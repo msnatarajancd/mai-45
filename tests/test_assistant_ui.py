@@ -24,6 +24,7 @@ def test_navigation_search_and_empty_state(app):
 
 def test_tour_navigation_and_exit(app):
     button(app,'Show me around').click().run()
+    button(app,'Start exploring').click().run()
     assert app.session_state['tour_step']==0
     button(app,'Next step').click().run()
     assert app.session_state['page']=='Household'

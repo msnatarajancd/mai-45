@@ -1,7 +1,7 @@
 """Compact top toolbar and a shared floating/full-screen assistant."""
 import streamlit as st
 from ui.capabilities import search_pages, PAGES
-from ui.components import navigate
+from ui.components import navigate, icon
 from ui.tour import start_tour
 
 
@@ -15,6 +15,8 @@ def toolbar():
         st.session_state['nav_search']=''
     st.session_state.setdefault('appearance','Bright')
     with st.container(key='top_toolbar'):
+        with st.container(key='header_brand'):
+            st.markdown('<div class="rr-brand"><span class="rr-brand-mark">'+icon('shield')+'</span><div>ReadyRelief<small>A clearer next step.</small></div></div>',unsafe_allow_html=True)
         title, search, theme, help_control = st.columns([.65,3,.28,.28],vertical_alignment='center',gap='small')
         with title.container(key='desktop_navigation'):
             from ui.navigation_component import render_toggle

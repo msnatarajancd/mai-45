@@ -154,6 +154,7 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
     elif kind=='start_tour':
         state['tour_run']=uuid4().hex
         state['tour_step']=0
+        state['tour_welcome']=True
         state['page']='Home'
         state.pop('tour_explanation',None)
     elif kind=='start_demo':

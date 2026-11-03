@@ -30,3 +30,12 @@ Icon-only controls retain accessible names and are excluded from visible-label c
 The desktop/tablet sidebar uses one toolbar button and a 240ms horizontal transition; reduced
 motion disables the transition. No live weather, model generation or recovery writes are used
 by these presentation tests. These checks do not certify every possible populated task or chat state.
+
+
+Header checks verify logo/search visibility after scrolling and sidebar collapse. Tour checks
+cover a centered welcome card, a larger step panel, header clearance, and browser voice selection.
+David/Mark (male) and Zira (female) were detected on the development Windows machine. Available
+voices vary by browser/device; the app lists actual English voices and remembers the user's choice
+within the tab. Natural/neural voices are preferred if the browser supplies them. Narration is
+opt-in; no external speech service or invented voice is used. Voice orchestration tests use labelled
+browser API test doubles, which do not certify perceived voice quality.

@@ -4,6 +4,10 @@ export default function(component) {
     const stop = parentElement.querySelector('[data-stop]');
     const show = parentElement.querySelector('[data-show]');
     const status = parentElement.querySelector('[data-status]');
+    const voicePicker = parentElement.querySelector('[data-voice]');
+    let voices = [];
+    let preferredVoice = window.__rrTourVoice || '';
+    try { preferredVoice = preferredVoice || window.sessionStorage.getItem('rr-tour-voice') || ''; } catch (_) {}
     const synth = window.speechSynthesis;
     const supported = !!(synth && window.SpeechSynthesisUtterance);
     const previous = window.__readyReliefTour;
@@ -51,8 +55,8 @@ export default function(component) {
         state.spoken = data.step;
         utterance = new SpeechSynthesisUtterance(data.narration);
         utterance.lang = 'en-US';
-        utterance.rate = 0.95;
-        const voice = synth.getVoices().find(v => v.lang.toLowerCase().startsWith('en'));
+        utterance.rate = 1.0;
+        const voice = voices.find(v => v.voiceURI === voicePicker.value) || synth.getVoices().find(v => v.lang.toLowerCase().startsWith('en'));
         if (voice) utterance.voice = voice; // Browser default also supports delayed voice loading.
         utterance.onstart = () => {clearTimeout(watchdog); sayStatus('Reading this step. Stop audio turns narration off.');};
         utterance.onend = () => {clearTimeout(watchdog); sayStatus('Step finished. Narration is on for your next step.');};
@@ -64,6 +68,29 @@ export default function(component) {
                 if (!synth.speaking) {stopAudio(); sayStatus('No browser voice is available. The written guide and highlights still work.');}
             }, 5000);
         } catch (_) {state.enabled = false; sayStatus('Audio is unavailable. The written guide and highlights still work.');}
+    };
+    const populateVoices = () => {
+        if(disposed) return;
+        voices = supported ? synth.getVoices().filter(v => v.lang.toLowerCase().startsWith('en')) : [];
+        voices.sort((a,b) => Number(/natural|neural/i.test(b.name))-Number(/natural|neural/i.test(a.name)) || a.name.localeCompare(b.name));
+        voicePicker.replaceChildren();
+        for(const voice of voices) {
+            const option=document.createElement('option');option.value=voice.voiceURI;
+            const gender=/Microsoft (David|Mark)\b/i.test(voice.name)?' · Male':/Microsoft Zira\b/i.test(voice.name)?' · Female':'';
+            option.textContent=voice.name.replace(/ - English \(.*\)/,'')+gender;
+            voicePicker.appendChild(option);
+        }
+        if(!voices.length){const option=document.createElement('option');option.textContent='Browser default voice';option.value='';voicePicker.appendChild(option);}
+        voicePicker.value=voices.some(v=>v.voiceURI===preferredVoice)?preferredVoice:(voices[0]?.voiceURI || '');
+        voicePicker.disabled=!supported || !voices.length;
+    };
+    populateVoices();
+    synth?.addEventListener?.('voiceschanged',populateVoices);
+    voicePicker.onchange=()=>{
+        preferredVoice=voicePicker.value;window.__rrTourVoice=preferredVoice;
+        try {window.sessionStorage.setItem('rr-tour-voice',preferredVoice);}catch(_){}
+        if(state.enabled) speak();
+        else sayStatus('Voice selected. Press Listen to hear this step.');
     };
     listen.disabled = !supported || !data.active;
     stop.disabled = !supported || !data.active;
@@ -81,6 +108,7 @@ export default function(component) {
     else {
         if (!supported) sayStatus('This browser has no spoken narration. The written guide and highlights still work.');
         else if (state.enabled) sayStatus('Narration is on. Press Stop audio to turn it off.');
+        else sayStatus('Audio is off. Choose a voice and press Listen.');
         let attempts = 0;
         const seek = () => {
             if (disposed) return;
@@ -111,6 +139,7 @@ export default function(component) {
     const cleanup = () => {
         if (disposed) return;
         disposed = true; cancel(); clearTimeout(timer); observer.disconnect(); ring.remove();
+        synth?.removeEventListener?.('voiceschanged',populateVoices);voicePicker.onchange=null;
         document.removeEventListener('click', emergency, true);
         document.removeEventListener('visibilitychange', hide);
         window.removeEventListener('scroll', placeRing, true);

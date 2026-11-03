@@ -8,14 +8,20 @@ from ui.capabilities import TOUR
 def start_tour():
     st.session_state['tour_run']=uuid4().hex
     st.session_state['tour_step']=0
+    st.session_state['tour_welcome']=True
     st.session_state['page']='Home'
     st.session_state.pop('tour_explanation',None)
+
+
+def begin_exploring():
+    st.session_state['tour_welcome']=False
 
 
 def move_step(index):
     st.session_state.pop('tour_explanation', None)
     if index >= len(TOUR) or index < 0:
         st.session_state.pop('tour_step', None)
+        st.session_state.pop('tour_welcome', None)
     else:
         st.session_state['tour_step'] = index
         st.session_state['page'] = TOUR[index][0]
@@ -26,6 +32,16 @@ def render_tour():
         st.session_state.pop('tour_step',None)
         st.session_state.pop('tour_explanation',None)
     if 'tour_step' not in st.session_state: return
+    if st.session_state.get('tour_welcome'):
+        with st.container(key='tour_welcome', border=True):
+            st.caption('WELCOME · YOUR GUIDED TOUR')
+            st.title("Let's find your next step.")
+            st.write('Explore ReadyRelief in six short steps. We will highlight each control and explain how to use it. You can listen along, choose a narrator, or read at your own pace.')
+            st.caption('You stay in control. No changes are saved by taking the tour.')
+            start, close = st.columns(2)
+            start.button('Start exploring', type='primary', width='stretch', on_click=begin_exploring)
+            close.button('End tour', width='stretch', on_click=move_step, args=(-1,))
+        return
     index=max(0,min(int(st.session_state['tour_step']),len(TOUR)-1))
     page,title,body,hint=TOUR[index]
     with st.container(border=True,key='guided_tour'):
@@ -40,10 +56,18 @@ def render_tour():
             'Recover': '.st-key-recovery_workspace [role="combobox"]',
             'Assistant': '.st-key-full_chat [data-testid="stChatInput"]',
         }
+        narration = {
+            'Home': "Welcome to ReadyRelief. Start here by choosing what you need: prepare your household, find help, or work on recovery. Let's take it one step at a time.",
+            'Household': "Here you can describe your demo household. Add the number of people and any transport, mobility, or pet needs. Use fictional details, then save your preferences.",
+            'Protect': "This is Protect. Choose an alert mode and an area, then use the button to check alerts. Simulated demo shows an example. Live check requests official information. The labels tell you which you're viewing.",
+            'Respond': "This is Respond. Choose the kind of assistance you need to explore official resources. Emergency options are separate from the AI assistant. This app does not contact or dispatch responders.",
+            'Recover': "This is Recover. Start with the immediate danger assessment, then describe your household's situation. Review the draft plan before accepting it. You're in control of every saved change.",
+            'Assistant': "You can also ask ReadyRelief for help in chat. Ask how a feature works, or request an action. You'll review proposed changes before confirming them. You can minimize this screen to keep chatting while you explore.",
+        }
         render_spotlight(
             run=st.session_state.setdefault('tour_run',uuid4().hex),
             step=index, target=targets[page],
-            narration=f'Step {index+1}. {page}. {title}. {hint} {body}',
+            narration=narration[page],
             active=st.session_state['page']==page,
         )
         st.progress((index+1)/len(TOUR))

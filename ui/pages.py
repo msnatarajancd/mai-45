@@ -9,7 +9,6 @@ from ui.capabilities import PAGES, search_pages
 
 def sidebar():
     with st.sidebar:
-        st.markdown('<div class="rr-brand"><span class="rr-brand-mark">'+icon('shield')+'</span><div>ReadyRelief<small>A clearer next step.</small></div></div>',unsafe_allow_html=True)
         st.caption('WORKSPACE')
         matches=PAGES  # Search suggestions must never remove primary navigation.
         for name in matches:
