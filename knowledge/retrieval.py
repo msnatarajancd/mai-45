@@ -41,7 +41,8 @@ def _scope_matches(scope, requested):
 def retrieve_guidance(store, request: KnowledgeRequest) -> GuidanceResult:
     """Use safety_topic plus household_needs as query text; phase/hazard/area
     are mandatory hard filters. Evidence is verbatim and citations use candidate
-    SHA-256 IDs. Source and candidate proof/context accompany each result.
+    SHA-256 IDs. Source/candidate proof and approved caveats accompany each result;
+    full review context never leaves the administrative store through retrieval.
 
     Rank by 2 * distinct passage token overlaps + distinct heading overlaps;
     require at least half the non-stopword query terms in the passage. Ties use
@@ -56,7 +57,7 @@ def retrieve_guidance(store, request: KnowledgeRequest) -> GuidanceResult:
         'Static evidence does not establish live alerts, evacuation orders, capacity, transport, eligibility, or building safety.',
         'Lexical matching and requested excerpt count do not establish completeness or personal applicability.',
         'Review validity uses stored review gates and integrity checks; no automatic freshness interval is configured.',
-        'Preserve citation context and caveats when displaying or using these excerpts.']
+        'Only approved passages and reviewed safety caveats are guidance; full surrounding context is administrative review material.']
 
     def result(status, missing, matches=()):
         sources = {bundle.source.source_id: bundle.source for _, _, bundle in matches}
@@ -72,7 +73,7 @@ def retrieve_guidance(store, request: KnowledgeRequest) -> GuidanceResult:
                 parent_chunk_id=c.parent_chunk_id, official_url=c.official_url,
                 original_content_hash=c.original_content_hash, passage_start=c.passage_start,
                 passage_end=c.passage_end, candidate_review=c.review, source_review=bundle.review,
-                surrounding_context=c.surrounding_context, safety_caveats=c.safety_caveats)
+                safety_caveats=c.safety_caveats)
                 for _, c, bundle in matches])
 
     query = ' '.join([request.safety_topic or '', *request.household_needs])

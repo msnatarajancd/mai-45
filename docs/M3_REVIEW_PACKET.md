@@ -5,6 +5,8 @@ Source quotations are acquired historical text, not current service availability
 Editorial safety caveats below are review annotations, not quotations or official orders.
 Packet prepared at: 2026-11-03T12:53:42.740423+00:00
 
+**Publication boundary (M3-3A.1):** Full surrounding context below is for administrative human review only. It is not published with an approved neighboring passage. Candidate approval additionally requires `--standalone-passage-checked`: attest that the exact passage and reviewed safety caveats preserve essential conditions and warnings on their own. Otherwise leave the candidate pending for revision. No approval was executed.
+
 ## Extraction repair and provenance
 
 The preserved EEAP response contains program text in main/div#service-data/service: an escaped longDescription and six related-faq name/answer pairs. The old generic extractor failed on metadata before a usable heading. A source-scoped static parser decodes only those fields without executing scripts.
@@ -69,7 +71,7 @@ Designate a shelter area if you can't evacuate. Rooms without windows are best.
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-flood-reentry --chunk-id 3f99a870c42b339f7b2816bb8aec2734480954062abe56ef9073246d7c6c30ae
-python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id 3f99a870c42b339f7b2816bb8aec2734480954062abe56ef9073246d7c6c30ae --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash 8015185fbd1a5a043acd8055ba770c4a29ee1f88c3acfc848f2db4ebdc7a202a --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id 3f99a870c42b339f7b2816bb8aec2734480954062abe56ef9073246d7c6c30ae --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash 8015185fbd1a5a043acd8055ba770c4a29ee1f88c3acfc848f2db4ebdc7a202a --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-flood-reentry --chunk-id 3f99a870c42b339f7b2816bb8aec2734480954062abe56ef9073246d7c6c30ae --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash 8015185fbd1a5a043acd8055ba770c4a29ee1f88c3acfc848f2db4ebdc7a202a --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -104,7 +106,7 @@ If your home has damage, do not reenter until it has been examined by a building
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-flood-reentry --chunk-id 0a803dca33e55c0c5dea445f1db7f8bde62474553fc53314f8b933bf229b2ce8
-python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id 0a803dca33e55c0c5dea445f1db7f8bde62474553fc53314f8b933bf229b2ce8 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash 484339b07cfd15ac25bb1edb68f974dedbc2b3d78151355f18dfff8c2efee83f --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id 0a803dca33e55c0c5dea445f1db7f8bde62474553fc53314f8b933bf229b2ce8 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash 484339b07cfd15ac25bb1edb68f974dedbc2b3d78151355f18dfff8c2efee83f --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-flood-reentry --chunk-id 0a803dca33e55c0c5dea445f1db7f8bde62474553fc53314f8b933bf229b2ce8 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash 484339b07cfd15ac25bb1edb68f974dedbc2b3d78151355f18dfff8c2efee83f --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -140,7 +142,7 @@ NEVER turn power on or off yourself or use an electric tool or appliance while s
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-flood-reentry --chunk-id 988c9fcd1da54e741fcd265c007f7388a9cfa52efc4b6c74d99796e1cb5a3fb1
-python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id 988c9fcd1da54e741fcd265c007f7388a9cfa52efc4b6c74d99796e1cb5a3fb1 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash a5bf10b7492cb21885da1ba44fe3bfdcb8cc16e1119d85edf1e0b59f8a68915c --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id 988c9fcd1da54e741fcd265c007f7388a9cfa52efc4b6c74d99796e1cb5a3fb1 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash a5bf10b7492cb21885da1ba44fe3bfdcb8cc16e1119d85edf1e0b59f8a68915c --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-flood-reentry --chunk-id 988c9fcd1da54e741fcd265c007f7388a9cfa52efc4b6c74d99796e1cb5a3fb1 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash a5bf10b7492cb21885da1ba44fe3bfdcb8cc16e1119d85edf1e0b59f8a68915c --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -176,7 +178,7 @@ Have an electrician check the house's electrical system before turning the power
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-flood-reentry --chunk-id ffa4fe9ae4c8f85d1030c5907c403b265370c503fefd6ab9f87e097ccf620465
-python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id ffa4fe9ae4c8f85d1030c5907c403b265370c503fefd6ab9f87e097ccf620465 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash d0495e060dc44a35380c5a0801a8035fb03e779e333fc56c5426d78b68498d16 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id ffa4fe9ae4c8f85d1030c5907c403b265370c503fefd6ab9f87e097ccf620465 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash d0495e060dc44a35380c5a0801a8035fb03e779e333fc56c5426d78b68498d16 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-flood-reentry --chunk-id ffa4fe9ae4c8f85d1030c5907c403b265370c503fefd6ab9f87e097ccf620465 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash d0495e060dc44a35380c5a0801a8035fb03e779e333fc56c5426d78b68498d16 --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -211,7 +213,7 @@ Tap water may not be safe to drink. Listen to local warnings.
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-flood-reentry --chunk-id a60f54160bbb2ce43a813d4ad0a83e72e8212aec8492956a7dd56b4e89c532c7
-python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id a60f54160bbb2ce43a813d4ad0a83e72e8212aec8492956a7dd56b4e89c532c7 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash 63ecfa40fa72e170a0046771970b1a06400cd516cdea572fe4e64f60eaa6acc2 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id a60f54160bbb2ce43a813d4ad0a83e72e8212aec8492956a7dd56b4e89c532c7 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash 63ecfa40fa72e170a0046771970b1a06400cd516cdea572fe4e64f60eaa6acc2 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-flood-reentry --chunk-id a60f54160bbb2ce43a813d4ad0a83e72e8212aec8492956a7dd56b4e89c532c7 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash 63ecfa40fa72e170a0046771970b1a06400cd516cdea572fe4e64f60eaa6acc2 --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -248,7 +250,7 @@ Take steps to protect your health and safety when returning to your flooded home
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-flood-reentry --chunk-id ab2bd10259fd31091cacb80da02f5e8e042eeef7fb9d88b6f37ff01d23622498
-python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id ab2bd10259fd31091cacb80da02f5e8e042eeef7fb9d88b6f37ff01d23622498 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash a58eea1396059bcd050a525654b08da5160ff61204e200f2cc054ee628b0be46 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-flood-reentry --chunk-id ab2bd10259fd31091cacb80da02f5e8e042eeef7fb9d88b6f37ff01d23622498 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash a58eea1396059bcd050a525654b08da5160ff61204e200f2cc054ee628b0be46 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-flood-reentry --chunk-id ab2bd10259fd31091cacb80da02f5e8e042eeef7fb9d88b6f37ff01d23622498 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85 --expected-context-hash a58eea1396059bcd050a525654b08da5160ff61204e200f2cc054ee628b0be46 --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -285,7 +287,7 @@ Stay out of floodwater—it can contain many things that can hurt you or make yo
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-floodwater --chunk-id f343d8888f2404484e62b2a2cf8a94838c6b01f18709920cc4052d220a435260
-python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id f343d8888f2404484e62b2a2cf8a94838c6b01f18709920cc4052d220a435260 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 23ebd894daa6b6b75ed1b75f331d8be0662e7af2ded8838fac90755068efcaae --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id f343d8888f2404484e62b2a2cf8a94838c6b01f18709920cc4052d220a435260 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 23ebd894daa6b6b75ed1b75f331d8be0662e7af2ded8838fac90755068efcaae --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-floodwater --chunk-id f343d8888f2404484e62b2a2cf8a94838c6b01f18709920cc4052d220a435260 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 23ebd894daa6b6b75ed1b75f331d8be0662e7af2ded8838fac90755068efcaae --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -322,7 +324,7 @@ Don't drive in flooded areas—cars or other vehicles won't protect you from flo
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-floodwater --chunk-id f8940b5b922259594b525596f654ee3d975d3f020077d671f73f4dbc62b01b86
-python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id f8940b5b922259594b525596f654ee3d975d3f020077d671f73f4dbc62b01b86 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 08fcd4743d3a6d842e17cf947454015d6d64e246ffb691cb61ae45725090bc97 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id f8940b5b922259594b525596f654ee3d975d3f020077d671f73f4dbc62b01b86 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 08fcd4743d3a6d842e17cf947454015d6d64e246ffb691cb61ae45725090bc97 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-floodwater --chunk-id f8940b5b922259594b525596f654ee3d975d3f020077d671f73f4dbc62b01b86 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 08fcd4743d3a6d842e17cf947454015d6d64e246ffb691cb61ae45725090bc97 --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -357,7 +359,7 @@ Floodwater can pose a drowning risk for everyone— regardless of their ability 
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-floodwater --chunk-id ee1b186d50f72b4fa2d5b4b8919c5c41d10f521349df1b2e4ef5fdcf1859d5ec
-python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id ee1b186d50f72b4fa2d5b4b8919c5c41d10f521349df1b2e4ef5fdcf1859d5ec --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash af27144d9fe707fc152cefcd114fb3b7a577e1ff21640c738a3b9eac773470da --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id ee1b186d50f72b4fa2d5b4b8919c5c41d10f521349df1b2e4ef5fdcf1859d5ec --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash af27144d9fe707fc152cefcd114fb3b7a577e1ff21640c738a3b9eac773470da --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-floodwater --chunk-id ee1b186d50f72b4fa2d5b4b8919c5c41d10f521349df1b2e4ef5fdcf1859d5ec --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash af27144d9fe707fc152cefcd114fb3b7a577e1ff21640c738a3b9eac773470da --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -400,7 +402,7 @@ Know flood evacuation routes near you.
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-floodwater --chunk-id 583e722d5f070eea7913bb10aa1c6f3c189b9cdcd4105807cb81f5df4f135e8c
-python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id 583e722d5f070eea7913bb10aa1c6f3c189b9cdcd4105807cb81f5df4f135e8c --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash bd62bfd7de184ce6ac3fdaf5831391aad5329e277942f561df49ac3429670b3d --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id 583e722d5f070eea7913bb10aa1c6f3c189b9cdcd4105807cb81f5df4f135e8c --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash bd62bfd7de184ce6ac3fdaf5831391aad5329e277942f561df49ac3429670b3d --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-floodwater --chunk-id 583e722d5f070eea7913bb10aa1c6f3c189b9cdcd4105807cb81f5df4f135e8c --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash bd62bfd7de184ce6ac3fdaf5831391aad5329e277942f561df49ac3429670b3d --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -440,7 +442,7 @@ If you believe someone has been electrocuted, call or have someone else call 911
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-floodwater --chunk-id c8cc634ab6e6efec6cbe6c76f280563dcdb58d2126b42efdda8baed2b052cb62
-python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id c8cc634ab6e6efec6cbe6c76f280563dcdb58d2126b42efdda8baed2b052cb62 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 18f8a20819ad25c5aae8d6f27e2f1271024cb9e24e4e4369fefeda54fa097aff --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id c8cc634ab6e6efec6cbe6c76f280563dcdb58d2126b42efdda8baed2b052cb62 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 18f8a20819ad25c5aae8d6f27e2f1271024cb9e24e4e4369fefeda54fa097aff --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-floodwater --chunk-id c8cc634ab6e6efec6cbe6c76f280563dcdb58d2126b42efdda8baed2b052cb62 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 18f8a20819ad25c5aae8d6f27e2f1271024cb9e24e4e4369fefeda54fa097aff --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -479,7 +481,7 @@ Do not bathe in water that may be contaminated with sewage or toxic chemicals. T
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id cdc-floodwater --chunk-id 2b547640ce57007af7be5598028fb9fa2f4026d67c6262a31a196a307180fa91
-python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id 2b547640ce57007af7be5598028fb9fa2f4026d67c6262a31a196a307180fa91 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 4fec7b9116dc718ab28eb7d96378b7e9b957fe1993c98f0798137c542bcfcc3d --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id cdc-floodwater --chunk-id 2b547640ce57007af7be5598028fb9fa2f4026d67c6262a31a196a307180fa91 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 4fec7b9116dc718ab28eb7d96378b7e9b957fe1993c98f0798137c542bcfcc3d --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id cdc-floodwater --chunk-id 2b547640ce57007af7be5598028fb9fa2f4026d67c6262a31a196a307180fa91 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8 --expected-context-hash 4fec7b9116dc718ab28eb7d96378b7e9b957fe1993c98f0798137c542bcfcc3d --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -530,7 +532,7 @@ Residents not currently enrolled in the EEAP, who need emergency and evacuation
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id miami-dade-eeap --chunk-id 1dceb9df1efd2dc78c44c34dc7d315c66d945f52bdd0ffe3959aaf9e13909549
-python -m knowledge.review approve --root data/official_sources --source-id miami-dade-eeap --chunk-id 1dceb9df1efd2dc78c44c34dc7d315c66d945f52bdd0ffe3959aaf9e13909549 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash dbd14b0ab97fb981138c08c154cac84abcdcb66d3abc09d975ca8b70fe39639f --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id miami-dade-eeap --chunk-id 1dceb9df1efd2dc78c44c34dc7d315c66d945f52bdd0ffe3959aaf9e13909549 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash dbd14b0ab97fb981138c08c154cac84abcdcb66d3abc09d975ca8b70fe39639f --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id miami-dade-eeap --chunk-id 1dceb9df1efd2dc78c44c34dc7d315c66d945f52bdd0ffe3959aaf9e13909549 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash dbd14b0ab97fb981138c08c154cac84abcdcb66d3abc09d975ca8b70fe39639f --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -592,7 +594,7 @@ Residents living in residential health care facilities such as nursing
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id miami-dade-eeap --chunk-id 15627d254d98b3cdb0d95737ba7177031d4a0c9067cbc3de1a4b6c00db45e017
-python -m knowledge.review approve --root data/official_sources --source-id miami-dade-eeap --chunk-id 15627d254d98b3cdb0d95737ba7177031d4a0c9067cbc3de1a4b6c00db45e017 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash 86d8e13a09aabeff88157620698c1419d24bd07f392f0512bb3f098f21f2d15c --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id miami-dade-eeap --chunk-id 15627d254d98b3cdb0d95737ba7177031d4a0c9067cbc3de1a4b6c00db45e017 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash 86d8e13a09aabeff88157620698c1419d24bd07f392f0512bb3f098f21f2d15c --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id miami-dade-eeap --chunk-id 15627d254d98b3cdb0d95737ba7177031d4a0c9067cbc3de1a4b6c00db45e017 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash 86d8e13a09aabeff88157620698c1419d24bd07f392f0512bb3f098f21f2d15c --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -664,7 +666,7 @@ Emergency evacuation centers are intended as a refuge of last resort for those
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id miami-dade-eeap --chunk-id 7d79b4586449195f46f7ef80385dde00241df006f892674b0c39a627013e9349
-python -m knowledge.review approve --root data/official_sources --source-id miami-dade-eeap --chunk-id 7d79b4586449195f46f7ef80385dde00241df006f892674b0c39a627013e9349 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash d4340ae59aa91a1ada2f978447ad1298d2a6c80032a777d00534537e8606eba7 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id miami-dade-eeap --chunk-id 7d79b4586449195f46f7ef80385dde00241df006f892674b0c39a627013e9349 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash d4340ae59aa91a1ada2f978447ad1298d2a6c80032a777d00534537e8606eba7 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id miami-dade-eeap --chunk-id 7d79b4586449195f46f7ef80385dde00241df006f892674b0c39a627013e9349 --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash d4340ae59aa91a1ada2f978447ad1298d2a6c80032a777d00534537e8606eba7 --reason "<HUMAN_REJECTION_REASON>"
 ```
 
@@ -714,7 +716,7 @@ Registration (online and paper application) for the EEAP closes before an evacua
 
 ```powershell
 python -m knowledge.review inspect --root data/official_sources --source-id miami-dade-eeap --chunk-id f8a045039bb7ab2b702116a082a43dd1b1ae83e8aa3140c3c2f2424f8ce34a5c
-python -m knowledge.review approve --root data/official_sources --source-id miami-dade-eeap --chunk-id f8a045039bb7ab2b702116a082a43dd1b1ae83e8aa3140c3c2f2424f8ce34a5c --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash 781db7d5d8cfb7884176ac8569512826558111393717f1b00e22d3be22923263 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+python -m knowledge.review approve --root data/official_sources --source-id miami-dade-eeap --chunk-id f8a045039bb7ab2b702116a082a43dd1b1ae83e8aa3140c3c2f2424f8ce34a5c --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash 781db7d5d8cfb7884176ac8569512826558111393717f1b00e22d3be22923263 --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked
 python -m knowledge.review reject --root data/official_sources --source-id miami-dade-eeap --chunk-id f8a045039bb7ab2b702116a082a43dd1b1ae83e8aa3140c3c2f2424f8ce34a5c --reviewer "<HUMAN_REVIEWER>" --expected-content-hash 4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2 --expected-context-hash 781db7d5d8cfb7884176ac8569512826558111393717f1b00e22d3be22923263 --reason "<HUMAN_REJECTION_REASON>"
 ```
 

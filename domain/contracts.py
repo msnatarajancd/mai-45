@@ -62,7 +62,7 @@ class GuidanceCitation(BaseModel):
     phases: list[str]
     source_review: dict[str, object]
     candidate_review: dict[str, object]
-    surrounding_context: list[dict[str, object]]
+    surrounding_context: list[dict[str, object]] = Field(default_factory=list, max_length=0)
     safety_caveats: list[str]
     source_limitations: list[str]
 

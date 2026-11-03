@@ -29,7 +29,7 @@ def export(fixture, req=None, chunk_id=None):
         chunk_id or candidates[0].chunk_id, req or request())
 
 
-def test_approved_candidate_exports_complete_context_and_m5_shape(reviewed_store):
+def test_approved_candidate_exports_passage_caveats_and_m5_shape(reviewed_store):
     from recovery.ai_planner import RecoveryEvidence
     _, bundle, candidates = reviewed_store
     payload = export(reviewed_store)
@@ -47,16 +47,18 @@ def test_parent_section_id_never_bypasses_candidate_gate(reviewed_store):
         export(reviewed_store, chunk_id=reviewed_store[1].chunks[0].chunk_id)
 
 
-def test_partial_passage_export_retains_parent_negative_instruction(reviewed_store):
+def test_context_dependent_passage_requires_explicit_standalone_review(reviewed_store):
     store, bundle, _ = reviewed_store
     candidate = make_candidate(bundle, bundle.chunks[0], end=25, phases=[Phase.RECOVER])
     assert 'Do not touch' not in candidate.original_passage
     with store.admin_lock():
         store.save_candidate_locked(candidate)
-    review_candidate(store, candidate.source_id, candidate.chunk_id,
-        decision(candidate.original_content_hash, candidate_context_hash(candidate)))
-    payload = export(reviewed_store, chunk_id=candidate.chunk_id)
-    assert 'Do not touch electrical wires.' in payload['guidance_text']
+    incomplete_review = replace_record(decision(candidate.original_content_hash,
+        candidate_context_hash(candidate)), standalone_passage_checked=False)
+    with pytest.raises(PublicationError, match='standalone'):
+        review_candidate(store, candidate.source_id, candidate.chunk_id, incomplete_review)
+    with pytest.raises(PublicationError):
+        export(reviewed_store, chunk_id=candidate.chunk_id)
 
 
 def test_oversized_complete_context_is_rejected_without_truncation(reviewed_store):
@@ -154,7 +156,7 @@ def test_m1_preserves_exact_passage_and_all_citation_provenance(reviewed_store):
     assert citation.official_url == bundle.source.official_url
     assert citation.candidate_review == candidates[0].review.model_dump(mode='json')
     assert citation.source_review == bundle.review.model_dump(mode='json')
-    assert citation.surrounding_context == [c.model_dump(mode='json') for c in candidates[0].surrounding_context]
+    assert citation.surrounding_context == []
     assert citation.safety_caveats == candidates[0].safety_caveats
     assert citation.phases == ['recover'] and citation.jurisdiction == 'US-FL'
     assert result.insufficient_evidence and result.retrieval_status == 'INSUFFICIENT_EVIDENCE'

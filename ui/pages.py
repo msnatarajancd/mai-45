@@ -173,10 +173,7 @@ def protect():
                 st.link_button(citation.title, citation.official_url)
                 for caveat in citation.safety_caveats:
                     st.caption(caveat)
-                with st.expander('Source context and review provenance: ' + citation.citation_id):
-                    for context in citation.surrounding_context:
-                        st.text(context['section_heading'])
-                        st.text(context['guidance_text'])
+                with st.expander('Citation review provenance: ' + citation.citation_id):
                     for limitation in citation.source_limitations:
                         st.caption(limitation)
                     st.caption('Original SHA-256: ' + citation.original_content_hash)

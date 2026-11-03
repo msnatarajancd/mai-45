@@ -4,7 +4,7 @@ from enum import StrEnum
 from typing import Annotated, Literal
 from urllib.parse import urlsplit
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, field_validator, model_validator
 
 Text = Annotated[str, Field(min_length=1, max_length=200)]
 Identifier = Annotated[str, Field(pattern=r'^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,79}$')]
@@ -185,6 +185,7 @@ class ReviewDecision(StrictRecord):
     geographic_scope_checked: Literal[True]
     applicability_checked: Literal[True]
     caveats_preserved: Literal[True]
+    standalone_passage_checked: StrictBool = False
 
 
     @model_validator(mode='before')
@@ -261,7 +262,7 @@ class RetrievalStatus(StrEnum):
 
 
 class EvidenceProvenance(StrictRecord):
-    """Chunk-level publication proof, including context that must accompany excerpts."""
+    """Public proof only. Full source context remains in admin ReviewCandidate."""
     chunk_id: Hash
     source_id: Identifier
     parent_chunk_id: Identifier
@@ -271,8 +272,14 @@ class EvidenceProvenance(StrictRecord):
     passage_end: int
     candidate_review: ReviewRecord
     source_review: ReviewRecord
-    surrounding_context: list[EvidenceChunk]
+    surrounding_context: list[EvidenceChunk] = Field(default_factory=list, max_length=0)
     safety_caveats: list[Annotated[str, Field(min_length=1, max_length=1000)]]
+
+    @model_validator(mode='after')
+    def published_scope(self):
+        if not self.candidate_review.decision.standalone_passage_checked:
+            raise ValueError('public evidence requires standalone passage and caveat review')
+        return self
 
 
 class GuidanceResult(StrictRecord):

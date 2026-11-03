@@ -98,6 +98,8 @@ def review_candidate(store: SourceStore, source_id: str, chunk_id: str,
     from .candidates import candidate_context_hash, verify_candidate_trace
     from .models import CandidateStatus
     decision = ReviewDecision.model_validate_json(decision.model_dump_json())
+    if not decision.standalone_passage_checked:
+        raise PublicationError('review the standalone passage and safety caveats without publishing surrounding context')
     with store.admin_lock():
         candidate = store.load_candidate(source_id, chunk_id)
         if candidate is None or candidate.review_status is not CandidateStatus.PENDING:
@@ -143,7 +145,7 @@ def main():
     parser.add_argument('--expected-content-hash')
     parser.add_argument('--expected-context-hash')
     for flag in ('provenance-checked', 'content-checked', 'geographic-scope-checked',
-                 'applicability-checked', 'caveats-preserved'):
+                 'applicability-checked', 'caveats-preserved', 'standalone-passage-checked'):
         parser.add_argument('--' + flag, action='store_true')
     args = parser.parse_args()
     store = SourceStore(args.root)
@@ -160,7 +162,8 @@ def main():
                 expected_content_hash=args.expected_content_hash, expected_context_hash=args.expected_context_hash,
                 provenance_checked=args.provenance_checked, content_checked=args.content_checked,
                 geographic_scope_checked=args.geographic_scope_checked,
-                applicability_checked=args.applicability_checked, caveats_preserved=args.caveats_preserved)
+                applicability_checked=args.applicability_checked, caveats_preserved=args.caveats_preserved,
+                standalone_passage_checked=args.standalone_passage_checked)
             print(review_candidate(store, args.source_id, args.chunk_id, decision).model_dump_json(indent=2))
         elif args.action == 'reject':
             print(reject_candidate(store, args.source_id, args.chunk_id, reviewer=args.reviewer,

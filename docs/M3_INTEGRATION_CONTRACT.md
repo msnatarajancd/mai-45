@@ -1,4 +1,4 @@
-﻿# M3-3A trusted knowledge integration contract
+# M3-3A.1 trusted knowledge integration contract
 
 M3 is a local Python service using Python 3.11+, Pydantic 2 and the existing
 pytest/Streamlit environment. No new dependency, API server, model client, vector
@@ -71,6 +71,12 @@ review record, curated official provenance, intact original bytes, and sections
 that re-extract identically. Candidates must be APPROVED, with an exact source
 span, stable content-derived ID, matching content/context hashes, explicit review
 proof, and unchanged source/context. Review must not predate current acquisition.
+Candidate approval additionally requires explicit `standalone_passage_checked=True`
+(`--standalone-passage-checked` in the CLI). The human must attest that the exact
+passage and its safety caveats preserve essential conditions and warnings without
+publishing raw surrounding context. If not, leave it pending for revision. The
+flag defaults to false; old approvals without this attestation cannot publish.
+Source-level approval does not supply this candidate-level attestation.
 
 `knowledge.candidates.verify_candidate_publication(store, candidate, request=None)`
 is shared by retrieval and export. Callers hold the existing admin lock. Export
@@ -96,7 +102,17 @@ Each domain.contracts.GuidanceCitation preserves:
 - exact passage, section heading and start/end span;
 - applicable jurisdiction, hazards and phases;
 - full source and candidate review records serialized as JSON-compatible values;
-- surrounding source sections, safety caveats and source limitations.
+- candidate-reviewed safety caveats and source-reviewed limitations.
+
+Full surrounding source sections are administrative review material, not public
+guidance. They remain unchanged in ReviewCandidate, history, the human packet and
+`knowledge.review inspect --chunk-id ...`. Review fingerprints still bind them.
+Public EvidenceProvenance and GuidanceCitation retain `surrounding_context=[]`
+for field compatibility but reject any nonempty value. Full context must never
+be put into a user response or model prompt, including as "provenance". Runtime
+serialization is passage-only; IDs, source hashes and both review records retain
+traceability without serializing parent instructions. Adapters revalidate this
+boundary and fail unavailable on legacy/nonconforming context-bearing outputs.
 
 Source link records additionally retain citation_id, parent source_id and
 original_content_hash. IDs are not reduced to URLs. M3 provenance is mapped by
@@ -108,7 +124,7 @@ Protect's existing knowledge panel now offers an explicit hazard and a bounded
 static preparedness topic. Known supported named areas map explicitly to
 US-FL-MIAMI-DADE; unknown locations provide no jurisdiction. No hazard is inferred
 from alert wording. Official/simulated alert details remain separate and retain
-their labels. Excerpts, citation IDs, URLs, caveats, source context, hashes and
+their labels. Excerpts, citation IDs, URLs, reviewed caveats, hashes and
 review provenance are displayed without an LLM. Requested displays are
 revalidated on rerender, and context/topic changes clear old results.
 
@@ -130,8 +146,13 @@ violating M5's unique-ID requirement. Parent source identity is explicitly
 retained in guidance_text and M3's full provenance. M5 source_reference can use
 this supplied citation ID without a planner change.
 
-Guidance text includes the exact headed candidate passage, surrounding source
-context (including parent warnings), candidate caveats and source limitations.
+Guidance text includes only the exact headed candidate passage, candidate-reviewed
+safety caveats and source-reviewed limitations. Parent instructions are never
+appended. If an essential warning exists only in parent context, a reviewer must
+withhold standalone approval and request a revised candidate; the exporter must
+not fill the gap with unapproved context. No new instructions are automatically
+extracted or paraphrased into caveats. Caveats are review-bound restrictions and
+limitations, not an automatic channel for unrelated parent instructions.
 It is never truncated. If the complete text exceeds M5's 6000-character limit,
 export fails closed. reviewed_at is the earlier source/candidate review timestamp;
 retrieved_at remains the source acquisition timestamp.
@@ -156,7 +177,12 @@ safety. A conservative operational-query guard abstains; it is not a complete
 semantic classifier or an emergency triage mechanism. No current alert state is
 inferred from static documents.
 
-find_resources remains UNAVAILABLE. Existing official directory links are not
+find_resources remains UNAVAILABLE. validate_resource now accepts listing detail
+and contact support only from individually approved standalone candidate passages,
+never whole parent text; contact_evidence_chunk_id means a candidate citation ID.
+This closes the otherwise dormant parent-context validation path. It does not
+create a resource finder or establish live availability.
+Existing official directory links are not
 verified available services. No resource availability or enrollment is invented.
 
 ## Real review queue and remaining cross-team work
@@ -189,6 +215,10 @@ Positive integration tests use clearly labeled synthetic documents, reserved
 .test URLs, test-scoped allowlists and temporary stores. Test review decisions
 are not real human signoffs and never touch the real review queue. Tests cover
 both publication gates, parent-ID rejection, scope, tampering, reacquisition,
-context size and negative instructions, stable citations, phase mapping, missing
+published size and negative instructions, stable citations, phase mapping, missing
 context, no model call, production-store abstention, revocation on rerender, and
-emergency controls during M3 failure. Pytest requires no Nebius or live API calls.
+emergency controls during M3 failure. Additional context-publication regressions
+embed the real Candidate 1/2 quotations in a labeled .test synthetic document and
+verify held context never reaches retrieval JSON, M1 display, M5 export or actual
+fake-client planner prompts. Human inspection retains it. Pytest requires no
+Nebius or live API calls.

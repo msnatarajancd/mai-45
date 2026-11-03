@@ -68,7 +68,6 @@ def retrieve_guidance(query: str, phase: str, context: Household | None = None, 
                 phases=[p.value for p in evidence.applicable_phases],
                 source_review=proof.source_review.model_dump(mode='json'),
                 candidate_review=proof.candidate_review.model_dump(mode='json'),
-                surrounding_context=[c.model_dump(mode='json') for c in proof.surrounding_context],
                 safety_caveats=proof.safety_caveats, source_limitations=source.limitations))
             links.append(Source(title=source.title, url=source.official_url, publisher=source.publisher,
                 reviewed_at=source.reviewed_at.isoformat(), citation_id=evidence.chunk_id,

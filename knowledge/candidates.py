@@ -41,6 +41,8 @@ def verify_candidate_publication(store, candidate, request=None):
     candidate = ReviewCandidate.model_validate_json(candidate.model_dump_json())
     if candidate.review_status is not CandidateStatus.APPROVED:
         raise PublicationError('only an approved candidate may be published')
+    if not candidate.review.decision.standalone_passage_checked:
+        raise PublicationError('explicit standalone passage and caveat review is required for publication')
     bundle = verify_candidate_trace(store, candidate)
     verify_publication(store, bundle)
     if candidate.review.reviewed_at < bundle.source.retrieved_at:
@@ -175,6 +177,7 @@ def render_packet(packet: CandidatePacket, output: Path):
         'Obfuscated contact markup remains source context only. No hidden email address is reconstructed and no contact availability is verified. All original acquisition history is retained.', '',
         '## Review procedure', '',
         'Read each exact passage and every linked context section against the preserved original hash. Check geography, hazard/phase scope and ALL conditional/negative language.',
+        'Full context is administrative review material only. Publication contains the exact candidate passage and reviewed safety caveats, never surrounding sections. Approve only if that standalone output preserves essential conditions and warnings. Otherwise leave pending and request a revised candidate; do not compensate by publishing parent context.',
         'The proposed chunk is verbatim; no generated paraphrase fills coverage gaps. Source authority and accuracy still require human judgment.',
         'Use the existing knowledge.review CLI commands shown below. Replace the reviewer/reason placeholders yourself. Do not approve by copying commands without inspection.',
         'Candidate approval records only that candidate decision. It does not mark the source REVIEWED, publish guidance, or enable retrieval. Existing export still requires source-level review.',
@@ -200,7 +203,7 @@ def render_packet(packet: CandidatePacket, output: Path):
             '**Proposed short retrieval chunk (verbatim, pending review):**', '', _fenced(candidate.proposed_chunk), '',
             '**Safety caveats (editorial review annotations):**', '', *['- '+c for c in candidate.safety_caveats], '',
             '**Inspect / approve / reject this candidate:**', '', '```powershell', commands.format(action='inspect'),
-            commands.format(action='approve') + f' --reviewer "<HUMAN_REVIEWER>" --expected-content-hash {candidate.original_content_hash} --expected-context-hash {fingerprint} --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved',
+            commands.format(action='approve') + f' --reviewer "<HUMAN_REVIEWER>" --expected-content-hash {candidate.original_content_hash} --expected-context-hash {fingerprint} --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved --standalone-passage-checked',
             commands.format(action='reject') + f' --reviewer "<HUMAN_REVIEWER>" --expected-content-hash {candidate.original_content_hash} --expected-context-hash {fingerprint} --reason "<HUMAN_REJECTION_REASON>"', '```', '']
     lines += ['## Acquired surrounding context', '', 'Text is decoded from the preserved HTML; HTML tags and layout whitespace are normalized. Guidance wording is not rewritten. Heading paths retain parent conditions.', '']
     for chunk_id, context in contexts.items():

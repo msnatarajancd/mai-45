@@ -33,7 +33,8 @@ class FoundationKnowledgeService:
 
         M5's legacy source_id carries the candidate citation ID, permitting unique
         references to multiple candidates from one parent. Parent identity, exact
-        context and caveats remain in guidance_text. No truncation is permitted.
+        approved passage and caveats remain in guidance_text. Raw parent context
+        is administrative only and must never be supplied to Recovery or a model.
         """
         from .candidates import verify_candidate_publication
         try:
@@ -45,16 +46,11 @@ class FoundationKnowledgeService:
                 source = bundle.source
                 parts = [f'Parent source: {source.source_id}\nCitation: {candidate.chunk_id}',
                          candidate.section_heading + '\n' + candidate.original_passage]
-                for context in candidate.surrounding_context:
-                    if (context.chunk_id == candidate.parent_chunk_id
-                            and context.guidance_text == candidate.original_passage):
-                        continue
-                    parts.append('Source context: ' + context.section_heading + '\n' + context.guidance_text)
                 parts.append('Safety caveats:\n' + '\n'.join(candidate.safety_caveats))
                 parts.append('Source limitations:\n' + '\n'.join(source.limitations))
                 guidance = '\n\n'.join(parts)
                 if len(guidance) > 6000:
-                    raise PublicationError('complete candidate context exceeds the M5 text limit')
+                    raise PublicationError('complete published passage and caveats exceed the M5 text limit')
                 return dict(source_id=candidate.chunk_id, source_title=source.title,
                     source_url=source.official_url, source_type=source.source_type,
                     verified=True, reviewed=True, guidance_text=guidance,
@@ -70,20 +66,31 @@ class FoundationKnowledgeService:
 
         No resource finder or automatic contact extraction is implemented here.
         Names, category, prerequisites, area and contacts must be exact strings
-        present in reviewed excerpts to prevent fabricated listing details.
+        present in individually approved passages to prevent context leakage.
         """
         with self.store.admin_lock():
             bundle = self.store.load(resource.source_id)
             if bundle is None:
                 raise PublicationError('resource provenance is unavailable')
             verify_publication(self.store, bundle)
-            text = '\n'.join(c.guidance_text for c in bundle.chunks)
+            from .candidates import verify_candidate_publication
+            from .models import CandidateStatus
+            published = []
+            for candidate in self.store.list_candidates(resource.source_id):
+                if candidate.review_status is not CandidateStatus.APPROVED:
+                    continue
+                try:
+                    verify_candidate_publication(self.store, candidate)
+                except PublicationError:
+                    continue
+                published.append(candidate)
+            text = '\n'.join(c.original_passage for c in published)
             if resource.official_url != bundle.source.official_url or resource.service_area != bundle.source.jurisdiction:
                 raise PublicationError('resource URL or service area lacks source provenance')
             if any(value not in text for value in [resource.official_name, resource.service_category, *resource.prerequisites]):
-                raise PublicationError('resource listing contains unsupported details')
+                raise PublicationError('resource listing lacks individually approved passage support')
             if resource.official_contact:
-                chunks = [c for c in bundle.chunks if c.chunk_id == resource.contact_evidence_chunk_id]
-                if len(chunks) != 1 or resource.official_contact not in chunks[0].guidance_text:
+                chunks = [c for c in published if c.chunk_id == resource.contact_evidence_chunk_id]
+                if len(chunks) != 1 or resource.official_contact not in chunks[0].original_passage:
                     raise PublicationError('contact information is not supported by reviewed content')
             return resource

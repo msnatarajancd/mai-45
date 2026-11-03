@@ -185,7 +185,7 @@ def test_candidate_approval_is_explicit_and_does_not_publish_source(captured_sto
     decision = ReviewDecision(reviewer='UNIT_TEST_ONLY identity; not a real signoff',
         expected_content_hash=candidate.original_content_hash, expected_context_hash=candidate_context_hash(candidate),
         provenance_checked=True, content_checked=True, geographic_scope_checked=True,
-        applicability_checked=True, caveats_preserved=True)
+        applicability_checked=True, caveats_preserved=True, standalone_passage_checked=True)
     approved = review_candidate(captured_store, candidate.source_id, candidate.chunk_id, decision)
     assert approved.review_status is CandidateStatus.APPROVED
     assert captured_store.load(candidate.source_id).source.review_status is not ReviewStatus.REVIEWED
@@ -212,5 +212,6 @@ def test_review_packet_contains_context_flags_and_both_commands(captured_store, 
     assert text.count('**Review status: PENDING**') == 16
     assert text.count('python -m knowledge.review approve') == 16
     assert text.count('python -m knowledge.review reject') == 16
+    assert text.count('--standalone-passage-checked') == 16
     assert 'does not guarantee' in text and 'NEVER turn power on or off' in text
     assert '<HUMAN_REVIEWER>' in text and 'Safe damage documentation' not in text

@@ -38,7 +38,7 @@ def decision(content_hash, fingerprint):
     return ReviewDecision(reviewer='SYNTHETIC TEST REVIEWER; not a human production signoff',
         expected_content_hash=content_hash, expected_context_hash=fingerprint,
         provenance_checked=True, content_checked=True, geographic_scope_checked=True,
-        applicability_checked=True, caveats_preserved=True)
+        applicability_checked=True, caveats_preserved=True, standalone_passage_checked=True)
 
 
 @pytest.fixture
@@ -89,7 +89,8 @@ def test_relevant_query_returns_exact_evidence_and_traceable_citation(reviewed_s
     assert proof.original_content_hash == hashlib.sha256(store.original(proof.original_content_hash)).hexdigest()
     assert proof.source_review == bundle.review
     assert proof.candidate_review == candidates[0].review
-    parent = next(c for c in proof.surrounding_context if c.chunk_id == proof.parent_chunk_id)
+    assert proof.surrounding_context == []
+    parent = next(c for c in candidates[0].surrounding_context if c.chunk_id == proof.parent_chunk_id)
     assert parent.guidance_text[proof.passage_start:proof.passage_end] == evidence.guidance_text
     assert proof.safety_caveats == candidates[0].safety_caveats
 

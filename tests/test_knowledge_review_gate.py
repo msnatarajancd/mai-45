@@ -169,7 +169,7 @@ def test_unverified_contact_cannot_be_published(official_acquisition):
         service_area='US', official_contact='invented-contact',
         contact_evidence_chunk_id=bundle.chunks[0].chunk_id, official_url=bundle.source.official_url,
         prerequisites=[], limitations=['UNIT_TEST_ONLY; never a live resource.'])
-    with pytest.raises(PublicationError, match='contact information'):
+    with pytest.raises(PublicationError, match='individually approved'):
         FoundationKnowledgeService(store).validate_resource(resource)
 
 
