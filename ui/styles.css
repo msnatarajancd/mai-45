@@ -166,3 +166,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
 /* Reserve scroll room so the last target can clear the floating guide. */
 .stApp:has(.st-key-guided_tour) .block-container {padding-bottom:60vh !important;}
 .st-key-home_card_Protect,.st-key-household_form_target [data-testid="stTextInput"],.st-key-alert_controls [data-testid="stRadio"],.st-key-assistance_controls [data-testid="stRadio"],.st-key-recovery_workspace [role="combobox"],.st-key-full_chat [data-testid="stChatInput"] {scroll-margin-top:24px;}
+
+/* Focus belongs to the complete rounded field, not its clipped inner input. */
+.st-key-nav_search input:focus,.st-key-nav_search input:focus-visible {outline:none !important;box-shadow:none !important;}
+.st-key-nav_search [data-testid="stTextInputRootElement"]:focus-within {outline:2px solid var(--rr-accent);outline-offset:2px;border-color:var(--rr-accent);}
+.st-key-search_suggestions {height:0 !important;min-height:0 !important;margin:0 !important;padding:0 !important;}
+
+.st-key-nav_search [data-testid="InputInstructions"] {display:none;}
+
+.st-key-top_toolbar [data-testid="stColumn"]:nth-child(2) [data-testid="stVerticalBlock"] {gap:0 !important;}

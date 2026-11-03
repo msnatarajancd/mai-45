@@ -2,7 +2,7 @@
 
 ## Find a screen
 
-Use **Search menu** in the top toolbar. It matches names and keywords: tasks → Recover, weather → Protect, mobility → Household, chat → Assistant. Search never hides the emergency controls above the current screen. Clear the input to restore all seven entries.
+Use **Search menu** in the top toolbar. Suggestions update as you type; select one with the mouse or use Up/Down and Enter. Escape dismisses the suggestions. Selecting a screen clears the query. It matches names and keywords: tasks → Recover, weather → Protect, mobility → Household, chat → Assistant. Search never hides the emergency controls above the current screen. Clear the input to restore all seven entries.
 
 ## Learn the app
 

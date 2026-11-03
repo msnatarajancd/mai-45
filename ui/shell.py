@@ -4,6 +4,8 @@ from ui.capabilities import search_pages
 
 
 def toolbar():
+    if st.session_state.pop('_clear_nav_search',False):
+        st.session_state['nav_search']=''
     st.session_state.setdefault('appearance','Bright')
     with st.container(key='top_toolbar'):
         title, search, theme, help_control = st.columns([1.1,3,.28,.28],vertical_alignment='center',gap='small')
@@ -16,7 +18,10 @@ def toolbar():
                         st.session_state['page']=page
                         st.rerun()
 
-        search.text_input('Search menu',placeholder='Search anything…',help='Find screens by task, weather, family or chat. Press Enter to search.',key='nav_search',label_visibility='collapsed',icon=':material/search:')
+        search.text_input('Search menu',placeholder='Search anything…',help='Suggestions appear as you type. Use arrow keys and Enter, or select a screen.',key='nav_search',label_visibility='collapsed',icon=':material/search:')
+        with search:
+            from ui.search_component import render_suggestions
+            render_suggestions()
         dark=st.session_state['appearance']=='Dark'
         if theme.button('Switch to bright mode' if dark else 'Switch to dark mode',icon=':material/light_mode:' if dark else ':material/dark_mode:',key='theme_toggle',help='Switch to bright mode' if dark else 'Switch to dark mode',width='stretch'):
             st.session_state['appearance']='Bright' if dark else 'Dark'
