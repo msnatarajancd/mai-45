@@ -1,163 +1,194 @@
-﻿# M3-1 integration contract
+﻿# M3-3A trusted knowledge integration contract
 
-M3 is a shared local Python package for M2 Protect, M4 Respond and M5 Recover.
-Runtime: Python 3.11+ and existing Pydantic 2; tests use existing pytest. There are
-no new dependencies, hosted API, model calls, vectors, scheduler, or autonomous
-crawler. M5 code, persistence, UI and deterministic reassessment are unchanged.
+M3 is a local Python service using Python 3.11+, Pydantic 2 and the existing
+pytest/Streamlit environment. No new dependency, API server, model client, vector
+store, automatic review, or external submission is introduced.
 
-## Public interfaces (actual signatures)
+## Actual interfaces
 
 ```python
-# knowledge.ingestion
-acquire_source(
-    source_id: str, store: SourceStore, *,
-    transport: SourceTransport | None = None,
-    timeout: float = 20, max_bytes: int = 2_000_000,
-) -> SourceBundle
-
-# knowledge.review
-review_source(store: SourceStore, source_id: str, decision: ReviewDecision) -> SourceBundle
-mark_stale(store: SourceStore, source_id: str) -> SourceBundle
-
-# knowledge.service.KnowledgeService protocol / FoundationKnowledgeService
-retrieve_guidance(request: KnowledgeRequest) -> GuidanceResult
+# knowledge.service.FoundationKnowledgeService(SourceStore(root))
+retrieve_guidance(request: KnowledgeRequest) -> knowledge.models.GuidanceResult
 find_resources(request: KnowledgeRequest) -> ResourceResult
-
-# FoundationKnowledgeService: explicit selected-ID publication, NOT search
 export_to_m5(source_id: str, chunk_id: str, request: KnowledgeRequest) -> dict[str, object]
 validate_resource(resource: ResourceRecord) -> ResourceRecord
+
+# services.knowledge -- existing positional M1 contract retained
+retrieve_guidance(
+    query: str,
+    phase: str,
+    context: Household | None = None,
+    *,
+    hazard=None,
+    jurisdiction=None,
+    service=None,
+) -> domain.contracts.GuidanceResult
 ```
 
-`SourceStore(root: str | Path)` supports `initialize()`, `load(source_id)`, and
-`original(content_hash)`. Administrative writes are internal operations under
-`admin_lock()`; they are not exposed to a household request or model. Inject
-`SourceTransport.fetch(spec, *, timeout, max_bytes) -> Download` for offline tests.
-Only curated IDs/URLs in `knowledge.sources.CURATED_SOURCES` can be acquired.
-Requests use HTTPS, exact URL/redirect allowlists, bounded bytes and timeout,
-permitted HTML content types, and no credentials or household context. Original
-bytes are SHA-256 addressed; script/style and semantic navigation elements are excluded from plain
-text extraction; other page chrome still requires review. There is no browser execution or PDF extraction fallback.
+The M1 adapter defaults to `data/official_sources` relative to the repository,
+not the process working directory. `service` is optional trusted application/test
+injection implementing M3 retrieval, never a household/model-supplied object.
+There is no default hazard or jurisdiction. Household preferences establish
+neither. Missing context abstains before consulting the store. Supported hazard
+values are `flood`, `hurricane`, `wildfire` (or the corresponding M3 enums).
+Phase mapping is `protect -> prepare`, `respond -> respond`, `recover -> recover`;
+`prepare` is also accepted. `guardian` has no implicit mapping.
 
-**Retrieval and resource search are NOT implemented in M3-1.** Both query methods
-return UNAVAILABLE with empty results and explicit missing-information fields.
-SUCCESS, NO_RELEVANT_EVIDENCE and INSUFFICIENT_EVIDENCE are defined for M3-2; their
-existence does not claim working retrieval. `export_to_m5` verifies a specifically
-selected reviewed chunk by exact ID; it is not relevance search/ranking.
+## Retrieval and status semantics
 
-## Shared strict schemas
+`KnowledgeRequest` requires hazard, disaster_phase and canonical jurisdiction,
+with optional safety_topic, household_needs, and requested_evidence_count (1-10,
+default 3). M1 supplies query as safety_topic and does not infer recovery needs
+from household flags. Geography uses exact scope or a hyphen-delimited child
+(e.g. US includes US-FL; US-FL includes US-FL-MIAMI-DADE). County evidence cannot
+answer a national or other-county request. No geocoding occurs.
 
-All M3 records use Pydantic `strict=True`, `extra='forbid'`, and `frozen=True`.
-Nonblank bounded text, safe IDs (1-80 alphanumeric/underscore/dot/hyphen characters,
-starting alphanumeric), unique IDs/list entries, and credential-free HTTPS URLs
-are required. UTC-normalized timestamps must be real timezone-aware datetimes,
-not naive, future, numeric or arbitrary strings in Python input. JSON decoding
-supports ISO timestamps/enums. Python callers supply enum/datetime objects.
+Retrieval is implemented. It filters source and candidate scope, hazard and
+phase, then ranks exact passages by twice the distinct passage-token overlap
+plus heading-token overlap. At least half the non-stopword query terms must
+match the passage. Ties use source ID then candidate ID. No stemming, embeddings,
+semantic generation or model call is used.
 
-- `SourceRecord`: `source_id`, `publisher`, `title`, `official_url`, `source_type`,
-  `jurisdiction`, `hazards`, `disaster_phases`, `classification`, `limitations`;
-  optional `content_type`, `charset`, `original_content_hash`, `retrieved_at`,
-  `reviewed_at`, `reviewer`, `final_url`, `http_status`, `byte_count`,
-  `last_attempt_at`, `failure_category`; `review_status` defaults LINK_ONLY.
-  Acquired states require original hash, actual retrieval time, final URL, type,
-  charset, nonzero byte count and HTTP 200. Reviewed state additionally requires
-  an identified reviewer and real review time after retrieval.
-- `EvidenceChunk`: `chunk_id`, `source_id`, `section_heading` (1-1000 chars),
-  `guidance_text` (1-6000 chars), nonempty `applicable_hazards` and
-  `applicable_phases`, `geographic_scope`, `review_status`. Whole sections are
-  retained, with hierarchical heading paths; no truncation or invented text.
-- `ResourceRecord`: `resource_id`, `source_id`, `official_name`, `service_category`,
-  `service_area`, `official_url`, `prerequisites`, nonempty `limitations`, optional
-  `official_contact` and `contact_evidence_chunk_id`. `availability_status` can
-  only be UNKNOWN. The validator requires reviewed exact-text support for listing
-  details/contact; this is not a live availability or eligibility check.
-- Review states: LINK_ONLY, DOWNLOADED_UNREVIEWED, REVIEW_REQUIRED, REVIEWED,
-  STALE, UNAVAILABLE. Classification is OFFICIAL_SOURCE or SIMULATED_DEMO.
-  SIMULATED_DEMO can never become reviewed official evidence.
-- `SourceBundle`: source, unique source-linked chunks, optional review record.
-  Reviewed bundles require matching reviewed chunks and review provenance.
-- `ReviewDecision`: reviewer, expected_content_hash, expected_context_hash, and
-  literal boolean True for provenance_checked, content_checked,
-  geographic_scope_checked, applicability_checked, caveats_preserved.
-  `ReviewRecord` binds decision, reviewer, actual review time and both hashes.
+- SUCCESS: the requested number of matching excerpts was returned. This does not
+  establish a complete answer, personal applicability, or household safety.
+- INSUFFICIENT_EVIDENCE: fewer matches than requested, missing topic/context, or
+  an unsupported live/personal operational question. Partial reviewed excerpts
+  can accompany a count shortfall, with insufficient_evidence remaining true.
+- NO_RELEVANT_EVIDENCE: a trustworthy corpus exists but no passage matches scope
+  and topic.
+- UNAVAILABLE: missing/busy/unreadable/invalid store or no evidence satisfies the
+  publication gates. No substitute guidance is generated.
 
-`KnowledgeRequest` requires `hazard` (flood/hurricane/wildfire), `disaster_phase`
-(prepare/respond/recover), and `jurisdiction`; optional `household_needs` (up to
-30 strings), `safety_topic`, and `requested_evidence_count` (integer 1-10, default
-3). Use canonical jurisdictions such as US, US-FL, US-FL-MIAMI-DADE. County scope
-matches only that exact county; US national guidance may match US subdivisions.
-There is no geocoding or inferred county. Other jurisdictions fail applicability.
+M3's GuidanceResult retains evidence_records, source_metadata, evidence_metadata,
+matching_context, retrieval_status, limitations and missing_information. Citation
+IDs are candidate SHA-256 IDs, not parent-section IDs or URLs.
 
-`GuidanceResult` contains evidence_records, source_metadata, matching_context,
-retrieval_status, limitations, missing_information. `ResourceResult` has resources
-instead of evidence_records. Static guidance is separate from live operational
-state. NWS alerts belong to M2. M4's Call 911 and I Can't Call 911 must never call
-or depend on these interfaces. No service makes external requests for assistance.
+## Publication gates and provenance
 
-## Exact existing M5 RecoveryEvidence contract
+Both the parent source and the specific candidate must pass publication checks.
+A source must have REVIEWED status, matching reviewed sections, a bound human
+review record, curated official provenance, intact original bytes, and sections
+that re-extract identically. Candidates must be APPROVED, with an exact source
+span, stable content-derived ID, matching content/context hashes, explicit review
+proof, and unchanged source/context. Review must not predate current acquisition.
 
-The existing class is `recovery.ai_planner.RecoveryEvidence`. It was read directly
-and is neither duplicated nor modified by M3. It forbids extra fields:
+`knowledge.candidates.verify_candidate_publication(store, candidate, request=None)`
+is shared by retrieval and export. Callers hold the existing admin lock. Export
+also checks source and candidate hazard, phase and jurisdiction under that lock.
+Supported review/acquisition writers use the same lock. Store errors fail closed;
+export raises sanitized PublicationError and M1 returns an unavailable response.
+No runtime request or LLM output can approve a record.
 
-| Field | Exact existing requirement |
-| --- | --- |
-| source_id | required string, 1-200 chars, nonblank |
-| source_title | required string, 1-200 chars, nonblank |
-| source_url | required string, 1-2000 chars; http or https, hostname present, no username/password |
-| source_type | required string, 1-200 chars, nonblank |
-| verified | required StrictBool |
-| reviewed | StrictBool, default False |
-| guidance_text | required string, 1-6000 chars, nonblank |
-| geographic_scope | required string, 1-200 chars, nonblank |
-| reviewed_at | optional datetime, default None; must be timezone-aware when present |
-| retrieved_at | optional datetime, default None; must be timezone-aware when present |
+Source validity uses explicit stored review/stale states and integrity checks.
+There is no automatic review-expiry interval. The JSON/CLI store is admin-owned;
+reviewer identity is recorded, not authenticated or cryptographically signed.
 
-M5's current model does not itself enforce timestamp freshness, geographic
-applicability, provenance integrity, or real human review; M3's review/export gate
-supplies those additional controls. M3 requires HTTPS even though M5 accepts HTTP.
-M5 also rejects duplicate evidence source IDs, more than 20 input records, and
-oversized combined context. M5's source_reference must match a supplied verified
-ID, but M5 does not prove semantic citation support. Its current catalogue-only
-planner does not become official guidance merely because evidence was provided.
+## M1 display contract
 
-The M3 adapter maps the parent source ID/title/URL/type, headed whole guidance
-excerpt, geographic scope and timestamps to those existing fields. Only after
-all publication and applicability checks does the adapter create verified=True
-and reviewed=True. Requests accept no such authoritative flags. Headings are
-included to preserve conditional language, and >6000-char headed excerpts are
-rejected. Supply at most one selected chunk per parent source to M5 until an
-agreed chunk-ID/aggregation contract is established; do not silently drop caveats
-to concatenate or deduplicate chunks. M3 results retain the original chunk IDs
-and source metadata for traceability outside the legacy M5 evidence shape.
+The existing answer/sources/insufficient_evidence fields remain. GuidanceResult
+adds retrieval_status, citations, limitations and missing_information. The answer
+is an application-owned status message; it is never generated disaster advice.
 
-Current real sources have no human review. Therefore **there is no verified
-production evidence available to export yet**. M5's UI still supplies an empty
-list; no M3 wiring is claimed. Empty/unverified input stays experimental and
-ungrounded. M4 emergency controls remain independent of source acquisition.
+Each domain.contracts.GuidanceCitation preserves:
 
-## Offline tests and next milestone
+- citation_id (candidate ID), source_id (parent source ID), parent_chunk_id;
+- source title, publisher, official URL and original SHA-256;
+- exact passage, section heading and start/end span;
+- applicable jurisdiction, hazards and phases;
+- full source and candidate review records serialized as JSON-compatible values;
+- surrounding source sections, safety caveats and source limitations.
 
-From this checkout, run `python -m pytest` in the existing environment. Tests use
-fake HTTP responses labeled SIMULATED_DEMO and captured original CDC bytes for
-positive review-gate simulations; simulated signoffs are isolated in temporary
-stores, never the real acquisition queue. No Nebius key or network is required.
+Source link records additionally retain citation_id, parent source_id and
+original_content_hash. IDs are not reduced to URLs. M3 provenance is mapped by
+trusted application code, not accepted from a household or model. The domain DTO
+uses plain JSON proof records so importing emergency UI contracts does not
+require importing M3 or opening its store.
 
-For M3-2, first resolve Miami-Dade extraction, complete real human review, and
-exclude non-guidance sections without losing parent caveats. Then implement a
-small deterministic reviewed-only lexical search with explicit scope/hazard/phase
-filters and explainable topic/needs matching. Enforce limits and distinguish zero
-matches, too few reviewed matches, stale sources and unavailable storage. Add
-request-to-evidence provenance and tests before considering embeddings. Agree a
-chunk-level ID and context-preserving M5 adapter, freshness/re-review policy,
-reviewer authorization, and M1 integration. Do not add live shelter/order claims,
-NWS fetching, emergency routing, model-generated source substitutes or automatic
-review. Stop M3-1 at the foundation and fail-closed interfaces described here.
+Protect's existing knowledge panel now offers an explicit hazard and a bounded
+static preparedness topic. Known supported named areas map explicitly to
+US-FL-MIAMI-DADE; unknown locations provide no jurisdiction. No hazard is inferred
+from alert wording. Official/simulated alert details remain separate and retain
+their labels. Excerpts, citation IDs, URLs, caveats, source context, hashes and
+review provenance are displayed without an LLM. Requested displays are
+revalidated on rerender, and context/topic changes clear old results.
 
-## Verification recorded for M3-1
+## M5 export compatibility -- candidate IDs required
 
-Complete repository suite: **217 passed** (57 M3 tests plus the existing 160).
-The first full offline run passed 205 tests before live acquisition; captured
-CDC content then enabled additional offline review-integrity/compatibility tests.
-No network requests or Nebius calls run during pytest. `git diff -- recovery`
-was empty. Work is on `feature/m3-rag`; no commit or push was performed.
-Actual source results and the untouched human-review queue are recorded in
-[M3_SOURCE_REVIEW.md](M3_SOURCE_REVIEW.md).
+`export_to_m5(source_id, chunk_id, request)` takes the parent source ID followed
+by an APPROVED CANDIDATE ID. Parent-section IDs are rejected even when their
+parent source is reviewed. The old parent-only export behavior is removed.
+
+The returned dict exactly matches existing recovery.ai_planner.RecoveryEvidence:
+source_id, source_title, source_url, source_type, verified, reviewed,
+guidance_text, geographic_scope, retrieved_at, reviewed_at. No extra fields are
+passed to M5's extra-forbid schema. Only trusted publication code sets the two
+boolean flags.
+
+Compatibility convention: the returned legacy `source_id` is the candidate
+citation ID. This permits distinct candidates from the same parent without
+violating M5's unique-ID requirement. Parent source identity is explicitly
+retained in guidance_text and M3's full provenance. M5 source_reference can use
+this supplied citation ID without a planner change.
+
+Guidance text includes the exact headed candidate passage, surrounding source
+context (including parent warnings), candidate caveats and source limitations.
+It is never truncated. If the complete text exceeds M5's 6000-character limit,
+export fails closed. reviewed_at is the earlier source/candidate review timestamp;
+retrieved_at remains the source acquisition timestamp.
+
+M5 planner, Recovery UIs, database and deterministic reassessment are unchanged.
+They are not wired to M3 in this milestone and still pass empty evidence to AI
+planning. M5 still limits evidence to 20 unique IDs and 60KB combined context;
+citation membership alone does not prove semantic support for a task. Durable
+plan-to-citation snapshot resolution remains a future integration decision.
+
+## Emergency and live-information boundaries
+
+Call 911 and I Can't Call 911 are rendered before retrieval, chat and page work.
+They do not depend on evidence, LLMs, location, login or network requests. M3
+imports are lazy at the M1 adapter boundary. Retrieval failure does not hide
+emergency controls. The app does not send texts, dispatch responders, or verify
+safety. Streamlit itself still requires its server/browser environment.
+
+Static evidence cannot establish live alerts, evacuation orders, all-clear
+conditions, shelter capacity, transportation availability, eligibility or building
+safety. A conservative operational-query guard abstains; it is not a complete
+semantic classifier or an emergency triage mechanism. No current alert state is
+inferred from static documents.
+
+find_resources remains UNAVAILABLE. Existing official directory links are not
+verified available services. No resource availability or enrollment is invented.
+
+## Real review queue and remaining cross-team work
+
+All 16 real candidates remain PENDING. No real source/candidate approval or
+publication was performed. The actual unreviewed store returns zero verified
+excerpts/citations. Existing source captures, hashes and acquisition history are
+unchanged.
+
+M1's action-proposal assistant already uses the shared Nebius client for product
+help. It is unchanged and is not an unrestricted disaster chatbot. M3 display
+needs no model. Do not add another Qwen client.
+
+M2 is not integrated in this checkout. Its remote explanation boundary expects a
+snippets dictionary, unique evidence IDs and ISO timestamps; guardian phase
+mapping needs agreement. Its domain allowlist excludes cdc.gov and it imposes a
+30-day review policy absent from M3. Those require coordinated M2 work, not an
+adapter that silently weakens its gates. Alert snapshot fields are also richer
+than current M1 Alert records. M4 reviewed routing remains a separate owner task.
+
+## Verification
+
+Run from this checkout with the existing environment:
+
+```powershell
+python -m pytest -q
+```
+
+Positive integration tests use clearly labeled synthetic documents, reserved
+.test URLs, test-scoped allowlists and temporary stores. Test review decisions
+are not real human signoffs and never touch the real review queue. Tests cover
+both publication gates, parent-ID rejection, scope, tampering, reacquisition,
+context size and negative instructions, stable citations, phase mapping, missing
+context, no model call, production-store abstention, revocation on rerender, and
+emergency controls during M3 failure. Pytest requires no Nebius or live API calls.

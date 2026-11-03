@@ -23,6 +23,9 @@ class Source(BaseModel):
     url: str
     publisher: str
     reviewed_at: str | None = None
+    citation_id: str | None = None
+    source_id: str | None = None
+    original_content_hash: str | None = None
 
 
 class Alert(BaseModel):
@@ -41,10 +44,37 @@ class AlertResult(BaseModel):
     message: str = ''
 
 
+class GuidanceCitation(BaseModel):
+    """Trusted display DTO; JSON proof avoids coupling emergency UI imports to M3."""
+    citation_id: str
+    source_id: str
+    parent_chunk_id: str
+    title: str
+    publisher: str
+    official_url: str
+    original_content_hash: str
+    section_heading: str
+    passage: str
+    passage_start: int
+    passage_end: int
+    jurisdiction: str
+    hazards: list[str]
+    phases: list[str]
+    source_review: dict[str, object]
+    candidate_review: dict[str, object]
+    surrounding_context: list[dict[str, object]]
+    safety_caveats: list[str]
+    source_limitations: list[str]
+
+
 class GuidanceResult(BaseModel):
     answer: str
     sources: list[Source] = Field(default_factory=list)
     insufficient_evidence: bool = True
+    retrieval_status: str = 'UNAVAILABLE'
+    citations: list[GuidanceCitation] = Field(default_factory=list)
+    limitations: list[str] = Field(default_factory=list)
+    missing_information: list[str] = Field(default_factory=list)
 
 
 class RouteResult(BaseModel):

@@ -12,10 +12,6 @@ class KnowledgeService(Protocol):
     def find_resources(self, request: KnowledgeRequest) -> ResourceResult: ...
 
 
-def _scope_matches(scope: str, requested: str) -> bool:
-    return scope == requested or (scope == 'US' and requested.startswith('US-'))
-
-
 class FoundationKnowledgeService:
     """Deterministic retrieval; other boundaries retain their existing gates."""
     def __init__(self, store: SourceStore):
@@ -33,35 +29,41 @@ class FoundationKnowledgeService:
             missing_information=['No reviewed resource records have been retrieved.'])
 
     def export_to_m5(self, source_id: str, chunk_id: str, request: KnowledgeRequest) -> dict[str, object]:
-        """Explicit exact-ID publication adapter, not automatic retrieval.
+        """Export one approved candidate, never a parent-section ID.
 
-        Caller must select at most one complete chunk per source for M5's current
-        unique-source-ID contract. No arbitrary text or verification flags accepted.
+        M5's legacy source_id carries the candidate citation ID, permitting unique
+        references to multiple candidates from one parent. Parent identity, exact
+        context and caveats remain in guidance_text. No truncation is permitted.
         """
-        with self.store.admin_lock():
-            bundle = self.store.load(source_id)
-            if bundle is None:
-                raise PublicationError('source is unavailable')
-            verify_publication(self.store, bundle)
-            matches = [c for c in bundle.chunks if c.chunk_id == chunk_id]
-            if len(matches) != 1:
-                raise PublicationError('reviewed chunk is unavailable')
-            chunk = matches[0]
-            if (request.hazard not in chunk.applicable_hazards
-                    or request.disaster_phase not in chunk.applicable_phases
-                    or not _scope_matches(chunk.geographic_scope, request.jurisdiction)):
-                raise PublicationError('reviewed evidence is not applicable to the requested context')
-            source = bundle.source
-            # Heading paths can contain essential conditional language. Never omit
-            # them or silently truncate an excerpt to fit a downstream contract.
-            guidance = chunk.section_heading + '\n' + chunk.guidance_text
-            if len(guidance) > 6000:
-                raise PublicationError('complete headed excerpt exceeds the M5 text limit')
-            return dict(source_id=source.source_id, source_title=source.title,
-                source_url=source.official_url, source_type=source.source_type,
-                verified=True, reviewed=True, guidance_text=guidance,
-                geographic_scope=chunk.geographic_scope, retrieved_at=source.retrieved_at,
-                reviewed_at=source.reviewed_at)
+        from .candidates import verify_candidate_publication
+        try:
+            with self.store.admin_lock():
+                candidate = self.store.load_candidate(source_id, chunk_id)
+                if candidate is None or candidate.source_id != source_id or candidate.chunk_id != chunk_id:
+                    raise PublicationError('approved candidate is unavailable; parent-section IDs are not accepted')
+                bundle = verify_candidate_publication(self.store, candidate, request)
+                source = bundle.source
+                parts = [f'Parent source: {source.source_id}\nCitation: {candidate.chunk_id}',
+                         candidate.section_heading + '\n' + candidate.original_passage]
+                for context in candidate.surrounding_context:
+                    if (context.chunk_id == candidate.parent_chunk_id
+                            and context.guidance_text == candidate.original_passage):
+                        continue
+                    parts.append('Source context: ' + context.section_heading + '\n' + context.guidance_text)
+                parts.append('Safety caveats:\n' + '\n'.join(candidate.safety_caveats))
+                parts.append('Source limitations:\n' + '\n'.join(source.limitations))
+                guidance = '\n\n'.join(parts)
+                if len(guidance) > 6000:
+                    raise PublicationError('complete candidate context exceeds the M5 text limit')
+                return dict(source_id=candidate.chunk_id, source_title=source.title,
+                    source_url=source.official_url, source_type=source.source_type,
+                    verified=True, reviewed=True, guidance_text=guidance,
+                    geographic_scope=candidate.jurisdiction, retrieved_at=source.retrieved_at,
+                    reviewed_at=min(source.reviewed_at, candidate.review.reviewed_at))
+        except PublicationError:
+            raise
+        except (OSError, ValueError, TypeError):
+            raise PublicationError('candidate publication validation or storage access failed') from None
 
     def validate_resource(self, resource: ResourceRecord) -> ResourceRecord:
         """Validate an admin-curated static listing; never infer live availability.

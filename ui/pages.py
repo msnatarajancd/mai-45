@@ -137,19 +137,55 @@ def protect():
             go('Household')
     with b, st.container(border=True):
         st.subheader('Understand the information')
-        st.write('A place for the Guardian’s evidence-backed explanation, personalized to your household.')
+        st.write('General source excerpts are separate from the alert details above. They do not establish current conditions, orders, or household safety.')
+        hazard = st.selectbox('Guidance hazard', ['Select a hazard', 'flood', 'hurricane'], key='guidance_hazard')
+        topic = st.selectbox('General preparedness topic',
+            ['Flood preparedness', 'Electrical hazards', 'Evacuation assistance program'], key='guidance_topic')
+        # These supported named areas are explicitly within Miami-Dade. Do not
+        # geocode, infer a county from household text, or use an unknown location.
+        jurisdiction = 'US-FL-MIAMI-DADE' if location in LOCATIONS else None
+        st.caption('Guidance scope: Miami-Dade County; preparedness phase. No live alert explanation is generated.')
+        binding = (hazard, topic, jurisdiction, 'protect')
+        if st.session_state.get('guidance_binding') != binding:
+            st.session_state.pop('guidance', None)
         if st.button('Explain with verified sources'):
+            st.session_state['guidance_binding'] = binding
+        # Revalidate a requested display on every rerender: revocation or changed
+        # source bytes must not leave a previously verified session result visible.
+        if st.session_state.get('guidance_binding') == binding:
             try:
-                st.session_state['guidance'] = knowledge.retrieve_guidance('Explain this alert for my household', 'protect', h)
+                st.session_state['guidance'] = knowledge.retrieve_guidance(topic, 'protect', h,
+                    hazard=None if hazard == 'Select a hazard' else hazard, jurisdiction=jurisdiction)
             except Exception:
                 st.session_state.pop('guidance', None)
                 st.warning('The knowledge service is unavailable. Check official guidance directly.')
         result = st.session_state.get('guidance')
         if result:
-            st.info(result.answer)
-            for source in result.sources:
-                st.link_button(source.title, source.url)
-        st.caption('Source-grounded explanations are pending the knowledge integration.')
+            if result.insufficient_evidence:
+                st.warning(result.answer)
+            else:
+                st.info(result.answer)
+            for citation in result.citations:
+                st.subheader(citation.section_heading)
+                st.text(citation.passage)
+                st.caption('Citation: ' + citation.citation_id + ' | Parent source: ' + citation.source_id)
+                st.caption('Geography: ' + citation.jurisdiction + ' | Phase: ' + ', '.join(citation.phases))
+                st.link_button(citation.title, citation.official_url)
+                for caveat in citation.safety_caveats:
+                    st.caption(caveat)
+                with st.expander('Source context and review provenance: ' + citation.citation_id):
+                    for context in citation.surrounding_context:
+                        st.text(context['section_heading'])
+                        st.text(context['guidance_text'])
+                    for limitation in citation.source_limitations:
+                        st.caption(limitation)
+                    st.caption('Original SHA-256: ' + citation.original_content_hash)
+                    st.json({'source_review': citation.source_review, 'candidate_review': citation.candidate_review})
+            for limitation in result.limitations:
+                st.caption(limitation)
+            for missing in result.missing_information:
+                st.caption(missing)
+        st.caption('Deterministic excerpt display; no AI call or current safety determination.')
     if st.button('Next · Explore assistance', type='primary'):
         go('Respond')
 

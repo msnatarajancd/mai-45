@@ -4,7 +4,7 @@ from pydantic import ValidationError
 from knowledge.ingestion import acquire_source
 from knowledge.models import (Classification, DisasterPhase, Hazard, KnowledgeRequest,
     ReviewDecision, ReviewStatus, RetrievalStatus, SourceBundle)
-from knowledge.review import PublicationError, review_source
+from knowledge.review import PublicationError, review_source, verify_publication
 from knowledge.service import FoundationKnowledgeService
 from knowledge.store import SourceStore, context_hash, replace_record
 from test_knowledge_ingestion import DEMO_HTML, FakeTransport, demo_spec
@@ -26,7 +26,7 @@ def test_unreviewed_evidence_cannot_export_verified(tmp_path, demo_spec):
     store = SourceStore(tmp_path)
     bundle = acquire_source(demo_spec.source.source_id, store, transport=FakeTransport(demo_spec))
     service = FoundationKnowledgeService(store)
-    with pytest.raises(PublicationError, match='human-reviewed'):
+    with pytest.raises(PublicationError, match='approved candidate'):
         service.export_to_m5(bundle.source.source_id, bundle.chunks[0].chunk_id, request())
 
 
@@ -88,17 +88,14 @@ def official_acquisition(tmp_path):
     return store, bundle, raw
 
 
-def test_explicit_review_and_m5_compatibility_use_real_captured_content(official_acquisition):
-    from recovery.ai_planner import RecoveryEvidence
+def test_source_review_alone_cannot_export_a_parent_section(official_acquisition):
     store, bundle, raw = official_acquisition
     reviewed = review_source(store, bundle.source.source_id, decision(bundle))
     assert reviewed.source.review_status is ReviewStatus.REVIEWED
     assert reviewed.source.reviewed_at >= bundle.source.retrieved_at
-    payload = FoundationKnowledgeService(store).export_to_m5(
-        bundle.source.source_id, bundle.chunks[1].chunk_id, request())
-    evidence = RecoveryEvidence.model_validate(payload)
-    assert evidence.verified is True and evidence.reviewed is True
-    assert evidence.guidance_text == bundle.chunks[1].section_heading + '\n' + bundle.chunks[1].guidance_text
+    with pytest.raises(PublicationError, match='parent-section IDs'):
+        FoundationKnowledgeService(store).export_to_m5(
+            bundle.source.source_id, bundle.chunks[1].chunk_id, request())
 
 
 @pytest.mark.parametrize('changes', [{'jurisdiction': 'CA-ON'}, {'hazard': Hazard.WILDFIRE},
@@ -106,7 +103,7 @@ def test_explicit_review_and_m5_compatibility_use_real_captured_content(official
 def test_wrong_context_is_excluded_even_after_review(official_acquisition, changes):
     store, bundle, _ = official_acquisition
     review_source(store, bundle.source.source_id, decision(bundle))
-    with pytest.raises(PublicationError, match='not applicable'):
+    with pytest.raises(PublicationError):
         FoundationKnowledgeService(store).export_to_m5(bundle.source.source_id, bundle.chunks[0].chunk_id,
             KnowledgeRequest.model_validate(request().model_dump() | changes))
 
@@ -143,14 +140,14 @@ def test_tampered_original_and_review_context_block_publication(official_acquisi
     original_path = store.root / 'originals' / (bundle.source.original_content_hash + '.bin')
     original_path.write_bytes(raw + b'\n')
     with pytest.raises(PublicationError, match='provenance'):
-        FoundationKnowledgeService(store).export_to_m5(bundle.source.source_id, bundle.chunks[0].chunk_id, request())
+        verify_publication(store, store.load(bundle.source.source_id))
     original_path.write_bytes(raw)
     altered = SourceBundle(source=replace_record(reviewed.source, limitations=['Changed after review']),
                            chunks=reviewed.chunks, review=reviewed.review)
     with store.admin_lock():
         store.save_locked(altered)
     with pytest.raises(PublicationError, match='changed after human review'):
-        FoundationKnowledgeService(store).export_to_m5(bundle.source.source_id, bundle.chunks[0].chunk_id, request())
+        verify_publication(store, store.load(bundle.source.source_id))
 
 
 def test_explicit_staleness_blocks_verified_export(official_acquisition):

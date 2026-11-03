@@ -42,12 +42,12 @@ def decision(content_hash, fingerprint):
 
 
 @pytest.fixture
-def reviewed_store(tmp_path, monkeypatch):
+def reviewed_store(tmp_path, monkeypatch, request):
     url = 'https://synthetic-knowledge.test/static-fixture'
     source = SourceRecord(source_id='synthetic-test-only', publisher='SYNTHETIC TEST ONLY',
         title='SYNTHETIC TEST ONLY, NOT OFFICIAL GUIDANCE', official_url=url,
         source_type='synthetic_test_fixture', jurisdiction='US-FL', hazards=[Hazard.FLOOD],
-        disaster_phases=[Phase.RECOVER], classification=Classification.OFFICIAL_SOURCE,
+        disaster_phases=[getattr(request, 'param', Phase.RECOVER)], classification=Classification.OFFICIAL_SOURCE,
         limitations=['SYNTHETIC TEST ONLY; never production evidence.'])
     monkeypatch.setattr('knowledge.sources.CURATED_SOURCES',
         (SourceSpec(source, (url,), ('synthetic',)),))
@@ -63,7 +63,7 @@ def reviewed_store(tmp_path, monkeypatch):
     bundle = review_source(store, source.source_id, decision(digest, context_hash(bundle)))
     candidates = []
     for parent in bundle.chunks:
-        candidate = make_candidate(bundle, parent, phases=[Phase.RECOVER],
+        candidate = make_candidate(bundle, parent, phases=source.disaster_phases,
             caveats=['SYNTHETIC TEST ONLY; no live availability or personal safety determination.'])
         with store.admin_lock():
             store.save_candidate_locked(candidate)

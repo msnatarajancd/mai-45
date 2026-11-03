@@ -1,7 +1,7 @@
 """Offline lexical retrieval. No model, network, generated advice, or signoff."""
 import re
 
-from .candidates import verify_candidate_trace
+from .candidates import verify_candidate_publication
 from .models import (CandidateStatus, EvidenceChunk, EvidenceProvenance, GuidanceResult,
                      KnowledgeRequest, RetrievalStatus, ReviewStatus)
 from .review import PublicationError, verify_publication
@@ -98,7 +98,7 @@ def retrieve_guidance(store, request: KnowledgeRequest) -> GuidanceResult:
                     if candidate.review_status is not CandidateStatus.APPROVED:
                         continue
                     try:
-                        verify_candidate_trace(store, candidate)
+                        verify_candidate_publication(store, candidate)
                     except PublicationError:
                         continue
                     if candidate.review.reviewed_at < bundle.source.retrieved_at:

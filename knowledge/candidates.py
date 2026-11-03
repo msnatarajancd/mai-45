@@ -35,6 +35,30 @@ def verify_candidate_trace(store: SourceStore, candidate: ReviewCandidate):
     return bundle
 
 
+def verify_candidate_publication(store, candidate, request=None):
+    """Shared fail-closed publication gate. Caller holds the store admin lock."""
+    from .review import PublicationError, verify_publication
+    candidate = ReviewCandidate.model_validate_json(candidate.model_dump_json())
+    if candidate.review_status is not CandidateStatus.APPROVED:
+        raise PublicationError('only an approved candidate may be published')
+    bundle = verify_candidate_trace(store, candidate)
+    verify_publication(store, bundle)
+    if candidate.review.reviewed_at < bundle.source.retrieved_at:
+        raise PublicationError('candidate review predates the current acquisition')
+    if request is not None:
+        from .models import KnowledgeRequest
+        request = KnowledgeRequest.model_validate_json(request.model_dump_json())
+        def scope_matches(scope):
+            return scope == request.jurisdiction or request.jurisdiction.startswith(scope + '-')
+        source = bundle.source
+        if (request.hazard not in source.hazards or request.hazard not in candidate.hazards
+                or request.disaster_phase not in source.disaster_phases
+                or request.disaster_phase not in candidate.phases
+                or not scope_matches(source.jurisdiction) or not scope_matches(candidate.jurisdiction)):
+            raise PublicationError('reviewed evidence is not applicable to the requested context')
+    return bundle
+
+
 def make_candidate(bundle, parent, *, start=0, end=None, phases, hazards=None, context=(), caveats=()):
     end = len(parent.guidance_text) if end is None else end
     passage = parent.guidance_text[start:end]
