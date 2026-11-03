@@ -107,3 +107,16 @@ class SourceStore:
         if name not in {s.source_id for s in sources}:
             sources.append(bundle.source)
         self._atomic_write(manifest_path, SourceManifest(sources=sources).model_dump_json(indent=2).encode())
+
+    def load_candidate(self, source_id: str, chunk_id: str):
+        from .models import ReviewCandidate
+        path = self.root / 'candidates' / self._id(source_id) / (self._id(chunk_id) + '.json')
+        return ReviewCandidate.model_validate_json(path.read_bytes()) if path.exists() else None
+
+    def save_candidate_locked(self, candidate):
+        from .models import ReviewCandidate
+        candidate = ReviewCandidate.model_validate_json(candidate.model_dump_json())
+        source_id, chunk_id = self._id(candidate.source_id), self._id(candidate.chunk_id)
+        data = candidate.model_dump_json(indent=2).encode()
+        self._atomic_write(self.root / 'candidate_history' / source_id / chunk_id / (uuid4().hex + '.json'), data)
+        self._atomic_write(self.root / 'candidates' / source_id / (chunk_id + '.json'), data)

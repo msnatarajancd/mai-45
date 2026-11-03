@@ -1,0 +1,79 @@
+{
+  "chunk_id": "f8a045039bb7ab2b702116a082a43dd1b1ae83e8aa3140c3c2f2424f8ce34a5c",
+  "source_id": "miami-dade-eeap",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+  "original_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+  "parent_chunk_id": "029d9ddadbf85022bb5c9a90f1c6bb1561ac15deb26335624a9b401aa80c7bbb",
+  "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > How do I register for the EEAP?",
+  "passage_start": 520,
+  "passage_end": 1020,
+  "original_passage": "If more than one eligible person living in the same household requires assistance\n during evacuations, each person must complete and submit a separate application.\nIf you require a higher level of medical care, your primary care physician should\n complete and sign the application before submission.\nRegistration (online and paper application) for the EEAP closes before an evacuation\n order is pronounced. Do not wait until an evacuation order is issued to request to\n be added to the EEAP Registry.",
+  "proposed_chunk": "If more than one eligible person living in the same household requires assistance\n during evacuations, each person must complete and submit a separate application.\nIf you require a higher level of medical care, your primary care physician should\n complete and sign the application before submission.\nRegistration (online and paper application) for the EEAP closes before an evacuation\n order is pronounced. Do not wait until an evacuation order is issued to request to\n be added to the EEAP Registry.",
+  "surrounding_context": [
+    {
+      "chunk_id": "029d9ddadbf85022bb5c9a90f1c6bb1561ac15deb26335624a9b401aa80c7bbb",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > How do I register for the EEAP?",
+      "guidance_text": "How to apply\nIndividuals may apply throughout the year to become enrolled in the\n EEAP. Residents only need to apply once to be a life-long member of the program.\nRegister online or download an application\n below, completely fill it out and mail it. You can also call 311 to have an application\n sent to you in English, Spanish, and Haitian Creole or in an alternate format such\n as Braille or large print.\nThe EEAP application is available in:\nEEAP Application English\nEEAP Application Spanish\nEEAP\n Application Creole\nIf more than one eligible person living in the same household requires assistance\n during evacuations, each person must complete and submit a separate application.\nIf you require a higher level of medical care, your primary care physician should\n complete and sign the application before submission.\nRegistration (online and paper application) for the EEAP closes before an evacuation\n order is pronounced. Do not wait until an evacuation order is issued to request to\n be added to the EEAP Registry.\nAfter you apply:\nThe Emergency Management Department or support personnel may contact you to verify\n your registration information.\nYou will receive a letter letting you know if you have been accepted\n into the program. This letter will include the evacuation assistance you are eligible\n to receive and your responsibilities.\nYou will be contacted throughout the year to update your personal contact and\n medical information. You do not need to complete an application every year, but it\n is the responsibility of you or your caregiver to report any changes. If your contact\n or medical information changes or you would like to be removed from the EEAP, please\n email [email protected] or call the support\n line at (305) 513-7700.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "1f1086b2b14e0d28ba209f1d6a64dc1940a30a82978d1ccc0abd52a68504e8ca",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > longDescription",
+      "guidance_text": "The Emergency & Evacuation Assistance Program (EEAP) provides free evacuation\n assistance to eligible residents living in Miami-Dade County who need specialized\n transportation and/or sheltering or who would like to receive a wellness call after\n a disaster.\nPrior to an emergency, residents who may require medical monitoring, assistance\n with daily living or have life-saving medical equipment dependent on electricity should\n register for the EEAP to ensure help is available when needed. Pre-registered residents\n will receive priority during an emergency. It may also be utilized post-disaster to\n provide other assistance.\nThis program is for individuals who live alone or with families and may have access/functional\n needs. Residents living in long-term care facilities such as nursing homes, assisted\n living facilities or group homes are not eligible for this program as these facilities\n are required by law to develop an emergency plan and provide emergency assistance\n for their clients.\nWhen an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "6a709297db559f157a7b7f4eff8cdbecca07b789ab49fd6b5edec3b616c5032b",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Can I get assistance if I am not enrolled in the event of an emergency?",
+      "guidance_text": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    }
+  ],
+  "jurisdiction": "US-FL-MIAMI-DADE",
+  "hazards": [
+    "hurricane"
+  ],
+  "phases": [
+    "prepare"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification.",
+    "Static program description is not live shelter, enrollment, transport or pickup availability.",
+    "No individual eligibility, enrollment, assistance or evacuation order is established; preserve the non-guarantee FAQ.",
+    "Preserve separate-application, physician-signature and Do not wait conditions; this is not a current enrollment window or evacuation notice."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

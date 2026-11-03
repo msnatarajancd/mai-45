@@ -1,0 +1,47 @@
+{
+  "chunk_id": "c8cc634ab6e6efec6cbe6c76f280563dcdb58d2126b42efdda8baed2b052cb62",
+  "source_id": "cdc-floodwater",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+  "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+  "parent_chunk_id": "0b26baf60b774893e1239f8b31e9d960abb4d4e335e60538dd7d06d8d7c0a555",
+  "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Avoid electrical hazards inside or outside your home.",
+  "passage_start": 252,
+  "passage_end": 598,
+  "original_passage": "NEVER touch a fallen power line. Call the power company to report fallen power lines. Avoid contact with overhead power lines during cleanup and other activities.\nDo not drive through standing water if downed power lines are in the water.\nIf you believe someone has been electrocuted, call or have someone else call 911 or emergency medical help.",
+  "proposed_chunk": "NEVER touch a fallen power line. Call the power company to report fallen power lines. Avoid contact with overhead power lines during cleanup and other activities.\nDo not drive through standing water if downed power lines are in the water.\nIf you believe someone has been electrocuted, call or have someone else call 911 or emergency medical help.",
+  "surrounding_context": [
+    {
+      "chunk_id": "0b26baf60b774893e1239f8b31e9d960abb4d4e335e60538dd7d06d8d7c0a555",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Avoid electrical hazards inside or outside your home.",
+      "guidance_text": "After a hurricane, flood or other natural disaster you need to be careful to avoid electrical hazards both in your home and elsewhere.\nShut off electrical power and natural gas or propane tanks in your home to avoid fire, electrocution, or explosions.\nNEVER touch a fallen power line. Call the power company to report fallen power lines. Avoid contact with overhead power lines during cleanup and other activities.\nDo not drive through standing water if downed power lines are in the water.\nIf you believe someone has been electrocuted, call or have someone else call 911 or emergency medical help.\nKeep Reading \nWhat to Do to Protect Yourself From Electrical Hazards",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood",
+    "hurricane"
+  ],
+  "phases": [
+    "respond",
+    "recover"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification.",
+    "Preserve the negative instructions and conditional emergency-help sentence. No responder contact is made by this application."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

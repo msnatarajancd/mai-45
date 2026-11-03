@@ -33,7 +33,9 @@ def test_captured_original_and_history_match_provenance(source):
     # Audit invariant: the recorded current state has an immutable matching snapshot.
     assert any(SourceBundle.model_validate_json(p.read_bytes()) == bundle for p in histories)
     if source.failure_category is None:
-        assert extract_sections(raw, source, charset=source.charset) == bundle.chunks
+        extracted = extract_sections(raw, source, charset=source.charset)
+        assert [c.model_dump(exclude={'review_status'}) for c in extracted] == [
+            c.model_dump(exclude={'review_status'}) for c in bundle.chunks]
     else:
         assert source.review_status is ReviewStatus.REVIEW_REQUIRED
         with pytest.raises(ExtractionError):

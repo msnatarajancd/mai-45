@@ -1,0 +1,1004 @@
+{
+  "prepared_at": "2026-11-03T12:53:42.740423Z",
+  "candidates": [
+    {
+      "chunk_id": "3f99a870c42b339f7b2816bb8aec2734480954062abe56ef9073246d7c6c30ae",
+      "source_id": "cdc-flood-reentry",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+      "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "parent_chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+      "passage_start": 54,
+      "passage_end": 375,
+      "original_passage": "Before\nCover windows with storm shutters or plywood.\nTune in for local information.\nKnow how to turn off your gas, electricity, and water in case you need to evacuate.\nSecure outdoor items by moving them to the garage.\nMake an emergency kit.\nDesignate a shelter area if you can't evacuate. Rooms without windows are best.",
+      "proposed_chunk": "Before\nCover windows with storm shutters or plywood.\nTune in for local information.\nKnow how to turn off your gas, electricity, and water in case you need to evacuate.\nSecure outdoor items by moving them to the garage.\nMake an emergency kit.\nDesignate a shelter area if you can't evacuate. Rooms without windows are best.",
+      "surrounding_context": [
+        {
+          "chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+          "guidance_text": "Be Ready! Hurricanes Infographic\nBe Ready! Hurricanes\nBefore\nCover windows with storm shutters or plywood.\nTune in for local information.\nKnow how to turn off your gas, electricity, and water in case you need to evacuate.\nSecure outdoor items by moving them to the garage.\nMake an emergency kit.\nDesignate a shelter area if you can't evacuate. Rooms without windows are best.\nAfter\nIf your home has damage, do not reenter until it has been examined by a building inspector for safety.\nPrevent mold growth by airing out rooms and disinfecting.\nTap water may not be safe to drink. Listen to local warnings.\nThrow away food that may be unsafe.\nPrevent carbon monoxide poisoning. Use generators, stoves, and grills outside and away from windows and doors. 20 feet\nFooter\nPublic Health Preparedness and Response/Centers for Disease Control and Prevention\nDownload Infographic PDF: English | Español\nTry to return to your home during the daytime so that you do not have to use any lights. Use battery-powered flashlights and lanterns, rather than candles, gas lanterns, or torches.\nIf you have standing water in your home and can turn off the main power from a dry location, then go ahead and turn off the power, even if it delays cleaning. If you must enter standing water to access the main power switch, then call an electrician to turn it off.\nHave an electrician check the house's electrical system before turning the power on again.\nIf you smell gas or suspect a leak, turn off the main gas valve, open all windows, and leave your house immediately. Notify the gas company or the police or fire departments or State Fire Marshal's office, and do not turn on the lights or do anything that could cause a spark. Do not return until you are told it is safe to do so.\nIf the house has been closed up for several days, enter briefly to open doors and windows to let the house air out for a while (at least 30 minutes) before you stay for any length of time.\nIf your home has been flooded and has been closed up for several days, assume your home has mold.\nIf your home has been flooded, it also may be contaminated with sewage. See Floodwater After a Disaster or Emergency.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Warning!",
+          "guidance_text": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "hurricane"
+      ],
+      "phases": [
+        "prepare"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "The source labels this infographic Before; PREPARE is a proposed phase beyond the current source-level RECOVER tag. Human scope review is required."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "0a803dca33e55c0c5dea445f1db7f8bde62474553fc53314f8b933bf229b2ce8",
+      "source_id": "cdc-flood-reentry",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+      "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "parent_chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+      "passage_start": 382,
+      "passage_end": 484,
+      "original_passage": "If your home has damage, do not reenter until it has been examined by a building inspector for safety.",
+      "proposed_chunk": "If your home has damage, do not reenter until it has been examined by a building inspector for safety.",
+      "surrounding_context": [
+        {
+          "chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+          "guidance_text": "Be Ready! Hurricanes Infographic\nBe Ready! Hurricanes\nBefore\nCover windows with storm shutters or plywood.\nTune in for local information.\nKnow how to turn off your gas, electricity, and water in case you need to evacuate.\nSecure outdoor items by moving them to the garage.\nMake an emergency kit.\nDesignate a shelter area if you can't evacuate. Rooms without windows are best.\nAfter\nIf your home has damage, do not reenter until it has been examined by a building inspector for safety.\nPrevent mold growth by airing out rooms and disinfecting.\nTap water may not be safe to drink. Listen to local warnings.\nThrow away food that may be unsafe.\nPrevent carbon monoxide poisoning. Use generators, stoves, and grills outside and away from windows and doors. 20 feet\nFooter\nPublic Health Preparedness and Response/Centers for Disease Control and Prevention\nDownload Infographic PDF: English | Español\nTry to return to your home during the daytime so that you do not have to use any lights. Use battery-powered flashlights and lanterns, rather than candles, gas lanterns, or torches.\nIf you have standing water in your home and can turn off the main power from a dry location, then go ahead and turn off the power, even if it delays cleaning. If you must enter standing water to access the main power switch, then call an electrician to turn it off.\nHave an electrician check the house's electrical system before turning the power on again.\nIf you smell gas or suspect a leak, turn off the main gas valve, open all windows, and leave your house immediately. Notify the gas company or the police or fire departments or State Fire Marshal's office, and do not turn on the lights or do anything that could cause a spark. Do not return until you are told it is safe to do so.\nIf the house has been closed up for several days, enter briefly to open doors and windows to let the house air out for a while (at least 30 minutes) before you stay for any length of time.\nIf your home has been flooded and has been closed up for several days, assume your home has mold.\nIf your home has been flooded, it also may be contaminated with sewage. See Floodwater After a Disaster or Emergency.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Warning!",
+          "guidance_text": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "988c9fcd1da54e741fcd265c007f7388a9cfa52efc4b6c74d99796e1cb5a3fb1",
+      "source_id": "cdc-flood-reentry",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+      "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "parent_chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Warning!",
+      "passage_start": 0,
+      "passage_end": 97,
+      "original_passage": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+      "proposed_chunk": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+      "surrounding_context": [
+        {
+          "chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Warning!",
+          "guidance_text": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+          "guidance_text": "Be Ready! Hurricanes Infographic\nBe Ready! Hurricanes\nBefore\nCover windows with storm shutters or plywood.\nTune in for local information.\nKnow how to turn off your gas, electricity, and water in case you need to evacuate.\nSecure outdoor items by moving them to the garage.\nMake an emergency kit.\nDesignate a shelter area if you can't evacuate. Rooms without windows are best.\nAfter\nIf your home has damage, do not reenter until it has been examined by a building inspector for safety.\nPrevent mold growth by airing out rooms and disinfecting.\nTap water may not be safe to drink. Listen to local warnings.\nThrow away food that may be unsafe.\nPrevent carbon monoxide poisoning. Use generators, stoves, and grills outside and away from windows and doors. 20 feet\nFooter\nPublic Health Preparedness and Response/Centers for Disease Control and Prevention\nDownload Infographic PDF: English | Español\nTry to return to your home during the daytime so that you do not have to use any lights. Use battery-powered flashlights and lanterns, rather than candles, gas lanterns, or torches.\nIf you have standing water in your home and can turn off the main power from a dry location, then go ahead and turn off the power, even if it delays cleaning. If you must enter standing water to access the main power switch, then call an electrician to turn it off.\nHave an electrician check the house's electrical system before turning the power on again.\nIf you smell gas or suspect a leak, turn off the main gas valve, open all windows, and leave your house immediately. Notify the gas company or the police or fire departments or State Fire Marshal's office, and do not turn on the lights or do anything that could cause a spark. Do not return until you are told it is safe to do so.\nIf the house has been closed up for several days, enter briefly to open doors and windows to let the house air out for a while (at least 30 minutes) before you stay for any length of time.\nIf your home has been flooded and has been closed up for several days, assume your home has mold.\nIf your home has been flooded, it also may be contaminated with sewage. See Floodwater After a Disaster or Emergency.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Preserve NEVER and while standing in water; this is not electrical-repair permission."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "ffa4fe9ae4c8f85d1030c5907c403b265370c503fefd6ab9f87e097ccf620465",
+      "source_id": "cdc-flood-reentry",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+      "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "parent_chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+      "passage_start": 1342,
+      "passage_end": 1432,
+      "original_passage": "Have an electrician check the house's electrical system before turning the power on again.",
+      "proposed_chunk": "Have an electrician check the house's electrical system before turning the power on again.",
+      "surrounding_context": [
+        {
+          "chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+          "guidance_text": "Be Ready! Hurricanes Infographic\nBe Ready! Hurricanes\nBefore\nCover windows with storm shutters or plywood.\nTune in for local information.\nKnow how to turn off your gas, electricity, and water in case you need to evacuate.\nSecure outdoor items by moving them to the garage.\nMake an emergency kit.\nDesignate a shelter area if you can't evacuate. Rooms without windows are best.\nAfter\nIf your home has damage, do not reenter until it has been examined by a building inspector for safety.\nPrevent mold growth by airing out rooms and disinfecting.\nTap water may not be safe to drink. Listen to local warnings.\nThrow away food that may be unsafe.\nPrevent carbon monoxide poisoning. Use generators, stoves, and grills outside and away from windows and doors. 20 feet\nFooter\nPublic Health Preparedness and Response/Centers for Disease Control and Prevention\nDownload Infographic PDF: English | Español\nTry to return to your home during the daytime so that you do not have to use any lights. Use battery-powered flashlights and lanterns, rather than candles, gas lanterns, or torches.\nIf you have standing water in your home and can turn off the main power from a dry location, then go ahead and turn off the power, even if it delays cleaning. If you must enter standing water to access the main power switch, then call an electrician to turn it off.\nHave an electrician check the house's electrical system before turning the power on again.\nIf you smell gas or suspect a leak, turn off the main gas valve, open all windows, and leave your house immediately. Notify the gas company or the police or fire departments or State Fire Marshal's office, and do not turn on the lights or do anything that could cause a spark. Do not return until you are told it is safe to do so.\nIf the house has been closed up for several days, enter briefly to open doors and windows to let the house air out for a while (at least 30 minutes) before you stay for any length of time.\nIf your home has been flooded and has been closed up for several days, assume your home has mold.\nIf your home has been flooded, it also may be contaminated with sewage. See Floodwater After a Disaster or Emergency.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Warning!",
+          "guidance_text": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Electricity availability does not establish general household safety."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "a60f54160bbb2ce43a813d4ad0a83e72e8212aec8492956a7dd56b4e89c532c7",
+      "source_id": "cdc-flood-reentry",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+      "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "parent_chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+      "passage_start": 543,
+      "passage_end": 604,
+      "original_passage": "Tap water may not be safe to drink. Listen to local warnings.",
+      "proposed_chunk": "Tap water may not be safe to drink. Listen to local warnings.",
+      "surrounding_context": [
+        {
+          "chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+          "guidance_text": "Be Ready! Hurricanes Infographic\nBe Ready! Hurricanes\nBefore\nCover windows with storm shutters or plywood.\nTune in for local information.\nKnow how to turn off your gas, electricity, and water in case you need to evacuate.\nSecure outdoor items by moving them to the garage.\nMake an emergency kit.\nDesignate a shelter area if you can't evacuate. Rooms without windows are best.\nAfter\nIf your home has damage, do not reenter until it has been examined by a building inspector for safety.\nPrevent mold growth by airing out rooms and disinfecting.\nTap water may not be safe to drink. Listen to local warnings.\nThrow away food that may be unsafe.\nPrevent carbon monoxide poisoning. Use generators, stoves, and grills outside and away from windows and doors. 20 feet\nFooter\nPublic Health Preparedness and Response/Centers for Disease Control and Prevention\nDownload Infographic PDF: English | Español\nTry to return to your home during the daytime so that you do not have to use any lights. Use battery-powered flashlights and lanterns, rather than candles, gas lanterns, or torches.\nIf you have standing water in your home and can turn off the main power from a dry location, then go ahead and turn off the power, even if it delays cleaning. If you must enter standing water to access the main power switch, then call an electrician to turn it off.\nHave an electrician check the house's electrical system before turning the power on again.\nIf you smell gas or suspect a leak, turn off the main gas valve, open all windows, and leave your house immediately. Notify the gas company or the police or fire departments or State Fire Marshal's office, and do not turn on the lights or do anything that could cause a spark. Do not return until you are told it is safe to do so.\nIf the house has been closed up for several days, enter briefly to open doors and windows to let the house air out for a while (at least 30 minutes) before you stay for any length of time.\nIf your home has been flooded and has been closed up for several days, assume your home has mold.\nIf your home has been flooded, it also may be contaminated with sewage. See Floodwater After a Disaster or Emergency.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Warning!",
+          "guidance_text": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "ab2bd10259fd31091cacb80da02f5e8e042eeef7fb9d88b6f37ff01d23622498",
+      "source_id": "cdc-flood-reentry",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+      "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "parent_chunk_id": "2273ed119c944e0858145c0aedf349de599ee60bf06cf3bf428905e8ec5fe1b0",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > Key points",
+      "passage_start": 0,
+      "passage_end": 231,
+      "original_passage": "When returning to a flooded home after a natural disaster, be aware that your house may be contaminated with mold or sewage, which can make you sick.\nTake steps to protect your health and safety when returning to your flooded home.",
+      "proposed_chunk": "When returning to a flooded home after a natural disaster, be aware that your house may be contaminated with mold or sewage, which can make you sick.\nTake steps to protect your health and safety when returning to your flooded home.",
+      "surrounding_context": [
+        {
+          "chunk_id": "2273ed119c944e0858145c0aedf349de599ee60bf06cf3bf428905e8ec5fe1b0",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > Key points",
+          "guidance_text": "When returning to a flooded home after a natural disaster, be aware that your house may be contaminated with mold or sewage, which can make you sick.\nTake steps to protect your health and safety when returning to your flooded home.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+          "guidance_text": "Be Ready! Hurricanes Infographic\nBe Ready! Hurricanes\nBefore\nCover windows with storm shutters or plywood.\nTune in for local information.\nKnow how to turn off your gas, electricity, and water in case you need to evacuate.\nSecure outdoor items by moving them to the garage.\nMake an emergency kit.\nDesignate a shelter area if you can't evacuate. Rooms without windows are best.\nAfter\nIf your home has damage, do not reenter until it has been examined by a building inspector for safety.\nPrevent mold growth by airing out rooms and disinfecting.\nTap water may not be safe to drink. Listen to local warnings.\nThrow away food that may be unsafe.\nPrevent carbon monoxide poisoning. Use generators, stoves, and grills outside and away from windows and doors. 20 feet\nFooter\nPublic Health Preparedness and Response/Centers for Disease Control and Prevention\nDownload Infographic PDF: English | Español\nTry to return to your home during the daytime so that you do not have to use any lights. Use battery-powered flashlights and lanterns, rather than candles, gas lanterns, or torches.\nIf you have standing water in your home and can turn off the main power from a dry location, then go ahead and turn off the power, even if it delays cleaning. If you must enter standing water to access the main power switch, then call an electrician to turn it off.\nHave an electrician check the house's electrical system before turning the power on again.\nIf you smell gas or suspect a leak, turn off the main gas valve, open all windows, and leave your house immediately. Notify the gas company or the police or fire departments or State Fire Marshal's office, and do not turn on the lights or do anything that could cause a spark. Do not return until you are told it is safe to do so.\nIf the house has been closed up for several days, enter briefly to open doors and windows to let the house air out for a while (at least 30 minutes) before you stay for any length of time.\nIf your home has been flooded and has been closed up for several days, assume your home has mold.\nIf your home has been flooded, it also may be contaminated with sewage. See Floodwater After a Disaster or Emergency.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
+          "source_id": "cdc-flood-reentry",
+          "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Warning!",
+          "guidance_text": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "f343d8888f2404484e62b2a2cf8a94838c6b01f18709920cc4052d220a435260",
+      "source_id": "cdc-floodwater",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+      "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+      "parent_chunk_id": "0d7bafd14b5d20adf424397f3b3afa737a14a39c4231c47b93c2feef9ad1cf0c",
+      "section_heading": "Safety Guidelines: Floodwater > Key points",
+      "passage_start": 0,
+      "passage_end": 140,
+      "original_passage": "Never drive in flooded areas—turn around, don't drown!\nStay out of floodwater—it can contain many things that can hurt you or make you sick.",
+      "proposed_chunk": "Never drive in flooded areas—turn around, don't drown!\nStay out of floodwater—it can contain many things that can hurt you or make you sick.",
+      "surrounding_context": [
+        {
+          "chunk_id": "0d7bafd14b5d20adf424397f3b3afa737a14a39c4231c47b93c2feef9ad1cf0c",
+          "source_id": "cdc-floodwater",
+          "section_heading": "Safety Guidelines: Floodwater > Key points",
+          "guidance_text": "Never drive in flooded areas—turn around, don't drown!\nStay out of floodwater—it can contain many things that can hurt you or make you sick.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "respond",
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "fb7c68740691c5415cf046ef7cf33c371987a032efa5349c24bd0344f50b7352",
+          "source_id": "cdc-floodwater",
+          "section_heading": "Safety Guidelines: Floodwater > Overview",
+          "guidance_text": "Never drive in flooded areas—turn around, don't drown!\nFloodwater and standing water can be dangerous and can make you vulnerable to infectious diseases, chemical hazards, and injuries. Protect yourself and your loved ones from the risks brought by floodwater by following these steps.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "respond",
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "respond"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "f8940b5b922259594b525596f654ee3d975d3f020077d671f73f4dbc62b01b86",
+      "source_id": "cdc-floodwater",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+      "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+      "parent_chunk_id": "028c2d0201eba657665949e814362ba0d7d2693321c217a9d325a0b31a61e49d",
+      "section_heading": "Safety Guidelines: Floodwater > Overview > Don't drive in flooded areas.",
+      "passage_start": 0,
+      "passage_end": 184,
+      "original_passage": "Always follow warnings about flooded roads.\nDon't drive in flooded areas—cars or other vehicles won't protect you from floodwaters. They can be swept away or may stall in moving water.",
+      "proposed_chunk": "Always follow warnings about flooded roads.\nDon't drive in flooded areas—cars or other vehicles won't protect you from floodwaters. They can be swept away or may stall in moving water.",
+      "surrounding_context": [
+        {
+          "chunk_id": "028c2d0201eba657665949e814362ba0d7d2693321c217a9d325a0b31a61e49d",
+          "source_id": "cdc-floodwater",
+          "section_heading": "Safety Guidelines: Floodwater > Overview > Don't drive in flooded areas.",
+          "guidance_text": "Always follow warnings about flooded roads.\nDon't drive in flooded areas—cars or other vehicles won't protect you from floodwaters. They can be swept away or may stall in moving water.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "respond",
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "fb7c68740691c5415cf046ef7cf33c371987a032efa5349c24bd0344f50b7352",
+          "source_id": "cdc-floodwater",
+          "section_heading": "Safety Guidelines: Floodwater > Overview",
+          "guidance_text": "Never drive in flooded areas—turn around, don't drown!\nFloodwater and standing water can be dangerous and can make you vulnerable to infectious diseases, chemical hazards, and injuries. Protect yourself and your loved ones from the risks brought by floodwater by following these steps.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "respond",
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "respond"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "ee1b186d50f72b4fa2d5b4b8919c5c41d10f521349df1b2e4ef5fdcf1859d5ec",
+      "source_id": "cdc-floodwater",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+      "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+      "parent_chunk_id": "054a6163a645840b22edd3daf3e5565b477c4490471aeb09b197844cf85a32f1",
+      "section_heading": "Safety Guidelines: Floodwater > Overview > Turn around, don't drown!",
+      "passage_start": 0,
+      "passage_end": 199,
+      "original_passage": "Floodwater can pose a drowning risk for everyone— regardless of their ability to swim. Swiftly moving shallow water can be deadly, and even shallow standing water can be dangerous for small children.",
+      "proposed_chunk": "Floodwater can pose a drowning risk for everyone— regardless of their ability to swim. Swiftly moving shallow water can be deadly, and even shallow standing water can be dangerous for small children.",
+      "surrounding_context": [
+        {
+          "chunk_id": "054a6163a645840b22edd3daf3e5565b477c4490471aeb09b197844cf85a32f1",
+          "source_id": "cdc-floodwater",
+          "section_heading": "Safety Guidelines: Floodwater > Overview > Turn around, don't drown!",
+          "guidance_text": "Floodwater can pose a drowning risk for everyone— regardless of their ability to swim. Swiftly moving shallow water can be deadly, and even shallow standing water can be dangerous for small children.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "respond",
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "fb7c68740691c5415cf046ef7cf33c371987a032efa5349c24bd0344f50b7352",
+          "source_id": "cdc-floodwater",
+          "section_heading": "Safety Guidelines: Floodwater > Overview",
+          "guidance_text": "Never drive in flooded areas—turn around, don't drown!\nFloodwater and standing water can be dangerous and can make you vulnerable to infectious diseases, chemical hazards, and injuries. Protect yourself and your loved ones from the risks brought by floodwater by following these steps.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "respond",
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "respond"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "583e722d5f070eea7913bb10aa1c6f3c189b9cdcd4105807cb81f5df4f135e8c",
+      "source_id": "cdc-floodwater",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+      "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+      "parent_chunk_id": "5a6739b4103ae566940edbd93627230a7423334ba321a3a63af4e16d4fc930ac",
+      "section_heading": "Safety Guidelines: Floodwater > Stay out of floodwater > Floodwaters contain many things that may harm health.",
+      "passage_start": 413,
+      "passage_end": 619,
+      "original_passage": "Recognize Flood Risk\nIdentify flood-prone or landslide-prone areas near you.\nKnow your community's warning signals, evacuation routes, and emergency shelter locations.\nKnow flood evacuation routes near you.",
+      "proposed_chunk": "Recognize Flood Risk\nIdentify flood-prone or landslide-prone areas near you.\nKnow your community's warning signals, evacuation routes, and emergency shelter locations.\nKnow flood evacuation routes near you.",
+      "surrounding_context": [
+        {
+          "chunk_id": "5a6739b4103ae566940edbd93627230a7423334ba321a3a63af4e16d4fc930ac",
+          "source_id": "cdc-floodwater",
+          "section_heading": "Safety Guidelines: Floodwater > Stay out of floodwater > Floodwaters contain many things that may harm health.",
+          "guidance_text": "Be Ready! Floods Infographic\nBe Ready! Floods\nDuring\nGather emergency supplies and follow local radio or TV updates.\nUnplug appliances to prevent electrical shock when power comes back on.\nDo NOT drive or walk across flooded roads. Cars and people can be swept away.\nWhen power lines are down, water is in your home, or before you evacuate, TURN OFF gas, power, and water.\nTie down or bring outdoor items inside.\nRecognize Flood Risk\nIdentify flood-prone or landslide-prone areas near you.\nKnow your community's warning signals, evacuation routes, and emergency shelter locations.\nKnow flood evacuation routes near you.\nAfter \nThrow away items that cannot be disinfected, like wall coverings, cloth, rugs, and drywall.\nUse fans, air conditioning units, and dehumidifiers for drying.\nFor cleanup, wear rubber boots and plastic gloves.\nClean walls, hard floors, and other surfaces with soap and water. Use a mixture of 1 cup of bleach and 1 gallon of water to disinfect.\nCaution! Flood water may contain trash.\nPractice safe hygiene\nWash hands with soap and water to help prevent germs.\nListen for information from your local officials on how to safely use water to drink, cook, or clean.\nDownload Infographic PDF: English | Español\nWe don't know exactly what is in floodwater at any given point in time. Floodwater can contain:\nDowned power lines\nHuman and livestock waste\nHousehold, medical, and industrial hazardous waste (chemical, biological, and radiological)\nCoal ash waste that can contain carcinogenic compounds such as arsenic, chromium, and mercury\nOther germs and contaminants that can lead to illness\nPhysical objects such as lumber, vehicles, and debris\nWild or stray animals such as rodents and snakes",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "respond",
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "prepare"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Hazard-awareness text only. Shelter names, capacity, evacuation orders and route availability are not established.",
+        "PREPARE is proposed from the infographic context; current source-level tags do not yet include PREPARE."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "c8cc634ab6e6efec6cbe6c76f280563dcdb58d2126b42efdda8baed2b052cb62",
+      "source_id": "cdc-floodwater",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+      "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+      "parent_chunk_id": "0b26baf60b774893e1239f8b31e9d960abb4d4e335e60538dd7d06d8d7c0a555",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Avoid electrical hazards inside or outside your home.",
+      "passage_start": 252,
+      "passage_end": 598,
+      "original_passage": "NEVER touch a fallen power line. Call the power company to report fallen power lines. Avoid contact with overhead power lines during cleanup and other activities.\nDo not drive through standing water if downed power lines are in the water.\nIf you believe someone has been electrocuted, call or have someone else call 911 or emergency medical help.",
+      "proposed_chunk": "NEVER touch a fallen power line. Call the power company to report fallen power lines. Avoid contact with overhead power lines during cleanup and other activities.\nDo not drive through standing water if downed power lines are in the water.\nIf you believe someone has been electrocuted, call or have someone else call 911 or emergency medical help.",
+      "surrounding_context": [
+        {
+          "chunk_id": "0b26baf60b774893e1239f8b31e9d960abb4d4e335e60538dd7d06d8d7c0a555",
+          "source_id": "cdc-floodwater",
+          "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Avoid electrical hazards inside or outside your home.",
+          "guidance_text": "After a hurricane, flood or other natural disaster you need to be careful to avoid electrical hazards both in your home and elsewhere.\nShut off electrical power and natural gas or propane tanks in your home to avoid fire, electrocution, or explosions.\nNEVER touch a fallen power line. Call the power company to report fallen power lines. Avoid contact with overhead power lines during cleanup and other activities.\nDo not drive through standing water if downed power lines are in the water.\nIf you believe someone has been electrocuted, call or have someone else call 911 or emergency medical help.\nKeep Reading \nWhat to Do to Protect Yourself From Electrical Hazards",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "respond",
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "respond",
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Preserve the negative instructions and conditional emergency-help sentence. No responder contact is made by this application."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "2b547640ce57007af7be5598028fb9fa2f4026d67c6262a31a196a307180fa91",
+      "source_id": "cdc-floodwater",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+      "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+      "parent_chunk_id": "29ee34e3fccd7fc859fe228e8ddb03b95613b3c99d0c871fbf14babf9fef5417",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Protect yourself and your loved ones from diarrheal diseases.",
+      "passage_start": 348,
+      "passage_end": 667,
+      "original_passage": "Do not allow children to play in floodwater areas.\nDo not allow children to play with toys that have been contaminated by floodwater and have not been disinfected.\nDo not bathe in water that may be contaminated with sewage or toxic chemicals. This includes rivers, streams, or lakes that are contaminated by floodwater.",
+      "proposed_chunk": "Do not allow children to play in floodwater areas.\nDo not allow children to play with toys that have been contaminated by floodwater and have not been disinfected.\nDo not bathe in water that may be contaminated with sewage or toxic chemicals. This includes rivers, streams, or lakes that are contaminated by floodwater.",
+      "surrounding_context": [
+        {
+          "chunk_id": "29ee34e3fccd7fc859fe228e8ddb03b95613b3c99d0c871fbf14babf9fef5417",
+          "source_id": "cdc-floodwater",
+          "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Protect yourself and your loved ones from diarrheal diseases.",
+          "guidance_text": "Be aware that floodwater may contain sewage, and eating or drinking anything contaminated by floodwater can cause diarrheal disease (such as E. coli or Salmonella infection). To protect yourself and your family:\nWash your hands after contact with floodwater. Also be sure to wash children's hands with soap and water often and always before meals.\nDo not allow children to play in floodwater areas.\nDo not allow children to play with toys that have been contaminated by floodwater and have not been disinfected.\nDo not bathe in water that may be contaminated with sewage or toxic chemicals. This includes rivers, streams, or lakes that are contaminated by floodwater.\nKeep Reading \nWater, Sanitation, and Hygiene (WASH)-related Emergencies and Outbreaks",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "respond",
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "phases": [
+        "respond"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "1dceb9df1efd2dc78c44c34dc7d315c66d945f52bdd0ffe3959aaf9e13909549",
+      "source_id": "miami-dade-eeap",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+      "original_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+      "parent_chunk_id": "6a709297db559f157a7b7f4eff8cdbecca07b789ab49fd6b5edec3b616c5032b",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Can I get assistance if I am not enrolled in the event of an emergency?",
+      "passage_start": 0,
+      "passage_end": 562,
+      "original_passage": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+      "proposed_chunk": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+      "surrounding_context": [
+        {
+          "chunk_id": "6a709297db559f157a7b7f4eff8cdbecca07b789ab49fd6b5edec3b616c5032b",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Can I get assistance if I am not enrolled in the event of an emergency?",
+          "guidance_text": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "1f1086b2b14e0d28ba209f1d6a64dc1940a30a82978d1ccc0abd52a68504e8ca",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > longDescription",
+          "guidance_text": "The Emergency & Evacuation Assistance Program (EEAP) provides free evacuation\n assistance to eligible residents living in Miami-Dade County who need specialized\n transportation and/or sheltering or who would like to receive a wellness call after\n a disaster.\nPrior to an emergency, residents who may require medical monitoring, assistance\n with daily living or have life-saving medical equipment dependent on electricity should\n register for the EEAP to ensure help is available when needed. Pre-registered residents\n will receive priority during an emergency. It may also be utilized post-disaster to\n provide other assistance.\nThis program is for individuals who live alone or with families and may have access/functional\n needs. Residents living in long-term care facilities such as nursing homes, assisted\n living facilities or group homes are not eligible for this program as these facilities\n are required by law to develop an emergency plan and provide emergency assistance\n for their clients.\nWhen an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        }
+      ],
+      "jurisdiction": "US-FL-MIAMI-DADE",
+      "hazards": [
+        "hurricane"
+      ],
+      "phases": [
+        "respond"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Static program description is not live shelter, enrollment, transport or pickup availability.",
+        "No individual eligibility, enrollment, assistance or evacuation order is established; preserve the non-guarantee FAQ."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "15627d254d98b3cdb0d95737ba7177031d4a0c9067cbc3de1a4b6c00db45e017",
+      "source_id": "miami-dade-eeap",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+      "original_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+      "parent_chunk_id": "9c7e52a128185b463037aabbc651ff167458f05694ff296cf0e8f8093e5d4bbb",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Am I eligible for the EEAP?",
+      "passage_start": 0,
+      "passage_end": 760,
+      "original_passage": "You are eligible for this program if any of the following conditions\n apply:\nYou are unable to evacuate on your own due to a specialized transportation need.\nYou are homebound and unable to walk to a bus pickup point and do not have anyone\n who can provide transportation.\nYou have medical needs that prevent you from evacuating on your own.\nYou are bedbound.\nYou are on life-sustaining medical equipment that requires electricity.\nYou require assistance with daily living activities.\nResidents living in residential health care facilities such as nursing\n homes, assisted living facilities or group homes do not qualify for this program as\n these facilities are required by law to develop an emergency plan and provide emergency\n assistance for their clients.",
+      "proposed_chunk": "You are eligible for this program if any of the following conditions\n apply:\nYou are unable to evacuate on your own due to a specialized transportation need.\nYou are homebound and unable to walk to a bus pickup point and do not have anyone\n who can provide transportation.\nYou have medical needs that prevent you from evacuating on your own.\nYou are bedbound.\nYou are on life-sustaining medical equipment that requires electricity.\nYou require assistance with daily living activities.\nResidents living in residential health care facilities such as nursing\n homes, assisted living facilities or group homes do not qualify for this program as\n these facilities are required by law to develop an emergency plan and provide emergency\n assistance for their clients.",
+      "surrounding_context": [
+        {
+          "chunk_id": "9c7e52a128185b463037aabbc651ff167458f05694ff296cf0e8f8093e5d4bbb",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Am I eligible for the EEAP?",
+          "guidance_text": "You are eligible for this program if any of the following conditions\n apply:\nYou are unable to evacuate on your own due to a specialized transportation need.\nYou are homebound and unable to walk to a bus pickup point and do not have anyone\n who can provide transportation.\nYou have medical needs that prevent you from evacuating on your own.\nYou are bedbound.\nYou are on life-sustaining medical equipment that requires electricity.\nYou require assistance with daily living activities.\nResidents living in residential health care facilities such as nursing\n homes, assisted living facilities or group homes do not qualify for this program as\n these facilities are required by law to develop an emergency plan and provide emergency\n assistance for their clients.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "1f1086b2b14e0d28ba209f1d6a64dc1940a30a82978d1ccc0abd52a68504e8ca",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > longDescription",
+          "guidance_text": "The Emergency & Evacuation Assistance Program (EEAP) provides free evacuation\n assistance to eligible residents living in Miami-Dade County who need specialized\n transportation and/or sheltering or who would like to receive a wellness call after\n a disaster.\nPrior to an emergency, residents who may require medical monitoring, assistance\n with daily living or have life-saving medical equipment dependent on electricity should\n register for the EEAP to ensure help is available when needed. Pre-registered residents\n will receive priority during an emergency. It may also be utilized post-disaster to\n provide other assistance.\nThis program is for individuals who live alone or with families and may have access/functional\n needs. Residents living in long-term care facilities such as nursing homes, assisted\n living facilities or group homes are not eligible for this program as these facilities\n are required by law to develop an emergency plan and provide emergency assistance\n for their clients.\nWhen an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "6a709297db559f157a7b7f4eff8cdbecca07b789ab49fd6b5edec3b616c5032b",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Can I get assistance if I am not enrolled in the event of an emergency?",
+          "guidance_text": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        }
+      ],
+      "jurisdiction": "US-FL-MIAMI-DADE",
+      "hazards": [
+        "hurricane"
+      ],
+      "phases": [
+        "prepare",
+        "respond"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Static program description is not live shelter, enrollment, transport or pickup availability.",
+        "No individual eligibility, enrollment, assistance or evacuation order is established; preserve the non-guarantee FAQ.",
+        "Criteria are quoted for human review, not an eligibility determination; retain the residential-facility exclusion."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "7d79b4586449195f46f7ef80385dde00241df006f892674b0c39a627013e9349",
+      "source_id": "miami-dade-eeap",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+      "original_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+      "parent_chunk_id": "16920ae167aca6c18f25b02f1f352277ca8dfeaee15c98c1bfcca176bad5683b",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > What does the EEAP offer and when is it used?",
+      "passage_start": 0,
+      "passage_end": 793,
+      "original_passage": "The program offers:\nSpecialized transportation\nSafe shelter\nMedical monitoring\nWellness checks\nA caregiver or companion is required to accompany the evacuee throughout the emergency\n period to ensure the evacuee’s needs are met in a timely manner.\nThe EEAP may be used for emergencies that occur in Miami-Dade County, such\n as:\nHurricanes or tornadoes\nChemical or Hazardous material releases (e.g., industrial accident or act of terrorism)\nWildfires\nProlonged widespread power outages\nRadiological  releases (e.g., from a nuclear power plant incident or act\n of terrorism)\nEmergency evacuation centers are intended as a refuge of last resort for those\n who do not have an alternate safe location for evacuation. They do not offer the same\n level of care or equipment as health care facilities.",
+      "proposed_chunk": "The program offers:\nSpecialized transportation\nSafe shelter\nMedical monitoring\nWellness checks\nA caregiver or companion is required to accompany the evacuee throughout the emergency\n period to ensure the evacuee’s needs are met in a timely manner.\nThe EEAP may be used for emergencies that occur in Miami-Dade County, such\n as:\nHurricanes or tornadoes\nChemical or Hazardous material releases (e.g., industrial accident or act of terrorism)\nWildfires\nProlonged widespread power outages\nRadiological  releases (e.g., from a nuclear power plant incident or act\n of terrorism)\nEmergency evacuation centers are intended as a refuge of last resort for those\n who do not have an alternate safe location for evacuation. They do not offer the same\n level of care or equipment as health care facilities.",
+      "surrounding_context": [
+        {
+          "chunk_id": "16920ae167aca6c18f25b02f1f352277ca8dfeaee15c98c1bfcca176bad5683b",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > What does the EEAP offer and when is it used?",
+          "guidance_text": "The program offers:\nSpecialized transportation\nSafe shelter\nMedical monitoring\nWellness checks\nA caregiver or companion is required to accompany the evacuee throughout the emergency\n period to ensure the evacuee’s needs are met in a timely manner.\nThe EEAP may be used for emergencies that occur in Miami-Dade County, such\n as:\nHurricanes or tornadoes\nChemical or Hazardous material releases (e.g., industrial accident or act of terrorism)\nWildfires\nProlonged widespread power outages\nRadiological  releases (e.g., from a nuclear power plant incident or act\n of terrorism)\nEmergency evacuation centers are intended as a refuge of last resort for those\n who do not have an alternate safe location for evacuation. They do not offer the same\n level of care or equipment as health care facilities.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "1f1086b2b14e0d28ba209f1d6a64dc1940a30a82978d1ccc0abd52a68504e8ca",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > longDescription",
+          "guidance_text": "The Emergency & Evacuation Assistance Program (EEAP) provides free evacuation\n assistance to eligible residents living in Miami-Dade County who need specialized\n transportation and/or sheltering or who would like to receive a wellness call after\n a disaster.\nPrior to an emergency, residents who may require medical monitoring, assistance\n with daily living or have life-saving medical equipment dependent on electricity should\n register for the EEAP to ensure help is available when needed. Pre-registered residents\n will receive priority during an emergency. It may also be utilized post-disaster to\n provide other assistance.\nThis program is for individuals who live alone or with families and may have access/functional\n needs. Residents living in long-term care facilities such as nursing homes, assisted\n living facilities or group homes are not eligible for this program as these facilities\n are required by law to develop an emergency plan and provide emergency assistance\n for their clients.\nWhen an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "6a709297db559f157a7b7f4eff8cdbecca07b789ab49fd6b5edec3b616c5032b",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Can I get assistance if I am not enrolled in the event of an emergency?",
+          "guidance_text": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        }
+      ],
+      "jurisdiction": "US-FL-MIAMI-DADE",
+      "hazards": [
+        "hurricane"
+      ],
+      "phases": [
+        "prepare",
+        "respond"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Static program description is not live shelter, enrollment, transport or pickup availability.",
+        "No individual eligibility, enrollment, assistance or evacuation order is established; preserve the non-guarantee FAQ.",
+        "Retain the caregiver requirement and refuge-of-last-resort / health-care-level limitations."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "f8a045039bb7ab2b702116a082a43dd1b1ae83e8aa3140c3c2f2424f8ce34a5c",
+      "source_id": "miami-dade-eeap",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+      "original_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+      "parent_chunk_id": "029d9ddadbf85022bb5c9a90f1c6bb1561ac15deb26335624a9b401aa80c7bbb",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > How do I register for the EEAP?",
+      "passage_start": 520,
+      "passage_end": 1020,
+      "original_passage": "If more than one eligible person living in the same household requires assistance\n during evacuations, each person must complete and submit a separate application.\nIf you require a higher level of medical care, your primary care physician should\n complete and sign the application before submission.\nRegistration (online and paper application) for the EEAP closes before an evacuation\n order is pronounced. Do not wait until an evacuation order is issued to request to\n be added to the EEAP Registry.",
+      "proposed_chunk": "If more than one eligible person living in the same household requires assistance\n during evacuations, each person must complete and submit a separate application.\nIf you require a higher level of medical care, your primary care physician should\n complete and sign the application before submission.\nRegistration (online and paper application) for the EEAP closes before an evacuation\n order is pronounced. Do not wait until an evacuation order is issued to request to\n be added to the EEAP Registry.",
+      "surrounding_context": [
+        {
+          "chunk_id": "029d9ddadbf85022bb5c9a90f1c6bb1561ac15deb26335624a9b401aa80c7bbb",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > How do I register for the EEAP?",
+          "guidance_text": "How to apply\nIndividuals may apply throughout the year to become enrolled in the\n EEAP. Residents only need to apply once to be a life-long member of the program.\nRegister online or download an application\n below, completely fill it out and mail it. You can also call 311 to have an application\n sent to you in English, Spanish, and Haitian Creole or in an alternate format such\n as Braille or large print.\nThe EEAP application is available in:\nEEAP Application English\nEEAP Application Spanish\nEEAP\n Application Creole\nIf more than one eligible person living in the same household requires assistance\n during evacuations, each person must complete and submit a separate application.\nIf you require a higher level of medical care, your primary care physician should\n complete and sign the application before submission.\nRegistration (online and paper application) for the EEAP closes before an evacuation\n order is pronounced. Do not wait until an evacuation order is issued to request to\n be added to the EEAP Registry.\nAfter you apply:\nThe Emergency Management Department or support personnel may contact you to verify\n your registration information.\nYou will receive a letter letting you know if you have been accepted\n into the program. This letter will include the evacuation assistance you are eligible\n to receive and your responsibilities.\nYou will be contacted throughout the year to update your personal contact and\n medical information. You do not need to complete an application every year, but it\n is the responsibility of you or your caregiver to report any changes. If your contact\n or medical information changes or you would like to be removed from the EEAP, please\n email [email protected] or call the support\n line at (305) 513-7700.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "1f1086b2b14e0d28ba209f1d6a64dc1940a30a82978d1ccc0abd52a68504e8ca",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > longDescription",
+          "guidance_text": "The Emergency & Evacuation Assistance Program (EEAP) provides free evacuation\n assistance to eligible residents living in Miami-Dade County who need specialized\n transportation and/or sheltering or who would like to receive a wellness call after\n a disaster.\nPrior to an emergency, residents who may require medical monitoring, assistance\n with daily living or have life-saving medical equipment dependent on electricity should\n register for the EEAP to ensure help is available when needed. Pre-registered residents\n will receive priority during an emergency. It may also be utilized post-disaster to\n provide other assistance.\nThis program is for individuals who live alone or with families and may have access/functional\n needs. Residents living in long-term care facilities such as nursing homes, assisted\n living facilities or group homes are not eligible for this program as these facilities\n are required by law to develop an emergency plan and provide emergency assistance\n for their clients.\nWhen an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "6a709297db559f157a7b7f4eff8cdbecca07b789ab49fd6b5edec3b616c5032b",
+          "source_id": "miami-dade-eeap",
+          "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Can I get assistance if I am not enrolled in the event of an emergency?",
+          "guidance_text": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "prepare",
+            "respond"
+          ],
+          "geographic_scope": "US-FL-MIAMI-DADE",
+          "review_status": "REVIEW_REQUIRED"
+        }
+      ],
+      "jurisdiction": "US-FL-MIAMI-DADE",
+      "hazards": [
+        "hurricane"
+      ],
+      "phases": [
+        "prepare"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Static program description is not live shelter, enrollment, transport or pickup availability.",
+        "No individual eligibility, enrollment, assistance or evacuation order is established; preserve the non-guarantee FAQ.",
+        "Preserve separate-application, physician-signature and Do not wait conditions; this is not a current enrollment window or evacuation notice."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    }
+  ],
+  "coverage_gaps": [
+    "No substantive acquired instruction supporting safe damage documentation was selected; a Damage Reporting link label is not guidance.",
+    "No live resource availability, personal eligibility or county evacuation order is evidenced.",
+    "PROTECT phase tags are proposals grounded in Before / Recognize Flood Risk text, not approved source scope."
+  ]
+}

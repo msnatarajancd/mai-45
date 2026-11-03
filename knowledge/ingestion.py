@@ -177,17 +177,41 @@ def acquire_source(source_id: str, store: SourceStore, *, transport: SourceTrans
     return bundle
 
 
+def reextract_source(source_id: str, store: SourceStore) -> SourceBundle:
+    """Reprocess preserved bytes, preserving the original HTTP timestamp/hash.
+
+    A new history snapshot records extraction metadata. No network or review action.
+    """
+    get_source(source_id)
+    with store.admin_lock():
+        previous = store.load(source_id)
+        if previous is None or previous.source.original_content_hash is None:
+            raise ValueError('preserved acquisition is missing')
+        raw = store.original(previous.source.original_content_hash)
+        if hashlib.sha256(raw).hexdigest() != previous.source.original_content_hash:
+            raise ValueError('preserved original hash mismatch')
+        chunks = extract_sections(raw, previous.source, charset=previous.source.charset)
+        source = replace_record(previous.source, review_status=ReviewStatus.REVIEW_REQUIRED,
+                                reviewer=None, reviewed_at=None, failure_category=None)
+        bundle = SourceBundle(source=source,
+            chunks=[replace_record(c, review_status=ReviewStatus.REVIEW_REQUIRED) for c in chunks],
+            extracted_at=datetime.now(timezone.utc), extraction_version='M3-2A-static-fields-v1')
+        store.save_locked(bundle)
+        return bundle
+
+
 def main():
     parser = argparse.ArgumentParser(description='Acquire only curated official source candidates; never publish automatically.')
     parser.add_argument('--root', type=Path, default=Path('data/official_sources'))
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--all', action='store_true')
     group.add_argument('--source-id', choices=[s.source.source_id for s in CURATED_SOURCES])
+    parser.add_argument('--reextract-existing', action='store_true', help='Re-extract stored bytes without a download; invalidate review.')
     args = parser.parse_args()
     store = SourceStore(args.root)
     store.initialize()
     for source_id in ([s.source.source_id for s in CURATED_SOURCES] if args.all else [args.source_id]):
-        bundle = acquire_source(source_id, store)
+        bundle = (reextract_source(source_id, store) if args.reextract_existing else acquire_source(source_id, store))
         report = bundle.source.model_dump(mode='json')
         report['extracted_section_count'] = len(bundle.chunks)
         print(json.dumps(report, indent=2))

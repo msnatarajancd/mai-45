@@ -1,0 +1,45 @@
+{
+  "chunk_id": "2b547640ce57007af7be5598028fb9fa2f4026d67c6262a31a196a307180fa91",
+  "source_id": "cdc-floodwater",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+  "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+  "parent_chunk_id": "29ee34e3fccd7fc859fe228e8ddb03b95613b3c99d0c871fbf14babf9fef5417",
+  "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Protect yourself and your loved ones from diarrheal diseases.",
+  "passage_start": 348,
+  "passage_end": 667,
+  "original_passage": "Do not allow children to play in floodwater areas.\nDo not allow children to play with toys that have been contaminated by floodwater and have not been disinfected.\nDo not bathe in water that may be contaminated with sewage or toxic chemicals. This includes rivers, streams, or lakes that are contaminated by floodwater.",
+  "proposed_chunk": "Do not allow children to play in floodwater areas.\nDo not allow children to play with toys that have been contaminated by floodwater and have not been disinfected.\nDo not bathe in water that may be contaminated with sewage or toxic chemicals. This includes rivers, streams, or lakes that are contaminated by floodwater.",
+  "surrounding_context": [
+    {
+      "chunk_id": "29ee34e3fccd7fc859fe228e8ddb03b95613b3c99d0c871fbf14babf9fef5417",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Protect yourself and your loved ones from diarrheal diseases.",
+      "guidance_text": "Be aware that floodwater may contain sewage, and eating or drinking anything contaminated by floodwater can cause diarrheal disease (such as E. coli or Salmonella infection). To protect yourself and your family:\nWash your hands after contact with floodwater. Also be sure to wash children's hands with soap and water often and always before meals.\nDo not allow children to play in floodwater areas.\nDo not allow children to play with toys that have been contaminated by floodwater and have not been disinfected.\nDo not bathe in water that may be contaminated with sewage or toxic chemicals. This includes rivers, streams, or lakes that are contaminated by floodwater.\nKeep Reading \nWater, Sanitation, and Hygiene (WASH)-related Emergencies and Outbreaks",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood",
+    "hurricane"
+  ],
+  "phases": [
+    "respond"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

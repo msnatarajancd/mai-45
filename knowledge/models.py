@@ -207,6 +207,8 @@ class ReviewRecord(StrictRecord):
 
 
 class SourceBundle(StrictRecord):
+    extracted_at: datetime | None = None
+    extraction_version: Text | None = None
     source: SourceRecord
     chunks: list[EvidenceChunk]
     review: ReviewRecord | None = None
@@ -274,3 +276,87 @@ class ResourceResult(StrictRecord):
     retrieval_status: RetrievalStatus
     limitations: list[Text]
     missing_information: list[Text]
+
+
+class CandidateStatus(StrEnum):
+    PENDING = 'PENDING'
+    APPROVED = 'APPROVED'
+    REJECTED = 'REJECTED'
+
+
+class CandidateRejection(StrictRecord):
+    reviewer: Text
+    rejected_at: datetime
+    reason: Annotated[str, Field(min_length=1, max_length=1000)]
+    content_hash: Hash
+    context_hash: Hash
+
+
+class ReviewCandidate(StrictRecord):
+    """Exact extract for human review, separate from source publication approval."""
+    chunk_id: Hash
+    source_id: Identifier
+    classification: Classification
+    official_url: Annotated[str, Field(max_length=2000)]
+    original_content_hash: Hash
+    parent_chunk_id: Identifier
+    section_heading: Annotated[str, Field(min_length=1, max_length=1000)]
+    passage_start: int = Field(ge=0)
+    passage_end: int = Field(gt=0)
+    original_passage: Guidance
+    proposed_chunk: Guidance
+    surrounding_context: list[EvidenceChunk] = Field(min_length=1)
+    jurisdiction: Text
+    hazards: list[Hazard] = Field(min_length=1)
+    phases: list[DisasterPhase] = Field(min_length=1)
+    safety_caveats: list[Annotated[str, Field(min_length=1, max_length=1000)]] = Field(min_length=1)
+    review_status: CandidateStatus = CandidateStatus.PENDING
+    review: ReviewRecord | None = None
+    rejection: CandidateRejection | None = None
+
+    @field_validator('official_url')
+    @classmethod
+    def valid_url(cls, value):
+        return validate_official_url(value)
+
+    @model_validator(mode='after')
+    def exact_passage(self):
+        import hashlib
+        import json
+        parents = [c for c in self.surrounding_context if c.chunk_id == self.parent_chunk_id]
+        if len(parents) != 1 or any(c.source_id != self.source_id for c in self.surrounding_context):
+            raise ValueError('candidate context must identify its original source section')
+        parent = parents[0]
+        if (parent.section_heading != self.section_heading or self.passage_end > len(parent.guidance_text)
+                or parent.guidance_text[self.passage_start:self.passage_end] != self.original_passage
+                or self.original_passage != self.proposed_chunk):
+            raise ValueError('candidate must preserve an exact, unmodified original passage')
+        identity = dict(source_id=self.source_id, source_hash=self.original_content_hash,
+            parent_chunk_id=self.parent_chunk_id, start=self.passage_start, end=self.passage_end,
+            passage=self.original_passage, hazards=[h.value for h in self.hazards],
+            phases=[p.value for p in self.phases])
+        if self.chunk_id != hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest():
+            raise ValueError('candidate ID does not match its source trace')
+        if self.review_status is CandidateStatus.PENDING and (self.review or self.rejection):
+            raise ValueError('pending candidates cannot have a signoff')
+        if self.review_status is CandidateStatus.APPROVED:
+            if self.classification is Classification.SIMULATED_DEMO or self.review is None or self.rejection:
+                raise ValueError('approval requires official provenance and explicit review evidence')
+        if self.review_status is CandidateStatus.REJECTED and (self.rejection is None or self.review):
+            raise ValueError('rejection requires its own reviewer record')
+        payload = self.model_dump(mode='json', exclude={'review_status', 'review', 'rejection'})
+        fingerprint = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+        proof = self.review if self.review is not None else self.rejection
+        if proof is not None and (proof.content_hash != self.original_content_hash or proof.context_hash != fingerprint):
+            raise ValueError('candidate signoff does not match its exact context')
+        if self.review is not None and (self.review.decision.reviewer != self.review.reviewer
+                or self.review.decision.expected_content_hash != self.original_content_hash
+                or self.review.decision.expected_context_hash != fingerprint):
+            raise ValueError('candidate decision does not match its review evidence')
+        return self
+
+
+class CandidatePacket(StrictRecord):
+    prepared_at: datetime
+    candidates: list[ReviewCandidate]
+    coverage_gaps: list[Annotated[str, Field(min_length=1, max_length=1000)]]

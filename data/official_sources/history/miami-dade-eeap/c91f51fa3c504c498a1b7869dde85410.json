@@ -1,0 +1,153 @@
+{
+  "extracted_at": "2026-11-03T12:46:19.388526Z",
+  "extraction_version": "M3-2A-static-fields-v1",
+  "source": {
+    "source_id": "miami-dade-eeap",
+    "publisher": "Miami-Dade County",
+    "title": "Emergency & Evacuation Assistance Program (EEAP)",
+    "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+    "source_type": "official_static_web_guidance",
+    "jurisdiction": "US-FL-MIAMI-DADE",
+    "hazards": [
+      "flood",
+      "hurricane"
+    ],
+    "disaster_phases": [
+      "prepare",
+      "respond"
+    ],
+    "classification": "OFFICIAL_SOURCE",
+    "content_type": "text/html",
+    "charset": "utf-8",
+    "original_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+    "retrieved_at": "2026-11-03T03:05:30.655165Z",
+    "reviewed_at": null,
+    "review_status": "REVIEW_REQUIRED",
+    "reviewer": null,
+    "limitations": [
+      "Candidate source; human review required before publication.",
+      "Static guidance is not live availability or a current evacuation order.",
+      "HTML-only extraction may omit images, embedded documents, or dynamic content."
+    ],
+    "final_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+    "http_status": 200,
+    "byte_count": 129366,
+    "last_attempt_at": "2026-11-03T03:05:29.547412Z",
+    "failure_category": null
+  },
+  "chunks": [
+    {
+      "chunk_id": "1f1086b2b14e0d28ba209f1d6a64dc1940a30a82978d1ccc0abd52a68504e8ca",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > longDescription",
+      "guidance_text": "The Emergency & Evacuation Assistance Program (EEAP) provides free evacuation\n assistance to eligible residents living in Miami-Dade County who need specialized\n transportation and/or sheltering or who would like to receive a wellness call after\n a disaster.\nPrior to an emergency, residents who may require medical monitoring, assistance\n with daily living or have life-saving medical equipment dependent on electricity should\n register for the EEAP to ensure help is available when needed. Pre-registered residents\n will receive priority during an emergency. It may also be utilized post-disaster to\n provide other assistance.\nThis program is for individuals who live alone or with families and may have access/functional\n needs. Residents living in long-term care facilities such as nursing homes, assisted\n living facilities or group homes are not eligible for this program as these facilities\n are required by law to develop an emergency plan and provide emergency assistance\n for their clients.\nWhen an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "9c7e52a128185b463037aabbc651ff167458f05694ff296cf0e8f8093e5d4bbb",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Am I eligible for the EEAP?",
+      "guidance_text": "You are eligible for this program if any of the following conditions\n apply:\nYou are unable to evacuate on your own due to a specialized transportation need.\nYou are homebound and unable to walk to a bus pickup point and do not have anyone\n who can provide transportation.\nYou have medical needs that prevent you from evacuating on your own.\nYou are bedbound.\nYou are on life-sustaining medical equipment that requires electricity.\nYou require assistance with daily living activities.\nResidents living in residential health care facilities such as nursing\n homes, assisted living facilities or group homes do not qualify for this program as\n these facilities are required by law to develop an emergency plan and provide emergency\n assistance for their clients.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "16920ae167aca6c18f25b02f1f352277ca8dfeaee15c98c1bfcca176bad5683b",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > What does the EEAP offer and when is it used?",
+      "guidance_text": "The program offers:\nSpecialized transportation\nSafe shelter\nMedical monitoring\nWellness checks\nA caregiver or companion is required to accompany the evacuee throughout the emergency\n period to ensure the evacuee’s needs are met in a timely manner.\nThe EEAP may be used for emergencies that occur in Miami-Dade County, such\n as:\nHurricanes or tornadoes\nChemical or Hazardous material releases (e.g., industrial accident or act of terrorism)\nWildfires\nProlonged widespread power outages\nRadiological  releases (e.g., from a nuclear power plant incident or act\n of terrorism)\nEmergency evacuation centers are intended as a refuge of last resort for those\n who do not have an alternate safe location for evacuation. They do not offer the same\n level of care or equipment as health care facilities.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "029d9ddadbf85022bb5c9a90f1c6bb1561ac15deb26335624a9b401aa80c7bbb",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > How do I register for the EEAP?",
+      "guidance_text": "How to apply\nIndividuals may apply throughout the year to become enrolled in the\n EEAP. Residents only need to apply once to be a life-long member of the program.\nRegister online or download an application\n below, completely fill it out and mail it. You can also call 311 to have an application\n sent to you in English, Spanish, and Haitian Creole or in an alternate format such\n as Braille or large print.\nThe EEAP application is available in:\nEEAP Application English\nEEAP Application Spanish\nEEAP\n Application Creole\nIf more than one eligible person living in the same household requires assistance\n during evacuations, each person must complete and submit a separate application.\nIf you require a higher level of medical care, your primary care physician should\n complete and sign the application before submission.\nRegistration (online and paper application) for the EEAP closes before an evacuation\n order is pronounced. Do not wait until an evacuation order is issued to request to\n be added to the EEAP Registry.\nAfter you apply:\nThe Emergency Management Department or support personnel may contact you to verify\n your registration information.\nYou will receive a letter letting you know if you have been accepted\n into the program. This letter will include the evacuation assistance you are eligible\n to receive and your responsibilities.\nYou will be contacted throughout the year to update your personal contact and\n medical information. You do not need to complete an application every year, but it\n is the responsibility of you or your caregiver to report any changes. If your contact\n or medical information changes or you would like to be removed from the EEAP, please\n email [email protected] or call the support\n line at (305) 513-7700.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "6a709297db559f157a7b7f4eff8cdbecca07b789ab49fd6b5edec3b616c5032b",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Can I get assistance if I am not enrolled in the event of an emergency?",
+      "guidance_text": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "88a29d406134e2aecb0edda7d89823a5665b86191f6755e453e70ca62f9c6da7",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > What happens during an emergency for individuals who require assistance?",
+      "guidance_text": "Individuals enrolled in the Emergency Evacuation Assistance Program (EEAP) will\n be contacted by phone, text or other method of communication to coordinate assistance\n when an evacuation order is issued to determine what specialized sheltering and/or\n transportation services are needed. You will be informed which facility you will be\n evacuated to and a time frame for your pick-up.\nIt is the EEAP client’s or caregiver/companion’s responsibility to\n monitor the media for updated information on what actions they may need to take. The\n individual and caregiver/companion must also be prepared to evacuate when transportation\n arrives along with their readiness kits. If they miss their scheduled pickup, there\n may not be time for a second attempt.\nAll EEAP clients must bring the following in the event of an evacuation:\nYou must be accompanied at all times by a caregiver or companion\nComfort items in one carrier (e.g. pillows, linens, blankets, cot, air mattress,\n sleeping bag, folding chair, change of clothing, toiletries)\nMinimum one-week (7 day) supply of all your medications and specific medication\n instructions\nMedical equipment (e.g. oxygen equipment, wheelchair, walking cane, diabetes equipment,\n feeding tubes, dressing supplies)\nMinimum three (3) day supply of food and water for you and your caregiver/companion\n (special dietary foods, if required)\nNames and telephone numbers of your emergency contacts and neighbors\nTo request a Hurricane Readiness Guide in an alternate format, such as Braille\n or large print, call 311 or send an email to [email protected].",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "dc1fbd3022460a9232ea49342b729de9b917044f9bfa0680038c8cf251472af3",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Why did I receive a phone call from the EEAP?",
+      "guidance_text": "When an emergency threatens the County, EEAP clients may be contacted via phone,\n text or other method of communication to coordinate transportation and sheltering\n accommodations, as well as receive important notifications.\nIndividuals may also be contacted throughout the year to verify that all contact\n and medical information is current.\nAutomated call downs may also be programmed to send important messages to residential\n healthcare facilities who have emergency plans submitted to the County's Emergency\n Management Department.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    }
+  ],
+  "review": null
+}

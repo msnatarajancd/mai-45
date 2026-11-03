@@ -1,0 +1,47 @@
+{
+  "chunk_id": "583e722d5f070eea7913bb10aa1c6f3c189b9cdcd4105807cb81f5df4f135e8c",
+  "source_id": "cdc-floodwater",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+  "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+  "parent_chunk_id": "5a6739b4103ae566940edbd93627230a7423334ba321a3a63af4e16d4fc930ac",
+  "section_heading": "Safety Guidelines: Floodwater > Stay out of floodwater > Floodwaters contain many things that may harm health.",
+  "passage_start": 413,
+  "passage_end": 619,
+  "original_passage": "Recognize Flood Risk\nIdentify flood-prone or landslide-prone areas near you.\nKnow your community's warning signals, evacuation routes, and emergency shelter locations.\nKnow flood evacuation routes near you.",
+  "proposed_chunk": "Recognize Flood Risk\nIdentify flood-prone or landslide-prone areas near you.\nKnow your community's warning signals, evacuation routes, and emergency shelter locations.\nKnow flood evacuation routes near you.",
+  "surrounding_context": [
+    {
+      "chunk_id": "5a6739b4103ae566940edbd93627230a7423334ba321a3a63af4e16d4fc930ac",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Stay out of floodwater > Floodwaters contain many things that may harm health.",
+      "guidance_text": "Be Ready! Floods Infographic\nBe Ready! Floods\nDuring\nGather emergency supplies and follow local radio or TV updates.\nUnplug appliances to prevent electrical shock when power comes back on.\nDo NOT drive or walk across flooded roads. Cars and people can be swept away.\nWhen power lines are down, water is in your home, or before you evacuate, TURN OFF gas, power, and water.\nTie down or bring outdoor items inside.\nRecognize Flood Risk\nIdentify flood-prone or landslide-prone areas near you.\nKnow your community's warning signals, evacuation routes, and emergency shelter locations.\nKnow flood evacuation routes near you.\nAfter \nThrow away items that cannot be disinfected, like wall coverings, cloth, rugs, and drywall.\nUse fans, air conditioning units, and dehumidifiers for drying.\nFor cleanup, wear rubber boots and plastic gloves.\nClean walls, hard floors, and other surfaces with soap and water. Use a mixture of 1 cup of bleach and 1 gallon of water to disinfect.\nCaution! Flood water may contain trash.\nPractice safe hygiene\nWash hands with soap and water to help prevent germs.\nListen for information from your local officials on how to safely use water to drink, cook, or clean.\nDownload Infographic PDF: English | Español\nWe don't know exactly what is in floodwater at any given point in time. Floodwater can contain:\nDowned power lines\nHuman and livestock waste\nHousehold, medical, and industrial hazardous waste (chemical, biological, and radiological)\nCoal ash waste that can contain carcinogenic compounds such as arsenic, chromium, and mercury\nOther germs and contaminants that can lead to illness\nPhysical objects such as lumber, vehicles, and debris\nWild or stray animals such as rodents and snakes",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood",
+    "hurricane"
+  ],
+  "phases": [
+    "prepare"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification.",
+    "Hazard-awareness text only. Shelter names, capacity, evacuation orders and route availability are not established.",
+    "PREPARE is proposed from the infographic context; current source-level tags do not yet include PREPARE."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

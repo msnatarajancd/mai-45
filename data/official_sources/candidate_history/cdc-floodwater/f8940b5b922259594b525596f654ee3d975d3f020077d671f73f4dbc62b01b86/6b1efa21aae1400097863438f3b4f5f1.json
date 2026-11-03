@@ -1,0 +1,61 @@
+{
+  "chunk_id": "f8940b5b922259594b525596f654ee3d975d3f020077d671f73f4dbc62b01b86",
+  "source_id": "cdc-floodwater",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+  "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+  "parent_chunk_id": "028c2d0201eba657665949e814362ba0d7d2693321c217a9d325a0b31a61e49d",
+  "section_heading": "Safety Guidelines: Floodwater > Overview > Don't drive in flooded areas.",
+  "passage_start": 0,
+  "passage_end": 184,
+  "original_passage": "Always follow warnings about flooded roads.\nDon't drive in flooded areas—cars or other vehicles won't protect you from floodwaters. They can be swept away or may stall in moving water.",
+  "proposed_chunk": "Always follow warnings about flooded roads.\nDon't drive in flooded areas—cars or other vehicles won't protect you from floodwaters. They can be swept away or may stall in moving water.",
+  "surrounding_context": [
+    {
+      "chunk_id": "028c2d0201eba657665949e814362ba0d7d2693321c217a9d325a0b31a61e49d",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Overview > Don't drive in flooded areas.",
+      "guidance_text": "Always follow warnings about flooded roads.\nDon't drive in flooded areas—cars or other vehicles won't protect you from floodwaters. They can be swept away or may stall in moving water.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "fb7c68740691c5415cf046ef7cf33c371987a032efa5349c24bd0344f50b7352",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Overview",
+      "guidance_text": "Never drive in flooded areas—turn around, don't drown!\nFloodwater and standing water can be dangerous and can make you vulnerable to infectious diseases, chemical hazards, and injuries. Protect yourself and your loved ones from the risks brought by floodwater by following these steps.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood",
+    "hurricane"
+  ],
+  "phases": [
+    "respond"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

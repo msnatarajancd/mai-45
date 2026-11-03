@@ -100,7 +100,7 @@
       "http_status": 200,
       "byte_count": 129366,
       "last_attempt_at": "2026-11-03T03:05:29.547412Z",
-      "failure_category": "EXTRACTION_FAILED"
+      "failure_category": null
     }
   ]
 }

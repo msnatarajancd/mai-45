@@ -1,0 +1,61 @@
+{
+  "chunk_id": "ee1b186d50f72b4fa2d5b4b8919c5c41d10f521349df1b2e4ef5fdcf1859d5ec",
+  "source_id": "cdc-floodwater",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+  "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+  "parent_chunk_id": "054a6163a645840b22edd3daf3e5565b477c4490471aeb09b197844cf85a32f1",
+  "section_heading": "Safety Guidelines: Floodwater > Overview > Turn around, don't drown!",
+  "passage_start": 0,
+  "passage_end": 199,
+  "original_passage": "Floodwater can pose a drowning risk for everyone— regardless of their ability to swim. Swiftly moving shallow water can be deadly, and even shallow standing water can be dangerous for small children.",
+  "proposed_chunk": "Floodwater can pose a drowning risk for everyone— regardless of their ability to swim. Swiftly moving shallow water can be deadly, and even shallow standing water can be dangerous for small children.",
+  "surrounding_context": [
+    {
+      "chunk_id": "054a6163a645840b22edd3daf3e5565b477c4490471aeb09b197844cf85a32f1",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Overview > Turn around, don't drown!",
+      "guidance_text": "Floodwater can pose a drowning risk for everyone— regardless of their ability to swim. Swiftly moving shallow water can be deadly, and even shallow standing water can be dangerous for small children.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "fb7c68740691c5415cf046ef7cf33c371987a032efa5349c24bd0344f50b7352",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Overview",
+      "guidance_text": "Never drive in flooded areas—turn around, don't drown!\nFloodwater and standing water can be dangerous and can make you vulnerable to infectious diseases, chemical hazards, and injuries. Protect yourself and your loved ones from the risks brought by floodwater by following these steps.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood",
+    "hurricane"
+  ],
+  "phases": [
+    "respond"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

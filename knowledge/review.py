@@ -92,11 +92,53 @@ def mark_stale(store: SourceStore, source_id: str) -> SourceBundle:
         return stale
 
 
+def review_candidate(store: SourceStore, source_id: str, chunk_id: str,
+                     decision: ReviewDecision):
+    """Explicit per-excerpt decision; never approves the parent source/publication."""
+    from .candidates import candidate_context_hash, verify_candidate_trace
+    from .models import CandidateStatus
+    decision = ReviewDecision.model_validate_json(decision.model_dump_json())
+    with store.admin_lock():
+        candidate = store.load_candidate(source_id, chunk_id)
+        if candidate is None or candidate.review_status is not CandidateStatus.PENDING:
+            raise PublicationError('candidate is missing or already decided')
+        verify_candidate_trace(store, candidate)
+        fingerprint = candidate_context_hash(candidate)
+        if (decision.expected_content_hash != candidate.original_content_hash
+                or decision.expected_context_hash != fingerprint):
+            raise PublicationError('candidate changed since inspection')
+        reviewed = replace_record(candidate, review_status=CandidateStatus.APPROVED,
+            review=ReviewRecord(reviewer=decision.reviewer, reviewed_at=datetime.now(timezone.utc),
+                content_hash=candidate.original_content_hash, context_hash=fingerprint, decision=decision))
+        store.save_candidate_locked(reviewed)
+        return reviewed
+
+
+def reject_candidate(store: SourceStore, source_id: str, chunk_id: str, *, reviewer: str,
+                     reason: str, expected_content_hash: str, expected_context_hash: str):
+    from .candidates import candidate_context_hash
+    from .models import CandidateRejection, CandidateStatus
+    with store.admin_lock():
+        candidate = store.load_candidate(source_id, chunk_id)
+        if candidate is None or candidate.review_status is not CandidateStatus.PENDING:
+            raise PublicationError('candidate is missing or already decided')
+        fingerprint = candidate_context_hash(candidate)
+        if expected_content_hash != candidate.original_content_hash or expected_context_hash != fingerprint:
+            raise PublicationError('candidate changed since inspection')
+        rejected = replace_record(candidate, review_status=CandidateStatus.REJECTED,
+            rejection=CandidateRejection(reviewer=reviewer, rejected_at=datetime.now(timezone.utc),
+                reason=reason, content_hash=candidate.original_content_hash, context_hash=fingerprint))
+        store.save_candidate_locked(rejected)
+        return rejected
+
+
 def main():
     parser = argparse.ArgumentParser(description='Inspect acquired public content or record an explicit human review.')
-    parser.add_argument('action', choices=['inspect', 'approve', 'stale'])
+    parser.add_argument('action', choices=['inspect', 'approve', 'reject', 'stale'])
     parser.add_argument('--root', type=Path, default=Path('data/official_sources'))
     parser.add_argument('--source-id', required=True)
+    parser.add_argument('--chunk-id', help='Review one prepared candidate instead of the entire source.')
+    parser.add_argument('--reason', help='Required explanation for rejecting a candidate.')
     parser.add_argument('--reviewer')
     parser.add_argument('--expected-content-hash')
     parser.add_argument('--expected-context-hash')
@@ -105,6 +147,30 @@ def main():
         parser.add_argument('--' + flag, action='store_true')
     args = parser.parse_args()
     store = SourceStore(args.root)
+    if args.chunk_id is not None:
+        from .candidates import candidate_context_hash
+        if args.action == 'inspect':
+            candidate = store.load_candidate(args.source_id, args.chunk_id)
+            if candidate is None:
+                parser.error('candidate does not exist')
+            print(json.dumps({'candidate': candidate.model_dump(mode='json'),
+                              'expected_context_hash': candidate_context_hash(candidate)}, indent=2))
+        elif args.action == 'approve':
+            decision = ReviewDecision(reviewer=args.reviewer,
+                expected_content_hash=args.expected_content_hash, expected_context_hash=args.expected_context_hash,
+                provenance_checked=args.provenance_checked, content_checked=args.content_checked,
+                geographic_scope_checked=args.geographic_scope_checked,
+                applicability_checked=args.applicability_checked, caveats_preserved=args.caveats_preserved)
+            print(review_candidate(store, args.source_id, args.chunk_id, decision).model_dump_json(indent=2))
+        elif args.action == 'reject':
+            print(reject_candidate(store, args.source_id, args.chunk_id, reviewer=args.reviewer,
+                reason=args.reason, expected_content_hash=args.expected_content_hash,
+                expected_context_hash=args.expected_context_hash).model_dump_json(indent=2))
+        else:
+            parser.error('stale is a source-level action; use reject for a pending candidate')
+        return
+    if args.action == 'reject':
+        parser.error('reject requires --chunk-id; stale remains the source-level revocation action')
     if args.action == 'inspect':
         bundle = store.load(args.source_id)
         if bundle is None:
