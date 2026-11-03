@@ -1,0 +1,72 @@
+{
+  "schema_version": "0.1",
+  "location_id": "custom_point",
+  "location": {
+    "label": "Selected coordinates (25.761700,-80.191800)",
+    "point": "25.761700,-80.191800",
+    "scope": "point"
+  },
+  "mode": "live",
+  "status": "alerts",
+  "alerts": [
+    {
+      "id": "urn:oid:2.49.0.1.840.0.092e9b32c7567fcab0abd859eb877ff253b32c72.001.2",
+      "feature_id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.092e9b32c7567fcab0abd859eb877ff253b32c72.001.2",
+      "event": "Rip Current Statement",
+      "headline": "Rip Current Statement issued November 2 at 3:20PM EST until November 3 at 7:00PM EST by NWS Miami FL",
+      "area": "Coastal Palm Beach County; Coastal Broward County; Coastal Miami Dade County",
+      "sender": "NWS Miami FL",
+      "severity": "Moderate",
+      "urgency": "Expected",
+      "certainty": "Likely",
+      "message_type": "Update",
+      "sent": "2026-11-02T15:20:00-05:00",
+      "effective": "2026-11-02T15:20:00-05:00",
+      "onset": "2026-11-02T15:20:00-05:00",
+      "expires": "2026-11-03T07:00:00-05:00",
+      "ends": "2026-11-03T19:00:00-05:00",
+      "description": "* WHAT...Minor to Moderate coastal flooding, large breaking\nwaves of 6 to 7 feet in the surf zone, and dangerous rip\ncurrents.\n\n* WHERE...Coastal Palm Beach County and Coastal Broward County.\n\n* WHEN...Through Tuesday for the Coastal Flood Advisory and High\nRip Current Risk, and through this morning for the High Surf\nAdvisory.\n\n* IMPACTS...Flooding of lots, parks, and roads with only\nisolated road closures expected. Dangerous swimming and\nsurfing conditions and localized beach erosion. Rip currents\ncan sweep even the best swimmers away from shore into deeper\nwater.",
+      "instruction": "If travel is required, allow extra time as some roads may be\nclosed. Do not drive around barricades or through water of\nunknown depth. Take the necessary actions to protect flood-prone\nproperty.\n\nSwim near a lifeguard. If caught in a rip current, relax and\nfloat. Don't swim against the current. If able, swim in a\ndirection following the shoreline. If unable to escape, face the\nshore and call or wave for help.",
+      "geometry": null,
+      "affected_zones": [
+        "https://api.weather.gov/zones/forecast/FLZ168",
+        "https://api.weather.gov/zones/forecast/FLZ172",
+        "https://api.weather.gov/zones/forecast/FLZ173"
+      ],
+      "source_url": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.092e9b32c7567fcab0abd859eb877ff253b32c72.001.2",
+      "simulated": false
+    },
+    {
+      "id": "urn:oid:2.49.0.1.840.0.092e9b32c7567fcab0abd859eb877ff253b32c72.001.1",
+      "feature_id": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.092e9b32c7567fcab0abd859eb877ff253b32c72.001.1",
+      "event": "Coastal Flood Advisory",
+      "headline": "Coastal Flood Advisory issued November 2 at 3:20PM EST until November 3 at 7:00PM EST by NWS Miami FL",
+      "area": "Coastal Palm Beach County; Coastal Broward County; Coastal Miami Dade County",
+      "sender": "NWS Miami FL",
+      "severity": "Minor",
+      "urgency": "Expected",
+      "certainty": "Likely",
+      "message_type": "Update",
+      "sent": "2026-11-02T15:20:00-05:00",
+      "effective": "2026-11-02T15:20:00-05:00",
+      "onset": "2026-11-02T15:20:00-05:00",
+      "expires": "2026-11-03T07:00:00-05:00",
+      "ends": "2026-11-03T19:00:00-05:00",
+      "description": "* WHAT...Minor to Moderate coastal flooding, large breaking\nwaves of 6 to 7 feet in the surf zone, and dangerous rip\ncurrents.\n\n* WHERE...Coastal Palm Beach County and Coastal Broward County.\n\n* WHEN...Through Tuesday for the Coastal Flood Advisory and High\nRip Current Risk, and through this morning for the High Surf\nAdvisory.\n\n* IMPACTS...Flooding of lots, parks, and roads with only\nisolated road closures expected. Dangerous swimming and\nsurfing conditions and localized beach erosion. Rip currents\ncan sweep even the best swimmers away from shore into deeper\nwater.",
+      "instruction": "If travel is required, allow extra time as some roads may be\nclosed. Do not drive around barricades or through water of\nunknown depth. Take the necessary actions to protect flood-prone\nproperty.\n\nSwim near a lifeguard. If caught in a rip current, relax and\nfloat. Don't swim against the current. If able, swim in a\ndirection following the shoreline. If unable to escape, face the\nshore and call or wave for help.",
+      "geometry": null,
+      "affected_zones": [
+        "https://api.weather.gov/zones/forecast/FLZ168",
+        "https://api.weather.gov/zones/forecast/FLZ172",
+        "https://api.weather.gov/zones/forecast/FLZ173"
+      ],
+      "source_url": "https://api.weather.gov/alerts/urn:oid:2.49.0.1.840.0.092e9b32c7567fcab0abd859eb877ff253b32c72.001.1",
+      "simulated": false
+    }
+  ],
+  "checked_at": "2026-11-03T01:29:46.773280+00:00",
+  "source": "https://www.weather.gov/",
+  "endpoint": "https://api.weather.gov/alerts/active?point=25.761700%2C-80.191800",
+  "notice": "Read the official warning and local instructions.",
+  "error_code": null
+}

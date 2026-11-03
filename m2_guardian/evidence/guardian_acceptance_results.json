@@ -1,0 +1,244 @@
+{
+  "classification": "PROPOSED SYNTHETIC M2 ACCEPTANCE CASES \u2014 pending M4 review, not the team golden dataset",
+  "network_calls": 0,
+  "passed": 12,
+  "total": 12,
+  "results": [
+    {
+      "id": "M2-G01",
+      "purpose": "Operational alert retains original instructions, even with null geometry.",
+      "passed": true,
+      "expected": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-original"
+        ]
+      },
+      "actual": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-original"
+        ]
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G02",
+      "purpose": "An empty official response must not imply safety.",
+      "passed": true,
+      "expected": {
+        "status": "no_alerts",
+        "alert_ids": []
+      },
+      "actual": {
+        "status": "no_alerts",
+        "alert_ids": []
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "no_all_clear": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G03",
+      "purpose": "An expired record must not display as active.",
+      "passed": true,
+      "expected": {
+        "status": "no_alerts",
+        "alert_ids": []
+      },
+      "actual": {
+        "status": "no_alerts",
+        "alert_ids": []
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "no_all_clear": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G04",
+      "purpose": "An update supersedes its referenced original regardless of order.",
+      "passed": true,
+      "expected": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-update"
+        ]
+      },
+      "actual": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-update"
+        ]
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G05",
+      "purpose": "A cancellation suppresses its referenced original.",
+      "passed": true,
+      "expected": {
+        "status": "no_alerts",
+        "alert_ids": []
+      },
+      "actual": {
+        "status": "no_alerts",
+        "alert_ids": []
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "no_all_clear": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G06",
+      "purpose": "Duplicate records must render once.",
+      "passed": true,
+      "expected": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-original"
+        ]
+      },
+      "actual": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-original"
+        ]
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G07",
+      "purpose": "A transport outage is unavailable, never empty-success or demo.",
+      "passed": true,
+      "expected": {
+        "status": "unavailable",
+        "alert_ids": []
+      },
+      "actual": {
+        "status": "unavailable",
+        "alert_ids": []
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G08",
+      "purpose": "Malformed upstream content must fail visibly.",
+      "passed": true,
+      "expected": {
+        "status": "unavailable",
+        "alert_ids": []
+      },
+      "actual": {
+        "status": "unavailable",
+        "alert_ids": []
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G09",
+      "purpose": "An active notice can have future onset.",
+      "passed": true,
+      "expected": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-original"
+        ]
+      },
+      "actual": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-original"
+        ]
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G10",
+      "purpose": "An exercise/test message must not be presented as actual.",
+      "passed": true,
+      "expected": {
+        "status": "no_alerts",
+        "alert_ids": []
+      },
+      "actual": {
+        "status": "no_alerts",
+        "alert_ids": []
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "no_all_clear": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G11",
+      "purpose": "Partial paginated results must not appear complete.",
+      "passed": true,
+      "expected": {
+        "status": "unavailable",
+        "alert_ids": []
+      },
+      "actual": {
+        "status": "unavailable",
+        "alert_ids": []
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "verbatim_instructions": true
+      }
+    },
+    {
+      "id": "M2-G12",
+      "purpose": "A corrupt date must not silently disappear as no alerts.",
+      "passed": true,
+      "expected": {
+        "status": "unavailable",
+        "alert_ids": []
+      },
+      "actual": {
+        "status": "unavailable",
+        "alert_ids": []
+      },
+      "checks": {
+        "expected_result": true,
+        "no_silent_demo": true,
+        "verbatim_instructions": true
+      }
+    }
+  ]
+}
