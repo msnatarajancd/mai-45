@@ -293,3 +293,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
 .st-key-top_toolbar {gap:0 !important;}
 .st-key-header_brand .rr-brand {line-height:1.1;}
 .st-key-header_brand .rr-brand-mark {display:flex;}
+
+/* A single header rhythm: brand and controls share a 44px centerline. */
+@media(min-width:701px) {
+ .st-key-top_toolbar {padding:18px 24px 18px 248px;}
+ .st-key-header_brand {top:20px;}
+ .st-key-header_brand .rr-brand small {display:none;}
+ .st-key-top_toolbar [data-testid="stColumn"]:first-child {flex:0 0 152px !important;}
+}
+.st-key-nav_search [data-testid="stTextInputRootElement"] {height:44px;min-height:44px;}
+.st-key-theme_toggle button,.st-key-quick_tour button {background:transparent;border-color:transparent;}
+.st-key-theme_toggle button:hover,.st-key-quick_tour button:hover {background:var(--rr-soft);}

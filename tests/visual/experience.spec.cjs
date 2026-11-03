@@ -187,3 +187,13 @@ test('narrator choices persist and audio remains opt-in',async({page})=>{
  await expect(page.locator('.st-key-guided_tour')).toContainText('STEP 3');
  expect(await page.evaluate(()=>window.__spoken.length)).toBe(count);
 });
+
+test('header controls share one centerline',async({page},info)=>{
+ await ready(page);
+ const selectors=info.project.name==='mobile'
+  ? ['.st-key-mobile_nav button','.st-key-nav_search [data-testid="stTextInputRootElement"]','.st-key-theme_toggle button','.st-key-quick_tour button']
+  : ['.rr-brand','.st-key-toolbar_toggle button','.st-key-nav_search [data-testid="stTextInputRootElement"]','.st-key-theme_toggle button','.st-key-quick_tour button'];
+ const centers=[];
+ for(const selector of selectors){const control=page.locator(selector+':visible').first();await expect(control).toBeVisible();const box=await control.boundingBox();centers.push(box.y+box.height/2);}
+ expect(Math.max(...centers)-Math.min(...centers)).toBeLessThanOrEqual(3);
+});
