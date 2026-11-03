@@ -106,7 +106,8 @@ def test_m5_payload_and_actual_planner_prompt_exclude_held_context(adjacent_cand
     store, _, _, selected = adjacent_candidates
     payload = FoundationKnowledgeService(store).export_to_m5(selected.source_id, selected.chunk_id, request())
     assert selected.original_passage in payload['guidance_text']
-    assert all(note in payload['guidance_text'] for note in selected.safety_caveats)
+    assert all(note in payload['guidance_text'] for note in selected.safety_caveats[1:])
+    assert 'Not operational guidance or household safety verification.' in payload['guidance_text']
     assert 'Cover windows with storm shutters or plywood.' not in payload['guidance_text']
     case = RecoveryCase(intake=RecoveryIntake(disaster_type='SYNTHETIC flood',
         housing_condition='SYNTHETIC reported damage', utility_availability={'water':None},
@@ -116,7 +117,57 @@ def test_m5_payload_and_actual_planner_prompt_exclude_held_context(adjacent_cand
     create_ai_draft_plan(case, [payload], fake)
     prompt = json.dumps(fake.calls)
     assert 'Cover windows with storm shutters or plywood.' not in prompt
+    assert 'PENDING human review' not in prompt
     assert selected.original_passage in prompt
+
+
+def test_public_caveat_projection_preserves_signed_records_and_store(adjacent_candidates):
+    store, _, _, selected = adjacent_candidates
+    def snapshot():
+        return {str(p.relative_to(store.root)):p.read_bytes()
+                for p in store.root.rglob('*') if p.is_file()}
+    before = snapshot()
+    original = store.load_candidate(selected.source_id, selected.chunk_id)
+    assert original.safety_caveats[0].startswith('PENDING human review;')
+    service = FoundationKnowledgeService(store)
+    retrieved = service.retrieve_guidance(request('building inspector'))
+    adapted = retrieve_guidance('building inspector', 'recover', hazard='flood',
+        jurisdiction='US-FL-MIAMI-DADE', service=service)
+    exported = service.export_to_m5(selected.source_id, selected.chunk_id, request())
+    for output in (retrieved.model_dump_json(), adapted.model_dump_json(), json.dumps(exported,default=str)):
+        assert 'PENDING human review' not in output
+        assert 'Not operational guidance or household safety verification.' in output
+        assert 'Cover windows with storm shutters or plywood.' not in output
+        assert selected.original_passage in output
+        assert selected.chunk_id in output
+    assert retrieved.evidence_metadata[0].candidate_review == original.review
+    assert retrieved.evidence_metadata[0].safety_caveats[1:] == original.safety_caveats[1:]
+    after = store.load_candidate(selected.source_id, selected.chunk_id)
+    assert after == original
+    assert candidate_context_hash(after) == original.review.context_hash
+    assert snapshot() == before
+
+
+def test_insufficient_reviewed_evidence_is_not_unavailable(adjacent_candidates):
+    store, _, _, selected = adjacent_candidates
+    service = FoundationKnowledgeService(store)
+    result = service.retrieve_guidance(request('building inspector',requested_evidence_count=3))
+    assert result.retrieval_status.value == 'INSUFFICIENT_EVIDENCE'
+    assert [e.chunk_id for e in result.evidence_records] == [selected.chunk_id]
+    adapted = retrieve_guidance('building inspector','recover',hazard='flood',
+        jurisdiction='US-FL-MIAMI-DADE',service=service)
+    assert adapted.retrieval_status == 'INSUFFICIENT_EVIDENCE'
+    assert adapted.insufficient_evidence and len(adapted.citations) == 1
+
+
+def test_unknown_pending_caveat_is_not_silently_removed(adjacent_candidates):
+    from knowledge.candidates import public_safety_caveats
+    _, _, held, selected = adjacent_candidates
+    with pytest.raises(PublicationError,match='approved'):
+        public_safety_caveats(held)
+    unknown = selected.model_copy(update={'safety_caveats':['PENDING additional safety review.']})
+    with pytest.raises(PublicationError,match='unresolved review-state'):
+        public_safety_caveats(unknown)
 
 
 def test_human_inspection_retains_full_context_and_same_fingerprint(adjacent_candidates, monkeypatch, capsys):
@@ -187,11 +238,15 @@ def test_real_store_candidates_and_full_context_unchanged():
     root=ROOT/'data/official_sources'
     packet=CandidatePacket.model_validate_json((root/'candidate_packet.json').read_bytes())
     assert len(packet.candidates)==16
-    assert all(c.review_status is CandidateStatus.PENDING for c in packet.candidates)
     assert packet.candidates[0].original_passage in packet.candidates[1].surrounding_context[0].guidance_text
     # Existing real-capture integrity tests verify all original bytes separately.
     from knowledge.store import SourceStore
     store=SourceStore(root)
     for c in packet.candidates:
-        assert store.load_candidate(c.source_id,c.chunk_id)==c
+        current = store.load_candidate(c.source_id,c.chunk_id)
+        # Packet is an ingestion snapshot, not the authoritative review queue.
+        fields = {'review_status', 'review', 'rejection'}
+        assert current.model_dump(exclude=fields) == c.model_dump(exclude=fields)
+        from knowledge.candidates import verify_candidate_trace
+        verify_candidate_trace(store, current)
         assert hashlib.sha256(store.original(c.original_content_hash)).hexdigest()==c.original_content_hash

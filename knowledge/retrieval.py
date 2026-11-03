@@ -1,7 +1,8 @@
 """Offline lexical retrieval. No model, network, generated advice, or signoff."""
 import re
 
-from .candidates import verify_candidate_publication
+from .candidates import public_safety_caveats, public_source_limitations, verify_candidate_publication
+from .store import replace_record
 from .models import (CandidateStatus, EvidenceChunk, EvidenceProvenance, GuidanceResult,
                      KnowledgeRequest, RetrievalStatus, ReviewStatus)
 from .review import PublicationError, verify_publication
@@ -60,7 +61,9 @@ def retrieve_guidance(store, request: KnowledgeRequest) -> GuidanceResult:
         'Only approved passages and reviewed safety caveats are guidance; full surrounding context is administrative review material.']
 
     def result(status, missing, matches=()):
-        sources = {bundle.source.source_id: bundle.source for _, _, bundle in matches}
+        # Metadata is a public copy; stored source/review records stay untouched.
+        sources = {bundle.source.source_id: replace_record(bundle.source,
+            limitations=public_source_limitations(bundle.source)) for _, _, bundle in matches}
         return GuidanceResult(matching_context=request, retrieval_status=status,
             limitations=limitations, missing_information=missing,
             evidence_records=[EvidenceChunk(chunk_id=c.chunk_id, source_id=c.source_id,
@@ -73,7 +76,7 @@ def retrieve_guidance(store, request: KnowledgeRequest) -> GuidanceResult:
                 parent_chunk_id=c.parent_chunk_id, official_url=c.official_url,
                 original_content_hash=c.original_content_hash, passage_start=c.passage_start,
                 passage_end=c.passage_end, candidate_review=c.review, source_review=bundle.review,
-                safety_caveats=c.safety_caveats)
+                safety_caveats=public_safety_caveats(c))
                 for _, c, bundle in matches])
 
     query = ' '.join([request.safety_topic or '', *request.household_needs])

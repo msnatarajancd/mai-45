@@ -43,12 +43,21 @@ def decision(content_hash, fingerprint):
 
 @pytest.fixture
 def reviewed_store(tmp_path, monkeypatch, request):
+    return _synthetic_store(tmp_path, monkeypatch, phase=getattr(request, 'param', Phase.RECOVER))
+
+
+@pytest.fixture
+def unreviewed_store(tmp_path, monkeypatch):
+    return _synthetic_store(tmp_path, monkeypatch, approve=False)
+
+
+def _synthetic_store(tmp_path, monkeypatch, *, phase=Phase.RECOVER, approve=True, limitations=None):
     url = 'https://synthetic-knowledge.test/static-fixture'
     source = SourceRecord(source_id='synthetic-test-only', publisher='SYNTHETIC TEST ONLY',
         title='SYNTHETIC TEST ONLY, NOT OFFICIAL GUIDANCE', official_url=url,
         source_type='synthetic_test_fixture', jurisdiction='US-FL', hazards=[Hazard.FLOOD],
-        disaster_phases=[getattr(request, 'param', Phase.RECOVER)], classification=Classification.OFFICIAL_SOURCE,
-        limitations=['SYNTHETIC TEST ONLY; never production evidence.'])
+        disaster_phases=[phase], classification=Classification.OFFICIAL_SOURCE,
+        limitations=limitations or ['SYNTHETIC TEST ONLY; never production evidence.'])
     monkeypatch.setattr('knowledge.sources.CURATED_SOURCES',
         (SourceSpec(source, (url,), ('synthetic',)),))
     store = SourceStore(tmp_path / 'synthetic-store')
@@ -60,7 +69,8 @@ def reviewed_store(tmp_path, monkeypatch, request):
     with store.admin_lock():
         store.write_original(RAW)
         store.save_locked(bundle)
-    bundle = review_source(store, source.source_id, decision(digest, context_hash(bundle)))
+    if approve:
+        bundle = review_source(store, source.source_id, decision(digest, context_hash(bundle)))
     candidates = []
     for parent in bundle.chunks:
         candidate = make_candidate(bundle, parent, phases=source.disaster_phases,
@@ -68,7 +78,7 @@ def reviewed_store(tmp_path, monkeypatch, request):
         with store.admin_lock():
             store.save_candidate_locked(candidate)
         candidates.append(review_candidate(store, source.source_id, candidate.chunk_id,
-            decision(digest, candidate_context_hash(candidate))))
+            decision(digest, candidate_context_hash(candidate))) if approve else candidate)
     return store, bundle, candidates
 
 
@@ -92,7 +102,8 @@ def test_relevant_query_returns_exact_evidence_and_traceable_citation(reviewed_s
     assert proof.surrounding_context == []
     parent = next(c for c in candidates[0].surrounding_context if c.chunk_id == proof.parent_chunk_id)
     assert parent.guidance_text[proof.passage_start:proof.passage_end] == evidence.guidance_text
-    assert proof.safety_caveats == candidates[0].safety_caveats
+    assert proof.safety_caveats[0] == 'Not operational guidance or household safety verification.'
+    assert proof.safety_caveats[1:] == candidates[0].safety_caveats[1:]
 
 
 def test_irrelevant_query_abstains(reviewed_store):
@@ -276,14 +287,15 @@ def test_missing_store_is_not_created(tmp_path):
     assert not path.exists()
 
 
-def test_real_unreviewed_store_returns_zero_without_any_artifact_changes():
-    store = SourceStore(ROOT / 'data/official_sources')
+def test_real_unreviewed_store_returns_zero_without_any_artifact_changes(unreviewed_store):
+    """Legacy node name retained; pending-state coverage uses isolated fixtures."""
+    store = unreviewed_store[0]
     before = {p.relative_to(store.root): p.read_bytes() for p in store.root.rglob('*') if p.is_file()}
     result = FoundationKnowledgeService(store).retrieve_guidance(request('electrical hazards'))
     assert result.retrieval_status is RetrievalStatus.UNAVAILABLE
     assert not result.evidence_records and not result.source_metadata and not result.evidence_metadata
     candidates = [c for b in store.list_bundles() for c in store.list_candidates(b.source.source_id)]
-    assert len(candidates) == 16
+    assert len(candidates) == 3
     assert all(c.review_status is CandidateStatus.PENDING and c.review is None for c in candidates)
     after = {p.relative_to(store.root): p.read_bytes() for p in store.root.rglob('*') if p.is_file()}
     assert before == after

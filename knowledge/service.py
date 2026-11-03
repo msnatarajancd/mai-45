@@ -36,7 +36,7 @@ class FoundationKnowledgeService:
         approved passage and caveats remain in guidance_text. Raw parent context
         is administrative only and must never be supplied to Recovery or a model.
         """
-        from .candidates import verify_candidate_publication
+        from .candidates import public_safety_caveats, public_source_limitations, verify_candidate_publication
         try:
             with self.store.admin_lock():
                 candidate = self.store.load_candidate(source_id, chunk_id)
@@ -46,8 +46,8 @@ class FoundationKnowledgeService:
                 source = bundle.source
                 parts = [f'Parent source: {source.source_id}\nCitation: {candidate.chunk_id}',
                          candidate.section_heading + '\n' + candidate.original_passage]
-                parts.append('Safety caveats:\n' + '\n'.join(candidate.safety_caveats))
-                parts.append('Source limitations:\n' + '\n'.join(source.limitations))
+                parts.append('Safety caveats:\n' + '\n'.join(public_safety_caveats(candidate)))
+                parts.append('Source limitations:\n' + '\n'.join(public_source_limitations(source)))
                 guidance = '\n\n'.join(parts)
                 if len(guidance) > 6000:
                     raise PublicationError('complete published passage and caveats exceed the M5 text limit')

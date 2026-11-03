@@ -12,7 +12,7 @@ from knowledge.candidates import candidate_context_hash, make_candidate
 from knowledge.service import FoundationKnowledgeService
 from knowledge.store import SourceStore, context_hash, replace_record
 from services.knowledge import retrieve_guidance
-from test_knowledge_retrieval import reviewed_store, request, decision
+from test_knowledge_retrieval import reviewed_store, unreviewed_store, request, decision
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -37,7 +37,8 @@ def test_approved_candidate_exports_passage_caveats_and_m5_shape(reviewed_store)
     assert payload['verified'] is True and payload['reviewed'] is True
     assert bundle.source.source_id in payload['guidance_text']
     assert candidates[0].original_passage in payload['guidance_text']
-    assert all(c in payload['guidance_text'] for c in candidates[0].safety_caveats)
+    assert all(c in payload['guidance_text'] for c in candidates[0].safety_caveats[1:])
+    assert 'Not operational guidance or household safety verification.' in payload['guidance_text']
     assert all(c in payload['guidance_text'] for c in bundle.source.limitations)
     assert 'Do not touch electrical wires.' in payload['guidance_text']
 
@@ -157,7 +158,8 @@ def test_m1_preserves_exact_passage_and_all_citation_provenance(reviewed_store):
     assert citation.candidate_review == candidates[0].review.model_dump(mode='json')
     assert citation.source_review == bundle.review.model_dump(mode='json')
     assert citation.surrounding_context == []
-    assert citation.safety_caveats == candidates[0].safety_caveats
+    assert citation.safety_caveats[0] == 'Not operational guidance or household safety verification.'
+    assert citation.safety_caveats[1:] == candidates[0].safety_caveats[1:]
     assert citation.phases == ['recover'] and citation.jurisdiction == 'US-FL'
     assert result.insufficient_evidence and result.retrieval_status == 'INSUFFICIENT_EVIDENCE'
 
@@ -199,13 +201,15 @@ def test_adapter_sanitizes_store_failure():
     assert not result.citations and 'secret' not in result.model_dump_json()
 
 
-def test_real_pending_store_produces_zero_m1_citations():
-    result = retrieve_guidance('electrical hazards', 'recover', hazard='flood', jurisdiction='US-FL-MIAMI-DADE')
+def test_real_pending_store_produces_zero_m1_citations(unreviewed_store):
+    """Legacy node name retained; no assumptions about production approvals."""
+    store = unreviewed_store[0]
+    result = retrieve_guidance('electrical hazards', 'recover', hazard='flood', jurisdiction='US-FL-MIAMI-DADE',
+        service=FoundationKnowledgeService(store))
     assert result.retrieval_status == 'UNAVAILABLE'
     assert not result.citations and not result.sources
-    store = SourceStore(ROOT / 'data/official_sources')
     candidates = [c for b in store.list_bundles() for c in store.list_candidates(b.source.source_id)]
-    assert len(candidates) == 16 and all(c.review_status is CandidateStatus.PENDING for c in candidates)
+    assert len(candidates) == 3 and all(c.review_status is CandidateStatus.PENDING for c in candidates)
 
 
 def button(app, label):

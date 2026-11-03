@@ -15,6 +15,51 @@ def candidate_context_hash(candidate: ReviewCandidate) -> str:
     return hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()
 
 
+def public_safety_caveats(candidate: ReviewCandidate) -> list[str]:
+    """Project one known queue annotation into a timeless safety limitation.
+
+    Stored/signed caveats and their context fingerprint remain immutable. Never
+    strip arbitrary review-state language: unfamiliar annotations fail closed.
+    Callers must still run the full publication gate under the store lock.
+    """
+    import re
+    from .review import PublicationError
+    if candidate.review_status is not CandidateStatus.APPROVED:
+        raise PublicationError('only approved candidates have public caveats')
+    pending = 'PENDING human review; not operational guidance or household safety verification.'
+    result = []
+    for caveat in candidate.safety_caveats:
+        text = ('Not operational guidance or household safety verification.'
+                if caveat == pending else caveat)
+        if re.search(r'\bpending\b', text, re.I):
+            raise PublicationError('unresolved review-state annotation in public safety caveats')
+        result.append(text)
+    return result
+
+
+def public_source_limitations(source) -> list[str]:
+    """Public view of limitations after source publication verification.
+
+    Never mutate the authoritative source or recompute its signed context hash
+    from this derived display view. Unknown review-state annotations fail closed.
+    """
+    import re
+    from .review import PublicationError
+    if source.review_status is not ReviewStatus.REVIEWED:
+        raise PublicationError('only reviewed sources have public limitations')
+    legacy = 'Candidate source; human review required before publication.'
+    result = []
+    for limitation in source.limitations:
+        text = ('Source review does not establish household safety or current conditions.'
+                if limitation == legacy else limitation)
+        if re.search(r'\b(candidate source|pending|unreviewed|review[_ -]required|'
+                     r'(?:human )?review (?:is )?(?:required|needed|outstanding)|awaiting\b.*\breview)\b',
+                     text, re.I):
+            raise PublicationError('unresolved review-state annotation in public source limitations')
+        result.append(text)
+    return result
+
+
 def verify_candidate_trace(store: SourceStore, candidate: ReviewCandidate):
     from .review import PublicationError, verify_original
     candidate = ReviewCandidate.model_validate_json(candidate.model_dump_json())
@@ -43,8 +88,10 @@ def verify_candidate_publication(store, candidate, request=None):
         raise PublicationError('only an approved candidate may be published')
     if not candidate.review.decision.standalone_passage_checked:
         raise PublicationError('explicit standalone passage and caveat review is required for publication')
+    public_safety_caveats(candidate)
     bundle = verify_candidate_trace(store, candidate)
     verify_publication(store, bundle)
+    public_source_limitations(bundle.source)
     if candidate.review.reviewed_at < bundle.source.retrieved_at:
         raise PublicationError('candidate review predates the current acquisition')
     if request is not None:

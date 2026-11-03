@@ -28,6 +28,7 @@ def retrieve_guidance(query: str, phase: str, context: Household | None = None, 
         from knowledge.models import (DisasterPhase, GuidanceResult as M3Result,
             Hazard, KnowledgeRequest, RetrievalStatus, ReviewStatus)
         from knowledge.service import FoundationKnowledgeService
+        from knowledge.candidates import public_source_limitations
         from knowledge.store import SourceStore
         request = KnowledgeRequest(hazard=Hazard(hazard), disaster_phase=DisasterPhase(phases[phase]),
             jurisdiction=jurisdiction, safety_topic=query)
@@ -68,7 +69,7 @@ def retrieve_guidance(query: str, phase: str, context: Household | None = None, 
                 phases=[p.value for p in evidence.applicable_phases],
                 source_review=proof.source_review.model_dump(mode='json'),
                 candidate_review=proof.candidate_review.model_dump(mode='json'),
-                safety_caveats=proof.safety_caveats, source_limitations=source.limitations))
+                safety_caveats=proof.safety_caveats, source_limitations=public_source_limitations(source)))
             links.append(Source(title=source.title, url=source.official_url, publisher=source.publisher,
                 reviewed_at=source.reviewed_at.isoformat(), citation_id=evidence.chunk_id,
                 source_id=source.source_id, original_content_hash=source.original_content_hash))

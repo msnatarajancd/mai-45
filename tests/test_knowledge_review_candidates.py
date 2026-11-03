@@ -42,6 +42,12 @@ def captured_store(tmp_path):
         for source_id in ('cdc-flood-reentry', 'cdc-floodwater', 'miami-dade-eeap'):
             bundle = REAL_STORE.load(source_id)
             raw = REAL_STORE.original(bundle.source.original_content_hash)
+            # Copy content/provenance, never mutable real human approval state.
+            state = (ReviewStatus.REVIEW_REQUIRED if source_id == 'miami-dade-eeap'
+                     else ReviewStatus.DOWNLOADED_UNREVIEWED)
+            source = replace_record(bundle.source, review_status=state, reviewer=None, reviewed_at=None)
+            bundle = SourceBundle(source=source, chunks=extract_sections(raw, source, charset=source.charset),
+                extracted_at=bundle.extracted_at, extraction_version=bundle.extraction_version)
             store.write_original(raw)
             store.save_locked(bundle)
     return store
@@ -182,6 +188,8 @@ def test_pending_candidates_cannot_be_exported(captured_store):
 
 def test_candidate_approval_is_explicit_and_does_not_publish_source(captured_store):
     candidate = prepare_candidates(captured_store).candidates[0]
+    before = captured_store.load(candidate.source_id)
+    assert before.review is None and before.source.review_status is not ReviewStatus.REVIEWED
     decision = ReviewDecision(reviewer='UNIT_TEST_ONLY identity; not a real signoff',
         expected_content_hash=candidate.original_content_hash, expected_context_hash=candidate_context_hash(candidate),
         provenance_checked=True, content_checked=True, geographic_scope_checked=True,
@@ -189,6 +197,11 @@ def test_candidate_approval_is_explicit_and_does_not_publish_source(captured_sto
     approved = review_candidate(captured_store, candidate.source_id, candidate.chunk_id, decision)
     assert approved.review_status is CandidateStatus.APPROVED
     assert captured_store.load(candidate.source_id).source.review_status is not ReviewStatus.REVIEWED
+    assert captured_store.load(candidate.source_id) == before
+    from knowledge.models import Hazard
+    with pytest.raises(PublicationError):
+        FoundationKnowledgeService(captured_store).export_to_m5(candidate.source_id, candidate.chunk_id,
+            KnowledgeRequest(hazard=Hazard.HURRICANE, disaster_phase=DisasterPhase.PREPARE, jurisdiction='US'))
     path = captured_store.root / 'originals' / (candidate.original_content_hash + '.bin')
     path.write_bytes(path.read_bytes() + b'\n')
     with pytest.raises(PublicationError): verify_candidate_trace(captured_store, approved)
