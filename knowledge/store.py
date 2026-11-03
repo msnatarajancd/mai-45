@@ -78,6 +78,27 @@ class SourceStore:
             raise ValueError('invalid content hash')
         return (self.root / 'originals' / (content_hash + '.bin')).read_bytes()
 
+    def list_bundles(self):
+        """Authoritative current records only; never history or packet summaries."""
+        if not (self.root / 'records').is_dir():
+            raise FileNotFoundError('source records are unavailable')
+        result = []
+        for path in sorted((self.root / 'records').glob('*.json')):
+            bundle = self.load(path.stem)
+            if bundle is None or bundle.source.source_id != path.stem:
+                raise ValueError('source record identity mismatch')
+            result.append(bundle)
+        return result
+
+    def list_candidates(self, source_id: str):
+        result = []
+        for path in sorted((self.root / 'candidates' / self._id(source_id)).glob('*.json')):
+            candidate = self.load_candidate(source_id, path.stem)
+            if candidate is None or candidate.source_id != source_id or candidate.chunk_id != path.stem:
+                raise ValueError('candidate record identity mismatch')
+            result.append(candidate)
+        return result
+
     def write_original(self, data: bytes) -> str:
         digest = hashlib.sha256(data).hexdigest()
         path = self.root / 'originals' / (digest + '.bin')

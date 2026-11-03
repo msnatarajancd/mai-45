@@ -1,4 +1,4 @@
-﻿"""Shared typed boundary. M3-1 intentionally has no query retrieval/ranking engine."""
+"""Shared typed boundary for reviewed retrieval and existing publication services."""
 from typing import Protocol
 
 from .models import (GuidanceResult, KnowledgeRequest, ResourceRecord,
@@ -17,16 +17,13 @@ def _scope_matches(scope: str, requested: str) -> bool:
 
 
 class FoundationKnowledgeService:
-    """Fail-closed interfaces, not a claim that retrieval is implemented."""
+    """Deterministic retrieval; other boundaries retain their existing gates."""
     def __init__(self, store: SourceStore):
         self.store = store
 
     def retrieve_guidance(self, request: KnowledgeRequest) -> GuidanceResult:
-        return GuidanceResult(evidence_records=[], source_metadata=[], matching_context=request,
-            retrieval_status=RetrievalStatus.UNAVAILABLE,
-            limitations=['Query retrieval is not implemented in M3-1.',
-                         'Static documents do not establish current orders or assistance availability.'],
-            missing_information=['No reviewed query-matched evidence has been retrieved.'])
+        from .retrieval import retrieve_guidance
+        return retrieve_guidance(self.store, request)
 
     def find_resources(self, request: KnowledgeRequest) -> ResourceResult:
         return ResourceResult(resources=[], source_metadata=[], matching_context=request,

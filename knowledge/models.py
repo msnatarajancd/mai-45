@@ -260,6 +260,21 @@ class RetrievalStatus(StrEnum):
     UNAVAILABLE = 'UNAVAILABLE'
 
 
+class EvidenceProvenance(StrictRecord):
+    """Chunk-level publication proof, including context that must accompany excerpts."""
+    chunk_id: Hash
+    source_id: Identifier
+    parent_chunk_id: Identifier
+    official_url: Annotated[str, Field(max_length=2000)]
+    original_content_hash: Hash
+    passage_start: int
+    passage_end: int
+    candidate_review: ReviewRecord
+    source_review: ReviewRecord
+    surrounding_context: list[EvidenceChunk]
+    safety_caveats: list[Annotated[str, Field(min_length=1, max_length=1000)]]
+
+
 class GuidanceResult(StrictRecord):
     evidence_records: list[EvidenceChunk]
     source_metadata: list[SourceRecord]
@@ -267,6 +282,7 @@ class GuidanceResult(StrictRecord):
     retrieval_status: RetrievalStatus
     limitations: list[Text]
     missing_information: list[Text]
+    evidence_metadata: list[EvidenceProvenance] = Field(default_factory=list)
 
 
 class ResourceResult(StrictRecord):

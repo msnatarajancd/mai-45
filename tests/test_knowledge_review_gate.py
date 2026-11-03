@@ -47,7 +47,7 @@ def test_no_fake_signoff_or_current_order_in_service_interfaces(tmp_path):
     assert resources.retrieval_status is RetrievalStatus.UNAVAILABLE
     assert not guidance.evidence_records and not guidance.source_metadata
     assert not resources.resources
-    assert any('not implemented' in value for value in guidance.limitations)
+    assert any('Static evidence' in value for value in guidance.limitations)
     assert any('availability' in value for value in resources.limitations)
 
 
