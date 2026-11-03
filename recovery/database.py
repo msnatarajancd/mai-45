@@ -287,6 +287,11 @@ class SQLiteRecoveryRepository:
             if row is None:
                 raise ValueError("recovery case does not exist")
             case = RecoveryCase.model_validate_json(row[0])
+            # Authoritative safety check under the same write lock as acceptance.
+            # Incoming intake and caller snapshots cannot clear a persisted flag.
+            current_assessment = evaluate_recovery_intake(case.intake)
+            if current_assessment.outcome is not RecoveryAssessmentOutcome.CONTINUE_RECOVERY:
+                raise RecoveryIntakeNotPermitted(current_assessment)
             if row[1] != str(preview.previous_plan_id):
                 raise ValueError("stale reassessment: active plan changed; generate a new preview")
             plan_row = connection.execute(

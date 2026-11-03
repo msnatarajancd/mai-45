@@ -53,6 +53,12 @@ def preview_reassessment(
     No repository calls, approval, removal, reprioritization, or status resets occur.
     """
     assessment = evaluate_recovery_intake(updated_intake)
+    current_assessment = evaluate_recovery_intake(case.intake)
+    # Ordinary reassessment cannot clear persisted danger or a missing assessment.
+    # A danger report from either intake still takes emergency precedence.
+    if (current_assessment.outcome is RecoveryAssessmentOutcome.EMERGENCY_HANDOFF
+            or assessment.outcome is RecoveryAssessmentOutcome.CONTINUE_RECOVERY):
+        assessment = current_assessment
     result = ReassessmentPreview(
         outcome=assessment.outcome, case_id=case.case_id,
         previous_plan_id=current_plan.plan_id,

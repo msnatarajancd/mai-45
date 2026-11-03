@@ -346,11 +346,109 @@ def test_emergency_report_invalidates_other_session_preview(saved):
     preview = make_revision(case, plan)
     other = SQLiteRecoveryRepository(path)
     repo.report_immediate_danger(case.case_id)
-    with pytest.raises(ValueError, match='stale'):
+    from recovery.assessment import RecoveryIntakeNotPermitted
+    with pytest.raises(RecoveryIntakeNotPermitted) as error:
         other.approve_reassessment(preview, explicitly_approved=True)
+    assert error.value.assessment.outcome is RecoveryAssessmentOutcome.EMERGENCY_HANDOFF
     with pytest.raises(ValueError, match='no-immediate-danger'):
         other.update_task_status(plan.plan_id, plan.proposed_tasks[1].task_id, TaskStatus.COMPLETED)
     assert other.get_active_plan(case.case_id) == plan
+
+
+def _persisted_state(path):
+    """Include all plans, active IDs, task/version JSON and approval history."""
+    with sqlite3.connect(path) as connection:
+        return {table: connection.execute(f'SELECT * FROM {table} ORDER BY rowid').fetchall()
+                for table in ('recovery_cases', 'recovery_plans', 'recovery_reassessments')}
+
+
+def _set_test_safety_state(path, repo, case_id, danger):
+    if danger is True:
+        repo.report_immediate_danger(case_id)
+    else:
+        # Synthetic legacy/unassessed persisted state; no clearance API is added.
+        current = repo.get_case(case_id)
+        current.intake.immediate_danger = None
+        with sqlite3.connect(path) as connection:
+            connection.execute('UPDATE recovery_cases SET case_json = ? WHERE case_id = ?',
+                               (current.model_dump_json(), str(case_id)))
+
+
+@pytest.mark.parametrize('danger,outcome', [
+    (True, RecoveryAssessmentOutcome.EMERGENCY_HANDOFF),
+    (None, RecoveryAssessmentOutcome.DANGER_NOT_ASSESSED),
+])
+@pytest.mark.parametrize('bypass_preview', [False, True])
+def test_persisted_safety_cannot_be_cleared_by_fresh_reassessment(saved, danger, outcome, bypass_preview):
+    from recovery.assessment import RecoveryIntakeNotPermitted
+    path, repo, case, plan = saved
+    # Retain an existing accepted revision/history as well as completed progress.
+    plan = repo.approve_reassessment(make_revision(case, plan), explicitly_approved=True)
+    safe_case = repo.get_case(case.case_id)
+    incoming = updated(safe_case, housing_condition='Synthetic changed accommodation', immediate_danger=False)
+    prior_preview = preview_reassessment(safe_case, plan, incoming)
+    _set_test_safety_state(path, repo, case.case_id, danger)
+    current = repo.get_case(case.case_id)
+    before = _persisted_state(path)
+    preview = preview_reassessment(current, plan, incoming)
+    assert preview.outcome is outcome
+    assert preview.proposed_revision is None
+    assert not preview.new_tasks and not preview.changed_circumstances
+    if bypass_preview:
+        # A caller supplies an old/permissive preview with a fresh matching case
+        # snapshot. Persistence must reject it independently of preview safety.
+        preview = prior_preview.model_copy(deep=True, update={'previous_case': current})
+        assert preview.outcome is RecoveryAssessmentOutcome.CONTINUE_RECOVERY
+    with pytest.raises(RecoveryIntakeNotPermitted) as error:
+        repo.approve_reassessment(preview, explicitly_approved=True)
+    assert error.value.assessment.outcome is outcome
+    reopened = SQLiteRecoveryRepository(path)
+    assert reopened.get_case(case.case_id).intake.immediate_danger is danger
+    assert reopened.get_active_plan(case.case_id) == plan
+    assert reopened.get_active_plan(case.case_id).proposed_tasks[0].status is TaskStatus.COMPLETED
+    assert _persisted_state(path) == before
+
+
+@pytest.mark.parametrize('danger,outcome', [
+    (True, RecoveryAssessmentOutcome.EMERGENCY_HANDOFF),
+    (None, RecoveryAssessmentOutcome.DANGER_NOT_ASSESSED),
+])
+def test_safety_added_after_preview_is_checked_inside_transaction(saved, monkeypatch, danger, outcome):
+    from contextlib import contextmanager
+    from recovery.assessment import RecoveryIntakeNotPermitted
+    path, repo, case, plan = saved
+    preview = make_revision(case, plan)
+    _set_test_safety_state(path, SQLiteRecoveryRepository(path), case.case_id, danger)
+    before = _persisted_state(path)
+    statements = []
+    original_connection = repo._connection
+
+    @contextmanager
+    def traced_connection():
+        with original_connection() as connection:
+            connection.set_trace_callback(statements.append)
+            yield connection
+
+    monkeypatch.setattr(repo, '_connection', traced_connection)
+    with pytest.raises(RecoveryIntakeNotPermitted) as error:
+        repo.approve_reassessment(preview, explicitly_approved=True)
+    assert error.value.assessment.outcome is outcome
+    begin = next(i for i, sql in enumerate(statements) if sql == 'BEGIN IMMEDIATE')
+    read = next(i for i, sql in enumerate(statements) if 'SELECT case_json, active_plan_id' in sql)
+    assert begin < read
+    assert 'ROLLBACK' in statements
+    assert not any(sql.lstrip().startswith(('INSERT', 'UPDATE', 'DELETE')) for sql in statements)
+    assert _persisted_state(path) == before
+
+
+@pytest.mark.parametrize('current,incoming', [(True, None), (None, True)])
+def test_preview_keeps_emergency_precedence_from_either_intake(saved, current, incoming):
+    _, _, case, plan = saved
+    changed_case = case.model_copy(deep=True)
+    changed_case.intake.immediate_danger = current
+    preview = preview_reassessment(changed_case, plan, updated(case, immediate_danger=incoming))
+    assert preview.outcome is RecoveryAssessmentOutcome.EMERGENCY_HANDOFF
+    assert preview.proposed_revision is None
 
 
 def test_foreign_task_id_cannot_be_used_for_new_revision_task(saved):
