@@ -79,7 +79,11 @@ def test_full_recovery_approval_progress_and_resume(app):
 
 
 
-def test_mode_switch_updates_banner_and_discards_fixture(app):
+def test_mode_switch_updates_banner_and_discards_fixture(app, monkeypatch):
+    from services import nws_alerts
+    from m2_guardian.service import GuardianService
+    def unavailable(*args): raise TimeoutError('Synthetic outage')
+    monkeypatch.setattr(nws_alerts, 'GuardianService', lambda: GuardianService(transport=unavailable))
     app.session_state['page'] = 'Protect'
     app.run()
     button(app, 'Show simulated alert').click().run()

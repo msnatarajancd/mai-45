@@ -53,3 +53,5 @@ def full_chat():
     from ui.assistant_page import render
     with st.container(key='full_chat'):
         render()
+        from ui.guidance import render as grounded_guidance
+        grounded_guidance('assistant')

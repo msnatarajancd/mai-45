@@ -33,6 +33,12 @@ class Alert(BaseModel):
     severity: str
     description: str
     expires_at: str | None = None
+    sent_at: str | None = None
+    effective_at: str | None = None
+    instruction: str | None = None
+    area: str | None = None
+    sender: str | None = None
+    source_url: str = 'https://www.weather.gov/'
 
 
 class AlertResult(BaseModel):
@@ -42,6 +48,8 @@ class AlertResult(BaseModel):
     checked_at: str | None = None
     source: str = 'https://www.weather.gov/mfl/'
     message: str = ''
+    scope: str | None = None
+    location_label: str | None = None
 
 
 class GuidanceCitation(BaseModel):

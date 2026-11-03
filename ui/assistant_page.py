@@ -40,7 +40,7 @@ def preview_action(proposal):
         for name,value in a.intake.model_dump().items(): st.write('**'+name.replace('_',' ').capitalize()+':**',value)
         st.caption('This prepares a deterministic organization plan, not source-grounded emergency guidance. Reassessment does not approve a revision.')
     elif a.kind=='start_demo': st.caption('Changes session preferences and alert mode to the fictional Rivera scenario. Existing recovery cases are kept.')
-    elif a.kind=='check_alerts': st.caption('The simulated mode uses a labeled fixture. Live mode currently reports unavailable.')
+    elif a.kind=='check_alerts': st.caption('The simulated mode uses a labeled fixture. Live mode requests official county-wide NWS alerts; failures remain unavailable and no alerts is not proof of safety.')
 
 
 def show_draft(draft_json):

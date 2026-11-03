@@ -1,0 +1,9 @@
+# M1 grounded integration
+
+Implement the team lead handoff on feature/m1-grounded-integration, based on shared main with M3 PR #3. Merge M2 through Git, preserving provenance.
+
+1. Add a bounded generation service around services.knowledge.retrieve_guidance and the existing NebiusClient. Explicit phase, hazard and jurisdiction; no raw corpus, review notes, surrounding context, household history or persisted tasks enter prompts. Only whitelisted public citation fields and public limitations. Never generate with unavailable/no matching evidence. Insufficient results permit only a labeled partial explanation of available passages, never a complete answer.
+2. Require per-statement citation IDs and verbatim supporting quotes. Reject invented references, links, missing support and unsupported output using a second constrained entailment check. Fail closed to reviewed passages. Preserve deterministic limitations outside model text. Revalidate retrieval after generation and on display; invalidate changed/revoked evidence without automatic model retries.
+3. Add a shared reviewed-guidance panel in Protect, Respond, Recover and Assistant. Keep existing deterministic Protect excerpt display. Requests are explicit, retain phase boundaries, distinguish actual Nebius generation from fallback. M5 task state and approval remain unchanged; explanations never write tasks.
+4. Integrate Guardian alert snapshots and test failure/no-alert/live/demo boundaries. Emergency controls render first and danger interrupts before either retrieval or generation.
+5. Test safe prompt projection, status handling, malformed output, provider failures, revocation, emergency bypass, UI state, approved persisted task updates. Run full suite, real CDC retrieval + Qwen call, and local browser checks. Record exact live status and handoff blockers; do not fake live evidence.

@@ -108,16 +108,25 @@ def protect():
         if result.status == 'alerts':
             for alert in result.alerts:
                 st.markdown(f'<div class="rr-warning"><div class="rr-eyebrow">{"SIMULATED SCENARIO · NOT CURRENT CONDITIONS" if result.simulated else "OFFICIAL ALERT RESULT"}</div><h3>{escape(alert.headline)}</h3><p>{escape(alert.description)}</p><span class="rr-badge">{escape(alert.severity)}</span></div>', unsafe_allow_html=True)
+                if alert.sent_at:
+                    st.caption('Issued: ' + alert.sent_at + ' · Effective: ' + (alert.effective_at or 'Not supplied'))
                 if alert.expires_at:
                     st.caption('Expires: ' + alert.expires_at)
+                st.caption('Area: ' + (alert.area or 'Not supplied') + ' · Sender: ' + (alert.sender or 'NWS'))
+                if alert.instruction:
+                    with st.expander('Official alert instructions'):
+                        st.text(alert.instruction)
+                if alert.source_url and not result.simulated:
+                    st.link_button('Original official alert', alert.source_url)
         elif result.status == 'none':
             st.info('No active alerts returned for this area. This does not mean the area or your household is safe.')
         else:
             st.warning(result.message)
+        st.caption(result.message)
         if result.simulated:
             st.caption('Fixture loaded for the walkthrough. No official issue time or live check is claimed.')
         elif result.checked_at:
-            st.caption('Last check: ' + result.checked_at + ' · On-demand only; not continuous monitoring.')
+            st.caption('Lookup started: ' + result.checked_at + ' · On-demand only; not continuous monitoring.')
         st.link_button('Open National Weather Service', 'https://www.weather.gov/mfl/')
     else:
         st.info('No alert check has been made. Choose a mode above to begin.')
@@ -183,6 +192,8 @@ def protect():
             for missing in result.missing_information:
                 st.caption(missing)
         st.caption('Deterministic excerpt display; no AI call or current safety determination.')
+    from ui.guidance import render as grounded_guidance
+    grounded_guidance('protect')
     if st.button('Next · Explore assistance', type='primary'):
         go('Respond')
 
@@ -228,6 +239,8 @@ def respond():
                 st.caption(record.caveat)
                 st.link_button('Open official information', record.url, width='stretch')
         st.caption('These are information links, not confirmed service matches. No live shelter capacity or pickup availability is shown.')
+    from ui.guidance import render as grounded_guidance
+    grounded_guidance('respond')
     if st.button('Next · Review recovery needs', type='primary'):
         go('Recover')
 
@@ -237,12 +250,12 @@ def evidence():
     a, b, c = st.columns(3)
     a.metric('Shared application', 'Connected')
     b.metric('Recovery persistence', 'Local SQLite')
-    c.metric('Live alerts / RAG', 'Pending')
+    c.metric('Reviewed retrieval', 'Connected')
     st.subheader('Integration readiness')
     integrations = [
         {'Owner': 'M1', 'Capability': 'Application, searchable menu, tour and conversational actions', 'State': 'Implemented'},
-        {'Owner': 'M2', 'Capability': 'NWS connector and Guardian explanation', 'State': 'TODO · simulated fixture only'},
-        {'Owner': 'M3', 'Capability': 'Reviewed corpus, retrieval and local directory', 'State': 'TODO · official entry links only'},
+        {'Owner': 'M2', 'Capability': 'NWS Guardian alert retrieval', 'State': 'Integrated · live checks are on demand'},
+        {'Owner': 'M3', 'Capability': 'Reviewed CDC retrieval and M1 Qwen explanations', 'State': 'Integrated · limited recovery evidence; resource directory pending'},
         {'Owner': 'M4', 'Capability': 'Reviewed emergency rules and safety evaluation', 'State': 'TODO · conservative access fallback'},
         {'Owner': 'M5', 'Capability': 'Intake, plan approval, saved tasks and reassessment', 'State': 'Integrated from PR #1'},
     ]
@@ -252,7 +265,7 @@ def evidence():
             left.write("**" + row["Owner"] + " · " + row["Capability"] + "**")
             right.caption(row["State"])
     st.subheader('Sources and provenance')
-    st.write('The links below point to official publishers. They are not a downloaded corpus and have not been used to claim grounded AI answers. Resource availability must be checked with the provider.')
+    st.write('The links below point to official publishers. Reviewed CDC recovery passages are available through the guidance panels. These general directory links do not themselves establish reviewed evidence. Resource availability must be checked with the provider.')
     for record in resources.OFFICIAL_LINKS:
         with st.expander(record.title):
             st.write(record.caveat)
@@ -260,7 +273,7 @@ def evidence():
             st.link_button('Visit official source', record.url)
     with st.expander('What the demo can honestly show', expanded=True):
         st.write('A fictional household journey; explicitly simulated warning; immediate emergency links; a reviewable deterministic recovery draft; local saved progress; changes proposed before approval.')
-        st.write('The Assistant and tour explanations use Nebius only when requested and configured; proposed actions are validated and require confirmation. The optional M5 AI planner also uses Nebius. Without verified evidence it is experimental and ungrounded. No hidden AI calls are made by the application shell.')
+        st.write('The Assistant and tour explanations use Nebius only when requested and configured; proposed actions are validated and require confirmation. The reviewed-guidance panels retrieve M3 evidence before Qwen generation and preserve limitations. The application uses deterministic organization drafts for task planning; source explanations never silently create or update tasks. No hidden AI calls are made by the application shell.')
     with st.expander('Storage, privacy and deployment limits'):
         st.write('No login. Household preferences last for the session. Fictional recovery cases persist on this local machine and can be resumed with their case ID. Case IDs are not authentication. This is a local single-user demo, not a private multi-user service. Streamlit hosted disk may be reset on restart or redeploy.')
         st.write('No offline guarantee, dispatch, monitoring, live shelter inventory, insurance submission, FEMA eligibility decision, or validation for real emergencies.')

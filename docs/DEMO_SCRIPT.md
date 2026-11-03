@@ -30,15 +30,24 @@ Open **Circumstances changed?**. Explicitly select no immediate danger, report e
 
 ## 6:30–7:30 — Evidence and close
 
-Open Evidence. State clearly what is connected (M1 interface, M5 saved recovery workflow) and pending (M2 live data, M3 grounding/directory, M4 reviewed rules). Once integrated, update these statements with actual test/probe evidence.
+Open Evidence. State clearly what is connected (M1 interface and grounded Qwen generation, M2 county alerts, M3 reviewed CDC retrieval, M5 saved recovery workflow) and pending (additional approved evidence, resource directory, M4 reviewed rules). Once integrated, update these statements with actual test/probe evidence.
 
 “The goal is a clear next step people can understand and review, with continuity when circumstances change.” This is a course prototype, not an operational emergency tool. Avoid claims about lives saved, guaranteed assistance, or winning the contest.
 
 ## Recovery if the demo goes off script
 
-Use sidebar navigation; saved plans are not erased. Start guided demo resets alert context and household preferences but preserves cases. An intentionally danger-reported saved case stays paused; start a new fictional case for the recovery segment. If storage fails, emergency controls still work, but do not claim progress was saved. Skip optional experimental AI if its provider is unconfigured.
+Use sidebar navigation; saved plans are not erased. Start guided demo resets alert context and household preferences but preserves cases. An intentionally danger-reported saved case stays paused; start a new fictional case for the recovery segment. If storage fails, emergency controls still work, but do not claim progress was saved. If Qwen is unavailable, show the explicitly labeled reviewed-excerpt fallback; never call it live generation.
 
 
 ## Optional 60-second assistant segment
 
-Search `tasks` in the left menu to reveal Recover. Clear the search and choose Show me around; demonstrate Next step and End tour. Open Ask ReadyRelief and request “Change my fictional household to 4 people with no vehicle.” Show that the preview identifies both changes before Confirm action. Ask “How do I save my progress?” to demonstrate product help without a write. With an accepted plan open, ask to complete an exact task title and confirm the proposal, then show the updated saved status. Keep the AI segment optional in case the provider is unavailable; Local guide and the original screens remain usable.
+Search `tasks` in the top toolbar to reveal Recover. Clear the search and choose Show me around; demonstrate Next step and End tour. Open Ask ReadyRelief and request “Change my fictional household to 4 people with no vehicle.” Show that the preview identifies both changes before Confirm action. Ask “How do I save my progress?” to demonstrate product help without a write. With an accepted plan open, ask to complete an exact task title and confirm the proposal, then show the updated saved status. Keep the AI segment optional in case the provider is unavailable; Local guide and the original screens remain usable.
+
+
+## Required 90-second grounded-Qwen segment
+
+In Recover, expand **Ask Qwen about reviewed guidance**, select **flood**, and ask **electrical hazards**. Select **Generate cited explanation**. Show the real-model label, **INSUFFICIENT_EVIDENCE** notice, and the cited explanation. Expand **Reviewed evidence** to show the exact CDC passage and official link. Explain that one approved passage supports only a partial answer, not permission to reenter or turn power on.
+
+Replace the question with **Am I eligible for FEMA assistance?**. The app must show insufficient evidence and **NO GENERATED ANSWER**. No model call is made without publishable matching evidence. Protect and Respond use their actual phases; they may abstain because the current approved corpus covers recovery only.
+
+The historical real call and prompt allowlist are recorded in `docs/evidence/m1-qwen-live-2026-11-03.json`. Test doubles are labeled separately. Then return to an approved recovery plan, change a task status, and select **Save progress** to demonstrate M5 persistence; explanations themselves never write task state.

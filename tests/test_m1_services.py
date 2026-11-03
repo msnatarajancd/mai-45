@@ -7,7 +7,12 @@ from services.knowledge import retrieve_guidance
 from ui.state import change_context
 
 
-def test_live_never_returns_simulated_warning():
+def test_live_never_returns_simulated_warning(monkeypatch):
+    from m2_guardian.service import GuardianService
+    from services import nws_alerts
+    def unavailable(*args):
+        raise TimeoutError('Synthetic NWS outage')
+    monkeypatch.setattr(nws_alerts, 'GuardianService', lambda: GuardianService(transport=unavailable))
     result = get_alerts('miami', AppMode.LIVE)
     assert result.status == 'unavailable'
     assert not result.alerts

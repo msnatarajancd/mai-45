@@ -134,22 +134,7 @@ def planning(repo, case):
             clear_view()
             st.session_state['rr_notice'] = 'Plan approved and saved locally. You can now track your next steps.'
             st.rerun()
-    with st.expander('Optional · Experimental AI draft'):
-        st.warning('Ungrounded experimental AI: no verified evidence is connected. This sends the fictional intake to Nebius only when you select Generate. Never enter real personal information.')
-        if st.button('Generate experimental AI draft'):
-            from recovery.ai_planner import create_ai_draft_plan
-            from recovery.llm_client import NebiusClient
-            try:
-                with st.spinner('Preparing a draft for review…'):
-                    generated = create_ai_draft_plan(case, [], NebiusClient())
-                if repo.get_case(case.case_id) != case:
-                    st.error('The case changed during generation. Reload and review the current assessment.')
-                else:
-                    st.session_state['rr_draft'] = generated.model_dump_json()
-                    st.session_state.pop('rr_reviewed', None)
-                    st.rerun()
-            except Exception:
-                st.error('The AI draft is unavailable or could not be validated. Your existing draft is unchanged. Check provider configuration; no automatic fallback was substituted.')
+    st.caption('For source-supported explanations, use Ask Qwen about reviewed guidance above. Explanations do not create or change saved tasks; review and approve the organization plan separately.')
 
 
 def reassessment(repo, case, plan):
@@ -255,6 +240,8 @@ def render():
         case_id = st.session_state.get('rr_case_id')
         if not case_id:
             new_case(repo)
+            from ui.guidance import render as grounded_guidance
+            grounded_guidance('recover')
             return
         pending = set(st.session_state.get('rr_pending_danger', []))
         if case_id in pending:
@@ -271,6 +258,8 @@ def render():
             if case.intake.immediate_danger is not False:
                 st.warning('This case has a danger report or an incomplete assessment. Routine changes are paused. Emergency controls remain above; this UI cannot clear a saved danger report.')
             else:
+                from ui.guidance import render as grounded_guidance
+                grounded_guidance('recover')
                 plan = repo.get_active_plan(case.case_id)
                 if plan:
                     dashboard(repo, case, plan)

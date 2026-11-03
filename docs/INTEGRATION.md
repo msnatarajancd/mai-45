@@ -4,7 +4,9 @@ M1 calls services through small adapters. Teammates should keep signatures/retur
 
 ## M2 — Guardian and alerts
 
-**TODO(M2)** `services/nws_alerts.get_alerts(location_id: str, mode: AppMode) -> AlertResult`.
+**Connected 2026-11-03:** see [M2 review](M2_M1_REVIEW.md). The bullets below describe the original contract; the current adapter uses explicitly labeled county coverage, not invented municipality coordinates.
+
+**Implemented M1/M2 contract:** `services/nws_alerts.get_alerts(location_id: str, mode: AppMode) -> AlertResult`.
 
 - Supported IDs: `miami`, `homestead`, `miami-beach`. Supply reviewed representative coordinates; selection is an area, not household geolocation.
 - Return `status=alerts|none|unavailable`, normalized alerts, `checked_at` with timezone, source URL, and accurate `simulated` flag.
@@ -15,12 +17,12 @@ M1 calls services through small adapters. Teammates should keep signatures/retur
 
 ## M3 — Knowledge and directory
 
-**TODO(M3)** `retrieve_guidance(query: str, phase: str, context: Household | None) -> GuidanceResult` in `services/knowledge.py`.
+**Connected from merged PR #3:** `retrieve_guidance(query: str, phase: str, context: Household | None) -> GuidanceResult` in `services/knowledge.py`.
 
 - Return answer, actual retrieved source records (title, URL, publisher, reviewed date), insufficient_evidence flag.
 - Download and review the master plan's 8–12 official items. Preserve source bytes and manifest; links alone are not a corpus.
 - Abstain on unsupported claims. Use only validated official HTTPS URLs; render plain text, not provider HTML.
-- The current adapter always abstains. No synthetic source evidence is supplied to the M5 AI planner.
+- The current adapter publishes approved CDC recovery passages and preserves retrieval status. M1 services/generation.py consumes its public fields only; no synthetic evidence is passed off as real. Task planning remains a deterministic template with explicit approval.
 
 **TODO(M3/M4)** `find_resources(needs: str, county: str='Miami-Dade') -> list[Resource]` in `services/resources.py`.
 
@@ -47,7 +49,7 @@ M1 consumes, without modifying `recovery/`:
 - `SQLiteRecoveryRepository.get_case/save_draft_plan/approve_plan/get_active_plan/update_task_status`.
 - `preview_reassessment`, `approve_reassessment(..., explicitly_approved=True)`.
 - `list_approved_plans`, `report_immediate_danger`.
-- Optional `create_ai_draft_plan` + `NebiusClient` only on explicit request.
+- M1 reuses `NebiusClient` for constrained explanations; the integrated UI no longer exposes ungrounded experimental task generation. The standalone M5 implementation remains unchanged.
 
 Shared household preferences prefill transportation needs during intake. The existing case model has no location/profile fields; M1 does not mutate it. **TODO(M5):** agree on versioned household/context persistence if required beyond the session, connect verified M3 evidence to planning, and define safe re-entry for danger-reported cases. Initial plan and task persistence already work locally. Do not replace them with stubs.
 
@@ -62,3 +64,7 @@ M1 retains the version the user last saw for task updates; the repository must r
 5. Rehearse the single household story. Ensure LIVE CHECK contains no fictional warnings and no-alert still has the safety caveat.
 
 Only fictional local demonstration data should be used until hosting isolation, authentication and retention are designed by the team.
+
+## M1 generation completion
+
+See [current handoff](M1_COMPLETION_HANDOFF.md) for acceptance evidence, remaining owner work and deployment limits. Public DTO projection excludes review metadata and surrounding context; exact support and citation membership are checked, followed by model entailment checking. Model checking reduces risk but is not a human safety certification. Every rerender revalidates the evidence fingerprint; revocation removes prior output.

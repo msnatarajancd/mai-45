@@ -1,6 +1,6 @@
 # ReadyRelief — Protect. Respond. Recover.
 
-A Miami-Dade hurricane/flood course prototype for a five-person team. M1 provides a complete Streamlit application; M5's Recovery Copilot from PR #1 is integrated through its existing Python services. M2–M4 have clearly labeled integration adapters and owner TODOs.
+A Miami-Dade hurricane/flood course prototype for a five-person team. M1 provides a complete Streamlit application; M5's Recovery Copilot from PR #1 is integrated through its existing Python services. M2 Guardian and M3 reviewed CDC retrieval are integrated. M1 owns constrained Nebius/Qwen explanations; M4 safety review and the resource directory remain owner TODOs.
 
 ## Run the demo
 
@@ -32,7 +32,7 @@ Open the local URL printed by Streamlit. Choose **Start guided demo**. The sideb
 - Explicit simulated/live alert modes, context invalidation, unavailable service handling.
 - Conservative emergency interruption and official-information links.
 - Actual M5 recovery intake, deterministic draft, explicit approval, SQLite task updates, resume by case ID, reviewable reassessment, preserved history, and plan download.
-- Optional M5 experimental Nebius draft generation, with explicit user action and ungrounded-output disclosure.
+- Retrieval-first Qwen explanations in Protect, Respond, Recover and expanded Assistant, with official citations, partial-evidence limits, provider-failure fallback and review-revocation checks. No ungrounded task generator is exposed in the integrated app.
 - Evidence screen explaining connected capabilities and remaining integrations.
 - Six-step product walkthrough with back/next/exit and optional Nebius explanations.
 - Conversational Assistant for product help and validated app operations, with review cards before execution. [Assistant guide](docs/ASSISTANT.md).
@@ -41,8 +41,8 @@ Open the local URL printed by Streamlit. Choose **Start guided demo**. The sideb
 
 | Owner | Handoff | Current behavior |
 | --- | --- | --- |
-| M2 | `services/nws_alerts.py` | Clearly fictional warning; live mode says unavailable |
-| M3 | `services/knowledge.py`, `services/resources.py` | Retrieval abstains; directory returns no verified match; official entry links provided |
+| M2 | `services/nws_alerts.py` | Integrated Guardian county alerts; PR #2 is ready for review; optional HTTP deployment remains with M2 |
+| M3 | `services/knowledge.py`, `services/resources.py` | Reviewed CDC recovery evidence connected; additional phase coverage and resource directory remain pending |
 | M4 | `services/emergency.py` | Emergency controls work; conservative fallback only; reviewed rules/golden safety cases pending |
 | M5 | Existing `recovery/` | Integrated unchanged from PR #1; source grounding, household persistence and any recovery-policy changes remain with M5/M3 |
 
@@ -61,7 +61,7 @@ $env:NEBIUS_API_KEY = "your-key"
 .venv/Scripts/python.exe -m streamlit run app.py
 ```
 
-Never commit keys. Missing/bad provider configuration leaves the existing draft unchanged. AI is not invoked by navigation, emergency access, or the default demo.
+Never commit keys. Missing/bad provider configuration shows reviewed excerpts with an explicit no-generation notice; saved tasks are unchanged. AI is not invoked by navigation, emergency access, or the default demo.
 
 ## Test
 
@@ -70,7 +70,9 @@ python -m pytest -q
 python -m compileall -q app.py domain services ui recovery
 ```
 
-The combined suite includes the original M5 tests plus M1 service contracts, navigation, safety access, mode isolation, approval, persistence/resume, and stale-write checks. [Verification notes](docs/VERIFICATION.md) record the tested environment and limits.
+On Windows, M3 fixtures can exceed the default temporary path length; use a dedicated short path, for example `python -m pytest -q --basetemp="D:/Documents/Code Repos/.t-m1"`. Pytest owns and clears that temporary directory.
+
+The combined suite includes M2/M3 and the original M5 tests plus M1 service contracts, navigation, safety access, mode isolation, approval, persistence/resume, and stale-write checks. [Verification notes](docs/VERIFICATION.md) record the tested environment and limits.
 
 ## Team layout
 
@@ -93,3 +95,9 @@ Use a local single-user demo for the contest; run the command above before rehea
 ## Scope and honesty
 
 Educational prototype, not an emergency service. Online only. No dispatch, rescue requests, live shelter inventory, push alerts, maps, insurance submission, FEMA eligibility determination, or safety verification. Simulated warnings are never current weather. No-alert responses do not establish safety. Recovery templates are not claimed to be source-grounded. No contest-win or measured-impact claim is made.
+
+## Grounded generation demonstration
+
+Open **Recover → Ask Qwen about reviewed guidance**. Select **flood**, retain **electrical hazards**, then choose **Generate cited explanation**. The reviewed CDC passage may be insufficient for a complete answer; its partial status must stay visible. Open the evidence expander to inspect the exact passage and citation. An unsupported eligibility question produces no model answer. Protect and Respond honor their own evidence phase; recovery evidence is never silently reused for them.
+
+A real, credential-free acceptance record is in [Qwen evidence](docs/evidence/m1-qwen-live-2026-11-03.json). Reproduce it explicitly with `python scripts/verify_grounded_generation.py --live`. This makes paid provider calls using the server environment key; unit tests use clearly labeled doubles. See [current M1 handoff](docs/M1_COMPLETION_HANDOFF.md).

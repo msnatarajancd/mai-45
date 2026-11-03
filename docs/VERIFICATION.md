@@ -48,3 +48,9 @@ Final extension verification: **212 passed in 22.06 seconds**. Browser checks pa
 ## Compact shell and chat dock
 
 215 tests passed, including dock expand/minimize/close/reopen state, pending confirmation preservation, assistant-mode preservation, toolbar search and appearance selection. Desktop (1920×1080) and mobile (390×844) browser checks verified the floating panel, full chat view and themes; mobile had no horizontal overflow. Contrast and top-toolbar clipping found during visual checks were corrected. Chat settings collapse to keep the conversation prominent. Theme selection lasts for the current browser session.
+
+## Grounded integration — 2026-11-03
+
+Full integrated suite: **482 passed, 11 optional HTTP tests skipped, 10 subtests passed** in 40.49 seconds. Used the dedicated short Windows `--basetemp="D:/Documents/Code Repos/.t-m1"`; longer default fixture paths exceed the host path limit. Test import mode is configured for M2/M5 duplicate filenames. Production-store tests do not run concurrently with browser/live retrieval because M3 correctly fails closed when its administrative lock is busy.
+
+Real Nebius generation + entailment check and actual NWS alert retrieval were verified separately from mocked tests. Browser checks covered the same live paths and deterministic emergency override. See [M1 completion handoff](M1_COMPLETION_HANDOFF.md) and [recorded public Qwen trace](evidence/m1-qwen-live-2026-11-03.json). Independent review identified the persisted-danger cross-screen gap; the shared panel now checks that case assessment and fails closed on unavailable assessment. M5 persistence code is unchanged.
