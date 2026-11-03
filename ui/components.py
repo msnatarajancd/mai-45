@@ -63,8 +63,12 @@ def emergency_controls():
         st.stop()
 
 
+def apply_style():
+    from ui.theme import theme_variables
+    st.markdown('<style>' + theme_variables(st.session_state.get('appearance', 'Bright')) + (ROOT / 'ui/styles.css').read_text(encoding='utf-8-sig') + '</style>', unsafe_allow_html=True)
+
+
 def frame():
-    st.markdown('<style>' + (ROOT / 'ui/styles.css').read_text(encoding='utf-8-sig') + '</style>', unsafe_allow_html=True)
     mode = st.session_state['mode']
     label = LOCATIONS[st.session_state['location_id']]
     st.markdown(f'<div class="rr-topline"><span>MIAMI-DADE, FLORIDA &nbsp; / &nbsp; {escape(label)}</span><span class="rr-badge">{escape(mode.value)} · COURSE PROTOTYPE</span></div>', unsafe_allow_html=True)

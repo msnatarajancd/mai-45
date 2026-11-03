@@ -44,3 +44,7 @@ Live Nebius smoke checks used fictional inputs only. Product help returned no ac
 Desktop browser inspection confirmed menu filtering, tour navigation and the AI household update card with explicit Confirm/Cancel controls. The basic tour and Local guide work without any API request. Model answers are generative product guidance, not a verified emergency knowledge source. Ambiguous operations may ask for clarification instead of producing an action.
 
 Final extension verification: **212 passed in 22.06 seconds**. Browser checks passed search filtering, tour Next/End, a live Nebius household proposal and explicit confirmed update. The 390×844 assistant view had no horizontal document overflow. Compile and whitespace checks passed.
+
+## Compact shell and chat dock
+
+215 tests passed, including dock expand/minimize/close/reopen state, pending confirmation preservation, assistant-mode preservation, toolbar search and appearance selection. Desktop (1920×1080) and mobile (390×844) browser checks verified the floating panel, full chat view and themes; mobile had no horizontal overflow. Contrast and top-toolbar clipping found during visual checks were corrected. Chat settings collapse to keep the conversation prominent. Theme selection lasts for the current browser session.

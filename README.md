@@ -26,7 +26,8 @@ Open the local URL printed by Streamlit. Choose **Start guided demo**. The sideb
 
 ## What is implemented
 
-- Responsive home and searchable navigation (names and synonyms such as tasks, weather, mobility); persistent emergency access on all six pages.
+- Bright/dark appearance and a floating assistant that expands into a full chat screen.
+- Responsive home and searchable top-toolbar navigation (names and synonyms such as tasks, weather, mobility); persistent emergency access on all six pages.
 - Optional fictional household preferences and supported Miami-Dade area selection.
 - Explicit simulated/live alert modes, context invalidation, unavailable service handling.
 - Conservative emergency interruption and official-information links.

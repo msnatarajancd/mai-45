@@ -2,7 +2,7 @@
 
 ## Find a screen
 
-Use **Search menu** in the left sidebar. It matches names and keywords: tasks → Recover, weather → Protect, mobility → Household, chat → Assistant. Search never hides the emergency controls above the current screen. Clear the input to restore all seven entries.
+Use **Search menu** in the top toolbar. It matches names and keywords: tasks → Recover, weather → Protect, mobility → Household, chat → Assistant. Search never hides the emergency controls above the current screen. Clear the input to restore all seven entries.
 
 ## Learn the app
 
@@ -45,3 +45,7 @@ Provider timeouts, unavailable credentials and malformed outputs leave applicati
 ## Verification
 
 Unit tests cover schema rejection, how-to vs operation requests, danger bypass, confirmation requirements, replay rejection, stale context, real task writes, explicit intake approval and a concurrent write occurring between snapshot comparison and execution. AppTest covers menu search/empty results, tour transitions, local navigation proposals and AI-profile confirmation. Live fictional Nebius checks verified product explanation, household changes and context changes without executing returned proposals. See VERIFICATION.md for the combined suite and browser evidence.
+
+## Chat and appearance
+
+Open **Ask ReadyRelief** at the bottom right of any regular screen. **Expand chat** opens the full assistant screen; **Minimize chat** returns to the previous screen. Closing and reopening the bubble preserves the conversation, assistant mode and pending confirmation for the browser session. Use **Bright / Dark** in the top toolbar to change appearance. The responsive layout uses the available screen width.

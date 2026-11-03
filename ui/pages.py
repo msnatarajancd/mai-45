@@ -11,8 +11,7 @@ def sidebar():
     with st.sidebar:
         st.markdown('<div class="rr-brand">Ready<span>Relief</span></div>', unsafe_allow_html=True)
         st.caption('PROTECT. RESPOND. RECOVER.')
-        st.divider()
-        query = st.text_input('Search menu', placeholder='Try tasks, weather, family…', help='Search screen names or related words. Press Enter to filter.', key='nav_search')
+        query = st.session_state.get('nav_search', '')
         matches = search_pages(query)
         if not matches:
             st.caption('No matching screens. Try tasks, weather, family or chat.')

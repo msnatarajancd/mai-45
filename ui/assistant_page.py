@@ -86,35 +86,43 @@ def pending_action(repo):
             st.rerun()
 
 
-def render():
-    heading('Your conversational copilot','A little guidance. A simpler way to act.','Ask how something works, or tell ReadyRelief what you want to do. Review proposed changes before they happen.')
+def render(compact=False):
+    if not compact: heading('Your conversational copilot','A little guidance. A simpler way to act.','Ask how something works, or tell ReadyRelief what you want to do. Review proposed changes before they happen.')
     repo=get_repo()
-    with st.container(border=True):
-        mode=st.radio('Assistant mode',['Nebius AI','Local guide · no AI'],index=0 if os.getenv('NEBIUS_API_KEY') else 1,horizontal=True,key='assistant_mode')
+    with st.expander('Assistant settings', expanded=False):
+        modes=['Nebius AI','Local guide · no AI']
+        preferred=st.session_state.get('assistant_mode_preference', 'Nebius AI' if os.getenv('NEBIUS_API_KEY') else 'Local guide · no AI')
+        mode=st.radio('Assistant mode',modes,index=modes.index(preferred),horizontal=True,key='assistant_mode')
+        st.session_state['assistant_mode_preference']=mode
         st.caption('Nebius AI sends your message, recent chat and current fictional household/recovery context to Nebius. Use fictional data only. Chat history lasts for this browser session; no automatic AI calls.')
         if mode=='Nebius AI' and not os.getenv('NEBIUS_API_KEY'):
             st.info('Configure NEBIUS_API_KEY in the server environment to enable AI. Local guide and walkthrough remain available.')
-        cols=st.columns(3)
-        examples=['Show me around','How do I save my progress?','Show my plan']
-        for col,text in zip(cols,examples):
-            if col.button(text,key='example_'+text,width='stretch'):
-                st.session_state['assistant_queued']=text
+        if not compact:
+            cols=st.columns(3)
+            examples=['Show me around','How do I save my progress?','Show my plan']
+            for col,text in zip(cols,examples):
+                if col.button(text,key='example_'+text,width='stretch'):
+                    st.session_state['assistant_queued']=text
         if st.button('Clear conversation'):
             st.session_state.pop('assistant_messages',None)
             st.session_state.pop('assistant_pending',None)
             st.session_state.pop('assistant_queued',None)
             st.rerun()
     if repo is None: st.warning('Recovery storage is unavailable. Product help and navigation remain available.')
-    for message in st.session_state.get('assistant_messages',[]):
-        with st.chat_message(message['role']):
-            if message['provider']: st.caption(message['provider'])
-            st.write(message['content'])
-    pending_action(repo)
-    if st.session_state.get('rr_draft'):
-        with st.expander('Current unapproved draft · review the tasks'):
-            show_draft(st.session_state['rr_draft'])
-        st.caption('Ask “approve this draft” to prepare an approval card, or open Recover to review it there.')
-    prompt=st.chat_input('Ask for help or an action… e.g. “We have 4 people and no vehicle”',max_chars=2500)
+    with st.container(height=300 if compact else 430, key='chat_transcript'):
+        if not st.session_state.get('assistant_messages'):
+            st.write('Hello! Ask me how to use ReadyRelief, or tell me what you would like to do.')
+            st.caption('For example: “Show my plan” or “We have 4 people and no vehicle”. Changes need your confirmation.')
+        for message in st.session_state.get('assistant_messages',[]):
+            with st.chat_message(message['role']):
+                if message['provider']: st.caption(message['provider'])
+                st.write(message['content'])
+        pending_action(repo)
+        if st.session_state.get('rr_draft'):
+            with st.expander('Current unapproved draft · review the tasks'):
+                show_draft(st.session_state['rr_draft'])
+            st.caption('Ask “approve this draft” to prepare an approval card, or open Recover to review it there.')
+    prompt=st.chat_input('Ask for help or an action… e.g. “We have 4 people and no vehicle”',max_chars=2500,key='shared_chat_input')
     prompt=prompt or st.session_state.pop('assistant_queued',None)
     if prompt:
         st.session_state.pop('assistant_pending',None)
