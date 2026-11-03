@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 370" role="img" aria-label="Illustration of a household moving through preparation, assistance, and recovery">
+<rect width="460" height="370" rx="22" fill="#edf2e5"/>
+<circle cx="318" cy="116" r="74" fill="#dde9d2"/><circle cx="318" cy="116" r="48" fill="#e8f0df"/>
+<path d="M35 300C99 274 113 338 190 308S286 243 418 284" fill="none" stroke="#c8d9b7" stroke-width="2"/>
+<path d="M55 320C118 294 156 349 218 320S317 271 434 302" fill="none" stroke="#d9e4cd" stroke-width="2"/>
+<path d="M113 184L228 92L343 184" fill="none" stroke="#2f6852" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M136 182V283H320V182L228 111Z" fill="#fffdf4"/>
+<rect x="208" y="213" width="43" height="70" rx="6" fill="#387861"/>
+<rect x="157" y="189" width="32" height="36" rx="5" fill="#d6e5c8"/><rect x="270" y="189" width="32" height="36" rx="5" fill="#d6e5c8"/>
+<path d="M130 283H331" stroke="#93af8c" stroke-width="4" stroke-linecap="round"/>
+<path d="M360 284V210M360 256L340 238M360 240L378 221" stroke="#799d72" stroke-width="5" stroke-linecap="round"/>
+<ellipse cx="352" cy="218" rx="22" ry="37" fill="#b9cea5"/>
+<rect x="25" y="47" width="173" height="54" rx="12" fill="#fffdf8" stroke="#d8e1cd"/>
+<circle cx="52" cy="74" r="14" fill="#dfedd6"/><path d="m45 74 5 5 9-11" fill="none" stroke="#3b785b" stroke-width="2.5"/>
+<text x="76" y="71" fill="#315c49" font-family="sans-serif" font-size="12" font-weight="700">A little more prepared.</text><text x="76" y="87" fill="#7b897b" font-family="sans-serif" font-size="10">One next step at a time.</text>
+<rect x="278" y="295" width="155" height="45" rx="11" fill="#fffdf8" stroke="#d8e1cd"/>
+<circle cx="300" cy="317" r="11" fill="#ebc889"/><path d="m295 317 4 4 7-8" fill="none" stroke="#78582a" stroke-width="2"/>
+<text x="320" y="321" fill="#315c49" font-family="sans-serif" font-size="11" font-weight="600">Your next step, clearer.</text>
+<circle cx="84" cy="205" r="16" fill="#d7b18d"/><path d="M63 259V237Q63 219 84 219Q105 219 105 237V259" fill="#dfad65"/><path d="M75 259V282M93 259V282" stroke="#466950" stroke-width="9" stroke-linecap="round"/>
+<circle cx="113" cy="231" r="11" fill="#d7b18d"/><path d="M99 268V253Q99 241 113 241Q127 241 127 253V268" fill="#7ba78d"/><path d="M107 268V282M120 268V282" stroke="#466950" stroke-width="6" stroke-linecap="round"/>
+</svg>

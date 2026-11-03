@@ -20,3 +20,8 @@ venv/
 # Local files
 .DS_Store
 Thumbs.db
+.local/
+artifacts/
+!.env.example
+
+*.log
