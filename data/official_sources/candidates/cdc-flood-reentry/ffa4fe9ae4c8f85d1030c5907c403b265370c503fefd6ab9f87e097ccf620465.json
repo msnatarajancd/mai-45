@@ -54,7 +54,23 @@
     "PENDING human review; not operational guidance or household safety verification.",
     "Electricity availability does not establish general household safety."
   ],
-  "review_status": "PENDING",
-  "review": null,
+  "review_status": "APPROVED",
+  "review": {
+    "reviewer": "Thiyagarajan",
+    "reviewed_at": "2026-11-03T17:52:58.862989Z",
+    "content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+    "context_hash": "d0495e060dc44a35380c5a0801a8035fb03e779e333fc56c5426d78b68498d16",
+    "decision": {
+      "reviewer": "Thiyagarajan",
+      "expected_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "expected_context_hash": "d0495e060dc44a35380c5a0801a8035fb03e779e333fc56c5426d78b68498d16",
+      "provenance_checked": true,
+      "content_checked": true,
+      "geographic_scope_checked": true,
+      "applicability_checked": true,
+      "caveats_preserved": true,
+      "standalone_passage_checked": true
+    }
+  },
   "rejection": null
 }

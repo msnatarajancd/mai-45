@@ -1,4 +1,6 @@
 {
+  "extracted_at": null,
+  "extraction_version": null,
   "source": {
     "source_id": "cdc-flood-reentry",
     "publisher": "Centers for Disease Control and Prevention",
@@ -18,9 +20,9 @@
     "charset": "utf-8",
     "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
     "retrieved_at": "2026-11-03T03:05:29.105758Z",
-    "reviewed_at": null,
-    "review_status": "DOWNLOADED_UNREVIEWED",
-    "reviewer": null,
+    "reviewed_at": "2026-11-03T18:56:36.645752Z",
+    "review_status": "REVIEWED",
+    "reviewer": "Thiyagarajan",
     "limitations": [
       "Candidate source; human review required before publication.",
       "Static guidance is not live availability or a current evacuation order.",
@@ -46,7 +48,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "2273ed119c944e0858145c0aedf349de599ee60bf06cf3bf428905e8ec5fe1b0",
@@ -61,7 +63,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "1e6f8416e649e5c03bc703d221abe79d1a35de983f8f51ad2f089cb210d13222",
@@ -76,7 +78,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
@@ -91,7 +93,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
@@ -106,7 +108,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "39fdc56b4f1a96644f26e7a55d906a3ffdf5e192bd158a47ee14f390807e7c4f",
@@ -121,7 +123,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "72f0b98f33b833d2f4aa3bc0c9d057f9c982f40f621f0e2bd704a6a2d7aa955f",
@@ -136,7 +138,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "c116114745256d37511f39ec0348efe44bfb6603b94b462c98824369879a50d6",
@@ -151,7 +153,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "0bbad1ba6854e41a7ae207a7b293f9abb5df0a0058107bf4f915d7b334ab1f2b",
@@ -166,7 +168,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "91060f4b0de1890973ae4178900d27d39e5a37a67752e262d1afcb6ac1dd1480",
@@ -181,7 +183,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "04469d5c0264a3bec5fa9a0bb9ff2d40a73ca960e8b35f65c31cf88b6afca5b9",
@@ -196,7 +198,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "7b8e91ed754abb4541ac4d08678cba41126704c7ae385a0c419562d6c32f62a0",
@@ -211,7 +213,7 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     },
     {
       "chunk_id": "b98459d3efe58e2da762e073a8ba177d284acbee2d72b161948a8c5da61f943d",
@@ -226,8 +228,24 @@
         "recover"
       ],
       "geographic_scope": "US",
-      "review_status": "DOWNLOADED_UNREVIEWED"
+      "review_status": "REVIEWED"
     }
   ],
-  "review": null
+  "review": {
+    "reviewer": "Thiyagarajan",
+    "reviewed_at": "2026-11-03T18:56:36.645752Z",
+    "content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+    "context_hash": "ed3c70f225b4c879561fcc30c6af4679293d782902bb1c01bcd8972fa977733a",
+    "decision": {
+      "reviewer": "Thiyagarajan",
+      "expected_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "expected_context_hash": "ed3c70f225b4c879561fcc30c6af4679293d782902bb1c01bcd8972fa977733a",
+      "provenance_checked": true,
+      "content_checked": true,
+      "geographic_scope_checked": true,
+      "applicability_checked": true,
+      "caveats_preserved": true,
+      "standalone_passage_checked": false
+    }
+  }
 }

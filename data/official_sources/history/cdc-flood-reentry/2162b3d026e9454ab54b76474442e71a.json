@@ -1,0 +1,251 @@
+{
+  "extracted_at": null,
+  "extraction_version": null,
+  "source": {
+    "source_id": "cdc-flood-reentry",
+    "publisher": "Centers for Disease Control and Prevention",
+    "title": "Safety Guidelines: Reentering Your Flooded Home",
+    "official_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+    "source_type": "official_static_web_guidance",
+    "jurisdiction": "US",
+    "hazards": [
+      "flood",
+      "hurricane"
+    ],
+    "disaster_phases": [
+      "recover"
+    ],
+    "classification": "OFFICIAL_SOURCE",
+    "content_type": "text/html",
+    "charset": "utf-8",
+    "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+    "retrieved_at": "2026-11-03T03:05:29.105758Z",
+    "reviewed_at": "2026-11-03T18:56:36.645752Z",
+    "review_status": "REVIEWED",
+    "reviewer": "Thiyagarajan",
+    "limitations": [
+      "Candidate source; human review required before publication.",
+      "Static guidance is not live availability or a current evacuation order.",
+      "HTML-only extraction may omit images, embedded documents, or dynamic content."
+    ],
+    "final_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+    "http_status": 200,
+    "byte_count": 55838,
+    "last_attempt_at": "2026-11-03T03:05:28.469282Z",
+    "failure_category": null
+  },
+  "chunks": [
+    {
+      "chunk_id": "8bc8c6843e01f9d40376c7a12c15efeb039b2b43a80509417ad3d00b7ae505b6",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home",
+      "guidance_text": "For Everyone \n Aug. 24, 2026 \n Español",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "2273ed119c944e0858145c0aedf349de599ee60bf06cf3bf428905e8ec5fe1b0",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > Key points",
+      "guidance_text": "When returning to a flooded home after a natural disaster, be aware that your house may be contaminated with mold or sewage, which can make you sick.\nTake steps to protect your health and safety when returning to your flooded home.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "1e6f8416e649e5c03bc703d221abe79d1a35de983f8f51ad2f089cb210d13222",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home",
+      "guidance_text": "Take steps to protect your health and safety when reentering your flooded home.\nWhen returning to a home that’s been flooded after natural disasters such as hurricanes, tornadoes, and floods, be aware that your house may be contaminated with mold or sewage, which can cause health risks for your family.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+      "guidance_text": "Be Ready! Hurricanes Infographic\nBe Ready! Hurricanes\nBefore\nCover windows with storm shutters or plywood.\nTune in for local information.\nKnow how to turn off your gas, electricity, and water in case you need to evacuate.\nSecure outdoor items by moving them to the garage.\nMake an emergency kit.\nDesignate a shelter area if you can't evacuate. Rooms without windows are best.\nAfter\nIf your home has damage, do not reenter until it has been examined by a building inspector for safety.\nPrevent mold growth by airing out rooms and disinfecting.\nTap water may not be safe to drink. Listen to local warnings.\nThrow away food that may be unsafe.\nPrevent carbon monoxide poisoning. Use generators, stoves, and grills outside and away from windows and doors. 20 feet\nFooter\nPublic Health Preparedness and Response/Centers for Disease Control and Prevention\nDownload Infographic PDF: English | Español\nTry to return to your home during the daytime so that you do not have to use any lights. Use battery-powered flashlights and lanterns, rather than candles, gas lanterns, or torches.\nIf you have standing water in your home and can turn off the main power from a dry location, then go ahead and turn off the power, even if it delays cleaning. If you must enter standing water to access the main power switch, then call an electrician to turn it off.\nHave an electrician check the house's electrical system before turning the power on again.\nIf you smell gas or suspect a leak, turn off the main gas valve, open all windows, and leave your house immediately. Notify the gas company or the police or fire departments or State Fire Marshal's office, and do not turn on the lights or do anything that could cause a spark. Do not return until you are told it is safe to do so.\nIf the house has been closed up for several days, enter briefly to open doors and windows to let the house air out for a while (at least 30 minutes) before you stay for any length of time.\nIf your home has been flooded and has been closed up for several days, assume your home has mold.\nIf your home has been flooded, it also may be contaminated with sewage. See Floodwater After a Disaster or Emergency.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Warning!",
+      "guidance_text": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "39fdc56b4f1a96644f26e7a55d906a3ffdf5e192bd158a47ee14f390807e7c4f",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Dry out your home to prevent mold.",
+      "guidance_text": "If flood or storm water has entered your home, dry it out as soon as possible to prevent mold. Follow these steps:\nIf you have electricity and an electrician has determined that it's safe to turn it on, use a \"wet-dry\" shop vacuum (or the vacuum function of a carpet steam cleaner), an electric-powered water transfer pump, or sump pump to remove standing water. If you are operating equipment in wet areas, be sure to wear rubber boots.\nIf you do not have electricity, or it is not safe to turn it on, you can use a portable generator to power equipment to remove standing water. For more information, see Protect Yourself and Others From Electrical Hazards After a Disaster.\nIf weather permits, open windows and doors of the house to aid in the drying-out process.\nUse fans and dehumidifiers to remove excess moisture. Fans should be placed at a window or door to blow the air outwards rather than inwards, so not to spread the mold.\nHave your home heating, ventilating, and air-conditioning (HVAC) system checked and cleaned by a maintenance or service professional who is experienced in mold cleanup before you turn it on. If the HVAC system was flooded with water, turning on the mold-contaminated HVAC will spread mold throughout the house. Professional cleaning will kill the mold and prevent later mold growth. When the service determines that your system is clean and if it is safe to do so, you can turn it on and use it to help remove excess moisture from your home.\nPrevent water outdoors from reentering your home. For example, rainwater from gutters or the roof should drain away from the house; the ground around the house should slope away from the house to keep basements and crawl spaces dry.\nEnsure that crawl spaces in basements have proper drainage to limit water seepage. Ventilate to allow the area to dry out.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "72f0b98f33b833d2f4aa3bc0c9d057f9c982f40f621f0e2bd704a6a2d7aa955f",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Prevent carbon monoxide poisoning",
+      "guidance_text": "If you must use a gasoline-powered pump, generator, pressure washer, or any other gasoline-powered tools to clean your home, never operate the gasoline engine inside a home, basement, garage, carport, porch, or other enclosed or partially enclosed structures, or less than 20 feet from any door, window, or vent, even if the windows and doors are open. Such improper use can create dangerously high levels of carbon monoxide and cause carbon monoxide poisoning.\nKeep Reading \nHomeowners and Renters Guide to Mold Cleanup After Disasters",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "c116114745256d37511f39ec0348efe44bfb6603b94b462c98824369879a50d6",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > Protect yourself from illness and injury > Clean up your home safely.",
+      "guidance_text": "Take steps to protect yourself and your loved ones during your cleanup after a flood. Follow our cleanup tips and monitor your radio or television for up-to-date emergency information. For more information see EPA's Flooded Homes Cleanup Guidance.\nKeep Reading \nGuidelines for Cleaning Safely After a Disaster",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "0bbad1ba6854e41a7ae207a7b293f9abb5df0a0058107bf4f915d7b334ab1f2b",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > Protect yourself from illness and injury > Use generators and other electrical equipment safely.",
+      "guidance_text": "Talk to your utility company about using electrical equipment, including power generators. Be aware that it is against the law and a violation of electrical codes to connect generators to your home's electrical circuits without the approved, automatic-interrupt devices. If a generator is on line when electrical service is restored, it can become a major fire hazard. In addition, the improper connection of a generator to your home's electrical circuits may endanger line workers helping to restore power in your area.\nAll electrical equipment and appliances must be completely dry before returning them to service. Have a certified electrician check these items if there is any question. For more information, see Protect Yourself and Others From Electrical Hazards After a Disaster.\nNever use a generator, pressure washer, or any gasoline-powered engine inside your home, basement, or garage or less than 20 feet from any window, door, or vent. Visit Carbon Monoxide Poisoning for more information.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "91060f4b0de1890973ae4178900d27d39e5a37a67752e262d1afcb6ac1dd1480",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > Protect yourself from illness and injury > Throw away unsafe food.",
+      "guidance_text": "Throw away food that may have come in contact with flood or storm water; perishable foods that have not been refrigerated properly due to power outages; and those with an unusual odor, color, or texture. Unsafe food can make you sick even if it looks, smells, and tastes normal. When in doubt, throw it out. \nKeep Reading \nKeep Food Safe After a Disaster or Emergency",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "04469d5c0264a3bec5fa9a0bb9ff2d40a73ca960e8b35f65c31cf88b6afca5b9",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > Protect yourself from illness and injury > Use safe water.",
+      "guidance_text": "Floodwater can contaminate your drinking water. Some contaminants from surface water get into the groundwater and affect private drinking water wells and municipal water systems that use groundwater.\nFollow local guidance on whether your water is safe to drink.\nIf you have a private well and live in an area with flooding, get your water tested before you use it.\nDo not use water you suspect or have been told is contaminated to wash dishes, brush your teeth, wash and prepare food, wash your hands, make ice, or make baby formula. Safe water for drinking, cooking, and personal hygiene includes bottled, boiled, or treated water.\nYour state, local, or tribal health department can make specific recommendations for boiling or treating water in your area.\nKeep Reading \nHow to Make Water Safe in an Emergency",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "7b8e91ed754abb4541ac4d08678cba41126704c7ae385a0c419562d6c32f62a0",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > Resources",
+      "guidance_text": "Natural Disasters and Severe Weather\nFlood Safety and Preparedness (weather.gov)\nFlood Safety | Flood Preparedness | American Red Cross\nFloods | Ready.gov",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "b98459d3efe58e2da762e073a8ba177d284acbee2d72b161948a8c5da61f943d",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > On This Page",
+      "guidance_text": "When you first reenter your home\nProtect yourself from illness and injury\nResources\n Aug. 24, 2026 \n Sources and Page Info \n Print \n Share \n Facebook \n LinkedIn \n Twitter \n Syndicate \nContent Source\n National Center for Environmental Health \n About This Page \n Published: May 15, 2024 \n Updated: August 24, 2026 \nThis page was last updated on this date. Updates may include minor edits, image changes, or other modifications to page content.\n Reviewed: August 24, 2026 \nThe information on this page was last reviewed by subject matter experts to ensure accuracy.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    }
+  ],
+  "review": {
+    "reviewer": "Thiyagarajan",
+    "reviewed_at": "2026-11-03T18:56:36.645752Z",
+    "content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+    "context_hash": "ed3c70f225b4c879561fcc30c6af4679293d782902bb1c01bcd8972fa977733a",
+    "decision": {
+      "reviewer": "Thiyagarajan",
+      "expected_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "expected_context_hash": "ed3c70f225b4c879561fcc30c6af4679293d782902bb1c01bcd8972fa977733a",
+      "provenance_checked": true,
+      "content_checked": true,
+      "geographic_scope_checked": true,
+      "applicability_checked": true,
+      "caveats_preserved": true,
+      "standalone_passage_checked": false
+    }
+  }
+}

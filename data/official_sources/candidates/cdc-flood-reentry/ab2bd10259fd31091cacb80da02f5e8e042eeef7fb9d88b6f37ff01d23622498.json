@@ -68,7 +68,23 @@
   "safety_caveats": [
     "PENDING human review; not operational guidance or household safety verification."
   ],
-  "review_status": "PENDING",
-  "review": null,
+  "review_status": "APPROVED",
+  "review": {
+    "reviewer": "Thiyagarajan",
+    "reviewed_at": "2026-11-03T18:49:15.106020Z",
+    "content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+    "context_hash": "a58eea1396059bcd050a525654b08da5160ff61204e200f2cc054ee628b0be46",
+    "decision": {
+      "reviewer": "Thiyagarajan",
+      "expected_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "expected_context_hash": "a58eea1396059bcd050a525654b08da5160ff61204e200f2cc054ee628b0be46",
+      "provenance_checked": true,
+      "content_checked": true,
+      "geographic_scope_checked": true,
+      "applicability_checked": true,
+      "caveats_preserved": true,
+      "standalone_passage_checked": true
+    }
+  },
   "rejection": null
 }

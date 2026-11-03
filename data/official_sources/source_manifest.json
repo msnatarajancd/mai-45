@@ -20,9 +20,9 @@
       "charset": "utf-8",
       "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
       "retrieved_at": "2026-11-03T03:05:29.105758Z",
-      "reviewed_at": null,
-      "review_status": "DOWNLOADED_UNREVIEWED",
-      "reviewer": null,
+      "reviewed_at": "2026-11-03T18:56:36.645752Z",
+      "review_status": "REVIEWED",
+      "reviewer": "Thiyagarajan",
       "limitations": [
         "Candidate source; human review required before publication.",
         "Static guidance is not live availability or a current evacuation order.",

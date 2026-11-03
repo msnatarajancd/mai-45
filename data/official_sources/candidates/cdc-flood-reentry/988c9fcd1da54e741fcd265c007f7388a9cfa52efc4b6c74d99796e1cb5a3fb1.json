@@ -54,7 +54,23 @@
     "PENDING human review; not operational guidance or household safety verification.",
     "Preserve NEVER and while standing in water; this is not electrical-repair permission."
   ],
-  "review_status": "PENDING",
-  "review": null,
+  "review_status": "APPROVED",
+  "review": {
+    "reviewer": "Thiyagarajan",
+    "reviewed_at": "2026-11-03T17:46:04.485413Z",
+    "content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+    "context_hash": "a5bf10b7492cb21885da1ba44fe3bfdcb8cc16e1119d85edf1e0b59f8a68915c",
+    "decision": {
+      "reviewer": "Thiyagarajan",
+      "expected_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "expected_context_hash": "a5bf10b7492cb21885da1ba44fe3bfdcb8cc16e1119d85edf1e0b59f8a68915c",
+      "provenance_checked": true,
+      "content_checked": true,
+      "geographic_scope_checked": true,
+      "applicability_checked": true,
+      "caveats_preserved": true,
+      "standalone_passage_checked": true
+    }
+  },
   "rejection": null
 }
