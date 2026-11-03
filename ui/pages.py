@@ -9,58 +9,55 @@ from ui.capabilities import PAGES, search_pages
 
 def sidebar():
     with st.sidebar:
-        st.markdown('<div class="rr-brand">Ready<span>Relief</span></div>', unsafe_allow_html=True)
-        st.caption('PROTECT. RESPOND. RECOVER.')
-        query = st.session_state.get('nav_search', '')
-        matches = search_pages(query)
-        if not matches:
-            st.caption('No matching screens. Try tasks, weather, family or chat.')
+        st.markdown('<div class="rr-brand"><span class="rr-brand-mark">'+icon('shield')+'</span><div>ReadyRelief<small>A clearer next step.</small></div></div>',unsafe_allow_html=True)
+        st.caption('WORKSPACE')
+        query=st.session_state.get('nav_search','')
+        matches=search_pages(query)
+        if not matches: st.caption('No matching screens. Try tasks, weather or family.')
         for name in matches:
-            symbol = ':material/' + PAGES[name][0] + ':'
-            if st.button(name, icon=symbol, key='nav_'+name, type='primary' if st.session_state['page'] == name else 'secondary', width='stretch'):
+            if name=='Household': st.caption('YOUR TOOLS')
+            if st.button(name,icon=':material/'+PAGES[name][0]+':',key='nav_'+name,
+                type='primary' if st.session_state['page']==name else 'secondary',width='stretch'):
                 go(name)
-        st.divider()
-        if st.button('Show me around', icon=':material/explore:', width='stretch'):
-            from ui.tour import start_tour
-            start_tour()
-            st.rerun()
-        st.caption('YOUR DEMONSTRATION')
-        st.write('One household.\n\nA clearer path forward.')
-        st.caption('3 people · Mobility support · No vehicle')
-        if st.button('Start guided demo', width='stretch'):
-            load_demo(st.session_state)
-            st.rerun()
-        if st.session_state.get('demo_started'):
-            steps = [('1 · Prepare together', 'Protect'), ('2 · Find immediate help', 'Respond'), ('3 · Build a recovery plan', 'Recover'), ('4 · Show the evidence', 'Evidence')]
-            for label, page in steps:
-                if st.button(label, key='demo_'+page, width='stretch'):
-                    go(page)
-            st.caption('Fictional scenario. Never place a real emergency call during rehearsal. Starting again keeps saved recovery cases.')
-        st.divider()
-        st.caption('TEAM MAI-45 · DEMO DAY 2026\n\nNo account needed. No real personal data.')
+        with st.container(key='sidebar_guide'):
+            st.markdown('<div class="rr-sidebar-kicker">A little help getting started</div>',unsafe_allow_html=True)
+            if st.button('Show me around',icon=':material/explore:',width='stretch'):
+                from ui.tour import start_tour
+                start_tour()
+                st.rerun()
+        with st.container(key='sidebar_demo'):
+            st.markdown('<div class="rr-sidebar-kicker">TRY THE DEMONSTRATION</div><p class="rr-sidebar-copy">Meet the Rivera household.<br>One journey, from ready to recovery.</p>',unsafe_allow_html=True)
+            if st.button('Start guided demo',icon=':material/play_circle:',width='stretch'):
+                load_demo(st.session_state)
+                st.rerun()
+            if st.session_state.get('demo_started'):
+                st.caption('FICTIONAL HOUSEHOLD · 3 PEOPLE')
+                for label,page in [('1 · Prepare together','Protect'),('2 · Find immediate help','Respond'),('3 · Build a recovery plan','Recover')]:
+                    if st.button(label,key='demo_'+page,width='stretch'): go(page)
+        st.caption('DEMO DAY 2026 · TEAM MAI-45')
 
 
 def home():
-    left, right = st.columns([1.3, 1], gap='large')
-    with left:
-        st.markdown('<div class="rr-hero"><div class="rr-eyebrow">A little more ready. A little less alone.</div><h1>When life changes,<br>know your <em>next step.</em></h1><p>Prepare your household, find the right help, and move through recovery—one clear action at a time.</p></div>', unsafe_allow_html=True)
-        a, b = st.columns(2)
-        if a.button('Explore your next step', type='primary', width='stretch'):
-            go('Protect')
-        if b.button('Meet the demo household', width='stretch'):
-            load_demo(st.session_state)
-            st.rerun()
-        st.caption('Miami-Dade · Hurricane & flood · Guest-first')
-    with right:
-        st.image(str(ROOT / 'assets/journey.svg'), width='stretch')
-    st.markdown('### What do you need right now?')
-    cards = [('01 / BEFORE THE STORM', 'shield', 'Protect', 'Get ready, together.', 'Check alert information and organize what matters for your household.', 'Prepare my household'), ('02 / WHEN YOU NEED HELP', 'help', 'Respond', 'Find the right help.', 'Reach emergency calling options immediately, or explore official assistance.', 'Find help now'), ('03 / AFTER THE STORM', 'home', 'Recover', 'Take the next small step.', 'Review a recovery plan, save your progress, and adapt when circumstances change.', 'Start my recovery')]
-    for col, (number, image, page, title, copy, action) in zip(st.columns(3, gap='medium'), cards):
-        with col, st.container(border=True):
-            st.markdown(f'<div class="rr-card-number">{number}</div>{icon(image)}<h3>{title}</h3><p class="rr-card-copy">{copy}</p>', unsafe_allow_html=True)
-            if st.button(action, key='home_'+page, width='stretch'):
-                go(page)
-    st.markdown('<div class="rr-note">Built around your household. You stay in control: review a plan before accepting it, and see what is simulated, unavailable, or connected.</div>', unsafe_allow_html=True)
+    with st.container(key='home_hero'):
+        left,right=st.columns([1.25,1],gap='large',vertical_alignment='center')
+        with left:
+            st.markdown('<div class="rr-hero"><div class="rr-eyebrow">PREPARE WITH CONFIDENCE</div><h1>A little more ready.<br><em>A lot less alone.</em></h1><p>From preparing your household to finding your next step after a storm. Clear information. Help you can understand. Progress you control.</p></div>',unsafe_allow_html=True)
+            a,b=st.columns(2)
+            if a.button('Explore your next step',icon=':material/arrow_forward:',type='primary',width='stretch'): go('Protect')
+            if b.button('Meet the demo household',icon=':material/play_circle:',width='stretch'):
+                load_demo(st.session_state)
+                st.rerun()
+            st.markdown('<div class="rr-trustline"><span>✓ No account needed</span><span>◎ Miami-Dade, Florida</span></div>',unsafe_allow_html=True)
+        with right:
+            st.markdown('<div class="rr-journey-visual"><div class="rr-orbit rr-orbit-one"></div><div class="rr-orbit rr-orbit-two"></div><div class="rr-visual-heading"><span class="rr-live-dot"></span> BUILT AROUND YOUR HOUSEHOLD</div><div class="rr-shield-hero">'+icon('shield')+'</div><div class="rr-journey-title">Your next step,<br>made clearer.</div><div class="rr-journey-flow"><div><b>01</b><span>Protect</span><small>Prepare together</small></div><i>›</i><div><b>02</b><span>Respond</span><small>Find the right help</small></div><i>›</i><div><b>03</b><span>Recover</span><small>Move forward</small></div></div><div class="rr-visual-foot">Official sources. Thoughtful guidance. Your decisions.</div></div>',unsafe_allow_html=True)
+    st.markdown('<div class="rr-section-head"><div><span class="rr-eyebrow">ONE STEP AT A TIME</span><h2>What do you need today?</h2></div><p>Choose where you are in your journey.</p></div>',unsafe_allow_html=True)
+    cards=[('01','shield','Protect','Feel more prepared.','Check official weather alerts and plan around your household.','Prepare my household'),('02','help','Respond','Find your connection.','Reach emergency options or explore official assistance.','Find help now'),('03','home','Recover','Make progress, together.','Review your plan and save each small step toward recovery.','Start my recovery')]
+    with st.container(key='home_actions'):
+        for col,(number,symbol,page,title,copy,action) in zip(st.columns(3,gap='medium'),cards):
+            with col,st.container(border=True,key='home_card_'+page):
+                st.markdown(f'<div class="rr-card-top">{icon(symbol)}<span>{number} / {page.upper()}</span></div><h3>{title}</h3><p class="rr-card-copy">{copy}</p>',unsafe_allow_html=True)
+                if st.button(action,icon=':material/arrow_forward:',key='home_'+page,width='stretch'):go(page)
+    st.markdown('<div class="rr-note"><b>You stay in control.</b> Review every proposed change. See the source behind guidance. Know what is live, simulated or unavailable.</div>',unsafe_allow_html=True)
 
 
 def household():
@@ -86,7 +83,7 @@ def household():
 
 def protect():
     heading('01 / Protect', 'A clearer picture. A better next step.', 'Start with official alert information, then consider what your household needs.')
-    with st.container(border=True):
+    with st.container(border=True,key='alert_controls'):
         a, b = st.columns(2)
         mode = a.radio('Alert mode', list(AppMode), index=list(AppMode).index(st.session_state['mode']), format_func=lambda m:m.value, horizontal=True, key='alert_mode_picker')
         location = b.selectbox('Check an area', list(LOCATIONS), index=list(LOCATIONS).index(st.session_state['location_id']), format_func=LOCATIONS.get, key='alert_location_picker')
@@ -201,7 +198,7 @@ def protect():
 def respond():
     heading('02 / Respond', 'Help starts with the right connection.', 'Emergency calling options stay above every screen. This app does not contact or dispatch responders.')
     left, right = st.columns([1.15, 1], gap='large')
-    with left, st.container(border=True):
+    with left, st.container(border=True,key='assistance_controls'):
         st.subheader('What kind of help do you need?')
         need = st.radio('Choose an assistance category', ['Transportation', 'Temporary housing', 'Supplies', 'Immediate danger / not sure'])
         if st.button('Show assistance options', type='primary'):

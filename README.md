@@ -26,7 +26,7 @@ Open the local URL printed by Streamlit. Choose **Start guided demo**. The sideb
 
 ## What is implemented
 
-- Bright/dark appearance and a floating assistant that expands into a full chat screen.
+- Polished bright/dark workspace with an icon theme switch, searchable navigation, a mobile menu, and a floating assistant that expands into a full chat screen.
 - Responsive home and searchable top-toolbar navigation (names and synonyms such as tasks, weather, mobility); persistent emergency access on all six pages.
 - Optional fictional household preferences and supported Miami-Dade area selection.
 - Explicit simulated/live alert modes, context invalidation, unavailable service handling.
@@ -34,7 +34,7 @@ Open the local URL printed by Streamlit. Choose **Start guided demo**. The sideb
 - Actual M5 recovery intake, deterministic draft, explicit approval, SQLite task updates, resume by case ID, reviewable reassessment, preserved history, and plan download.
 - Retrieval-first Qwen explanations in Protect, Respond, Recover and expanded Assistant, with official citations, partial-evidence limits, provider-failure fallback and review-revocation checks. No ungrounded task generator is exposed in the integrated app.
 - Evidence screen explaining connected capabilities and remaining integrations.
-- Six-step product walkthrough with back/next/exit and optional Nebius explanations.
+- Six-step spotlight walkthrough with optional browser narration, Listen/Stop controls, automatic control highlighting, and optional Nebius product explanations.
 - Conversational Assistant for product help and validated app operations, with review cards before execution. [Assistant guide](docs/ASSISTANT.md).
 
 ## What is intentionally pending

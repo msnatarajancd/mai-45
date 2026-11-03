@@ -151,3 +151,13 @@ def test_concurrent_update_between_snapshot_check_and_write_is_rejected(tmp_path
     with pytest.raises(ValueError,match='stale'):
         execute(p,s,RacingRepository(),confirmed=True)
     assert r.get_active_plan(c.case_id).proposed_tasks[0].status==TaskStatus.COMPLETED
+
+
+def test_chat_started_tour_gets_fresh_muted_narration_session():
+    from services.assistant import local_proposal
+    s=state(); s['tour_run']='previously-spoken'; s['tour_explanation']=(0,'old help')
+    proposal=local_proposal('start tour',s,None)
+    execute(proposal,s,None,confirmed=True)
+    assert s['tour_run']!='previously-spoken'
+    assert s['tour_step']==0 and s['page']=='Home'
+    assert 'tour_explanation' not in s

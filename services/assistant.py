@@ -151,7 +151,11 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
         raise ValueError('An assessed recovery case with no immediate danger reported is required.')
     message='Action completed.'
     if kind=='navigate': state['page']=a.page
-    elif kind=='start_tour': state['tour_step']=0; state['page']='Home'
+    elif kind=='start_tour':
+        state['tour_run']=uuid4().hex
+        state['tour_step']=0
+        state['page']='Home'
+        state.pop('tour_explanation',None)
     elif kind=='start_demo':
         from ui.state import load_demo
         load_demo(state)

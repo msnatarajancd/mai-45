@@ -22,8 +22,10 @@ if page == 'Assistant':
     full_chat()
 elif page == 'Recover':
     from ui.recovery_page import render
-    render()
+    with st.container(key='recovery_workspace'):
+        render()
 else:
-    {'Home': pages.home, 'Protect': pages.protect, 'Respond': pages.respond,
-     'Household': pages.household, 'Evidence': pages.evidence}.get(page, pages.home)()
+    with st.container(key='household_form_target' if page=='Household' else 'page_workspace'):
+        {'Home': pages.home, 'Protect': pages.protect, 'Respond': pages.respond,
+         'Household': pages.household, 'Evidence': pages.evidence}.get(page, pages.home)()
 footer()

@@ -41,6 +41,8 @@ def emergency_controls():
         st.info('If you cannot call, text-to-911 may be an option. Local network and device availability vary; delivery is not guaranteed. This app cannot send a text or contact responders. If possible, ask someone nearby to call for you.')
         st.link_button('Read county Text-to-911 information', 'https://www.miamidade.gov/global/release.page?Mduid_release=rel1748353190014356')
     if st.session_state['rr_emergency']:
+        st.session_state.pop('tour_step', None)
+        st.session_state.pop('tour_explanation', None)
         st.error('Emergency access comes first. ReadyRelief has not contacted or dispatched anyone. Routine recovery actions are paused.')
         st.write('If you are in immediate danger, call 911. Follow instructions from emergency services and local authorities.')
         # Persist interruption for the active M5 case when possible, without gating controls.

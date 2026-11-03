@@ -48,4 +48,12 @@ Unit tests cover schema rejection, how-to vs operation requests, danger bypass, 
 
 ## Chat and appearance
 
-Open **Ask ReadyRelief** at the bottom right of any regular screen. **Expand chat** opens the full assistant screen; **Minimize chat** returns to the previous screen. Closing and reopening the bubble preserves the conversation, assistant mode and pending confirmation for the browser session. Use **Bright / Dark** in the top toolbar to change appearance. The responsive layout uses the available screen width.
+Open **Ask ReadyRelief** at the bottom right of any regular screen. **Expand chat** opens the full assistant screen; **Minimize chat** returns to the previous screen. Closing and reopening the bubble preserves the conversation, assistant mode and pending confirmation for the browser session. Use the **moon / sun icon** in the top toolbar to change appearance. The icon has an accessible label and tooltip. On small screens, the **menu icon** opens navigation. The responsive layout uses the available screen width.
+
+## Spoken spotlight walkthrough
+
+Choose **Show me around** in the sidebar or the **help icon** in the toolbar. A floating guide highlights the relevant control and scrolls it into view. Use **Show me where** to locate it again. **Next step**, **Previous step** and **End tour** never submit forms or change saved recovery data.
+
+Audio starts off. Select **Listen to this step** to enable browser narration; subsequent steps are narrated until **Stop audio** is selected. Returning to a different page pauses the guide. Closing the tour or activating emergency controls stops narration. A fresh tour starts muted. Spoken instructions use the browser/device voice service, not Nebius; voice availability and playback policy vary by browser. If unavailable or blocked, the guide displays a clear fallback and keeps written instructions and highlights usable. Reduced-motion preferences are respected.
+
+**Details & AI help** contains the longer explanation and the optional, separately requested Nebius product-help call. This is distinct from browser narration.

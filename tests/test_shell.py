@@ -30,7 +30,7 @@ def test_dock_expand_minimize_preserves_conversation(app):
     assert app.session_state['assistant_pending']==pending
 
 def test_dark_theme_preserves_household_and_emergency_access(app):
-    next(r for r in app.radio if r.label=='Appearance').set_value('Dark').run()
+    button(app,'Switch to dark mode').click().run()
     assert app.session_state['appearance']=='Dark'
     assert app.session_state['household'].members==1
     assert 'Call 911' in [b.label for b in app.get('link_button')]
@@ -40,4 +40,13 @@ def test_search_is_in_main_toolbar(app):
     assert not any(t.label=='Search menu' for t in app.sidebar.text_input)
     next(t for t in app.text_input if t.label=='Search menu').input('tasks').run()
     assert 'Recover' in [b.label for b in app.button]
+    assert not app.exception
+
+
+def test_top_walkthrough_and_mobile_menu_keep_navigation_available(app):
+    button(app,'Start walkthrough').click().run()
+    assert app.session_state['tour_step']==0
+    button(app,'Immediate danger').click().run()
+    assert 'tour_step' not in app.session_state
+    assert 'Call 911' in [b.label for b in app.get('link_button')]
     assert not app.exception

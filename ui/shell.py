@@ -4,10 +4,27 @@ from ui.capabilities import search_pages
 
 
 def toolbar():
+    st.session_state.setdefault('appearance','Bright')
     with st.container(key='top_toolbar'):
-        search, theme = st.columns([4,1.35],vertical_alignment='center')
-        search.text_input('Search menu',placeholder='Search screens · tasks, weather, family…',help='Press Enter to filter the menu. Clear to show all screens.',key='nav_search',label_visibility='collapsed')
-        theme.radio('Appearance',['Bright','Dark'],horizontal=True,key='appearance',label_visibility='collapsed')
+        title, search, theme, help_control = st.columns([1.1,3,.28,.28],vertical_alignment='center',gap='small')
+        title.markdown('<div class="rr-page-label"><span>YOUR WORKSPACE</span><strong>'+st.session_state['page']+'</strong></div>',unsafe_allow_html=True)
+        with title.container(key='mobile_nav'):
+            with st.popover('Navigate',icon=':material/menu:',help='Open navigation',width='stretch'):
+                st.caption('YOUR WORKSPACE')
+                for page in search_pages(st.session_state.get('nav_search','')):
+                    if st.button(page,key='mobile_nav_'+page,width='stretch'):
+                        st.session_state['page']=page
+                        st.rerun()
+
+        search.text_input('Search menu',placeholder='Search anything…',help='Find screens by task, weather, family or chat. Press Enter to search.',key='nav_search',label_visibility='collapsed',icon=':material/search:')
+        dark=st.session_state['appearance']=='Dark'
+        if theme.button('Switch to bright mode' if dark else 'Switch to dark mode',icon=':material/light_mode:' if dark else ':material/dark_mode:',key='theme_toggle',help='Switch to bright mode' if dark else 'Switch to dark mode',width='stretch'):
+            st.session_state['appearance']='Bright' if dark else 'Dark'
+            st.rerun()
+        if help_control.button('Start walkthrough',icon=':material/help_outline:',key='quick_tour',help='Take a guided tour',width='stretch'):
+            from ui.tour import start_tour
+            start_tour()
+            st.rerun()
     query=st.session_state.get('nav_search','')
     if query:
         matches=search_pages(query)
