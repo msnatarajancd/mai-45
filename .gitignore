@@ -20,6 +20,17 @@ venv/
 # Local files
 .DS_Store
 Thumbs.db
+
 # M3 admin acquisition artifacts
 /data/official_sources/admin.lock
 /data/official_sources/**/*.tmp
+
+# M1 local files and artifacts
+.local/
+artifacts/
+
+# Application logs
+*.log
+
+# Allow the shared environment variable template
+!.env.example

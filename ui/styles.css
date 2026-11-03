@@ -1,0 +1,91 @@
+/* Semantic theme shared by pages, form controls and both chat sizes. */
+.stApp {background:var(--rr-bg);color:var(--rr-ink);}
+[data-testid="stHeader"] {background:var(--rr-bg);height:2.4rem;}
+[data-testid="stToolbar"] {display:none;}
+.block-container {max-width:none;padding:2.8rem 1.5rem 5.5rem;}
+[data-testid="stSidebar"] {background:#143d35;width:260px !important;min-width:260px !important;}
+[data-testid="stSidebarUserContent"] {padding:1rem 1.1rem;}
+[data-testid="stSidebar"] * {color:#eff6ef;}
+[data-testid="stSidebar"] .stButton button {background:transparent;border:1px solid #45675e;text-align:left;}
+[data-testid="stSidebar"] .stButton button[kind="primary"] {background:#d6eccd;border-color:#d6eccd;}
+[data-testid="stSidebar"] .stButton button[kind="primary"] * {color:#143d35;}
+[data-testid="stSidebar"] hr {border-color:#426055;margin:10px 0;}
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] * {color:#bfd1c6;}
+.stApp h1,.stApp h2,.stApp h3 {letter-spacing:-.035em;color:var(--rr-ink);}
+h1 {font-size:2.5rem !important;line-height:1.12 !important;}
+h2 {font-size:1.7rem !important;} h3 {font-size:1.18rem !important;}
+p,li {line-height:1.55;}
+.stApp a {color:var(--rr-link);}
+.stApp label,.stApp [data-testid="stMarkdownContainer"],.stApp [data-testid="stWidgetLabel"],.stApp [data-testid="stRadio"] {color:var(--rr-ink);}
+.stApp [data-testid="stCaptionContainer"] {color:var(--rr-muted);}
+.stButton button,.stLinkButton a,.stDownloadButton button {border-radius:9px;min-height:42px;font-weight:600;background:var(--rr-surface);color:var(--rr-ink);border-color:var(--rr-border);}
+.stButton button[kind="primary"],.stFormSubmitButton button[kind="primary"] {background:var(--rr-accent);color:var(--rr-onaccent);border-color:var(--rr-accent);}
+.stButton button[kind="primary"] p,.stFormSubmitButton button[kind="primary"] p {color:inherit;}
+.stButton button:hover,.stLinkButton a:hover {border-color:var(--rr-accent);}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible {outline:3px solid #d88b26 !important;outline-offset:2px;}
+.stApp input,.stApp textarea,.stApp [role="combobox"],.stApp select {background:var(--rr-soft);color:var(--rr-ink);caret-color:var(--rr-ink);}
+.stApp input::placeholder,.stApp textarea::placeholder {color:var(--rr-muted);opacity:1;}
+.stApp [data-baseweb="input"],.stApp [data-baseweb="select"],.stApp [data-baseweb="textarea"],.stApp [data-testid="stTextInputRootElement"],.stApp [data-testid="stNumberInputContainer"] {background:var(--rr-soft);color:var(--rr-ink);border-color:var(--rr-border);}
+[role="listbox"],[role="option"] {background:var(--rr-surface);color:var(--rr-ink);}
+[role="option"][aria-selected="true"] {background:var(--rr-soft);}
+.stApp [data-testid="stForm"],.stApp [data-testid="stExpander"],.stApp [data-testid="stVerticalBlockBorderWrapper"] > div {border-color:var(--rr-border);border-radius:12px;}
+.stApp details,.stApp summary {background:var(--rr-surface);color:var(--rr-ink);border-color:var(--rr-border);}
+.stApp [data-testid="stAlert"] {background:var(--rr-info);color:var(--rr-ink);}
+.stApp [data-testid="stAlert"] p {color:var(--rr-ink);}
+.stApp [data-testid="stChatMessage"] {background:var(--rr-soft);color:var(--rr-ink);border-radius:12px;}
+.stApp [data-testid="stChatInput"],.stApp [data-testid="stChatInput"] textarea {background:var(--rr-soft);color:var(--rr-ink);border-color:var(--rr-border);}
+.stApp [data-testid="stBottom"],.stApp [data-testid="stBottomBlockContainer"] {background:var(--rr-bg);}
+.stApp [data-testid="stMetric"] {background:var(--rr-soft);color:var(--rr-ink);padding:16px;border-radius:12px;}
+.stApp [data-testid="stMetricValue"] {font-size:1.65rem;color:var(--rr-ink);}
+.stApp [data-testid="stCode"] {background:var(--rr-soft);color:var(--rr-ink);}
+.rr-brand {font-size:1.6rem;letter-spacing:-.06em;font-weight:800;padding:0;}
+.rr-brand span {color:#b8dfa8 !important;}
+.rr-eyebrow {font-size:.7rem;font-weight:750;text-transform:uppercase;letter-spacing:.15em;color:var(--rr-muted);margin:0 0 6px;}
+.rr-hero {padding:8px 0 12px;}
+.rr-hero h1 {font-size:3.5rem !important;max-width:720px;margin:0 0 16px;font-weight:750;}
+.rr-hero h1 em {color:var(--rr-accent);font-style:normal;}
+.rr-hero p {color:var(--rr-muted);max-width:650px;font-size:1.05rem;}
+.rr-badge {display:inline-block;border-radius:5px;padding:5px 9px;font-size:.68rem;letter-spacing:.06em;font-weight:750;background:var(--rr-warn);color:var(--rr-warntext);margin:0 0 4px;}
+.rr-badge.green {background:var(--rr-soft);color:var(--rr-ink);}
+.rr-topline {display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:0;color:var(--rr-muted);font-size:.78rem;}
+.rr-emergency-label {font-weight:650;color:var(--rr-danger);font-size:.84rem;padding:8px 0;}
+.st-key-emergency_bar {background:var(--rr-emergency);border:1px solid var(--rr-border);border-radius:12px;padding:7px 12px;margin-bottom:10px;}
+.st-key-emergency_bar .stLinkButton a {background:#a24435;border-color:#a24435;color:white;}
+.st-key-emergency_bar .stButton button {background:transparent;color:var(--rr-danger);border-color:var(--rr-border);}
+.rr-card-number {color:var(--rr-muted);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px;font-weight:700;}
+.rr-icon {width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--rr-soft);color:var(--rr-accent);margin-bottom:12px;}
+.rr-icon svg {width:23px;height:23px;}
+.rr-card-copy {min-height:65px;color:var(--rr-muted);font-size:.9rem;}
+.rr-note {border-left:3px solid var(--rr-border);padding:8px 15px;color:var(--rr-muted);font-size:.86rem;margin:12px 0;}
+.rr-footer {border-top:1px solid var(--rr-border);margin-top:22px;padding-top:14px;color:var(--rr-muted);font-size:.75rem;}
+.rr-warning {background:var(--rr-warn);border:1px solid var(--rr-border);border-radius:14px;padding:20px 24px;margin:8px 0 14px;color:var(--rr-warntext);}
+.rr-warning h3 {color:var(--rr-warntext);}
+.st-key-guided_tour,.st-key-assistant_action {background:var(--rr-soft);border-left:4px solid var(--rr-accent);border-radius:12px;padding:14px;margin-bottom:12px;}
+.st-key-top_toolbar {padding-bottom:4px;border-bottom:1px solid var(--rr-border);margin-bottom:6px;}
+.st-key-chat_launcher {position:fixed;right:24px;bottom:22px;width:auto !important;z-index:1001;}
+.st-key-chat_launcher button {border-radius:999px;min-height:54px;padding:10px 22px;box-shadow:0 5px 24px var(--rr-shadow);}
+.st-key-chat_panel {position:fixed;right:24px;bottom:22px;width:440px !important;max-width:calc(100vw - 32px);max-height:calc(100dvh - 90px);overflow-y:auto;background:var(--rr-surface);border:1px solid var(--rr-border);padding:16px;border-radius:18px;box-shadow:0 12px 50px var(--rr-shadow);z-index:1001;}
+.st-key-chat_panel h3 {font-size:1.05rem !important;}
+.st-key-chat_panel p {font-size:.9rem;}
+.st-key-chat_panel [data-testid="stHorizontalBlock"] {flex-wrap:nowrap;}
+.st-key-chat_panel button {font-size:.76rem;min-height:38px;padding:4px 7px;}
+.st-key-chat_panel .st-key-chat_transcript {border:0;}
+.st-key-chat_panel [data-testid="stChatMessage"] {padding:10px;}
+.st-key-chat_panel [data-testid="stChatMessageAvatarUser"],.st-key-chat_panel [data-testid="stChatMessageAvatarAssistant"] {display:none;}
+.st-key-full_chat {max-width:1450px;margin:auto;width:100%;}
+@media(min-width:1800px) {.block-container {padding-left:2rem;padding-right:2rem;}}
+@media(max-width:700px) {.block-container {padding:2.8rem .85rem 5rem;}.rr-hero h1 {font-size:2.5rem !important;}h1{font-size:2rem !important;}.rr-card-copy {min-height:0;}.rr-topline {align-items:flex-start;}.st-key-top_toolbar [data-testid="stHorizontalBlock"] {gap:6px;}.st-key-chat_panel {right:8px;bottom:8px;width:calc(100vw - 16px) !important;max-width:none;max-height:calc(100dvh - 62px);padding:12px;}.st-key-chat_launcher {right:14px;bottom:14px;}.st-key-chat_panel [data-testid="stColumn"] {min-width:0 !important;flex:1 !important;}}
+@media(prefers-reduced-motion:reduce) {*{scroll-behavior:auto !important;transition:none !important;}}
+
+.stApp .stButton button[kind="primary"] [data-testid="stMarkdownContainer"],.stApp .stFormSubmitButton button[kind="primary"] [data-testid="stMarkdownContainer"] {color:var(--rr-onaccent);}
+.stApp [data-testid="stCaptionContainer"] p {color:var(--rr-muted);}
+.st-key-chat_panel button p {font-size:.76rem;}
+
+/* Streamlit's native header occupies 60px in this release. */
+.block-container {padding-top:4.25rem;}
+.stApp [data-testid="stCaptionContainer"],.stApp [data-testid="stCaptionContainer"] * {color:var(--rr-muted) !important;opacity:1;}
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"], [data-testid="stSidebar"] [data-testid="stCaptionContainer"] * {color:#bfd1c6 !important;}
+.stApp .stFormSubmitButton button {background:var(--rr-accent);border-color:var(--rr-accent);}
+.stApp .stFormSubmitButton button * {color:var(--rr-onaccent) !important;}
+.st-key-emergency_bar .stLinkButton a * {color:white !important;}
+.stApp [data-testid="stChatInput"] > div {background:var(--rr-soft);color:var(--rr-ink);}
