@@ -5,7 +5,36 @@ service. Government origin, downloading, extraction, and unit tests are not huma
 review. **No actual source has been marked REVIEWED. No real reviewer signoff was
 created.** All approvals in tests exist only in temporary test directories.
 
-## Actual acquisition
+
+## M3-2A extraction and candidate-packet update
+
+The acquisition table below is the historical M3-1 outcome. EEAP has now been
+re-extracted from its original captured bytes: **7 sections**, still
+**REVIEW_REQUIRED**, no reviewer/signoff. Its original URL, HTTP timestamp,
+byte count and SHA-256 are unchanged. The original failed-extraction snapshot
+remains in history; a separate extraction timestamp/version records the repair.
+
+The original page contains a hidden `service-data` service record, an escaped
+`longDescription` and six escaped FAQ answers. The generic parser had stopped at
+metadata before any usable heading. The source-scoped repair uses those fields
+without browser execution, without unrelated organization/featured-service text,
+and without attempting to reconstruct obfuscated contact information.
+
+See [M3_REVIEW_PACKET.md](M3_REVIEW_PACKET.md) for **16 PENDING candidates**
+(6 reentry, 6 floodwater, 4 EEAP), exact passages, full linked surrounding context,
+proposed applicability, editorial caveats, and ready-to-fill per-candidate commands.
+The `knowledge.review` CLI now accepts `--chunk-id` for `inspect`, `approve`, and
+`reject`. Without `--chunk-id`, existing source-level behavior is unchanged.
+Candidate decisions are separate from source review and cannot publish a source.
+No approval/rejection command was run against the real source store.
+
+Safe damage documentation has no supported passage in the selected captures.
+PROTECT phase tags are explicitly proposed from the acquired infographic's
+Before/Recognize Flood Risk text, not approved expansions of current source scope.
+Retrieval and resource search still return UNAVAILABLE. No ranking is implemented.
+
+## Actual acquisition (historical M3-1)
+
 
 The following are results of running the acquisition utility, not browser-search
 results or assumed successes. Timestamps below are recorded UTC instants. Each
