@@ -23,10 +23,8 @@ def repository():
 
 
 def clear_view():
-    for key in list(st.session_state):
-        if key.startswith(('rr_draft', 'rr_revision', 'rr_reviewed', 'rr_progress')):
-            del st.session_state[key]
-
+    from ui.state import clear_recovery_view
+    clear_recovery_view(st.session_state)
 
 def intake_fields(prefix, defaults=None):
     h = st.session_state['household']

@@ -4,6 +4,7 @@ from domain.contracts import AppMode, Household, LOCATIONS
 from services import nws_alerts, knowledge, emergency, resources
 from ui.components import ROOT, go, heading, icon
 from ui.state import change_context, load_demo
+from ui.capabilities import PAGES, search_pages
 
 
 def sidebar():
@@ -11,10 +12,19 @@ def sidebar():
         st.markdown('<div class="rr-brand">Ready<span>Relief</span></div>', unsafe_allow_html=True)
         st.caption('PROTECT. RESPOND. RECOVER.')
         st.divider()
-        for name, symbol in [('Home', ':material/home:'), ('Protect', ':material/shield:'), ('Respond', ':material/emergency:'), ('Recover', ':material/checklist:'), ('Household', ':material/group:'), ('Evidence', ':material/fact_check:')]:
+        query = st.text_input('Search menu', placeholder='Try tasks, weather, family…', help='Search screen names or related words. Press Enter to filter.', key='nav_search')
+        matches = search_pages(query)
+        if not matches:
+            st.caption('No matching screens. Try tasks, weather, family or chat.')
+        for name in matches:
+            symbol = ':material/' + PAGES[name][0] + ':'
             if st.button(name, icon=symbol, key='nav_'+name, type='primary' if st.session_state['page'] == name else 'secondary', width='stretch'):
                 go(name)
         st.divider()
+        if st.button('Show me around', icon=':material/explore:', width='stretch'):
+            from ui.tour import start_tour
+            start_tour()
+            st.rerun()
         st.caption('YOUR DEMONSTRATION')
         st.write('One household.\n\nA clearer path forward.')
         st.caption('3 people · Mobility support · No vehicle')
@@ -198,7 +208,7 @@ def evidence():
     c.metric('Live alerts / RAG', 'Pending')
     st.subheader('Integration readiness')
     integrations = [
-        {'Owner': 'M1', 'Capability': 'Application, household, demo and integration UI', 'State': 'Implemented'},
+        {'Owner': 'M1', 'Capability': 'Application, searchable menu, tour and conversational actions', 'State': 'Implemented'},
         {'Owner': 'M2', 'Capability': 'NWS connector and Guardian explanation', 'State': 'TODO · simulated fixture only'},
         {'Owner': 'M3', 'Capability': 'Reviewed corpus, retrieval and local directory', 'State': 'TODO · official entry links only'},
         {'Owner': 'M4', 'Capability': 'Reviewed emergency rules and safety evaluation', 'State': 'TODO · conservative access fallback'},
@@ -218,7 +228,7 @@ def evidence():
             st.link_button('Visit official source', record.url)
     with st.expander('What the demo can honestly show', expanded=True):
         st.write('A fictional household journey; explicitly simulated warning; immediate emergency links; a reviewable deterministic recovery draft; local saved progress; changes proposed before approval.')
-        st.write('The optional M5 AI planner uses Nebius only when requested and configured. Without verified evidence it is experimental and ungrounded. No hidden AI calls are made by the application shell.')
+        st.write('The Assistant and tour explanations use Nebius only when requested and configured; proposed actions are validated and require confirmation. The optional M5 AI planner also uses Nebius. Without verified evidence it is experimental and ungrounded. No hidden AI calls are made by the application shell.')
     with st.expander('Storage, privacy and deployment limits'):
         st.write('No login. Household preferences last for the session. Fictional recovery cases persist on this local machine and can be resumed with their case ID. Case IDs are not authentication. This is a local single-user demo, not a private multi-user service. Streamlit hosted disk may be reset on restart or redeploy.')
         st.write('No offline guarantee, dispatch, monitoring, live shelter inventory, insurance submission, FEMA eligibility decision, or validation for real emergencies.')

@@ -1,0 +1,57 @@
+"""Contextual native walkthrough, anchored to the app's actual controls."""
+import streamlit as st
+from ui.capabilities import TOUR
+
+
+def start_tour():
+    st.session_state['tour_step']=0
+    st.session_state['page']='Home'
+    st.session_state.pop('tour_explanation',None)
+
+
+def render_tour():
+    if 'tour_step' not in st.session_state: return
+    index=max(0,min(int(st.session_state['tour_step']),len(TOUR)-1))
+    page,title,body,hint=TOUR[index]
+    with st.container(border=True,key='guided_tour'):
+        st.caption(f'YOUR PRODUCT GUIDE · STEP {index+1} OF {len(TOUR)} · {page.upper()}')
+        st.subheader(title)
+        st.write(body)
+        st.info(hint)
+        st.progress((index+1)/len(TOUR))
+        if st.session_state['page']!=page:
+            if st.button('Take me to this step'):
+                st.session_state['page']=page
+                st.rerun()
+        cols=st.columns(4)
+        if cols[0].button('Previous step',disabled=index==0,width='stretch'):
+            st.session_state['tour_step']=index-1
+            st.session_state['page']=TOUR[index-1][0]
+            st.session_state.pop('tour_explanation',None)
+            st.rerun()
+        if cols[1].button('Next step' if index<len(TOUR)-1 else 'Finish tour',type='primary',width='stretch'):
+            st.session_state.pop('tour_explanation',None)
+            if index==len(TOUR)-1: st.session_state.pop('tour_step',None)
+            else:
+                st.session_state['tour_step']=index+1
+                st.session_state['page']=TOUR[index+1][0]
+            st.rerun()
+        if cols[2].button('Explain this step with AI',width='stretch'):
+            from services.assistant import propose
+            try:
+                # Share only the fictional household/page context for product help, not recovery records.
+                context={k:st.session_state[k] for k in ('page','mode','location_id','household')}
+                with st.spinner('Explaining this feature with Nebius…'):
+                    result=propose(f'Explain how to use the {page} page for a new user. Keep it short; do not propose any action.',context,None)
+                st.session_state['tour_explanation']=(index,result.answer)
+            except Exception:
+                st.warning('The AI explanation is unavailable. The product guide above still works; nothing was changed.')
+        if cols[3].button('End tour',width='stretch'):
+            st.session_state.pop('tour_step',None)
+            st.session_state.pop('tour_explanation',None)
+            st.rerun()
+        st.caption('AI explanation sends this step and fictional household preferences to Nebius. The tour itself makes no API calls.')
+        explanation=st.session_state.get('tour_explanation')
+        if explanation and explanation[0]==index:
+            st.markdown('**Nebius AI explanation · product help**')
+            st.write(explanation[1])

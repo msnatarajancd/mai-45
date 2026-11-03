@@ -51,3 +51,7 @@ button:focus-visible,a:focus-visible { outline:3px solid #d88b26 !important; out
 [data-testid="stMetricValue"] { font-size:1.65rem; }
 @media(max-width:700px) { .block-container { padding:4.2rem 1rem 3rem; } .rr-hero h1 {font-size:2.55rem !important;} h1 {font-size:2rem !important;} .rr-card-copy {min-height:0;} .rr-topline {align-items:flex-start;} .st-key-emergency_bar {margin-bottom:18px;} }
 @media(prefers-reduced-motion:reduce) { * {scroll-behavior:auto !important; transition:none !important;} }
+.st-key-guided_tour { background:#edf3e6; border-left:4px solid #659665; border-radius:12px; padding:14px; margin-bottom:18px; }
+.st-key-assistant_action { background:#f0f5ea; border-left:4px solid #167367; border-radius:12px; padding:18px; }
+[data-testid="stSidebar"] input { color:#173c35 !important; }
+[data-testid="stSidebar"] input::placeholder { color:#566e60 !important; }

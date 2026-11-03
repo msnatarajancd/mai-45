@@ -37,3 +37,8 @@ Open Evidence. State clearly what is connected (M1 interface, M5 saved recovery 
 ## Recovery if the demo goes off script
 
 Use sidebar navigation; saved plans are not erased. Start guided demo resets alert context and household preferences but preserves cases. An intentionally danger-reported saved case stays paused; start a new fictional case for the recovery segment. If storage fails, emergency controls still work, but do not claim progress was saved. Skip optional experimental AI if its provider is unconfigured.
+
+
+## Optional 60-second assistant segment
+
+Search `tasks` in the left menu to reveal Recover. Clear the search and choose Show me around; demonstrate Next step and End tour. Open Ask ReadyRelief and request “Change my fictional household to 4 people with no vehicle.” Show that the preview identifies both changes before Confirm action. Ask “How do I save my progress?” to demonstrate product help without a write. With an accepted plan open, ask to complete an exact task title and confirm the proposal, then show the updated saved status. Keep the AI segment optional in case the provider is unavailable; Local guide and the original screens remain usable.

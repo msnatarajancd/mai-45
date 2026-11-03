@@ -23,3 +23,9 @@ def load_demo(state):
     state['demo_started'] = True
     state['page'] = 'Protect'
     # Existing recovery cases are deliberately not overwritten by a demo restart.
+
+
+def clear_recovery_view(state):
+    for key in list(state):
+        if key.startswith(("rr_draft", "rr_revision", "rr_reviewed", "rr_progress")):
+            del state[key]

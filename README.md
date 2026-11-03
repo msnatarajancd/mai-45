@@ -26,13 +26,15 @@ Open the local URL printed by Streamlit. Choose **Start guided demo**. The sideb
 
 ## What is implemented
 
-- Responsive home and shared navigation; persistent emergency access on all six pages.
+- Responsive home and searchable navigation (names and synonyms such as tasks, weather, mobility); persistent emergency access on all six pages.
 - Optional fictional household preferences and supported Miami-Dade area selection.
 - Explicit simulated/live alert modes, context invalidation, unavailable service handling.
 - Conservative emergency interruption and official-information links.
 - Actual M5 recovery intake, deterministic draft, explicit approval, SQLite task updates, resume by case ID, reviewable reassessment, preserved history, and plan download.
 - Optional M5 experimental Nebius draft generation, with explicit user action and ungrounded-output disclosure.
 - Evidence screen explaining connected capabilities and remaining integrations.
+- Six-step product walkthrough with back/next/exit and optional Nebius explanations.
+- Conversational Assistant for product help and validated app operations, with review cards before execution. [Assistant guide](docs/ASSISTANT.md).
 
 ## What is intentionally pending
 
@@ -49,11 +51,12 @@ Open the local URL printed by Streamlit. Choose **Start guided demo**. The sideb
 
 The integrated app defaults to `.local/recovery.sqlite3` (ignored by Git). Override with an absolute `READYRELIEF_DB_PATH`. The standalone M5 `dev_recovery_preview.py` retains its original path behavior. Save your fictional case ID to resume after a browser/server restart on the same machine. Household preferences are session-only. Switching household preferences does not rewrite existing recovery cases.
 
-`.env.example` documents configuration; the application does **not** automatically load `.env` files. For optional AI:
+`.env.example` documents configuration; the application does **not** automatically load `.env` files. For optional AI (also used by the new Assistant):
 
 ```powershell
 $env:NEBIUS_API_KEY = "your-key"
-# Optional: $env:NEBIUS_MODEL = "provider-model-id"
+# Optional for chat/tour: $env:NEBIUS_CHAT_MODEL = "Qwen/Qwen3-235B-A22B-Instruct-2507"
+# Optional for M5 planner: $env:NEBIUS_MODEL = "provider-model-id"
 .venv/Scripts/python.exe -m streamlit run app.py
 ```
 
@@ -72,10 +75,10 @@ The combined suite includes the original M5 tests plus M1 service contracts, nav
 
 ```text
 app.py                 single application entry point
-ui/                    shared shell, six screens, M5 presentation
+ui/                    shared shell, seven screens, product tour, M5 presentation
 assets/journey.svg     original local vector illustration (no remote asset dependency)
 domain/contracts.py    M1–M4 integration data contracts
-services/              M2/M3/M4 adapters with owner TODOs
+services/              M2/M3/M4 adapters, validated assistant planner/executor
 recovery/              existing M5 domain, SQLite, planners, reassessment (unchanged)
 tests/                 existing M5 + M1 regression tests
 .streamlit/config.toml theme and local server defaults

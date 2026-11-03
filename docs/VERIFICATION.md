@@ -33,3 +33,14 @@ Windows sandbox execution stalled Streamlit AppTest and denied some temporary-di
 A subsequent full-suite run encountered one transient Windows socket buffer error (`WinError 10055`) in the original M5 `test_reassessment_dashboard_actions[danger]`. The final rerun was performed after browser work finished.
 
 Final rerun result after browser completion: all 189 tests passed. No test failures remain.
+
+
+## Search and assistant extension
+
+Full combined suite: **212 passed** after adding searchable navigation, a six-step product tour, Nebius action proposals and confirmed execution. Tests cover structured-action rejection, product questions without writes, emergency bypass, explicit confirmation, duplicate action rejection, stale case/context detection, draft approval, pending danger, and actual saved task changes. Independent review identified a race between snapshot comparison and task writes; a failing regression reproduced it, and writes now use the proposal's original plan ID/version for atomic repository validation.
+
+Live Nebius smoke checks used fictional inputs only. Product help returned no action after the question guard; household updates and area/mode updates returned validated proposals; an exact recovery task title resolved to its real saved task ID and COMPLETED status. The live task proposal was not executed. Chat uses the school-planning reference's Qwen/Qwen3-235B-A22B-Instruct-2507 default through M5's bounded transport. API keys were read from the existing environment and never copied into source files or printed.
+
+Desktop browser inspection confirmed menu filtering, tour navigation and the AI household update card with explicit Confirm/Cancel controls. The basic tour and Local guide work without any API request. Model answers are generative product guidance, not a verified emergency knowledge source. Ambiguous operations may ask for clarification instead of producing an action.
+
+Final extension verification: **212 passed in 22.06 seconds**. Browser checks passed search filtering, tour Next/End, a live Nebius household proposal and explicit confirmed update. The 390×844 assistant view had no horizontal document overflow. Compile and whitespace checks passed.
