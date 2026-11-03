@@ -1,0 +1,62 @@
+{
+  "chunk_id": "1dceb9df1efd2dc78c44c34dc7d315c66d945f52bdd0ffe3959aaf9e13909549",
+  "source_id": "miami-dade-eeap",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+  "original_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+  "parent_chunk_id": "6a709297db559f157a7b7f4eff8cdbecca07b789ab49fd6b5edec3b616c5032b",
+  "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Can I get assistance if I am not enrolled in the event of an emergency?",
+  "passage_start": 0,
+  "passage_end": 562,
+  "original_passage": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+  "proposed_chunk": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+  "surrounding_context": [
+    {
+      "chunk_id": "6a709297db559f157a7b7f4eff8cdbecca07b789ab49fd6b5edec3b616c5032b",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Can I get assistance if I am not enrolled in the event of an emergency?",
+      "guidance_text": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "1f1086b2b14e0d28ba209f1d6a64dc1940a30a82978d1ccc0abd52a68504e8ca",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > longDescription",
+      "guidance_text": "The Emergency & Evacuation Assistance Program (EEAP) provides free evacuation\n assistance to eligible residents living in Miami-Dade County who need specialized\n transportation and/or sheltering or who would like to receive a wellness call after\n a disaster.\nPrior to an emergency, residents who may require medical monitoring, assistance\n with daily living or have life-saving medical equipment dependent on electricity should\n register for the EEAP to ensure help is available when needed. Pre-registered residents\n will receive priority during an emergency. It may also be utilized post-disaster to\n provide other assistance.\nThis program is for individuals who live alone or with families and may have access/functional\n needs. Residents living in long-term care facilities such as nursing homes, assisted\n living facilities or group homes are not eligible for this program as these facilities\n are required by law to develop an emergency plan and provide emergency assistance\n for their clients.\nWhen an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    }
+  ],
+  "jurisdiction": "US-FL-MIAMI-DADE",
+  "hazards": [
+    "hurricane"
+  ],
+  "phases": [
+    "respond"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification.",
+    "Static program description is not live shelter, enrollment, transport or pickup availability.",
+    "No individual eligibility, enrollment, assistance or evacuation order is established; preserve the non-guarantee FAQ."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

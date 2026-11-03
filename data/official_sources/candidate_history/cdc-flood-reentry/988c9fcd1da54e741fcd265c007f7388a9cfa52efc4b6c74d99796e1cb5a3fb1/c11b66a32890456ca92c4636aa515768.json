@@ -1,0 +1,60 @@
+{
+  "chunk_id": "988c9fcd1da54e741fcd265c007f7388a9cfa52efc4b6c74d99796e1cb5a3fb1",
+  "source_id": "cdc-flood-reentry",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+  "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+  "parent_chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
+  "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Warning!",
+  "passage_start": 0,
+  "passage_end": 97,
+  "original_passage": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+  "proposed_chunk": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+  "surrounding_context": [
+    {
+      "chunk_id": "40d20e9ce3a5c19070064a2701e6b7ee1a164e150c32c59a8405ad2ca12cad0e",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Warning!",
+      "guidance_text": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "00c7f0e0a7de3a0992eb142574ba75d93dd473b504adc196e13c9033bcf3e558",
+      "source_id": "cdc-flood-reentry",
+      "section_heading": "Safety Guidelines: Reentering Your Flooded Home > When you first reenter your home > Take these steps when you first reenter your flooded home.",
+      "guidance_text": "Be Ready! Hurricanes Infographic\nBe Ready! Hurricanes\nBefore\nCover windows with storm shutters or plywood.\nTune in for local information.\nKnow how to turn off your gas, electricity, and water in case you need to evacuate.\nSecure outdoor items by moving them to the garage.\nMake an emergency kit.\nDesignate a shelter area if you can't evacuate. Rooms without windows are best.\nAfter\nIf your home has damage, do not reenter until it has been examined by a building inspector for safety.\nPrevent mold growth by airing out rooms and disinfecting.\nTap water may not be safe to drink. Listen to local warnings.\nThrow away food that may be unsafe.\nPrevent carbon monoxide poisoning. Use generators, stoves, and grills outside and away from windows and doors. 20 feet\nFooter\nPublic Health Preparedness and Response/Centers for Disease Control and Prevention\nDownload Infographic PDF: English | Español\nTry to return to your home during the daytime so that you do not have to use any lights. Use battery-powered flashlights and lanterns, rather than candles, gas lanterns, or torches.\nIf you have standing water in your home and can turn off the main power from a dry location, then go ahead and turn off the power, even if it delays cleaning. If you must enter standing water to access the main power switch, then call an electrician to turn it off.\nHave an electrician check the house's electrical system before turning the power on again.\nIf you smell gas or suspect a leak, turn off the main gas valve, open all windows, and leave your house immediately. Notify the gas company or the police or fire departments or State Fire Marshal's office, and do not turn on the lights or do anything that could cause a spark. Do not return until you are told it is safe to do so.\nIf the house has been closed up for several days, enter briefly to open doors and windows to let the house air out for a while (at least 30 minutes) before you stay for any length of time.\nIf your home has been flooded and has been closed up for several days, assume your home has mold.\nIf your home has been flooded, it also may be contaminated with sewage. See Floodwater After a Disaster or Emergency.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood",
+    "hurricane"
+  ],
+  "phases": [
+    "recover"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification.",
+    "Preserve NEVER and while standing in water; this is not electrical-repair permission."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

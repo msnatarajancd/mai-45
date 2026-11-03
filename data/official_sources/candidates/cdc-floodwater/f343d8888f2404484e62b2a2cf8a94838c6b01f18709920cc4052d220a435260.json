@@ -1,0 +1,61 @@
+{
+  "chunk_id": "f343d8888f2404484e62b2a2cf8a94838c6b01f18709920cc4052d220a435260",
+  "source_id": "cdc-floodwater",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+  "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+  "parent_chunk_id": "0d7bafd14b5d20adf424397f3b3afa737a14a39c4231c47b93c2feef9ad1cf0c",
+  "section_heading": "Safety Guidelines: Floodwater > Key points",
+  "passage_start": 0,
+  "passage_end": 140,
+  "original_passage": "Never drive in flooded areas—turn around, don't drown!\nStay out of floodwater—it can contain many things that can hurt you or make you sick.",
+  "proposed_chunk": "Never drive in flooded areas—turn around, don't drown!\nStay out of floodwater—it can contain many things that can hurt you or make you sick.",
+  "surrounding_context": [
+    {
+      "chunk_id": "0d7bafd14b5d20adf424397f3b3afa737a14a39c4231c47b93c2feef9ad1cf0c",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Key points",
+      "guidance_text": "Never drive in flooded areas—turn around, don't drown!\nStay out of floodwater—it can contain many things that can hurt you or make you sick.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "fb7c68740691c5415cf046ef7cf33c371987a032efa5349c24bd0344f50b7352",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Overview",
+      "guidance_text": "Never drive in flooded areas—turn around, don't drown!\nFloodwater and standing water can be dangerous and can make you vulnerable to infectious diseases, chemical hazards, and injuries. Protect yourself and your loved ones from the risks brought by floodwater by following these steps.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood",
+    "hurricane"
+  ],
+  "phases": [
+    "respond"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

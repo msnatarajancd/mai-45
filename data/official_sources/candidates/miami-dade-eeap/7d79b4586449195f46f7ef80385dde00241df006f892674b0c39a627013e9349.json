@@ -1,0 +1,80 @@
+{
+  "chunk_id": "7d79b4586449195f46f7ef80385dde00241df006f892674b0c39a627013e9349",
+  "source_id": "miami-dade-eeap",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+  "original_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+  "parent_chunk_id": "16920ae167aca6c18f25b02f1f352277ca8dfeaee15c98c1bfcca176bad5683b",
+  "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > What does the EEAP offer and when is it used?",
+  "passage_start": 0,
+  "passage_end": 793,
+  "original_passage": "The program offers:\nSpecialized transportation\nSafe shelter\nMedical monitoring\nWellness checks\nA caregiver or companion is required to accompany the evacuee throughout the emergency\n period to ensure the evacuee’s needs are met in a timely manner.\nThe EEAP may be used for emergencies that occur in Miami-Dade County, such\n as:\nHurricanes or tornadoes\nChemical or Hazardous material releases (e.g., industrial accident or act of terrorism)\nWildfires\nProlonged widespread power outages\nRadiological  releases (e.g., from a nuclear power plant incident or act\n of terrorism)\nEmergency evacuation centers are intended as a refuge of last resort for those\n who do not have an alternate safe location for evacuation. They do not offer the same\n level of care or equipment as health care facilities.",
+  "proposed_chunk": "The program offers:\nSpecialized transportation\nSafe shelter\nMedical monitoring\nWellness checks\nA caregiver or companion is required to accompany the evacuee throughout the emergency\n period to ensure the evacuee’s needs are met in a timely manner.\nThe EEAP may be used for emergencies that occur in Miami-Dade County, such\n as:\nHurricanes or tornadoes\nChemical or Hazardous material releases (e.g., industrial accident or act of terrorism)\nWildfires\nProlonged widespread power outages\nRadiological  releases (e.g., from a nuclear power plant incident or act\n of terrorism)\nEmergency evacuation centers are intended as a refuge of last resort for those\n who do not have an alternate safe location for evacuation. They do not offer the same\n level of care or equipment as health care facilities.",
+  "surrounding_context": [
+    {
+      "chunk_id": "16920ae167aca6c18f25b02f1f352277ca8dfeaee15c98c1bfcca176bad5683b",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > What does the EEAP offer and when is it used?",
+      "guidance_text": "The program offers:\nSpecialized transportation\nSafe shelter\nMedical monitoring\nWellness checks\nA caregiver or companion is required to accompany the evacuee throughout the emergency\n period to ensure the evacuee’s needs are met in a timely manner.\nThe EEAP may be used for emergencies that occur in Miami-Dade County, such\n as:\nHurricanes or tornadoes\nChemical or Hazardous material releases (e.g., industrial accident or act of terrorism)\nWildfires\nProlonged widespread power outages\nRadiological  releases (e.g., from a nuclear power plant incident or act\n of terrorism)\nEmergency evacuation centers are intended as a refuge of last resort for those\n who do not have an alternate safe location for evacuation. They do not offer the same\n level of care or equipment as health care facilities.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "1f1086b2b14e0d28ba209f1d6a64dc1940a30a82978d1ccc0abd52a68504e8ca",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > longDescription",
+      "guidance_text": "The Emergency & Evacuation Assistance Program (EEAP) provides free evacuation\n assistance to eligible residents living in Miami-Dade County who need specialized\n transportation and/or sheltering or who would like to receive a wellness call after\n a disaster.\nPrior to an emergency, residents who may require medical monitoring, assistance\n with daily living or have life-saving medical equipment dependent on electricity should\n register for the EEAP to ensure help is available when needed. Pre-registered residents\n will receive priority during an emergency. It may also be utilized post-disaster to\n provide other assistance.\nThis program is for individuals who live alone or with families and may have access/functional\n needs. Residents living in long-term care facilities such as nursing homes, assisted\n living facilities or group homes are not eligible for this program as these facilities\n are required by law to develop an emergency plan and provide emergency assistance\n for their clients.\nWhen an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "6a709297db559f157a7b7f4eff8cdbecca07b789ab49fd6b5edec3b616c5032b",
+      "source_id": "miami-dade-eeap",
+      "section_heading": "Emergency & Evacuation Assistance Program (EEAP) > Can I get assistance if I am not enrolled in the event of an emergency?",
+      "guidance_text": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    }
+  ],
+  "jurisdiction": "US-FL-MIAMI-DADE",
+  "hazards": [
+    "hurricane"
+  ],
+  "phases": [
+    "prepare",
+    "respond"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification.",
+    "Static program description is not live shelter, enrollment, transport or pickup availability.",
+    "No individual eligibility, enrollment, assistance or evacuation order is established; preserve the non-guarantee FAQ.",
+    "Retain the caregiver requirement and refuge-of-last-resort / health-care-level limitations."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

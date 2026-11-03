@@ -1,0 +1,2122 @@
+<!DOCTYPE HTML><html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title></title>
+      <!--grid-layout--><!--ls:begin[stylesheet]-->
+      <style type="text/css">
+          
+          .iw_container
+          {
+            max-width:800px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+          .iw_stretch
+          {
+            min-width: 100% !important;
+          }
+        </style><script type="text/javascript">
+	// script to add keyup event and make escape functional to exit from preview
+	// only if it is a preview environment.
+	var frame = window.frameElement;
+	if (frame && frame.src.indexOf("/iw-preview") != -1) {
+		document.addEventListener("DOMContentLoaded", function () {
+			document.body.addEventListener("keyup", function (event) {
+				var key = event.keyCode;
+				if (key === 27) {
+					frame.parentElement.ownerDocument.dispatchEvent(new KeyboardEvent('keyup', {keyCode: key}));
+				}
+			});
+		});
+	}
+	</script><script type="text/javascript">
+    // A simplified version of AjaxRequest.class.js
+    // So component events doesn't require to add AjaxRequest.class.js as resources
+    // TODO: Keep it in the same files as embedded-layout.page.xml in POC, we can consider to move it to another file or not later
+    // TODO: Need to maintain a dependency to the extenal files it references
+    
+    AjaxCall.METHOD_POST = 'POST';
+    AjaxCall.METHOD_GET  = 'GET';
+    AjaxCall.ACTIVEX_MSXML2_XMLHTTP = 'Msxml2.XMLHTTP';
+    AjaxCall.ACTIVEX_LEGACY_XMLHTTP = 'Microsoft.XMLHTTP';
+    AjaxCall.CONTENT_TYPE_URL_ENCODED = 'application/x-www-form-urlencoded';
+    AjaxCall.CONTENT_TYPE = 'Content-Type';
+    AjaxCall.DELIM_QS = '?';
+    AjaxCall.DELIM_PARAM = '&';
+    AjaxCall.DELIM_KEY_VALUE = '=';
+    AjaxCall.READY_STATE_COMPLETE      = 4;
+    AjaxCall.STATUS_OK        = 200;
+    AjaxCall.STATUS_NOT_FOUND = 404;
+    AjaxCall.ERROR_CREATE_REQUEST = 'Unable to create ActiveX XMLHttpRequest.'
+    AjaxCall.ERROR_REQUEST_STATE = 'Error in XMLHttpRequest [$code/$text]';
+
+    /**
+     * Constructor creates an encapsulated XMLHttpRequest object. Both parameters
+     * to the constructor are optional, and may be configured later.
+     *
+     * @param url             the url to which the request is sent
+     * @param handlerFunction the function to invoke and pass the response
+     *                        xml dom and the response text
+     * @param errorHandlerFunction the function to invoke and pass as argument errorHandlerFunction(request) the entire HTTPXMLRequest instance to
+     *                        when the AJAX request failed, for most cases
+     * @param method          HTTP method: POST or GET
+     * @param isDebugMode     indicator for debug mode
+     */
+    function AjaxCall(url, handlerFunction, errorHandlerFunction, method, isDebugMode)
+    {
+      this.mUrl          = url;
+      this.mHandler      = handlerFunction;
+      this.mErrorHandler = errorHandlerFunction;
+      this.mMethod       = method;
+      this.mDebug        = isDebugMode;
+      
+      this.mMethod = (this.mMethod == null) ? this.mMethod = AjaxCall.METHOD_POST : this.mMethod;
+      this.mDebug = (this.mDebug == null) ? this.mDebug = false : this.mDebug;
+
+      this.mAsynchronous = true;
+
+      this.mContentType = null;
+      this.mRequestBody = null;
+
+      this.mParams = new Array();
+      this.mComponentId = null;
+    }
+
+   /**
+    * Sets a request parameter. The key and value are automatically url-encoded.
+    *
+    * @param key   the request parameter key
+    * @param value the request parameter value
+    * @return a self-reference for method chaining
+    */
+    AjaxCall.prototype.setParameter = function(key, value)
+    {
+      this.mParams[this.mParams.length] = encodeURIComponent(key)
+          + AjaxCall.DELIM_KEY_VALUE + encodeURIComponent(value);
+      return this;
+    }
+
+   /**
+    * Sets a request body
+    *
+    * @param value the request body value
+    * @return a self-reference for method chaining
+    */
+    AjaxCall.prototype.setBody = function(value)
+    {
+      this.mRequestBody = value;
+      return this;
+    }
+
+   /**
+    * Sets a component id
+    *
+    * @param componentId   the component id
+    * @return a self-reference for method chaining
+    */
+    AjaxCall.prototype.setComponentId = function(componentId)
+    {
+      this.mComponentId = componentId;
+      return this;
+    }
+
+    /**
+     * Submits the request to the url using the data configured in the object.
+     */
+    AjaxCall.prototype.submit = function()
+    {
+      var request = null;
+
+      // INSTANTIATE THE XMLHttpRequest
+      if (window.XMLHttpRequest)
+      {
+        request = new XMLHttpRequest();
+      }
+
+      // SET THE READY STATE CHANGE HANDLER
+
+      // cannot reference object member from the anonymous function
+      var handlerFunction  = this.mHandler;
+      var errorHandlerFunction = this.mErrorHandler;
+      var showResponseText = this.mDebug;
+      var componentId  = this.mComponentId;
+      
+      
+      /**
+       * Triggered when there is a handler for the response
+       */
+      var readyStateChangeFunction = function() {
+        if (AjaxCall.READY_STATE_COMPLETE == request.readyState)
+        {
+          if (AjaxCall.STATUS_OK == request.status)
+          {
+            if (showResponseText)
+            {
+              window.open().document.write('<xmp>' + request.responseText + '</xmp>');
+            }
+
+            if (handlerFunction) // only invoke if defined
+            {
+              handlerFunction(request.responseXML, request.responseText, request, componentId);
+            }
+          }
+          else
+          {
+            if(errorHandlerFunction)
+            {
+              errorHandlerFunction(request);
+            }
+            else
+            {
+              alert(AjaxCall.ERROR_REQUEST_STATE
+                .replace(/\$code/, request.status)
+                .replace(/\$text/, request.statusText));
+            }
+          }
+        }
+      }
+
+      // PREPARE THE REQUEST PROPERTIES AND ANY DEFAULTS
+      
+      var url    = this.mUrl;
+      var body   = this.mRequestBody;
+      var type   = this.mContentType;
+      var params = this.mParams.join(AjaxCall.DELIM_PARAM);
+
+      // if no parameters are set, then there is no need to dispatch them
+      if (params.length > 0)
+      {
+        var paramDelim = (0 > url.indexOf("?"))   // if a url already has a query
+                       ? AjaxCall.DELIM_QS     // string delimiter (?), use an
+                       : AjaxCall.DELIM_PARAM  // ampersand (&) instead
+
+        if (body != null)      // User-set request body, all params go in
+        {                      // the query string for both POST and GET.
+          url += paramDelim + params;
+        }
+        else                   // no request body
+        {
+          if (this.mMethod == AjaxCall.METHOD_GET)
+          {
+            url += paramDelim + params;
+          }
+          else
+          {
+            body = params;
+
+            if (type == null)  // assign default if no type is set
+            {
+              type = AjaxCall.CONTENT_TYPE_URL_ENCODED;
+            }
+          }
+        }
+      }
+
+      // SUBMIT THE REQUEST
+      if(this.mAsynchronous)
+      {
+        if(this.mHandler != null || ( this.mHandler == null && this.mDebug == true) ) // no need to fire a handler if it was null in the first place. FF issue.
+        {
+          request.onreadystatechange = readyStateChangeFunction;
+        }
+      }
+
+      request.open(this.mMethod, url, this.mAsynchronous);
+
+      if (type != null)
+      {
+        request.setRequestHeader(AjaxCall.CONTENT_TYPE, type);
+      }
+
+      request.send(body);
+
+      return request;
+    }
+    </script><script type="text/javascript">
+    // Scripts to handle the flow to update components based on the action
+    // TODO: Keep it in the same files as embedded-layout.page.xml in POC, we can consider to move it to another file or not later
+    // TODO: Need to maintain a dependency to the extenal files it references
+
+    const IW_PREVIEW_HOST_NAME = "iw-preview";
+    const INSTRUCTION_TYPE_UPDATE_PAGE_PARAMETER = "update_page_parameter";
+    const INSTRUCTION_TYPE_REFRESH_COMPONENT = "refresh_component";
+    const INSTRUCTION_TYPE_NAVIGATE_TO_PAGE = "navigate_to_page";
+    
+    var invokeActionURL = "/site/global/page/service/component/$componentId/datum/$datumId/eventAction/$eventActionId/invokeAction.action";
+    var componentRenderURL = "/global/service/$componentId.async.RENDER";
+    var variantId = "";
+    var siteApplicationType = "java";
+    var updatePageParameterMap = [];
+    var eventTriggerID = "";
+    var eventDataJson;
+    // An array of events that are already executed
+    var eventsExecuted = [];
+
+    //boolean to check if valid json string
+    function parseJSON(str) {
+      try 
+      {
+        var parsedJSON = JSON.parse(str.trim());
+        if (parsedJSON) {
+		      if (typeof parsedJSON === "object") {
+			      return parsedJSON;
+		      }
+        }
+      }
+      catch (e) 
+      {
+        return null;
+      }
+
+      return null;
+    }
+
+    // currently it only support in runtime server
+    // and it always return all componentId from the page
+    // this is called from component, and needs to pass in the 
+    // componentId(it can its id or other component id) and 
+    // datumId (the datum id of a ComponentEventAction datum)
+    function invokeAction(componentId, datumId, eventActionId, eventData) {
+
+      eventDataJson = eventData;
+      // ex: eventTriggerID: 1702053980345:INTERACTION:onClick
+      eventTriggerID = componentId+":"+datumId+":"+eventActionId;
+      //If the Site is .NET type, do not trigger invokeAction call
+      if(siteApplicationType != null && siteApplicationType == "dotnet")
+      {
+        return;
+      }
+      var url = invokeActionURL.replace(/\$componentId/, componentId).replace(/\$datumId/, datumId).replace(/\$eventActionId/, eventActionId);
+      var request = new AjaxCall(url, handleComponentList, handleAjaxError, AjaxCall.METHOD_POST, false);
+      var requestBody = {};
+
+      if(variantId)
+      {
+        request.setParameter("variantId", variantId);
+      }
+
+      if(!eventsExecuted.includes(eventTriggerID))
+      {
+        //flag to tell if we need to evaluate event trigger variants for ComponentEventTrigger datums
+        //We should not be evaluating event trigger variants when an event is invoked for first time
+        requestBody.evaluateEventTrigger = false;
+        eventsExecuted.push(eventTriggerID);
+      }
+
+      var pageParametersMapJson = {};
+      for (var key in updatePageParameterMap ) {
+        pageParametersMapJson[key] = updatePageParameterMap[key];
+      }
+
+      if (eventData) 
+      {
+        requestBody = parseJSON(eventData);
+        if (requestBody !== null) {
+          requestBody.PageParameters = pageParametersMapJson;
+          request.setBody(JSON.stringify(requestBody));
+          request.submit();
+        }
+        else {
+          console.error("Invalid JSON for EventData");
+        }
+      }
+      else {
+        requestBody.EventData = {};
+        requestBody.PageParameters = pageParametersMapJson;
+        request.setBody(JSON.stringify(requestBody));
+        request.submit();
+      }
+
+    }
+    
+    // Handler for the response returned from invokeAction.action Ajax call
+    // retrieve the information from the response and trigger another Ajax call to refresh the component
+    function handleComponentList(xmlDoc, text) {
+      var invokeActionResponse = JSON.parse(text);      
+      
+      if(invokeActionResponse.actionResults && Array.isArray(invokeActionResponse.actionResults)) {
+        var componentIdList = [];
+        
+        for (var actionResult of invokeActionResponse.actionResults ) {
+          if(actionResult.instructionType && actionResult.instructionType === INSTRUCTION_TYPE_UPDATE_PAGE_PARAMETER) {
+            updatePageParameterMap = [];
+            if(actionResult.objects) {
+              var keys = Object.keys(actionResult.objects);
+              if(keys && Array.isArray(keys)) {
+                for (var key of keys ) {
+                  updatePageParameterMap[key] = actionResult.objects[key];
+                }
+              }
+            }
+          } else if(actionResult.instructionType && actionResult.instructionType === INSTRUCTION_TYPE_REFRESH_COMPONENT) {
+            if(actionResult.objects && actionResult.objects.objectIds && Array.isArray(actionResult.objects.objectIds)) {
+              for (var componentId of actionResult.objects.objectIds ) {
+                componentIdList.push(componentId);
+              }
+            }
+          } else if(actionResult.instructionType && actionResult.instructionType === INSTRUCTION_TYPE_NAVIGATE_TO_PAGE) {
+            if(actionResult.objects.objectIds) {
+              // Navigate to the first page from the action results
+              window.location.href = actionResult.objects.objectIds[0];
+            }
+          }
+        }
+        
+        if(componentIdList.length > 0) {
+          for (var componentId of componentIdList ) {
+            var url = componentRenderURL.replace(/\$componentId/, componentId);
+            var request = new AjaxCall(url, handleComponentRefresh, handleAjaxError, AjaxCall.METHOD_GET, false);
+            request.setComponentId(componentId);
+            request.setParameter("eventTriggerID",eventTriggerID);
+            if(eventDataJson)
+            {
+            request.setParameter("eventData",eventDataJson);
+            }
+            if(url.includes(IW_PREVIEW_HOST_NAME)){
+              request.setParameter("variantId", variantId);
+            }
+            for (var key in updatePageParameterMap ) {
+              request.setParameter(key, updatePageParameterMap[key]);
+            }
+        
+            request.submit();
+          }
+        }
+      }
+    }
+    
+    // Handler for the response returned from component .async.render Ajax call
+    // retrieve the response and updated the div containing the componendid
+    function handleComponentRefresh(xmlDoc, text, request, componentId) {
+      var componentElem = document.getElementById("iw_comp" + componentId);      
+      componentElem.innerHTML = text;
+      // explicitly recreate script elements to ensure they are executed
+      const sources = componentElem.querySelectorAll("script");
+      sources.forEach(source => {
+        const target = document.createElement('script');
+        // add contents of element if it exists
+        if(source.innerHTML) target.innerHTML = source.innerHTML;
+        // copy all attributes
+        [...source.attributes].forEach(attr => { target.setAttribute(attr.nodeName ,attr.nodeValue) });
+        source.after(target);
+        // remove original element when done
+        source.remove();
+      });
+    }
+    
+    // Error handler for Ajax call
+    function handleAjaxError(request) {
+      var url = new URL(request.responseURL);
+      
+      // temporary show mssage as the service is not available in iw-preview yet
+      if(url.pathname.includes(IW_PREVIEW_HOST_NAME)){
+        alert("The service is not available in /iw-preview");
+      } else {
+        alert(AjaxCall.ERROR_REQUEST_STATE
+          .replace(/\$code/, request.status)
+          .replace(/\$text/, request.statusText));
+      }      
+    }
+    
+    </script><link rel="stylesheet" type="text/css" href="/iwov-resources/grid/materialize.min.css">
+      <!--ls:end[stylesheet]--><!--ls:begin[canonical]--><!--ls:end[canonical]--><!--ls:begin[script]--><!--ls:end[script]--><!--ls:begin[meta-keywords]-->
+      <meta name="keywords" content="services">
+      <!--ls:end[meta-keywords]--><!--ls:begin[meta-description]-->
+      <meta name="description" content="">
+      <!--ls:end[meta-description]--><!--ls:begin[custom-meta-data]-->
+      <meta name="og:image" content="https://www.miamidade.gov/resources/images/banners/main-banner.jpg">
+      <meta name="og:type" content="website">
+      <meta name="ContentType" content="Services">
+      <meta name="Audience" content="all-residents">
+      <meta name="og:url" content="https://www.miamidade.gov/global/service.page">
+      <!--ls:end[custom-meta-data]--><!--ls:begin[meta-vpath]-->
+      <meta name="vpath" content="">
+      <!--ls:end[meta-vpath]--><!--ls:begin[meta-page-locale-name]-->
+      <meta name="page-locale-name" content="">
+      <!--ls:end[meta-page-locale-name]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/js-slider.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/materialize.min.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/global-styles.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/font-awesome.min.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[script]--><script src="/resources/js/1.8.2.jquery.min.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/jquery.visible.min.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/md-global.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/materialize.min.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/flexMenu.min.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/global-scripts.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/components/number-polyfill.min.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/popper.min.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[head-injection]--><!-- appendToHead -->
+<!-- MDC script injection -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MTLB43');</script>
+<!-- End Google Tag Manager -->
+
+<!-- BEGIN QUALTRICS SITE INTERCEPT -->
+<script type='text/javascript'>
+(function(){var g=function(e,h,f,g){
+this.get=function(a){for(var a=a+"=",c=document.cookie.split(";"),b=0,e=c.length;b<e;b++){for(var d=c[b];" "==d.charAt(0);)d=d.substring(1,d.length);if(0==d.indexOf(a))return d.substring(a.length,d.length)}return null};
+this.set=function(a,c){var b="",b=new Date;b.setTime(b.getTime()+6048E5);b="; expires="+b.toGMTString();document.cookie=a+"="+c+b+"; path=/; "};
+this.check=function(){var a=this.get(f);if(a)a=a.split(":");else if(100!=e)"v"==h&&(e=Math.random()>=e/100?0:100),a=[h,e,0],this.set(f,a.join(":"));else return!0;var c=a[1];if(100==c)return!0;switch(a[0]){case "v":return!1;case "r":return c=a[2]%Math.floor(100/c),a[2]++,this.set(f,a.join(":")),!c}return!0};
+this.go=function(){if(this.check()){var a=document.createElement("script");a.type="text/javascript";a.src=g+ "&t=" + (new Date()).getTime();document.body&&document.body.appendChild(a)}};
+this.start=function(){var a=this;window.addEventListener?window.addEventListener("load",function(){a.go()},!1):window.attachEvent&&window.attachEvent("onload",function(){a.go()})}};
+try{(new g(100,"r","QSI_S_ZN_a8zTa7cUf00EjMF","//zna8zta7cuf00ejmf-miamidadecounty.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_a8zTa7cUf00EjMF&Q_LOC="+encodeURIComponent(window.location.href))).start()}catch(i){}})();
+</script>
+<!-- END QUALTRICS SITE INTERCEPT -->
+
+<!-- End of injection -->
+<!--ls:end[head-injection]--><!--ls:begin[tracker-injection]--><!--ls:end[tracker-injection]--><!--ls:begin[script]--><!--ls:end[script]--><!--ls:begin[script]--><!--ls:end[script]--><script>NS_CSM_td=1262269953;NS_CSM_pd=275116665;NS_CSM_u="/clm10";NS_CSM_col="AAAAAAU1XnNDy2lU9sWbRN903WpfpAnx4GPERAv9unRX+/s7VGiKpPEleNG5V3BCuWyV0y9FMn0toZoXSwJX2jqQzihP";</script><script type="text/javascript">function sendTimingInfoInit(){setTimeout(sendTimingInfo,0)}function sendTimingInfo(){var wp=window.performance;if(wp){var c1,c2,t;c1=wp.timing;if(c1){var cm={};cm.ns=c1.navigationStart;if((t=c1.unloadEventStart)>0)cm.us=t;if((t=c1.unloadEventEnd)>0)cm.ue=t;if((t=c1.redirectStart)>0)cm.rs=t;if((t=c1.redirectEnd)>0)cm.re=t;cm.fs=c1.fetchStart;cm.dls=c1.domainLookupStart;cm.dle=c1.domainLookupEnd;cm.cs=c1.connectStart;cm.ce=c1.connectEnd;if((t=c1.secureConnectionStart)>0)cm.scs=t;cm.rqs=c1.requestStart;cm.rss=c1.responseStart;cm.rse=c1.responseEnd;cm.dl=c1.domLoading;cm.di=c1.domInteractive;cm.dcls=c1.domContentLoadedEventStart;cm.dcle=c1.domContentLoadedEventEnd;cm.dc=c1.domComplete;if((t=c1.loadEventStart)>0)cm.ls=t;if((t=c1.loadEventEnd)>0)cm.le=t;cm.tid=NS_CSM_td;cm.pid=NS_CSM_pd;cm.ac=NS_CSM_col;var xhttp=new XMLHttpRequest();if(xhttp){var JSON=JSON||{};JSON.stringify=JSON.stringify||function(ob){var t=typeof(ob);if(t!="object"||ob===null){if(t=="string")ob='"'+ob+'"';return String(ob);}else{var n,v,json=[],arr=(ob&&ob.constructor==Array);for(n in ob){v=ob[n];t=typeof(v);if(t=="string")v='"'+v+'"';else if(t=="object"&&v!==null)v=JSON.stringify(v);json.push((arr?"":'"'+n+'":')+String(v));}return(arr?"[":"{")+String(json)+(arr?"]":"}");}};xhttp.open("POST",NS_CSM_u,true);xhttp.send(JSON.stringify(cm));}}}}if(window.addEventListener)window.addEventListener("load",sendTimingInfoInit,false);else if(window.attachEvent)window.attachEvent("onload",sendTimingInfoInit);else window.onload=sendTimingInfoInit;</script></head>
+   <body><!--ls:begin[body]--><!-- MDC body injection -->
+
+<!-- BEGIN QUALTRICS SITE INTERCEPT -->
+<div id='ZN_a8zTa7cUf00EjMF'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+<!-- END QUALTRICS SITE INTERCEPT -->
+
+
+<!-- End of injection -->
+
+      <div class="iw_viewport-wrapper"><div class="mdc-template-1-2-1-2-layout" id="main-container">
+ <div data-fid="row-1-area-1"><!-- Global Nav -->
+  <div class="iw_component" id="iw_comp1553655066001">
+   <!--ls:begin[component-1553655066001]--><style>#iw_comp1553655066001{}</style><style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+    color: #000;
+    background-color: #fff;
+  }
+
+  .sr-only-focusable:active, .sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+  }
+
+  .skip-nav {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    z-index: 9999;
+    font-size: 12px;
+    font-weight: bold;
+    color: #027abb;
+    padding: 0 10px;
+  }
+
+  .skip-nav.sr-only-focusable:active,
+  .skip-nav.sr-only-focusable:focus {
+    position: absolute;
+  }
+  
+  </style><script src="/resources/js/jquery.url.js"></script><script src="/resources/js/1.4.1.jquery.cookie.min.js"></script><script src="/resources/js/purl.js"></script><script type="module" src="/resources/js/security/login-authenticate.js"></script><script type="module" src="/resources/js/security/login-api.js"></script><style>
+
+  a.dropdown-button {
+  padding: 0;
+  line-height: 100%;
+  height: auto;
+  }
+ a.dropdown-button,
+ a.dropdown-button:hover {
+  background-color: transparent;
+  color: #fff;
+  text-transform: none;
+  box-shadow: none;
+ }
+
+ a.dropdown-button i.material-icons { 
+ vertical-align: top;
+ }
+
+ .dropdown-content li>a, .dropdown-content li>span {
+  color: #027abb;
+  font-size: 13px;
+ }
+
+</style><a href="#main-content" class="btn white skip-nav sr-only sr-only-focusable" id="skipNavMain">Skip to Primary Content</a><script>
+
+  $('#skipNavMain').on('click', function(event){
+    event.preventDefault();
+    $('#main-content').attr('tabIndex',-1).focus();
+  });
+
+</script><style>
+
+  .important {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 70% auto;
+    grid-template-columns: 70% auto;
+  }
+
+  .important-message {
+    -ms-grid-column: 1;
+    grid-column: 1;
+    text-align: center;
+  }
+
+  .important-links {
+    -ms-grid-column: 2;
+    grid-column: 2;
+    align-self: center;
+   
+   	display: flex;
+   	justify-content: flex-end;
+  }
+
+  .important-links__item {
+    display: flex;
+    align-items: center;
+  }
+
+  .important-links > div:not(:last-child) {
+    margin-right: 2em;
+  }
+
+  @media (max-width: 1149px) {
+
+    .important {
+      -ms-grid-columns: 1fr;
+      grid-template-columns: 1fr;
+       -ms-grid-rows: auto auto;
+      grid-template-rows: auto auto;
+    }
+
+    .important-message {
+      -ms-grid-column: 1;
+      grid-column: 1;
+      -ms-grid-row: 2;
+      grid-row: 2;
+    }
+
+    .important-links {
+      -ms-grid-column: 1;
+      grid-column: 1;
+      margin-bottom: 0.5em;
+    }
+
+  }
+
+  .important-message__title {
+    font-size: 1.3rem;
+    margin: 0 0 0.3em;
+  }
+
+
+
+  .important__content p:last-child {
+    margin-bottom: 0;
+  }
+
+
+  .global-important__ie {
+    background-color: #546E7A;
+    color: #fff;
+    padding: 10px 0;
+    display: none;
+  }
+
+
+  @media screen and (min-width:0\0) {
+    .global-important__ie {
+      display: block !important;
+    }
+  }
+</style><header>
+   <div class="global-important__ie" role="alert" aria-atomic="true">
+      <div class="container"><span>Please note that miamidade.gov no longer supports Internet Explorer. We recommend
+            upgrading to the latest Microsoft Edge, Google Chrome or Firefox.</span></div>
+   </div>
+   <div class="global-header-container">
+      <div class="global-important">
+         <div class="container">
+            <div class="important">
+               <div class="important-links">
+                  <div class="important-links__item"><a href="/global/311/home.page">311</a></div>
+                  <div class="important-links__item"><a href="/global/webcasting/home.page">GovMeetings</a></div>
+                  <div class="important-links__item"><a href="/global/calendar/global.page">Calendar</a></div>
+                  <div class="important-links__item"><a href="/global/page-translation.page">Translation</a></div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <nav class="site-navigation-container white" role="navigation">
+         <div class="nav-wrapper container">
+            <div class="global-nav__mobile show-below-1150-only">
+               <div class="global-nav__mobile-container">
+                  <div class="global-nav__mobile-child"><a href="#" id="mobile-menu" class="left">
+                        <div class="mobile-menu-bars"><span></span><span></span><span></span><div>Menu</div>
+                        </div></a></div>
+                  <div class="global-nav__mobile-child"><a href="https://www.miamidade.gov/global/home.page"><img src="/resources/global/images/md-logo-color.png" class="md-logo-header-mobile" alt="Miami-Dade County Homepage"></a></div>
+                  <div class="global-nav__mobile-child">
+                     <div class="log-in-out" style="display: none;"><a id="loginId-mobile" class="loginAPI" href="#">Login</a></div>
+                     <ul class="login-container" style="display: none;">
+                        <li class="login-dropdown"><a href="#"><i class="fa fa-user"></i><span class="sr-only">User Icon Mobile</span></a><ul>
+                              <div class="drop-arrow"></div>
+                              <li><a href="#" class="selfServiceAPI">Self-Service</a></li>
+                              <li><a href="#" class="updateProfileAPI">Update Profile</a></li>
+                              <li><a href="#" class="contentPreferencesAPI">Content Preferences</a></li>
+                              <li><a href="#" class="logoutAPI">Sign Out</a></li>
+                           </ul>
+                        </li>
+                        <li class="link-pip">|</li>
+                        <li class="login-dropdown__signout"><a href="#" class="logoutAPI">Sign Out</a></li>
+                     </ul><a class="cd-search-trigger-mobile" id="searchMobile" href="#cd-search-mobile">Search<span></span></a></div>
+                  <div id="cd-search-mobile" class="cd-search-mobile">
+                     <form action="/global/service.pagesubmit=true&amp;componentID=1553655066001" method="GET" class="mobile-main-search" onsubmit="return q.value!=''"><label class="sr-only mobile-main-search" id="mainMobileSearch">Mobile Search</label><input type="search" name="q" for="mainMobileSearch" aria-labelledby="mainMobileSearch" placeholder="Search miamidade.gov" class="mobile-main-search__search"><input type="submit" value="Submit" class="mobile-main-search__submit btn sr-only" aria-label="Submit your query."></form>
+                  </div>
+               </div>
+            </div>
+            <div class="row global-nav__search show-above-1149-only">
+               <div class="col s12">
+                  <div class="global-nav-container"><a href="https://www.miamidade.gov/global/home.page"><img src="/resources/global/images/md-logo-color.png" class="md-logo-header" alt="Miami-Dade County Homepage"></a><ul class="site-nav-content">
+                        <li class="mega-container"><button class="site-navigation__link-button" aria-controls="collapseNavServicesInformation1" aria-expanded="false">Services &amp; Information</button><ul class="z-depth-1 site-navigation__billboard" id="collapseNavServicesInformation1" aria-hidden="true">
+                              <li class="mega-container-child mega-container-child--two-third">
+                                 <h3><a href="/global/navigation/service-index.page">Interest Categories</a></h3>
+                                 <ul>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=animals-pets">Animals &amp; Pets</a></li>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=building-development">Building &amp; Development</a></li>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=business-industry">Business &amp; Industry</a></li>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=courts-records">Courts &amp; Records</a></li>
+                                    <li><a href="https://www.votemiamidade.gov/elections/index.page" target="_blank">Elections &amp; Voting</a></li>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=environment-resilience">Environment &amp; Resilience</a></li>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=home-property">Home &amp; Property</a></li>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=housing-social-services">Housing &amp; Social Services</a></li>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=jobs-employment">Jobs &amp; Employment</a></li>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=public-safety">Public Safety</a></li>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=recreation-culture">Recreation &amp; Culture</a></li>
+                                    <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=travel-transportation">Travel &amp; Transportation</a></li>
+                                 </ul>
+                                 <div class="mega-container-child__button"><a href="/global/navigation/service-index.page" class="waves-effect wave-light btn blue">A-Z of Services &amp; Information </a></div>
+                              </li>
+                              <li class="mega-container-child">
+                                 <h3><a href="/global/navigation/online-services.page">Online Services</a></h3>
+                                 <ul>
+                                    <li><a href="/global/service.page?Mduid_service=ser148069212998189">Bulky Waste Pickup</a></li>
+                                    <li><a href="/global/humanresources/jobs/home.page">County Jobs</a></li>
+                                    <li><a href="/global/service.page?Mduid_service=ser1491494549439906">Inmate Search</a></li>
+                                    <li><a href="https://mdctaxcollector.gov/" target="_blank">Pay Taxes</a></li>
+                                    <li><a href="https://www.miamidadepa.gov/pa/real-estate/property-search.page" target="_blank">Property Search</a></li>
+                                    <li><a href="/global/transportation/transit-pass.page">Transit Passes</a></li>
+                                    <li><a href="/global/water/my-account.page">Pay Water Bill</a></li>
+                                 </ul>
+                                 <div class="mega-container-child__button"><a href="/global/navigation/online-services.page" class="waves-effect wave-light btn blue">View Online Services</a></div>
+                              </li>
+                           </ul>
+                        </li>
+                        <li class="mega-container"><button class="site-navigation__link-button" aria-controls="collapseNavNewsSocialMedia2" aria-expanded="false">News &amp; Social Media</button><ul class="z-depth-1 site-navigation__billboard" id="collapseNavNewsSocialMedia2" aria-hidden="true">
+                              <li class="mega-container-child mega-container-child--two-third">
+                                 <h3><a href="/global/navigation/news-index.page">News &amp; Social Media</a></h3>
+                                 <ul>
+                                    <li><a href="/global/calendar/global.page">Meetings &amp; Events</a></li>
+                                    <li><a href="/global/service.page?Mduid_service=ser1501010041747308">Miami-Dade TV</a></li>
+                                    <li><a href="/global/mobile-applications.page">Mobile Apps</a></li>
+                                    <li><a href="/global/navigation/prindex.page">Press Releases</a></li>
+                                    <li><a href="/global/navigation/legal-ad-index.page">Public Notices</a></li>
+                                    <li><a href="/global/social-media.page">Social Media</a></li>
+                                 </ul>
+                                 <div class="mega-container-child__button"><a href="/global/navigation/news-index.page" class="waves-effect wave-light btn blue">Read Latest News</a></div>
+                              </li>
+                              <li class="mega-container-child">
+                                 <h3><a href="/global/login.page">Create a new miamidade.gov account</a></h3>
+                                 <div class="mega-container-short-description"><p>A miamidade.gov profile allows you to link to your Water and Sewer customer account, as well as subscribe to a variety of news and alert services.</p>
+<p>Receive weekly news &amp; events, public notices, recycling reminders, grant opportunities, emergency alerts, transit rider alerts and more.</p></div>
+                                 <ul></ul>
+                                 <div class="mega-container-child__button"><a href="/global/login.page" class="waves-effect wave-light btn blue">Sign Up Now</a></div>
+                              </li>
+                           </ul>
+                        </li>
+                        <li class="mega-container"><button class="site-navigation__link-button" aria-controls="collapseNavYourGovernment3" aria-expanded="false">Your Government</button><ul class="z-depth-1 site-navigation__billboard" id="collapseNavYourGovernment3" aria-hidden="true">
+                              <li class="mega-container-child">
+                                 <h3><a href="/global/navigation/agency-directory-elected.page">Elected Officials</a></h3>
+                                 <ul>
+                                    <li><a href="/global/government/mayor/home.page">Office of the Mayor</a></li>
+                                    <li><a href="https://www.miamidade.gov/global/government/commission/home.page">Board of County Commissioners</a></li>
+                                    <li><a href="/global/navigation/constitutional-offices.page">Constitutional Offices</a></li>
+                                 </ul>
+                                 <div class="mega-container-child__button"><a href="/global/navigation/agency-directory-elected.page" class="waves-effect wave-light btn blue">A-Z of Elected Officials</a></div>
+                              </li>
+                              <li class="mega-container-child">
+                                 <h3><a href="/global/navigation/agency-directory.page">County Agencies</a></h3>
+                                 <ul>
+                                    <li><a href="/global/navigation/agency-directory-departments.page">Departments</a></li>
+                                    <li><a href="/global/navigation/agency-directory-offices.page">Offices</a></li>
+                                    <li><a href="/global/navigation/agency-directory-boards.page">Boards</a></li>
+                                    <li><a href="/global/navigation/agency-directory-trusts.page">Trusts</a></li>
+                                 </ul>
+                                 <div class="mega-container-child__button"><a href="/global/navigation/agency-directory.page" class="waves-effect wave-light btn blue">A-Z of County Agencies</a></div>
+                              </li>
+                              <li class="mega-container-child">
+                                 <h3><a href="/global/government/transparency/home.page">Public Records &amp; Open Data </a></h3>
+                                 <ul>
+                                    <li><a href="/global/navigation/audit-index.page">Audit Reports</a></li>
+                                    <li><a href="/global/management/budget/home.page">County Budget</a></li>
+                                    <li><a href="/global/webcasting/virtual-meeting.page">Government Meetings</a></li>
+                                    <li><a href="https://www.miamidade.gov/govaction/home.asp">Legislative Information</a></li>
+                                    <li><a href="/global/publicrecords/search.page">Public Records</a></li>
+                                 </ul>
+                                 <div class="mega-container-child__button"><a href="https://www.miamidade.gov/global/government/transparency/home.page" class="waves-effect wave-light btn blue">Search More Data</a></div>
+                              </li>
+                           </ul>
+                        </li>
+                        <li class="mega-container"><button class="site-navigation__link-button" aria-controls="collapseNavEmployees4" aria-expanded="false">Employees</button><ul class="z-depth-1 site-navigation__billboard" id="collapseNavEmployees4" aria-hidden="true">
+                              <li class="mega-container-child mega-container-child--two-third">
+                                 <h3>Employee Portal</h3>
+                                 <ul>
+                                    <li><a href="/global/humanresources/jobs/home.page">County Jobs</a></li>
+                                    <li><a href="/global/humanresources/benefits/home.page">Employee Benefits</a></li>
+                                    <li><a href="/employee/discounts/home.page">Employee Discounts</a></li>
+                                    <li><a href="/global/humanresources/fair-employment/home.page">Human Rights &amp; Fair Employment</a></li>
+                                    <li><a href="/global/humanresources/labor-relations/home.page">Labor Relations</a></li>
+                                    <li><a href="/global/humanresources/benefits/pay-compensation.page">Pay &amp; Compensation</a></li>
+                                    <li><a href="/global/humanresources/training/home.page">Training &amp; Development</a></li>
+                                    <li><a href="/employee/ithrive/home.page" target="_blank">I THRIVE</a></li>
+                                    <li><a href="/employee/wellness-works/home.page" target="_blank">WellnessWorks</a></li>
+                                 </ul>
+                                 <div class="mega-container-child__button"><a href="/employee/home.page" class="waves-effect wave-light btn blue">Visit the Employee Portal</a></div>
+                              </li>
+                              <li class="mega-container-child">
+                                 <h3><a href="/myemployee/home.page">My Employee Portal</a></h3>
+                                 <div class="mega-container-short-description"><p>Employees can login to access personnel information, workplace tools, trainings and more.</p></div>
+                                 <ul></ul>
+                                 <div class="mega-container-child__button"><a href="/myemployee/home.page" class="waves-effect wave-light btn blue">Employee Login</a></div>
+                              </li>
+                           </ul>
+                        </li>
+                     </ul>
+                     <div class="global-nav__search-container">
+                        <div class="cd-search-trigger-desktop" style="display: none;"><a class="cd-search-trigger" id="searchDesktop" href="#cd-search">Search<span></span></a><div class="cd-search-trigger-desktop__arrow"></div>
+                        </div>
+                        <div id="cd-search" class="cd-search">
+                           <form action="/global/service.pagesubmit=true&amp;componentID=1553655066001" method="GET" class="z-depth-1 desktop-main-search" onsubmit="return q.value!=''"><label class="sr-only" id="mainDesktopSearch">Desktop Search</label><input type="search" name="q" placeholder="Search miamidade.gov" aria-labelledby="mainDesktopSearch" class="desktop-main-search__search"><input type="submit" value="Submit" class="desktop-main-search__submit btn sr-only" aria-label="Submit your query."></form>
+                        </div>
+                        <div class="log-in-out"><a id="loginId-desktop" class="loginAPI" href="#"><i class="fa fa-sign-in"></i> Login</a></div>
+                        <ul class="login-container" style="display: none;">
+                           <li class="login-dropdown"><a href="#"><i class="fa fa-user"></i><span class="sr-only">User Icon</span></a><ul>
+                                 <div class="drop-arrow"></div>
+                                 <li><a href="#" class="selfServiceAPI">Self-Service</a></li>
+                                 <li><a href="#" class="updateProfileAPI">Update Profile</a></li>
+                                 <li><a href="#" class="contentPreferencesAPI">Content Preferences</a></li>
+                                 <li><a href="#" class="logoutAPI">Sign Out</a></li>
+                              </ul>
+                           </li>
+                           <li class="link-pip">|</li>
+                           <li class="login-dropdown__signout"><a href="#" class="logoutAPI">Sign Out</a></li>
+                        </ul>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </nav>
+      <div class="mobile-global-nav" aria-label="Mobile Navigation" aria-hidden="true">
+         <div class="mobile-global-nav-container">
+            <ul class="mobile-top-menu__tabs">
+               <li data-tab="mobile-site" class="mobile-top-menu__tab--active">
+                  <div class="mobile-top-menu__tab"><a href="#">Miami-Dade County</a></div>
+               </li>
+            </ul><button id="mobile-global-close"><svg viewBox="0 0 12 12" role="img" aria-label="Close" focusable="false" style="height: 15px; width: 15px; display: block; fill: rgb(72, 72, 72);">
+                  <path fill-rule="evenodd" d="M11.5 10.5c.3.3.3.8 0 1.1-.3.3-.8.3-1.1 0L6 7.1l-4.5 4.5c-.3.3-.8.3-1.1 0-.3-.3-.3-.8 0-1.1L4.9 6 .5 1.5C.2 1.2.2.7.5.4c.3-.3.8-.3 1.1 0L6 4.9 10.5.4c.3-.3.8-.3 1.1 0 .3.3.3.8 0 1.1L7.1 6l4.4 4.5z"></path></svg><span class="sr-only">Close mobile menu</span></button><div class="mobile-content">
+               <div class="mobile-content-tab mobile-content-tab--active mobile-content__site-container" id="mobile-site">
+                  <ul>
+                     <li><button class="site-mobile-navigation__link-button" aria-controls="collapseMobileServicesInformation1" aria-expanded="false">Services &amp; Information</button><ul class="site-navigation__billboard" id="collapseMobileServicesInformation1" aria-hidden="true">
+                           <li class="mega-container-child mega-container-child--two-third">
+                              <h3><a href="/global/navigation/service-index.page">Interest Categories</a></h3>
+                              <ul>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=animals-pets">Animals &amp; Pets</a></li>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=building-development">Building &amp; Development</a></li>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=business-industry">Business &amp; Industry</a></li>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=courts-records">Courts &amp; Records</a></li>
+                                 <li><a href="https://www.votemiamidade.gov/elections/index.page" target="_blank">Elections &amp; Voting</a></li>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=environment-resilience">Environment &amp; Resilience</a></li>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=home-property">Home &amp; Property</a></li>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=housing-social-services">Housing &amp; Social Services</a></li>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=jobs-employment">Jobs &amp; Employment</a></li>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=public-safety">Public Safety</a></li>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=recreation-culture">Recreation &amp; Culture</a></li>
+                                 <li><a href="/global/navigation/service-index.page?INTERESTCATEGORY=travel-transportation">Travel &amp; Transportation</a></li>
+                              </ul>
+                              <div class="mega-container-child__button"><a href="/global/navigation/service-index.page" class="waves-effect wave-light btn blue">A-Z of Services &amp; Information </a></div>
+                           </li>
+                           <li class="mega-container-child">
+                              <h3><a href="/global/navigation/online-services.page">Online Services</a></h3>
+                              <ul>
+                                 <li><a href="/global/service.page?Mduid_service=ser148069212998189">Bulky Waste Pickup</a></li>
+                                 <li><a href="/global/humanresources/jobs/home.page">County Jobs</a></li>
+                                 <li><a href="/global/service.page?Mduid_service=ser1491494549439906">Inmate Search</a></li>
+                                 <li><a href="https://mdctaxcollector.gov/" target="_blank">Pay Taxes</a></li>
+                                 <li><a href="https://www.miamidadepa.gov/pa/real-estate/property-search.page" target="_blank">Property Search</a></li>
+                                 <li><a href="/global/transportation/transit-pass.page">Transit Passes</a></li>
+                                 <li><a href="/global/water/my-account.page">Pay Water Bill</a></li>
+                              </ul>
+                              <div class="mega-container-child__button"><a href="/global/navigation/online-services.page" class="waves-effect wave-light btn blue">View Online Services</a></div>
+                           </li>
+                        </ul>
+                     </li>
+                     <li><button class="site-mobile-navigation__link-button" aria-controls="collapseMobileNewsSocialMedia2" aria-expanded="false">News &amp; Social Media</button><ul class="site-navigation__billboard" id="collapseMobileNewsSocialMedia2" aria-hidden="true">
+                           <li class="mega-container-child mega-container-child--two-third">
+                              <h3><a href="/global/navigation/news-index.page">News &amp; Social Media</a></h3>
+                              <ul>
+                                 <li><a href="/global/calendar/global.page">Meetings &amp; Events</a></li>
+                                 <li><a href="/global/service.page?Mduid_service=ser1501010041747308">Miami-Dade TV</a></li>
+                                 <li><a href="/global/mobile-applications.page">Mobile Apps</a></li>
+                                 <li><a href="/global/navigation/prindex.page">Press Releases</a></li>
+                                 <li><a href="/global/navigation/legal-ad-index.page">Public Notices</a></li>
+                                 <li><a href="/global/social-media.page">Social Media</a></li>
+                              </ul>
+                              <div class="mega-container-child__button"><a href="/global/navigation/news-index.page" class="waves-effect wave-light btn blue">Read Latest News</a></div>
+                           </li>
+                           <li class="mega-container-child">
+                              <h3><a href="/global/login.page">Create a new miamidade.gov account</a></h3>
+                              <div class="mega-container-short-description"><p>A miamidade.gov profile allows you to link to your Water and Sewer customer account, as well as subscribe to a variety of news and alert services.</p>
+<p>Receive weekly news &amp; events, public notices, recycling reminders, grant opportunities, emergency alerts, transit rider alerts and more.</p></div>
+                              <ul></ul>
+                              <div class="mega-container-child__button"><a href="/global/login.page" class="waves-effect wave-light btn blue">Sign Up Now</a></div>
+                           </li>
+                        </ul>
+                     </li>
+                     <li><button class="site-mobile-navigation__link-button" aria-controls="collapseMobileYourGovernment3" aria-expanded="false">Your Government</button><ul class="site-navigation__billboard" id="collapseMobileYourGovernment3" aria-hidden="true">
+                           <li class="mega-container-child">
+                              <h3><a href="/global/navigation/agency-directory-elected.page">Elected Officials</a></h3>
+                              <ul>
+                                 <li><a href="/global/government/mayor/home.page">Office of the Mayor</a></li>
+                                 <li><a href="https://www.miamidade.gov/global/government/commission/home.page">Board of County Commissioners</a></li>
+                                 <li><a href="/global/navigation/constitutional-offices.page">Constitutional Offices</a></li>
+                              </ul>
+                              <div class="mega-container-child__button"><a href="/global/navigation/agency-directory-elected.page" class="waves-effect wave-light btn blue">A-Z of Elected Officials</a></div>
+                           </li>
+                           <li class="mega-container-child">
+                              <h3><a href="/global/navigation/agency-directory.page">County Agencies</a></h3>
+                              <ul>
+                                 <li><a href="/global/navigation/agency-directory-departments.page">Departments</a></li>
+                                 <li><a href="/global/navigation/agency-directory-offices.page">Offices</a></li>
+                                 <li><a href="/global/navigation/agency-directory-boards.page">Boards</a></li>
+                                 <li><a href="/global/navigation/agency-directory-trusts.page">Trusts</a></li>
+                              </ul>
+                              <div class="mega-container-child__button"><a href="/global/navigation/agency-directory.page" class="waves-effect wave-light btn blue">A-Z of County Agencies</a></div>
+                           </li>
+                           <li class="mega-container-child">
+                              <h3><a href="/global/government/transparency/home.page">Public Records &amp; Open Data </a></h3>
+                              <ul>
+                                 <li><a href="/global/navigation/audit-index.page">Audit Reports</a></li>
+                                 <li><a href="/global/management/budget/home.page">County Budget</a></li>
+                                 <li><a href="/global/webcasting/virtual-meeting.page">Government Meetings</a></li>
+                                 <li><a href="https://www.miamidade.gov/govaction/home.asp">Legislative Information</a></li>
+                                 <li><a href="/global/publicrecords/search.page">Public Records</a></li>
+                              </ul>
+                              <div class="mega-container-child__button"><a href="https://www.miamidade.gov/global/government/transparency/home.page" class="waves-effect wave-light btn blue">Search More Data</a></div>
+                           </li>
+                        </ul>
+                     </li>
+                     <li><button class="site-mobile-navigation__link-button" aria-controls="collapseMobileEmployees4" aria-expanded="false">Employees</button><ul class="site-navigation__billboard" id="collapseMobileEmployees4" aria-hidden="true">
+                           <li class="mega-container-child mega-container-child--two-third">
+                              <h3>Employee Portal</h3>
+                              <ul>
+                                 <li><a href="/global/humanresources/jobs/home.page">County Jobs</a></li>
+                                 <li><a href="/global/humanresources/benefits/home.page">Employee Benefits</a></li>
+                                 <li><a href="/employee/discounts/home.page">Employee Discounts</a></li>
+                                 <li><a href="/global/humanresources/fair-employment/home.page">Human Rights &amp; Fair Employment</a></li>
+                                 <li><a href="/global/humanresources/labor-relations/home.page">Labor Relations</a></li>
+                                 <li><a href="/global/humanresources/benefits/pay-compensation.page">Pay &amp; Compensation</a></li>
+                                 <li><a href="/global/humanresources/training/home.page">Training &amp; Development</a></li>
+                                 <li><a href="/employee/ithrive/home.page" target="_blank">I THRIVE</a></li>
+                                 <li><a href="/employee/wellness-works/home.page" target="_blank">WellnessWorks</a></li>
+                              </ul>
+                              <div class="mega-container-child__button"><a href="/employee/home.page" class="waves-effect wave-light btn blue">Visit the Employee Portal</a></div>
+                           </li>
+                           <li class="mega-container-child">
+                              <h3><a href="/myemployee/home.page">My Employee Portal</a></h3>
+                              <div class="mega-container-short-description"><p>Employees can login to access personnel information, workplace tools, trainings and more.</p></div>
+                              <ul></ul>
+                              <div class="mega-container-child__button"><a href="/myemployee/home.page" class="waves-effect wave-light btn blue">Employee Login</a></div>
+                           </li>
+                        </ul>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</header><!--ls:end[component-1553655066001]-->
+  </div>
+ </div>
+ <div class="template-site-banner-container" data-fid="row-2-area-1"><!-- Site Banner --> <!-- Site Navigation -->
+  <div class="iw_placeholder" id="iw_placeholder1553655066002"></div>
+ </div>
+ <main role="main" class="main-body-content-container" id="main-content">
+  <div data-fid="nest-col-1-row-1-area-1"><!-- Row 01 - Column 01 -->
+   <div class="iw_component" id="iw_comp1553655066004">
+    <!--ls:begin[component-1553655066004]--><style>#iw_comp1553655066004{}</style><div class="iw-breadcrumb"></div><!--ls:end[component-1553655066004]-->
+   </div>
+   <div class="iw_placeholder" id="iw_placeholder1553655066005">
+    <div class="iw_component" id="iw_comp1789757053452">
+     <!--ls:begin[component-1789757053452]--><style>#iw_comp1789757053452{}</style><base href="/"><div id="service-data" style="display:none;">
+   <service>
+      <subOrganization></subOrganization>
+      <internal-service></internal-service>
+      <show-faqs></show-faqs>
+      <login-required></login-required>
+      <keywords>Emergency Evacuation Assistance Program (EEAP), EEAP, evacuation, hurricane</keywords>
+      <name>Emergency &amp; Evacuation Assistance Program (EEAP)</name>
+      <external-url></external-url>
+      <name-details></name-details>
+      <service-display-name></service-display-name>
+      <alternateNames></alternateNames>
+      <category>
+         <mainCategory>public-safety</mainCategory>
+         <subCategory>emergency-management</subCategory>
+      </category>
+      <category>
+         <mainCategory>housing-social-services</mainCategory>
+         <subCategory>assistance-programs</subCategory>
+      </category>
+      <audience>all-residents, elderly-persons, low-income-residents, persons-with-disabilities</audience>
+      <selfService>apply-for</selfService>
+      <showLicenseCollection></showLicenseCollection>
+      <showProductCollection></showProductCollection>
+      <collectionTitle></collectionTitle>
+      <defaultTab></defaultTab>
+      <description>The EEAP provides evacuation assistance to residents who need&nbsp;specialized transportation
+         or whose medical needs prevent them from evacuating on their own.</description>
+      <longDescription>&lt;p&gt;The Emergency &amp;amp; Evacuation Assistance Program (EEAP) provides free evacuation
+         assistance to eligible residents living in Miami-Dade County who need specialized
+         transportation and/or sheltering or who would like to receive a wellness call after
+         a disaster.&lt;/p&gt;
+         &lt;p&gt;Prior to an emergency, residents who may require medical monitoring, assistance
+         with daily living or have life-saving medical equipment dependent on electricity should
+         register for the EEAP to ensure help is available when needed. Pre-registered residents
+         will receive priority during an emergency. It may also be utilized post-disaster to
+         provide other assistance.&lt;/p&gt;
+         &lt;p&gt;This program is for individuals who live alone or with families and may have access/functional
+         needs. Residents living in long-term care facilities such as nursing homes, assisted
+         living facilities or group homes are not eligible for this program as these facilities
+         are required by law to develop an emergency plan and provide emergency assistance
+         for their clients.&lt;/p&gt;
+         &lt;p&gt;When an emergency arises, pre-registered residents will have priority over those
+         who have not registered for the program.&lt;/p&gt;</longDescription>
+      <serviceFee>
+         <typeFee>noFee</typeFee>
+         <fee></fee>
+         <pricesVary></pricesVary>
+      </serviceFee>
+      <serviceImage>
+         <image>/resources/images/services/emergency-evacuation-assistance.jpg</image>
+         <imageAlt></imageAlt>
+      </serviceImage>
+      <closeSections></closeSections>
+      <details>
+         <title>Custom</title>
+         <customTitle></customTitle>
+         <content></content>
+      </details>
+      <onlineChannelContainer>
+         <type>online-service</type><label>Register Online</label><url>https://www.miamidade.gov/apps/gis/eeap_publicregistration/</url>
+         <urlType>true</urlType>
+      </onlineChannelContainer>
+      <phoneContainer>
+         <phoneLabel>Hotline for Registrants</phoneLabel>
+         <phone>305-513-7700</phone>
+      </phoneContainer>
+      <phoneContainer>
+         <phoneLabel>TTY/TDD Line</phoneLabel>
+         <phone>305-468-5402</phone>
+      </phoneContainer>
+      <phoneContainer>
+         <phoneLabel>Fax</phoneLabel>
+         <phone>305-468-5401</phone>
+      </phoneContainer>
+      <emailContainer>
+         <emailLabel><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d5b0b0b4a595b8bcb4b8bcb1b4b1b0fbb2baa3">[email&#160;protected]</a></emailLabel>
+         <email><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d4b1b1b5a494b9bdb5b9bdb0b5b0b1fab3bba2">[email&#160;protected]</a></email>
+      </emailContainer>
+      <mailContainer>
+         <attention>Emergency and Evacuation Assistance Program</attention>
+         <address>Miami-Dade County Department of Emergency Management</address>
+         <address2>9300 NW 41st Street</address2>
+         <city>Doral</city>
+         <state>FL</state>
+         <zip>33178</zip>
+      </mailContainer>
+      <locations>
+         <openAccordion></openAccordion>
+         <locationAutoComplete></locationAutoComplete>
+         <location></location>
+         <locationHasHours></locationHasHours>
+         <locationSpecifics></locationSpecifics>
+         <telephone></telephone>
+         <publicHours>
+            <weekdayCopy></weekdayCopy>
+            <monday close="17:00" open="08:00"></monday>
+            <tuesday close="" open=""></tuesday>
+            <wednesday close="" open=""></wednesday>
+            <thursday close="" open=""></thursday>
+            <friday close="" open=""></friday>
+            <saturday close="" open=""></saturday>
+            <sunday close="" open=""></sunday>
+            <notes></notes>
+         </publicHours>
+      </locations>
+      <document>
+         <documentdisclaimer></documentdisclaimer>
+         <documentinfo>
+            <documentname>Emergency and Evacuation Assistance Program Application</documentname>
+            <documenturl>https://www.miamidade.gov/fire/library/hurricane/OEM/eeap-application-english.pdf</documenturl>
+         </documentinfo>
+         <documentinfo>
+            <documentname>Emergency and Evacuation Assistance Program Application (Español)</documentname>
+            <documenturl>https://www.miamidade.gov/fire/library/hurricane/OEM/eeap-application-spanish.pdf</documenturl>
+         </documentinfo>
+         <documentinfo>
+            <documentname>Emergency and Evacuation Assistance Program Application (Kreyòl)</documentname>
+            <documenturl>https://www.miamidade.gov/fire/library/hurricane/OEM/eeap-application-creole.pdf</documenturl>
+         </documentinfo>
+         <documentinfo>
+            <documentname>Disaster Preparedness Guide for Older Adults</documentname>
+            <documenturl>https://www.miamidade.gov/fire/library/OEM/ready-gov-disaster-preparedness-guide-for-older-adults.pdf</documenturl>
+         </documentinfo>
+      </document>
+      <featured-service>
+         <id></id>
+         <name>Emergency Evacuations</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+      </featured-service>
+      <featured-service>
+         <id></id>
+         <name>Storm Aides for Everyone</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+      </featured-service>
+      <featured-service>
+         <id></id>
+         <name>Damage Reporting</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+      </featured-service>
+      <featured-service>
+         <id></id>
+         <name>Community Emergency Response Team</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+      </featured-service>
+      <featured-service>
+         <id></id>
+         <name>Communities Organized to Respond in Emergencies (C.O.R.E.)</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+      </featured-service>
+      <featured-service>
+         <id></id>
+         <name>Business Recovery</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+      </featured-service>
+      <featured-service>
+         <id></id>
+         <name>Emergency Help</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+      </featured-service>
+      <related-faq>
+         <name>Am I eligible for the EEAP?</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+         <faq>
+            <calltakerOnly></calltakerOnly>
+            <keywords>EEAP, Eligibility &amp; Requirements, EEAP Eligibility &amp; Requirements, emergency evacuation
+               assistance program</keywords>
+            <priority></priority>
+            <Jurisdiction_511>
+               <jurisdiction>local</jurisdiction>
+               <localType>county</localType>
+               <county>miami-dade</county>
+               <municipality></municipality>
+               <organization>org1665164800368109</organization>
+               <subOrganization></subOrganization>
+               <parentService></parentService>
+            </Jurisdiction_511>
+            <text>Am I eligible for the EEAP?</text>
+            <displayTitle>EEAP: Eligibility &amp; Requirements</displayTitle>
+            <about>Learn about eligibility requirements, services, and events when the Emergency Evacuation
+               Assistance program may be used. </about>
+            <answer>&lt;p align="left"&gt;You are eligible for this program if any of the following conditions
+               apply:&lt;/p&gt;
+               &lt;ul&gt;
+               &lt;li&gt;You are unable to evacuate on your own due to a specialized transportation need.&lt;/li&gt;
+               &lt;li&gt;You are homebound and unable to walk to a bus pickup point and do not have anyone
+               who can provide transportation.&lt;/li&gt;
+               &lt;li&gt;You have medical needs that prevent you from evacuating on your own.&lt;/li&gt;
+               &lt;li&gt;You are bedbound.&lt;/li&gt;
+               &lt;li&gt;You are on life-sustaining medical equipment that requires electricity.&lt;/li&gt;
+               &lt;li&gt;You require assistance with daily living activities.&lt;/li&gt;
+               &lt;/ul&gt;
+               &lt;p align="left"&gt;Residents living in residential health care facilities such as nursing
+               homes, assisted living facilities or group homes do not qualify for this program as
+               these facilities are required by law to develop an emergency plan and provide emergency
+               assistance for their clients.&lt;/p&gt;</answer>
+            <publishDate>2022-10-07</publishDate>
+            <pubHour>06</pubHour>
+            <pubMin>40</pubMin>
+            <pubTod>pm</pubTod>
+            <call311></call311>
+            <call711></call711>
+            <category>
+               <mainCategory>public-safety</mainCategory>
+               <subCategory>hurricane</subCategory>
+               <subTopics>emergency-evacuation-assistance-eeap</subTopics>
+            </category>
+            <faqCategory>
+               <mainCategory></mainCategory>
+            </faqCategory>
+            <serviceRequestURL>
+               <title></title>
+               <description></description>
+               <buttonText></buttonText>
+               <link>
+            </serviceRequestURL>
+            <slug>am-i-eligible-for-the-eeap</slug>
+            <mduid>faq1598022220984134</mduid>
+            <organizationName>Emergency Management</organizationName>
+            <subTopicValue></subTopicValue>
+            <pubDateTime>2022-10-07T18:40</pubDateTime>
+            <subCategoryValue>hurricane</subCategoryValue><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script><title>Related FAQ's / Topics</title>
+               <accordionState></accordionState>
+               <content><p class="MsoNormal"><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq1620330819097696">Emergency
+                  Evacuation Assistance Program EEAP</a></p>
+                  <p class="MsoNormal"><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq162031870831577">EEAP
+                  last minute call</a></p>
+                  <p class="MsoNormal"><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq1598014015110910">Why
+                  did I receive a phone call from the EEAP?</a> <span style="mso-spacerun: yes;">&nbsp;</span><span
+                  style="mso-spacerun: yes;">&nbsp;</span></p></content>
+               <serviceRequestURL>
+                  <srType></srType>
+               </serviceRequestURL></script></faq>
+      </related-faq>
+      <related-faq>
+         <name>What does the EEAP offer and when is it used?</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+         <faq>
+            <calltakerOnly></calltakerOnly>
+            <keywords>EEAP, specialized transportation, safe shelter, medical monitoring, wellness checks,
+               emergencies</keywords>
+            <priority></priority>
+            <Jurisdiction_511>
+               <jurisdiction>local</jurisdiction>
+               <localType>county</localType>
+               <county>miami-dade</county>
+               <municipality></municipality>
+               <organization>org1665164800368109</organization>
+               <subOrganization></subOrganization>
+               <parentService></parentService>
+            </Jurisdiction_511>
+            <text>What does the EEAP offer and when is it used?</text>
+            <displayTitle>EEAP: Program Services</displayTitle>
+            <about>The Emergency Evacuation Assistance Program offers specialized transportation, safe
+               shelter, medical monitoring and wellness checks during emergencies.</about>
+            <answer>&lt;p&gt;&lt;strong&gt;The program offers:&lt;/strong&gt;&lt;/p&gt;
+               &lt;ul&gt;
+               &lt;li&gt;Specialized transportation&lt;/li&gt;
+               &lt;li&gt;Safe shelter&lt;/li&gt;
+               &lt;li&gt;Medical monitoring&lt;/li&gt;
+               &lt;li&gt;Wellness checks&lt;/li&gt;
+               &lt;/ul&gt;
+               &lt;p&gt;A caregiver or companion is required to accompany the evacuee throughout the emergency
+               period to ensure the evacuee&amp;rsquo;s needs are met in a timely manner.&lt;/p&gt;
+               &lt;p&gt;&lt;strong&gt;The EEAP may be used for emergencies that occur in Miami-Dade County, such
+               as:&lt;/strong&gt;&lt;/p&gt;
+               &lt;ul&gt;
+               &lt;li&gt;Hurricanes or tornadoes&lt;/li&gt;
+               &lt;li&gt;Chemical or Hazardous material releases (e.g., industrial accident or act of terrorism)&lt;/li&gt;
+               &lt;li&gt;Wildfires&lt;/li&gt;
+               &lt;li&gt;Prolonged widespread power outages&lt;/li&gt;
+               &lt;li&gt;Radiological &amp;nbsp;releases (e.g., from a nuclear power plant incident or act
+               of terrorism)&lt;/li&gt;
+               &lt;/ul&gt;
+               &lt;p&gt;Emergency evacuation centers are intended as a refuge of last resort for those
+               who do not have an alternate safe location for evacuation. They do not offer the same
+               level of care or equipment as health care facilities.&lt;/p&gt;</answer>
+            <publishDate>2022-10-07</publishDate>
+            <pubHour>06</pubHour>
+            <pubMin>50</pubMin>
+            <pubTod>pm</pubTod>
+            <call311></call311>
+            <call711></call711>
+            <category>
+               <mainCategory>public-safety</mainCategory>
+               <subCategory>hurricane</subCategory>
+               <subTopics>emergency-evacuation-assistance-eeap</subTopics>
+            </category>
+            <faqCategory>
+               <mainCategory></mainCategory>
+            </faqCategory>
+            <serviceRequestURL>
+               <title></title>
+               <description></description>
+               <buttonText></buttonText>
+               <link>
+            </serviceRequestURL>
+            <slug>what-does-the-eeap-offer-and-when-is-it-used</slug>
+            <mduid>faq159802748241828</mduid>
+            <organizationName>Emergency Management</organizationName>
+            <subTopicValue></subTopicValue>
+            <pubDateTime>2022-10-07T18:50</pubDateTime>
+            <subCategoryValue>hurricane</subCategoryValue><script><title>Related FAQ's / Topics</title>
+               <accordionState></accordionState>
+               <content><p><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq1620330819097696">Emergency
+                  Evacuation Assistance Program EEAP</a></p>
+                  <p><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq162031870831577">EEAP
+                  last minute call</a></p>
+                  <p><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq1598014015110910">Why
+                  did I receive a phone call from the EEAP?</a> &nbsp;&nbsp;</p></content>
+               <serviceRequestURL>
+                  <srType></srType>
+               </serviceRequestURL></script></faq>
+      </related-faq>
+      <related-faq>
+         <name>How do I register for the EEAP?</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+         <faq>
+            <calltakerOnly></calltakerOnly>
+            <keywords>EEAP Registration, Register, Emergency Evacuation Assistance</keywords>
+            <priority></priority>
+            <Jurisdiction_511>
+               <jurisdiction>local</jurisdiction>
+               <localType>county</localType>
+               <county>miami-dade</county>
+               <municipality></municipality>
+               <organization>org1665164800368109</organization>
+               <subOrganization></subOrganization>
+               <parentService></parentService>
+            </Jurisdiction_511>
+            <text>How do I register for the EEAP?</text>
+            <displayTitle>EEAP Registration</displayTitle>
+            <about>You can register for the Emergency Evacuation Assistance Program online or download
+               an application and return it my mail.</about>
+            <answer>&lt;p align="left"&gt;&lt;strong&gt;How to apply&lt;/strong&gt;&lt;/p&gt;
+               &lt;p align="left"&gt;Individuals may apply throughout the year to become enrolled in the
+               EEAP. Residents only need to apply once to be a life-long member of the program.&lt;/p&gt;
+               &lt;p align="left"&gt;&lt;u&gt;&lt;a href="https://www.miamidade.gov/apps/gis/eeap_publicregistration/"
+               target="_blank" rel="noopener"&gt;Register online&lt;/a&gt;&lt;/u&gt;&amp;nbsp;or download an application
+               below, completely fill it out&amp;nbsp;and mail it. You can also call 311 to have an application
+               sent to you in English, Spanish, and Haitian Creole or in an alternate format such
+               as Braille or large print.&lt;/p&gt;
+               &lt;p align="left"&gt;The EEAP application is available in:&lt;/p&gt;
+               &lt;ul&gt;
+               &lt;li&gt;&lt;u&gt;&lt;a href="http://www.miamidade.gov/fire/library/hurricane/OEM/eeap-application-english.pdf"
+               target="_blank" rel="noopener"&gt;EEAP Application English&lt;/a&gt;&lt;/u&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;u&gt;&lt;a href="http://www.miamidade.gov/fire/library/hurricane/OEM/eeap-application-spanish.pdf"
+               target="_blank" rel="noopener"&gt;EEAP Application Spanish&lt;/a&gt;&lt;/u&gt;&lt;/li&gt;
+               &lt;li&gt;&lt;u&gt;&lt;a href="http://www.miamidade.gov/fire/library/hurricane/OEM/eeap-application-creole.pdf"&gt;EEAP
+               Application Creole&lt;/a&gt;&lt;/u&gt;&lt;/li&gt;
+               &lt;/ul&gt;
+               &lt;p&gt;If more than one eligible person living in the same household requires assistance
+               during evacuations, each person must complete and submit a separate application.&lt;/p&gt;
+               &lt;p&gt;If you require a higher level of medical care, your primary care physician should
+               complete and sign the application before submission.&lt;/p&gt;
+               &lt;p&gt;Registration (online and paper application) for the EEAP closes before an evacuation
+               order is pronounced. Do not wait until an evacuation order is issued to request to
+               be added to the EEAP Registry.&lt;/p&gt;
+               &lt;p&gt;&lt;strong&gt;After you apply:&lt;/strong&gt;&lt;/p&gt;
+               &lt;ul&gt;
+               &lt;li&gt;The Emergency Management Department or support personnel may contact you to verify
+               your registration information.&lt;/li&gt;
+               &lt;li&gt;You will receive a letter&amp;nbsp;letting you know&amp;nbsp;if you have been accepted
+               into the program. This letter will include the evacuation assistance you are eligible
+               to receive and your responsibilities.&lt;/li&gt;
+               &lt;li&gt;You will be contacted throughout the year to update your personal contact and
+               medical information. You do not need to complete an application every year, but it
+               is the responsibility of you or your caregiver to report any changes. If your contact
+               or medical information changes or you would like to be removed from the EEAP, please
+               email &lt;a href="mailto:<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bcd9d9ddccfcd1d5ddd1d5d8ddd8d992dbd3ca">[email&#160;protected]</a>"&gt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1c79797d6c5c71757d7175787d7879327b736a">[email&#160;protected]</a>&lt;/a&gt; or call the support
+               line at (305) 513-7700.&lt;/li&gt;
+               &lt;/ul&gt;</answer>
+            <publishDate>2022-10-07</publishDate>
+            <pubHour>06</pubHour>
+            <pubMin>55</pubMin>
+            <pubTod>pm</pubTod>
+            <call311></call311>
+            <call711></call711>
+            <category>
+               <mainCategory>public-safety</mainCategory>
+               <subCategory>hurricane</subCategory>
+               <subTopics>emergency-evacuation-assistance-eeap</subTopics>
+            </category>
+            <faqCategory>
+               <mainCategory></mainCategory>
+            </faqCategory>
+            <serviceRequestURL>
+               <title></title>
+               <description></description>
+               <buttonText></buttonText>
+               <link>
+            </serviceRequestURL>
+            <slug>how-do-i-register-for-the-eeap</slug>
+            <mduid>faq1598023863344518</mduid>
+            <organizationName>Emergency Management</organizationName>
+            <subTopicValue></subTopicValue>
+            <pubDateTime>2022-10-07T18:55</pubDateTime>
+            <subCategoryValue>hurricane</subCategoryValue><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script><title>Checking Client Information - EEAP Database</title>
+               <accordionState></accordionState>
+               <content><p style="box-sizing: inherit; margin: 0px 0px 1.5em; color: rgba(0, 0, 0, 0.87);
+                  font-family: Roboto, sans-serif; font-size: 15px; background-color: #ffffff;"><span
+                  style="text-decoration: underline;"><strong>311 Agent Instructions:</strong></span></p>
+                  <p style="box-sizing: inherit; margin: 0px 0px 1.5em; color: rgba(0, 0, 0, 0.87);
+                  font-family: Roboto, sans-serif; font-size: 15px; background-color: #ffffff;">Check
+                  if the customer is already in the EEAP Database (Use Below credentials to log into
+                  the database).</p>
+                  <p style="box-sizing: inherit; margin: 0px 0px 1.5em; color: rgba(0, 0, 0, 0.87);
+                  font-family: Roboto, sans-serif; font-size: 15px; background-color: #ffffff;"><span
+                  style="box-sizing: inherit; text-decoration-line: underline;"><span style="box-sizing:
+                  inherit; font-weight: 600;">EEAP Database:</span></span></p>
+                  <p style="box-sizing: inherit; margin: 0px 0px 1.5em; color: rgba(0, 0, 0, 0.87);
+                  font-family: Roboto, sans-serif; font-size: 15px; background-color: #ffffff;">Link
+                  to:&nbsp;&nbsp;<a style="box-sizing: inherit; background-color: transparent; color:
+                  #295d92; -webkit-tap-highlight-color: transparent;" href="https://www.miamidade.gov/Apps/GIS/EEAP/main/PSNEntryFormLogIn.aspx"><span
+                  style="box-sizing: inherit; font-weight: 600;">EEAP Registry</span></a></p>
+                  <ul style="box-sizing: inherit; padding: 0px 0px 0px 15px; list-style-type: none;
+                  margin-left: 20px; margin-top: 15px; color: rgba(0, 0, 0, 0.87); font-family: Roboto,
+                  sans-serif; font-size: 15px; background-color: #ffffff;">
+                  <li style="box-sizing: inherit; list-style-type: none; margin-left: 10px; min-height:
+                  30px; margin-bottom: 5px;"><span style="box-sizing: inherit; font-weight: 600;">User
+                  ID:</span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="box-sizing: inherit; font-weight:
+                  600;">311USER</span></li>
+                  <li style="box-sizing: inherit; list-style-type: none; margin-left: 10px; min-height:
+                  30px; margin-bottom: 5px;"><span style="box-sizing: inherit; font-weight: 600;">Password:</span>&nbsp;
+                  &nbsp;&nbsp;<span style="box-sizing: inherit; font-weight: 600;">@311userS8</span></li>
+                  </ul>
+                  <p style="box-sizing: inherit; margin: 0px 0px 1.5em; color: rgba(0, 0, 0, 0.87);
+                  font-family: Roboto, sans-serif; font-size: 15px; background-color: #ffffff;"><span
+                  style="box-sizing: inherit; font-weight: 600;"><span style="box-sizing: inherit; color:
+                  #e03e2d;">User ID and Password are case-sensitive.</span></span></p>
+                  <p style="box-sizing: inherit; margin: 0px 0px 1.5em; color: rgba(0, 0, 0, 0.87);
+                  font-family: Roboto, sans-serif; font-size: 15px; background-color: #ffffff;"><span
+                  style="box-sizing: inherit; font-weight: 600; background-color: #ffffff; color: #000000;"><span
+                  style="box-sizing: inherit;"><strong>Note: </strong></span></span>When updating the
+                  EEAP Evacuation Status Form, remember to update the section that states "Will Evacuate."
+                  Select what the caller is doing. Also, in the comments, use dashes instead of slashes
+                  for the date. Make sure the system states the Record is Updated Successfully so OEM
+                  can receive the update requested.&nbsp;</p></content>
+               <serviceRequestURL>
+                  <srType></srType>
+               </serviceRequestURL></script><script><title>Related FAQ's / Topics</title>
+               <accordionState></accordionState>
+               <content><p><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq1620330819097696">Emergency
+                  Evacuation Assistance Program EEAP</a></p>
+                  <p><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq162031870831577">EEAP
+                  last minute call</a></p>
+                  <p><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq1598014015110910">Why
+                  did I receive a phone call from the EEAP?</a> &nbsp;&nbsp;</p></content>
+               <serviceRequestURL>
+                  <srType></srType>
+               </serviceRequestURL></script></faq>
+      </related-faq>
+      <related-faq>
+         <name>Can I get assistance if I am not enrolled in the event of an emergency?</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+         <faq>
+            <calltakerOnly></calltakerOnly>
+            <keywords>Last-minute registrations, EEAP, Emergency Evacuation Assistance, EEAP </keywords>
+            <priority></priority>
+            <Jurisdiction_511>
+               <jurisdiction>local</jurisdiction>
+               <localType>county</localType>
+               <county>miami-dade</county>
+               <municipality></municipality>
+               <organization>org1665164800368109</organization>
+               <subOrganization></subOrganization>
+               <parentService></parentService>
+            </Jurisdiction_511>
+            <text>Can I get assistance if I am not enrolled in the event of an emergency?</text>
+            <displayTitle>Last-minute registration</displayTitle>
+            <about>In the event of an emergency, eligible residents that have not registered to the EEAP
+               should call 311.</about>
+            <answer>&lt;p&gt;When an emergency arises, pre-registered residents will have priority over those
+               who have not registered for the program.&lt;/p&gt;
+               &lt;p&gt;Residents not currently enrolled in the EEAP, who need emergency and evacuation
+               assistance, should call 311 to request assistance. Contacting the 311 Contact Center
+               does not guarantee that a resident will receive assistance in the event of an emergency
+               or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are
+               encouraged to seek alternate transportation and sheltering arrangements with family
+               and friends.&lt;/p&gt;</answer>
+            <publishDate>2022-10-07</publishDate>
+            <pubHour>06</pubHour>
+            <pubMin>55</pubMin>
+            <pubTod>pm</pubTod>
+            <call311></call311>
+            <call711></call711>
+            <category>
+               <mainCategory>public-safety</mainCategory>
+               <subCategory>hurricane</subCategory>
+               <subTopics>emergency-evacuation-assistance-eeap</subTopics>
+            </category>
+            <faqCategory>
+               <mainCategory></mainCategory>
+            </faqCategory>
+            <serviceRequestURL>
+               <title></title>
+               <description></description>
+               <buttonText></buttonText>
+               <link>
+            </serviceRequestURL>
+            <slug>can-i-get-assistance-if-i-am-not-enrolled-in-the-event-of-an-emergency</slug>
+            <mduid>faq1598019268060845</mduid>
+            <organizationName>Emergency Management</organizationName>
+            <subTopicValue></subTopicValue>
+            <pubDateTime>2022-10-07T18:55</pubDateTime>
+            <subCategoryValue>hurricane</subCategoryValue><script><title>Related FAQ's / Topics</title>
+               <accordionState></accordionState>
+               <content><p><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq1620330819097696">Emergency
+                  Evacuation Assistance Program EEAP</a></p>
+                  <p><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq162031870831577">EEAP
+                  last minute call</a></p>
+                  <p><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq1598014015110910">Why
+                  did I receive a phone call from the EEAP?</a> &nbsp;&nbsp;</p></content>
+               <serviceRequestURL>
+                  <srType></srType>
+               </serviceRequestURL></script></faq>
+      </related-faq>
+      <related-faq>
+         <name>What happens during an emergency for individuals who require assistance?</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+         <faq>
+            <calltakerOnly></calltakerOnly>
+            <keywords>EEAP, Disabled Evacuees, residents with disabilities, special needs, Emergency evacuation
+               assistance, shelter services, service animals</keywords>
+            <priority></priority>
+            <Jurisdiction_511>
+               <jurisdiction>local</jurisdiction>
+               <localType>county</localType>
+               <county>miami-dade</county>
+               <municipality></municipality>
+               <organization>org1665164800368109</organization>
+               <subOrganization></subOrganization>
+               <parentService></parentService>
+            </Jurisdiction_511>
+            <text>What happens during an emergency for individuals who require assistance?</text>
+            <displayTitle>Emergency Evacuation Assistance Program for special needs  </displayTitle>
+            <about>Special accommodations through the Emergency Evacuation Assistance Program are available
+               to evacuees with special needs. </about>
+            <answer>&lt;p&gt;Individuals enrolled in the Emergency Evacuation Assistance Program (EEAP) will
+               be contacted by phone, text or other method of communication to coordinate assistance
+               when an evacuation order is issued to determine what specialized sheltering and/or
+               transportation services are needed. You will be informed which facility you will be
+               evacuated to and a time frame for your pick-up.&lt;/p&gt;
+               &lt;p&gt;It is the EEAP client&amp;rsquo;s or caregiver/companion&amp;rsquo;s responsibility to
+               monitor the media for updated information on what actions they may need to take. The
+               individual and caregiver/companion must also be prepared to evacuate when transportation
+               arrives along with their readiness kits. If they miss their scheduled pickup, there
+               may not be time for a second attempt.&lt;/p&gt;
+               &lt;p&gt;All EEAP clients must bring the following in the event of an evacuation:&lt;/p&gt;
+               &lt;ul&gt;
+               &lt;li&gt;You must be accompanied at all times by a caregiver or companion&lt;/li&gt;
+               &lt;li&gt;Comfort items in one carrier (e.g. pillows, linens, blankets, cot, air mattress,
+               sleeping bag, folding chair, change of clothing, toiletries)&lt;/li&gt;
+               &lt;li&gt;Minimum one-week (7 day) supply of all your medications and specific medication
+               instructions&lt;/li&gt;
+               &lt;li&gt;Medical equipment (e.g. oxygen equipment, wheelchair, walking cane, diabetes equipment,
+               feeding tubes, dressing supplies)&lt;/li&gt;
+               &lt;li&gt;Minimum three (3) day supply of food and water for you and your caregiver/companion
+               (special dietary foods, if required)&lt;/li&gt;
+               &lt;li&gt;Names and telephone numbers of your emergency contacts and neighbors&lt;/li&gt;
+               &lt;/ul&gt;
+               &lt;p&gt;To request a Hurricane Readiness Guide in an alternate format, such as Braille
+               or large print, call 311 or send an email to &lt;a href="mailto:<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="32575d51725f5b535f5b565356571c555d44">[email&#160;protected]</a>"&gt;<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3a5f55597a57535b57535e5b5e5f145d554c">[email&#160;protected]</a>&lt;/a&gt;.&lt;/p&gt;
+               &lt;center&gt;
+               &lt;p&gt;&lt;iframe src="https://www.youtube.com/embed/5AkEFCYyCeI" width="560" height="350"
+               frameborder="0" allowfullscreen=""&gt;&lt;/iframe&gt;&lt;/p&gt;
+               &lt;/center&gt;</answer>
+            <publishDate>2022-10-07</publishDate>
+            <pubHour>06</pubHour>
+            <pubMin>55</pubMin>
+            <pubTod>pm</pubTod>
+            <call311></call311>
+            <call711></call711>
+            <category>
+               <mainCategory>public-safety</mainCategory>
+               <subCategory></subCategory>
+               <subTopics>emergency-evacuation-assistance-eeap</subTopics>
+            </category>
+            <faqCategory>
+               <mainCategory></mainCategory>
+            </faqCategory>
+            <serviceRequestURL>
+               <title></title>
+               <description></description>
+               <buttonText></buttonText>
+               <link>
+            </serviceRequestURL>
+            <slug>what-happens-during-an-emergency-for-individuals-who-require-assistance</slug>
+            <mduid>faq1598025784580332</mduid>
+            <organizationName>Emergency Management</organizationName>
+            <subTopicValue></subTopicValue>
+            <pubDateTime>2022-10-07T18:55</pubDateTime>
+            <subCategoryValue></subCategoryValue><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script><title>Related FAQ's / Topics</title>
+               <accordionState></accordionState>
+               <content><p class="MsoNormal"><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq1620330819097696">Emergency
+                  Evacuation Assistance Program EEAP</a></p>
+                  <p class="MsoNormal"><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq162031870831577">EEAP
+                  last minute call</a></p>
+                  <p class="MsoNormal"><a href="https://secure.miamidade.gov/internal/calltaker-faq.page?Mduid_faq=faq1598014015110910">Why
+                  did I receive a phone call from the EEAP?</a> <span style="mso-spacerun: yes;">&nbsp;</span><span
+                  style="mso-spacerun: yes;">&nbsp;</span></p></content>
+               <serviceRequestURL>
+                  <srType></srType>
+               </serviceRequestURL></script></faq>
+      </related-faq>
+      <related-faq>
+         <name>Why did I receive a phone call from the EEAP?</name>
+         <showProductCollection></showProductCollection>
+         <showLicenseCollection></showLicenseCollection>
+         <organization></organization>
+         <faq>
+            <calltakerOnly>true</calltakerOnly>
+            <keywords>EEAP, eeap call back, eeap called, calling back eeap, call back, Emergency Evacuation
+               Assistance Program, Hurricane, storm approaching, before storm, hurricane, tropical
+               storm, evacuation, emergency, covid test kits, facilities,</keywords>
+            <priority>call back, eeap called me, calling back eeap, eeap called, </priority>
+            <Jurisdiction_511>
+               <jurisdiction>local</jurisdiction>
+               <localType>county</localType>
+               <county>miami-dade</county>
+               <municipality></municipality>
+               <organization>org1665164800368109</organization>
+               <subOrganization></subOrganization>
+               <parentService></parentService>
+            </Jurisdiction_511>
+            <text>Why did I receive a phone call from the EEAP?</text>
+            <displayTitle>EEAP: During an Emergency</displayTitle>
+            <about>When a hurricane threatens, the County will call all the registrants who qualify for
+               evacuation assistance to coordinate pick up and sheltering accommodations.</about>
+            <answer>&lt;p&gt;When an emergency threatens the County, EEAP clients may be contacted via phone,
+               text or other method of communication to coordinate transportation and sheltering
+               accommodations, as well as receive important notifications.&lt;/p&gt;
+               &lt;p&gt;Individuals may also be contacted throughout the year to verify that all contact
+               and medical information is current.&lt;/p&gt;
+               &lt;p&gt;Automated call downs may also be programmed to send important messages to residential
+               healthcare facilities who have emergency plans submitted to the County's Emergency
+               Management Department.&amp;nbsp;&lt;/p&gt;</answer>
+            <publishDate>2022-10-07</publishDate>
+            <pubHour>06</pubHour>
+            <pubMin>50</pubMin>
+            <pubTod>pm</pubTod>
+            <call311></call311>
+            <call711></call711>
+            <category>
+               <mainCategory>public-safety</mainCategory>
+               <subCategory>hurricane</subCategory>
+               <subTopics>emergency-evacuation-assistance-eeap</subTopics>
+            </category>
+            <faqCategory>
+               <mainCategory></mainCategory>
+            </faqCategory>
+            <serviceRequestURL>
+               <title></title>
+               <description></description>
+               <buttonText></buttonText>
+               <link>
+            </serviceRequestURL>
+            <slug>why-did-i-receive-a-phone-call-from-the-eeap</slug>
+            <mduid>faq1598014015110910</mduid>
+            <organizationName>Emergency Management</organizationName>
+            <subTopicValue></subTopicValue>
+            <pubDateTime>2022-10-07T18:50</pubDateTime>
+            <subCategoryValue>hurricane</subCategoryValue><script><title>Call Down Message - When no threat exists</title>
+               <accordionState></accordionState>
+               <content><p>The Department of Emergency Management calls all the EEAP registrants throughout
+                  the year to make sure contact information is up-to-date.</p>
+                  <p><strong><span style="text-decoration: underline;">311 Agent Instruction:&nbsp;</span>
+                  </strong></p>
+                  <p>If the caller states that a message from the EEAP was left on their phone, follow
+                  the instructions below.</p>
+                  <p>The purpose of the call-downs is:&nbsp;</p>
+                  <ul>
+                  <li>To ask if the registrant wishes to evacuate (in the event an evacuation order
+                  is issued)</li>
+                  <li>To verify address (location and unit number, if applicable)</li>
+                  <li>To verify contact information (phone number(s)</li>
+                  </ul>
+                  <p>Should you receive a call, send an email with the information below to:&nbsp; <a
+                  href="mailto:ESU@miamidade.gov">EEAP@miamidade.gov</a></p>
+                  <p>Include the following information (you may copy and paste into the email):</p>
+                  <ul>
+                  <li><strong>Email Subject Line:</strong>&nbsp; Patient Name and ID number</li>
+                  <li>In the body of the email, include:</li>
+                  <ul>
+                  <li>Patient Name:</li>
+                  <li>Address:</li>
+                  <li>Unit Number (if applicable):</li>
+                  <li>Contact Number:</li>
+                  </ul>
+                  <li>Does patient wish to remain on the registry?&nbsp; YES or NO</li>
+                  <li>Will the patient need transportation assistance during an emergency?&nbsp; &nbsp;
+                  <em>YES or NO</em></li>
+                  </ul>
+                  <p><u>Family member reporting a registrant is deceased, send an email to:</u>&nbsp;&nbsp;<u><a
+                  href="mailto:eeap@miamidade.gov">EEAP@miamidade.gov</a>&nbsp;</u><strong>&nbsp;&nbsp;</strong></p>
+                  <ul>
+                  <li><strong>Email Subject Line:</strong>&nbsp; Patient Name and ID number</li>
+                  <li>In the body of the email, include:</li>
+                  <ul>
+                  <li>Name and Contact Information of the individual informing of a deceased registrant.</li>
+                  <ul>
+                  <li>(include death date if possible)</li>
+                  </ul>
+                  <li>Registrants Name:</li>
+                  <li>Address:</li>
+                  <li>Unit Number (if applicable):</li>
+                  <li>Contact Number:</li>
+                  <li>Note: Registrant is Deceased</li>
+                  </ul>
+                  </ul></content>
+               <serviceRequestURL>
+                  <srType></srType>
+               </serviceRequestURL></script><script><title>Call-Down Message - When DEM is Activated</title>
+               <accordionState></accordionState>
+               <content><p><strong>The Department of Emergency Management (DEM), EEAP conducts a call-down
+                  to the program registrants in preparation for a storm.</strong></p>
+                  <p><u>If the caller states that a message from the EEAP was left on their phone, follow
+                  the below instructions.</u></p>
+                  <p><u>The purpose of the call-downs is:&nbsp;</u></p>
+                  <ul>
+                  <li>To confirm that the registrant is still a resident of Miami-Dade</li>
+                  <li>To ask if the registrant wishes to evacuate (in the event an evacuation order
+                  is issued)</li>
+                  <li>To verify address (location and unit number, if applicable)</li>
+                  <li>To verify contact information (phone number(s)</li>
+                  </ul>
+                  <p><strong>311 Agent:&nbsp; &nbsp;When Instructed to begin updating and entering information
+                  in the EEAP Database:</strong></p>
+                  <p><u>Instructions:</u></p>
+                  <ul>
+                  <li>Open the <a href="https://www.miamidade.gov/Apps/GIS/EEAP/main/PSNEntryFormLogIn.aspx"
+                  target="_blank" rel="noopener">EEAP Database</a> to search for the client.</li>
+                  <ul>
+                  <li>Search using Name, Address or Phone Number</li>
+                  </ul>
+                  <li>If client is found, under the column named "Command Center". Next to the client&rsquo;s
+                  name click on "TBD".</li>
+                  <li>On the question: "Will Evacuate" select from drop down:</li>
+                  <ul>
+                  <li>Evacuate - YES</li>
+                  <li>Declined - NO</li>
+                  </ul>
+                  <li>Add additional comments/notes in the "Comments Section"</li>
+                  <ul>
+                  <li>Example: Daughter answered on client's behalf (time and date of call),</li>
+                  <li>Example: _____ is not in town, husband stated she does not want to evacuate (time
+                  and date of call)</li>
+                  </ul>
+                  <li>Click on the calendar to "Stamp Date"</li>
+                  <li><strong>Click on "Submit" <span style="color: #e03e2d;">(THIS MUST BE DONE) </span>The
+                  system does not save any changes unless you do this.&nbsp;</strong></li>
+                  </ul>
+                  <p><strong>311 Agent:&nbsp;&nbsp;</strong><u>If unable to find the client on the EEAP
+                  Database, please send an email with the below information to:</u> &nbsp;<a href="mailto:ESU@miamidade.gov">ESU@miamidade.gov</a>
+                  (email ONLY for use by 311 during activation)&nbsp;&nbsp;</p>
+                  <p>Include the following information (you may copy and paste into the email):</p>
+                  <ul>
+                  <li><strong>Email Subject Line:</strong>&nbsp; Patient Name and ID number</li>
+                  <li>In the body of the email, include:</li>
+                  <ul>
+                  <li>Patient Name:</li>
+                  <li>Address:</li>
+                  <li>Unit Number (if applicable):</li>
+                  <li>Contact Number:</li>
+                  </ul>
+                  <li>Does patient wish to evacuate?&nbsp; &nbsp;<em>YES or NO</em></li>
+                  <li>Does patient need transportation assistance?&nbsp; &nbsp; <em>YES or NO</em></li>
+                  <ul>
+                  <li>Provide details:&nbsp; &nbsp;<em>(example: wheelchair, ambulance transportation,
+                  etc.)</em></li>
+                  </ul>
+                  <li>What are the medical conditions and severity of the condition?&nbsp;</li>
+                  <li>What medical equipment is used by the EEAP Registrant?&nbsp; &nbsp;<em>(ventilator,
+                  oxygen dependent, etc.)</em>&nbsp;</li>
+                  <li>How often is the medical equipment used?&nbsp; <em>(Intermittent or Continuous)</em></li>
+                  </ul>
+                  <p><span style="color: #e03e2d;">(this email is for use by 311 only during an "in-storm"
+                  event only)&nbsp;&nbsp;</span></p></content>
+               <serviceRequestURL>
+                  <srType></srType>
+               </serviceRequestURL></script><script><title>Hurricane Milton EEAP Clients</title>
+               <accordionState></accordionState>
+               <content><p><strong>Instructions for EEAP Clients Regarding Potential Evacuation Due to Hurricane
+                  Milton</strong></p>
+                  <p>In response to Hurricane Milton, the County is considering evacuating residents
+                  in Storm Surge Zones A, B, and C who are registered with the Emergency Evacuation
+                  and Assistance Program (EEAP).</p>
+                  <p><strong>Step 1: Determine Evacuation Needs</strong></p>
+                  <p><strong>Do you wish to be evacuated from your home?</strong></p>
+                  <ul>
+                  <li>Verify all sections of the client&rsquo;s EEAP record, including General Information,
+                  Assistance Needed, Medical Conditions, and Home Health Care.</li>
+                  <li><strong>Record the client&rsquo;s response</strong> on your call sheet (use the
+                  list of responses attached to these instructions).</li>
+                  </ul>
+                  <p><strong>Step 2: Instructions Based on Client Response</strong></p>
+                  <ul>
+                  <li><strong>For clients who will drive themselves:</strong><br />Inform them that
+                  we will contact them to coordinate their arrival time at their designated shelter,
+                  which will be after 9:00 a.m.</li>
+                  <li><strong>For clients who require transportation:</strong><br />Let them know that
+                  their transportation provider will call on the morning of <strong>Tuesday, October
+                  8, 2024</strong>, with their pickup time.</li>
+                  </ul>
+                  <p><strong>Step 3: Important Reminders for EEAP Clients</strong></p>
+                  <ul>
+                  <li><strong>Mandatory Evacuation:</strong><br />Clients must evacuate when transportation
+                  arrives at their home. If they decline transportation upon arrival, they may be charged
+                  for the service.</li>
+                  <li><strong>Hospital Accommodations:</strong><br />Remind clients they will not be
+                  admitted as hospital patients. Instead, they will be assigned to a designated area
+                  within the facility for the duration of the storm. Accommodations may not include
+                  a bed.</li>
+                  </ul>
+                  <p><strong>Step 4: What Clients Must Bring to the Shelter</strong></p>
+                  <ol>
+                  <li>A <strong>caregiver</strong> must accompany the client at all times.</li>
+                  <li><strong>Bedding supplies</strong>, such as pillows, linens, blankets, a cot, air
+                  mattress, or folding chair.</li>
+                  <li>A <strong>7-day supply</strong> of all medications, along with specific medication
+                  instructions.</li>
+                  <li>Any <strong>medical equipment</strong> needed (e.g., wheelchair, walker, oxygen,
+                  feeding equipment, diapers).</li>
+                  <li>A <strong>3-day supply</strong> of snacks and water.</li>
+                  <li><strong>Names and contact information</strong> for emergency contacts and neighbors.</li>
+                  <li><strong>Cash</strong> for personal expenses.
+                  <p><strong>Step 5: Stay Informed</strong></p>
+                  <ul>
+                  <li>Advise clients to stay tuned to local news for updates.</li>
+                  <li>For further information, they can call <strong>3-1-1</strong>.</li>
+                  </ul>
+                  <p><strong>Step 6: Additional Instructions</strong></p>
+                  <ul>
+                  <li><strong>Verify Address and Transportation Mode</strong><br />Ensure the client&rsquo;s
+                  address and transportation details are correct.</li>
+                  <li><strong>If the client declines evacuation:</strong><br />Remind them that we cannot
+                  guarantee pickup later if they change their mind. If they experience a medical emergency
+                  or power loss during the storm, they must call 911. Be aware that once tropical storm
+                  force winds reach 40 mph, ambulances will no longer be able to respond.</li>
+                  <li><strong>Offer a follow-up call</strong> after the storm to check on their well-being.</li>
+                  </ul>
+                  <p><strong>Documentation</strong></p>
+                  <ul>
+                  <li><strong>Record your initials, date, and time</strong> as well as any important
+                  notes on the PSN Information Form.</li>
+                  </ul>
+                  <p>&nbsp;</p>
+                  </li>
+                  </ol></content>
+               <serviceRequestURL>
+                  <srType></srType>
+               </serviceRequestURL></script></faq>
+      </related-faq>
+      <slug>emergency-evacuation-assistance</slug>
+      <locationList></locationList>
+      <serviceList>faq1598022220984134,faq159802748241828,faq1598023863344518,faq1598019268060845,faq1598025784580332,faq1598014015110910</serviceList>
+      <productList></productList>
+      <licenseList></licenseList>
+      <mduid>ser1470238193996672</mduid>
+      <organization>
+         <jurisdiction>local</jurisdiction>
+         <localType>county</localType>
+         <county>miami-dade</county>
+         <municipality></municipality>
+         <agencyType>department</agencyType>
+         <subType>department</subType>
+         <name>Emergency Management</name><acronym></acronym><betaName></betaName>
+         <betaUrl></betaUrl>
+         <contactLabel>Contact Us</contactLabel>
+         <contactUrl>/global/emergency/contact.page</contactUrl>
+         <aboutLabel>About Us</aboutLabel>
+         <aboutUrl>/global/emergency/about.page</aboutUrl>
+         <requestPublicRecordsUrl>/global/publicrecords/search.page</requestPublicRecordsUrl>
+         <legalName></legalName>
+         <description>The Department of Emergency Management supports the community's disaster preparedness,
+            response, recovery and mitigation needs.</description>
+         <mission>&lt;p&gt;The Department of Emergency Management supports the community's disaster preparedness,
+            response, recovery and mitigation needs through the coordination of information and
+            resources countywide.&lt;/p&gt;</mission>
+         <overview></overview>
+         <longDescription>&lt;p&gt;The Department of Emergency Management plans and prepares for emergencies by coordinating
+            activities with County departments, municipalities, non-profit social service and
+            medical care agencies, businesses, residents and visitors by educating about preparedness,
+            coordinating emergency response and recovery, and delivering emergency information.&lt;/p&gt;</longDescription>
+         <logo></logo>
+         <departmentImage>/resources/images/banners/emergency-management-sub-organization-banner.jpg</departmentImage>
+         <leaderTitle>Director</leaderTitle>
+         <leaderTitleOther></leaderTitleOther>
+         <leaderName>Pete Gomez</leaderName>
+         <leaderImage></leaderImage>
+         <leaderImageLarge></leaderImageLarge>
+         <leaderNameHidden>Pete Gomez</leaderNameHidden>
+         <leaderUrl>/global/government/biographies/emergency-management.page</leaderUrl>
+         <locations>
+            <locationAutoComplete>R. David Paulison Fire Rescue Headquarters - 9300 NW 41st St [loc150100031195132]
+               : Miami ^ 33178-2414</locationAutoComplete>
+            <location>loc150100031195132</location>
+            <locationSpecifics></locationSpecifics>
+            <telephone>305-468-5400</telephone>
+            <fax></fax>
+            <email><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ec89838fac81858d8185888d8889c28b839a">[email&#160;protected]</a></email>
+            <url>/global/emergency/home.page</url>
+         </locations>
+         <sub-organization>
+            <id></id>
+         </sub-organization>
+         <topServices>
+            <id></id>
+            <name></name>
+            <showProductCollection></showProductCollection>
+            <showLicenseCollection></showLicenseCollection>
+         </topServices>
+         <socialMedia>
+            <socialChannel url="https://www.facebook.com/MiamiDadeCountyEM">facebook</socialChannel>
+            <socialChannelTitle></socialChannelTitle>
+         </socialMedia>
+         <socialMedia>
+            <socialChannel url="https://twitter.com/miamidadeEM">twitter</socialChannel>
+            <socialChannelTitle></socialChannelTitle>
+         </socialMedia>
+         <twitterFeed></twitterFeed>
+         <ada>
+            <adaDisclaimer></adaDisclaimer>
+            <adaName></adaName>
+            <adaEmail></adaEmail>
+            <adaPhone></adaPhone>
+         </ada>
+         <slug>emergency-management</slug>
+         <mduid>org1665164800368109</mduid>
+         <locationList>loc150100031195132</locationList>
+         <locationListTitle>R. David Paulison Fire Rescue Headquarters</locationListTitle>
+         <locationListAddress>9300 NW 41st St</locationListAddress>
+         <locationListSpecifics></locationListSpecifics>
+         <locationListCity> Miami</locationListCity>
+         <locationListZip> 33178-2414</locationListZip>
+         <locationListTele>305-468-5400</locationListTele>
+         <locationListFax></locationListFax>
+         <locationListEmail><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b6d3d9d5f6dbdfd7dbdfd2d7d2d398d1d9c0">[email&#160;protected]</a></locationListEmail>
+         <locationListPrimaryURL>/global/emergency/home.page</locationListPrimaryURL>
+         <serviceListValue></serviceListValue>
+         <serviceListName></serviceListName>
+         <serviceListProductCollection></serviceListProductCollection>
+         <serviceListLicenseCollection></serviceListLicenseCollection>
+         <socialIconsList>facebook,twitter</socialIconsList>
+         <socialUrlList>https://www.facebook.com/MiamiDadeCountyEM,https://twitter.com/miamidadeEM</socialUrlList>
+         <leaderTitleFinal></leaderTitleFinal>
+         <messsageTitle></messsageTitle>
+         <orgMessage></orgMessage>
+      </organization>
+      <parentServices></parentServices>
+   </service>
+</div><div class="data-type-service-ui-container">
+   <app-root></app-root>
+</div><link rel="stylesheet" href="/resources/components/data-type-service/css/styles-AUCPZHKA.css"><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module" src="/resources/components/data-type-service/js/polyfills-FFHMD2TL.js"></script><script type="module" src="/resources/components/data-type-service/js/main-FSKPEG7N.js"></script><!--ls:end[component-1789757053452]-->
+    </div>
+   </div>
+  </div>
+  <div class="container template-two-column">
+   <div class="row">
+    <div class="col s12 m7 template-content-container" data-fid="nest-col-2-row-2-area-2"><!-- Row 02 - Column 01 -->
+     <div class="iw_placeholder" id="iw_placeholder1553655066006"></div>
+    </div>
+    <div class="col s12 m4 offset-m1 right-content template-right-content-container" data-fid="nest-col-2-row-2-area-3"><!-- Row 02 - Column 02 -->
+     <div class="iw_placeholder" id="iw_placeholder1553655066007"></div>
+    </div>
+   </div>
+  </div>
+  <div data-fid="nest-col-3-row-3-area-4"><!-- Row 03 -->
+   <div class="iw_placeholder" id="iw_placeholder1553655066008"></div>
+  </div>
+  <div class="container template-two-column">
+   <div class="row">
+    <div class="col s12 m7 template-content-container" data-fid="nest-col-4-row-4-area-5"><!-- Row 04 - Column 01 -->
+     <div class="iw_placeholder" id="iw_placeholder1553655066009"></div>
+    </div>
+    <div class="col s12 m4 offset-m1 right-content template-right-content-container" data-fid="nest-col-2-row-2-area-6"><!-- Row 04 - Column 02 -->
+     <div class="iw_placeholder" id="iw_placeholder1553655066010"></div>
+    </div>
+   </div>
+  </div>
+  <div data-fid="nest-col-5-row-5-area-7"><!-- Row 05 -->
+   <div class="iw_placeholder" id="iw_placeholder1553655066011"></div>
+  </div>
+ </main>
+ <div data-fid="row-6-area-1"><!-- Footer -->
+  <div class="iw_placeholder" id="iw_placeholder1553655066012"></div>
+  <div class="iw_component" id="iw_comp1646403036035">
+   <!--ls:begin[component-1646403036035]--><style>#iw_comp1646403036035{}</style><section aria-label="Was this helpful?">
+   <div class="container"><span id="mdc-qualtrics-helpful"></span></div>
+</section><footer class="site-footer-container">
+   <div class="container">
+      <div class="row">
+         <div class="col s12 m7">
+            <div class="row">
+               <div class="col s12 m4 footer-column">
+                  <h2 class="footer-title">Help and Support</h2>
+                  <ul class="mdc-custom__footer__links">
+                     <li><a href="https://www.miamidade.gov/global/home.page">Miami-Dade Home</a></li>
+                     <li><a href="https://www.miamidade.gov/global/disclaimer/privacy-and-security.page">Privacy Statement</a></li>
+                     <li><a href="https://www.miamidade.gov/global/disclaimer/ada-notice.page">ADA Notice</a></li>
+                     <li><a href="https://www.miamidade.gov/global/disclaimer/disclaimer.page">Disclaimer</a></li>
+                     <li><a href="https://www.miamidade.gov/global/disclaimer/about-miami-dade-county.page">About Miami-Dade</a></li>
+                  </ul>
+               </div>
+               <div class="col s12 m4 footer-column">
+                  <h2 class="footer-title">Self-Service</h2>
+                  <ul class="mdc-custom__footer__links">
+                     <li><a href="https://www.miamidade.gov/global/311/home.page">311 Contact Center</a></li>
+                     <li><a href="https://www.miamidade.gov/global/mobile-applications.page">Mobile Applications</a></li>
+                     <li><a href="https://gis-mdc.opendata.arcgis.com/">Open Data</a></li>
+                     <li><a href="https://www.miamidade.gov/global/publicrecords/search.page">Public Records</a></li>
+                     <li><a href="https://www.miamidade.gov/global/navigation/service-index.page">Service Directory</a></li>
+                  </ul>
+               </div>
+               <div class="col s12 m4 footer-column">
+                  <h2 class="footer-title">Stay Connected</h2>
+                  <ul class="mdc-custom__footer__links">
+                     <li><a href="https://www.miamidade.gov/global/navigation/legal-ad-index.page">Legal Ads &amp; Public Notices</a></li>
+                     <li><a href="https://www.miamidade.gov/global/social-media.page">Social Media Directory</a></li>
+                     <li><a href="https://www.miamidade.gov/global/webcasting/home.page">Watch Government Meetings</a></li>
+                     <li><a href="https://www.miamidade.gov/global/calendar/global.page">County Calendar</a></li>
+                     <li><a href="https://www.miamidade.gov/global/rss-news.page">News RSS Feed</a></li>
+                  </ul>
+               </div>
+            </div>
+            <p class="footer-disclaimer">Under Florida law, email addresses are public records. If you do not want your email
+               address released in response to a public records request, do not send electronic mail
+               to this entity. Instead, contact this office by phone or in writing.</p>
+         </div>
+         <div class="col s12 m4 offset-m1">
+            <div class="right-align">
+               <p><a href="https://www.miamidade.gov/global/home.page"><img src="https://www.miamidade.gov/resources/images/md-logo.png" class="md-logo-footer" alt="Miami-Dade County Home"></a></p>
+               <p>© <span id="footer-current-year">2025</span> Miami-Dade County. All rights reserved.</p>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="back-to-top top-active"><a href="#">
+         <div class="fa fa-arrow-up fa-2x"></div><span class="sr-only">Back to top</span></a></div>
+</footer><section aria-label="Floating Navigation - Social Links and Feedback Button">
+   <div class="floating-bar">
+      <div class="container">
+         <div class="floating-bar__table">
+            <div class="floating-bar__left-container floating-bar__table-column">
+               <div class="floating-bar__left-container__table">
+                  <div class="floating-bar__left-container__table-column"><a href="/global/home.page"><img alt="Miami-Dade County Homepage" src="/resources/global/images/beta-miamidade-gov.png"></a></div>
+                  <div class="floating-bar__left-container__table-column"><a target="_blank" href="https://www.facebook.com/miami.dade.county"><img class="social-media-icons" alt="Miami-Dade County Facebook" src="/resources/images/social-icons/Social-Media-Facebook.png"><span class="sr-only">Miami-Dade County Facebook - Opens a warning dialog</span></a><a target="_blank" href="https://www.instagram.com/miamidadecounty/"><img class="social-media-icons" alt="Miami-Dade County Instagram" src="/resources/images/social-icons/Social-Media-Instagram.png"><span class="sr-only">Miami-Dade County Instagram - Opens a warning dialog</span></a><a target="_blank" href="https://www.youtube.com/user/MiamiDadeTV"><img class="social-media-icons" alt="Miami-Dade County Youtube" src="/resources/images/social-icons/Social-Media-YouTube.png"><span class="sr-only">Miami-Dade County Youtube - Opens a warning dialog</span></a><a target="_blank" href="https://www.twitter.com/MiamiDadeCounty"><img class="social-media-icons" alt="Miami-Dade County X" src="/resources/images/social-icons/Social-Media-X.png"><span class="sr-only">Miami-Dade County X - Opens a warning dialog</span></a></div>
+               </div>
+            </div>
+            <div class="floating-bar__right-container floating-bar__table-column right-align"><a id="feedback" href="https://miamidadecounty.co1.qualtrics.com/jfe/form/SV_ehUyWHof5ekicZL" target="_blank"><span>Feedback</span><div class="material-icons">chat</div></a></div>
+         </div>
+      </div>
+   </div>
+</section><style type="text/css">
+
+#pwBackgroundPopup{
+display:none;position:fixed;_position:absolute; /* hack for internet explorer 6*/height:100%;width:100%;top:0;left:0;background:#666;border:1px solid #cecece;z-index:1000;}
+#popupWarning{display:none;position: fixed;_position:absolute; /* hack for internet explorer 6*/height:250px;width:400px;z-index:1001;}
+.contactArea a{text-decoration:none;color:#1e9bde;}
+.contactArea a:hover{text-decoration:underline;}
+div#alert{
+    margin: 0.5rem 0 1rem 0;
+    background-color: #fff;
+    transition: box-shadow .25s;
+    border-radius: 2px;
+    border: #717070 1px solid;
+    padding: 70px 0 24px 0;
+    background-image: url(https://www.miamidade.gov/resources/global/images/beta-miamidade-gov.png);
+    background-repeat: no-repeat;
+    background-position: 54px 26px;
+}
+input#pwAlertButton, input#cancelButton {
+    padding: 0 2rem;
+    line-height: 36px;
+}
+div#alert p{font-size: 14px;width: 360px;text-align:center;padding: 15px 0 15px 0;margin: 0 0 0 15px;}
+#alert p#buttons{margin-top: 10px;padding: 0;}
+.exit-md {margin: 0 10px 0 0;}
+.buttons i.exit-md {
+    padding: 0;
+}
+
+</style><div id="popupWarning" aria-labelledby="dialogLeavingTitle" aria-describedby="dialogLeavingDesc" role="dialog" aria-label="Leaving the official website of Miami-Dade County warning">
+   <div id="alert" class="z-depth-2">
+      <h2 id="dialogLeavingTitle" class="sr-only">Leaving Miami-Dade County</h2>
+      <div id="dialogLeavingDesc">
+         <p class="contactArea">
+            You are now leaving the official website of Miami-Dade County government. Please be
+            aware that when you exit this site, you are no longer protected by our privacy or
+            security policies. Miami-Dade County is not responsible for the content provided on
+            linked sites. The provision of links to these external sites does not constitute an
+            endorsement. </p>
+         <p><strong>Please click 'OK' to be sent to the new site, or Click 'Cancel' to go back.</strong></p>
+      </div>
+      <p class="buttons"><button type="button" id="pwAlertButton" class="waves-effect wave-light btn blue exit-md">Ok</button><button type="button" id="cancelButton" class="waves-effect wave-light btn blue exit-md">Cancel</button></p>
+   </div>
+</div><div id="pwBackgroundPopup"></div><script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({layout: google.translate.TranslateElement.InlineLayout.SIMPLE, gaTrack: true, gaId: 'UA-22131309-26'}, 'google_translate_element');
+    }
+
+  function triggerHtmlEvent(element, eventName) {
+    var event;
+    if (document.createEvent) {
+    event = document.createEvent('HTMLEvents');
+    event.initEvent(eventName, true, true);
+    element.dispatchEvent(event);
+    } else {
+    event = document.createEventObject();
+    event.eventType = eventName;
+    element.fireEvent('on' + event.eventType, event);
+    }
+  }
+
+  jQuery('.lang-select').click(function() {
+    var theLang = jQuery(this).attr('data-lang');
+    jQuery('.goog-te-combo').val(theLang);
+
+    //alert(jQuery(this).attr('href'));
+    window.location = jQuery(this).attr('href');
+    location.reload();
+
+  });
+  </script><script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script><script async="" src="https://siteimproveanalytics.com/js/siteanalyze_15202920.js"></script><!--ls:end[component-1646403036035]-->
+  </div>
+ </div>
+</div></div><!--ls:end[body]--><!--ls:begin[page_track]--><!--ls:end[page_track]--></body>
+</html>
