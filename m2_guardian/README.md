@@ -179,3 +179,8 @@ pending; it does not block official NWS lookups. Changes remain local and unpush
 ## Integration review pack
 
 Start with `M1_HANDOFF.md` for Meenakshi. `evaluation/golden_cases.json` contains 12 proposed M2-specific synthetic acceptance cases, pending Thiagu/M4 review. Run `.venv/bin/python -m m2_guardian.evaluation.run` to regenerate `evidence/guardian_acceptance_results.json`. These supplement, rather than replace, the team golden dataset. `evaluation/response_examples.json` illustrates the three states using explicitly simulated data only.
+
+
+## Optional HTTP interface (latest update)
+
+M2 can now also run as a FastAPI service, using the same connector. See [API_HANDOFF.md](API_HANDOFF.md). Direct imports remain supported; Meenakshi can choose either interface. Nothing has been hosted publicly. The module guidance above still applies to the direct-import path.

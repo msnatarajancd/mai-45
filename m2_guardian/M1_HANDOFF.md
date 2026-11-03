@@ -5,7 +5,7 @@ Status: locally implemented/tested; no push or full M1 app integration yet.
 
 ## What to integrate
 
-M2 is a Python module inside the shared app, not a separate HTTP service.
+M2 remains an importable Python module. An optional HTTP adapter is now also available; see API_HANDOFF.md for endpoints, authentication and local startup.
 Core alert lookup requires only Python's standard library. Streamlit is needed
 only for the optional screen. No model key or M3 dependency is needed for alerts.
 
@@ -98,3 +98,8 @@ The shared M5 requirements supply pytest for the combined command.
 3. M3 owner supplies reviewed evidence and agrees the retrieval schema.
 4. Run the whole Protect → Respond → Recover story after integration; local module
    tests do not establish that the complete application is integrated.
+
+
+## Optional HTTP interface (latest update)
+
+M2 can now also run as a FastAPI service, using the same connector. See [API_HANDOFF.md](API_HANDOFF.md). Direct imports remain supported; Meenakshi can choose either interface. Nothing has been hosted publicly. The module guidance above still applies to the direct-import path.
