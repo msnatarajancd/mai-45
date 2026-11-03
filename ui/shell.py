@@ -1,6 +1,13 @@
 """Compact top toolbar and a shared floating/full-screen assistant."""
 import streamlit as st
-from ui.capabilities import search_pages
+from ui.capabilities import search_pages, PAGES
+from ui.components import navigate
+from ui.tour import start_tour
+
+
+def toggle_theme():
+    st.session_state["appearance"] = "Bright" if st.session_state["appearance"] == "Dark" else "Dark"
+
 
 
 def toolbar():
@@ -8,28 +15,24 @@ def toolbar():
         st.session_state['nav_search']=''
     st.session_state.setdefault('appearance','Bright')
     with st.container(key='top_toolbar'):
-        title, search, theme, help_control = st.columns([1.1,3,.28,.28],vertical_alignment='center',gap='small')
-        title.markdown('<div class="rr-page-label"><span>YOUR WORKSPACE</span><strong>'+st.session_state['page']+'</strong></div>',unsafe_allow_html=True)
+        title, search, theme, help_control = st.columns([.65,3,.28,.28],vertical_alignment='center',gap='small')
+        with title.container(key='desktop_navigation'):
+            from ui.navigation_component import render_toggle
+            render_toggle('toolbar_toggle')
+        title.markdown('<div class="rr-page-label"><strong>'+st.session_state['page']+'</strong></div>',unsafe_allow_html=True)
         with title.container(key='mobile_nav'):
             with st.popover('Navigate',icon=':material/menu:',help='Open navigation',width='stretch'):
                 st.caption('YOUR WORKSPACE')
-                for page in search_pages(st.session_state.get('nav_search','')):
-                    if st.button(page,key='mobile_nav_'+page,width='stretch'):
-                        st.session_state['page']=page
-                        st.rerun()
+                for page in PAGES:
+                    st.button(page,key='mobile_nav_'+page,width='stretch',on_click=navigate,args=(page,))
 
         search.text_input('Search menu',placeholder='Search anything…',help='Suggestions appear as you type. Use arrow keys and Enter, or select a screen.',key='nav_search',label_visibility='collapsed',icon=':material/search:')
         with search:
             from ui.search_component import render_suggestions
             render_suggestions()
         dark=st.session_state['appearance']=='Dark'
-        if theme.button('Switch to bright mode' if dark else 'Switch to dark mode',icon=':material/light_mode:' if dark else ':material/dark_mode:',key='theme_toggle',help='Switch to bright mode' if dark else 'Switch to dark mode',width='stretch'):
-            st.session_state['appearance']='Bright' if dark else 'Dark'
-            st.rerun()
-        if help_control.button('Start walkthrough',icon=':material/help_outline:',key='quick_tour',help='Take a guided tour',width='stretch'):
-            from ui.tour import start_tour
-            start_tour()
-            st.rerun()
+        theme.button('Switch to bright mode' if dark else 'Switch to dark mode',icon=':material/light_mode:' if dark else ':material/dark_mode:',key='theme_toggle',help='Switch to bright mode' if dark else 'Switch to dark mode',width='stretch',on_click=toggle_theme)
+        help_control.button('Start walkthrough',icon=':material/help_outline:',key='quick_tour',help='Take a guided tour',width='stretch',on_click=start_tour)
     query=st.session_state.get('nav_search','')
     if query:
         matches=search_pages(query)

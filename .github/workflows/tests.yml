@@ -17,3 +17,29 @@ jobs:
       - run: node tests/search_suggestions.mjs
       - run: python -m pytest -q
       - run: python -m compileall -q app.py domain services ui recovery
+
+  visual:
+    runs-on: windows-latest
+    env:
+      READYRELIEF_DB_PATH: visual-test.sqlite3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install chromium
+      - run: npm run test:visual
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: visual-regression-report
+          path: |
+            playwright-report/
+            test-results/

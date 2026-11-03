@@ -1,0 +1,6 @@
+{
+  "name": "readyrelief-ui-checks",
+  "private": true,
+  "scripts": {"test:visual": "playwright test", "test:visual:update": "playwright test --update-snapshots"},
+  "devDependencies": {"playwright": "1.62.1"}
+}

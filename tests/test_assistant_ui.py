@@ -14,7 +14,9 @@ def button(app,name): return next(b for b in app.button if b.label==name)
 def test_navigation_search_and_empty_state(app):
     next(t for t in app.text_input if t.label=='Search menu').input('tasks').run()
     assert 'Recover' in [b.label for b in app.button]
-    assert 'Protect' not in [b.label for b in app.button]
+    assert 'Protect' in [b.label for b in app.button]  # Primary navigation stays available.
+    assert 'Open Recover' in [b.label for b in app.button]
+    assert 'Open Protect' not in [b.label for b in app.button]
     assert 'Call 911' in [b.label for b in app.get('link_button')]
     next(t for t in app.text_input if t.label=='Search menu').input('zzzzz').run()
     assert any('No matching' in x.value for x in app.caption)

@@ -15,7 +15,11 @@ export default function(component) {
     const ring = document.createElement('div');
     ring.setAttribute('aria-hidden', 'true');
     ring.setAttribute('data-testid', 'rr-tour-spotlight');
-    Object.assign(ring.style, {position:'fixed', pointerEvents:'none', border:'3px solid var(--rr-accent, #499c77)', borderRadius:'16px', boxShadow:'0 0 0 5px rgba(73,156,119,.18)', zIndex:'100', display:'none', boxSizing:'border-box'});
+    Object.assign(ring.style, {position:'fixed', pointerEvents:'none', border:'1px solid var(--rr-accent, #087f6c)', borderRadius:'10px', background:'color-mix(in srgb, var(--rr-accent) 5%, transparent)', boxShadow:'0 4px 18px var(--rr-shadow)', zIndex:'100', display:'none', boxSizing:'border-box'});
+    const marker = document.createElement('span');
+    marker.textContent = `Step ${data.step + 1}`;
+    Object.assign(marker.style, {position:'absolute', top:'-22px', left:'8px', background:'var(--rr-accent)', color:'var(--rr-onaccent)', borderRadius:'6px', padding:'3px 9px', font:'600 12px system-ui', whiteSpace:'nowrap'});
+    ring.appendChild(marker);
     document.body.appendChild(ring);
     const sayStatus = (message) => {if (!disposed) status.textContent = message;};
     const cancel = () => {
@@ -66,7 +70,13 @@ export default function(component) {
     show.disabled = !data.active;
     listen.onclick = () => {locate(true); speak();};
     stop.onclick = stopAudio;
-    show.onclick = () => {if (!locate(true)) sayStatus('The control is not visible yet. Open this step’s page to continue.');};
+    show.onclick = () => {
+        if (!locate(true)) {sayStatus('The control is not visible yet. Open this step’s page to continue.'); return;}
+        sayStatus(`Step ${data.step + 1} control located. Look for the numbered marker.`);
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            ring.animate?.([{background:'color-mix(in srgb, var(--rr-accent) 22%, transparent)'},{background:'color-mix(in srgb, var(--rr-accent) 5%, transparent)'}], {duration:650, iterations:1});
+        }
+    };
     if (!data.active) {state.enabled = false; cancel(); sayStatus('Guide paused. Return to this step to see its controls.');}
     else {
         if (!supported) sayStatus('This browser has no spoken narration. The written guide and highlights still work.');

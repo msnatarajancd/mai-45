@@ -12,6 +12,15 @@ def start_tour():
     st.session_state.pop('tour_explanation',None)
 
 
+def move_step(index):
+    st.session_state.pop('tour_explanation', None)
+    if index >= len(TOUR) or index < 0:
+        st.session_state.pop('tour_step', None)
+    else:
+        st.session_state['tour_step'] = index
+        st.session_state['page'] = TOUR[index][0]
+
+
 def render_tour():
     if st.session_state.get('rr_emergency'):
         st.session_state.pop('tour_step',None)
@@ -42,23 +51,10 @@ def render_tour():
             if st.button('Take me to this step'):
                 st.session_state['page']=page
                 st.rerun()
-        cols=st.columns([1,1.2,.85])
-        if cols[0].button('Previous step',disabled=index==0,width='stretch'):
-            st.session_state['tour_step']=index-1
-            st.session_state['page']=TOUR[index-1][0]
-            st.session_state.pop('tour_explanation',None)
-            st.rerun()
-        if cols[1].button('Next step' if index<len(TOUR)-1 else 'Finish tour',type='primary',width='stretch'):
-            st.session_state.pop('tour_explanation',None)
-            if index==len(TOUR)-1: st.session_state.pop('tour_step',None)
-            else:
-                st.session_state['tour_step']=index+1
-                st.session_state['page']=TOUR[index+1][0]
-            st.rerun()
-        if cols[2].button('End tour',width='stretch'):
-            st.session_state.pop('tour_step',None)
-            st.session_state.pop('tour_explanation',None)
-            st.rerun()
+        cols=st.columns(3)
+        cols[0].button('Previous step',disabled=index==0,width='stretch',on_click=move_step,args=(index-1,))
+        cols[1].button('Next step' if index<len(TOUR)-1 else 'Finish tour',type='primary',width='stretch',on_click=move_step,args=(index+1,))
+        cols[2].button('End tour',width='stretch',on_click=move_step,args=(-1,))
         with st.expander('Details & AI help'):
             st.write(body)
             if st.button('Explain this step with AI',width='stretch'):

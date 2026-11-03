@@ -4,7 +4,7 @@ const rings = new Set();
 const observers = [];
 let cancellations = 0;
 globalThis.window = {speechSynthesis:{cancel(){cancellations++;},getVoices(){return [];},speak(){}},SpeechSynthesisUtterance:class {},addEventListener(){},removeEventListener(){}};
-globalThis.document = {body:{appendChild(el){rings.add(el);}},createElement(){return {style:{},setAttribute(){},remove(){rings.delete(this);}};},addEventListener(){},removeEventListener(){}};
+globalThis.document = {body:{appendChild(el){rings.add(el);}},createElement(){return {style:{},appendChild(){},setAttribute(){},remove(){rings.delete(this);}};},addEventListener(){},removeEventListener(){}};
 globalThis.MutationObserver = class {constructor(fn){this.fn=fn;observers.push(this);} observe(){} disconnect(){this.disconnected=true;}};
 const source=readFileSync(new URL('../ui/tour_assets/tour.js',import.meta.url),'utf8');
 const {default:render}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));

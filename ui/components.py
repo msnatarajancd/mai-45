@@ -15,6 +15,11 @@ def icon(name):
     return f'<div class="rr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS[name]}</svg></div>'
 
 
+def navigate(page):
+    """Widget callback: update navigation before Streamlit's single render."""
+    st.session_state['page'] = page
+
+
 def go(page):
     st.session_state['page'] = page
     st.rerun()

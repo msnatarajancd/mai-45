@@ -34,3 +34,6 @@ artifacts/
 
 # Allow the shared environment variable template
 !.env.example
+node_modules/
+test-results/
+playwright-report/

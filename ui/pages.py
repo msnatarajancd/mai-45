@@ -2,38 +2,33 @@ from html import escape
 import streamlit as st
 from domain.contracts import AppMode, Household, LOCATIONS
 from services import nws_alerts, knowledge, emergency, resources
-from ui.components import ROOT, go, heading, icon
+from ui.components import ROOT, go, navigate, heading, icon
 from ui.state import change_context, load_demo
 from ui.capabilities import PAGES, search_pages
 
 
 def sidebar():
     with st.sidebar:
+        from ui.navigation_component import render_toggle
+        render_toggle('sidebar_toggle')
         st.markdown('<div class="rr-brand"><span class="rr-brand-mark">'+icon('shield')+'</span><div>ReadyRelief<small>A clearer next step.</small></div></div>',unsafe_allow_html=True)
         st.caption('WORKSPACE')
-        query=st.session_state.get('nav_search','')
-        matches=search_pages(query)
-        if not matches: st.caption('No matching screens. Try tasks, weather or family.')
+        matches=PAGES  # Search suggestions must never remove primary navigation.
         for name in matches:
             if name=='Household': st.caption('YOUR TOOLS')
-            if st.button(name,icon=':material/'+PAGES[name][0]+':',key='nav_'+name,
-                type='primary' if st.session_state['page']==name else 'secondary',width='stretch'):
-                go(name)
+            st.button(name,icon=':material/'+PAGES[name][0]+':',key='nav_'+name,
+                type='primary' if st.session_state['page']==name else 'secondary',width='stretch',on_click=navigate,args=(name,))
         with st.container(key='sidebar_guide'):
             st.markdown('<div class="rr-sidebar-kicker">A little help getting started</div>',unsafe_allow_html=True)
-            if st.button('Show me around',icon=':material/explore:',width='stretch'):
-                from ui.tour import start_tour
-                start_tour()
-                st.rerun()
+            from ui.tour import start_tour
+            st.button('Show me around',icon=':material/explore:',width='stretch',on_click=start_tour)
         with st.container(key='sidebar_demo'):
             st.markdown('<div class="rr-sidebar-kicker">TRY THE DEMONSTRATION</div><p class="rr-sidebar-copy">Meet the Rivera household.<br>One journey, from ready to recovery.</p>',unsafe_allow_html=True)
-            if st.button('Start guided demo',icon=':material/play_circle:',width='stretch'):
-                load_demo(st.session_state)
-                st.rerun()
+            st.button('Start guided demo',icon=':material/play_circle:',width='stretch',on_click=load_demo,args=(st.session_state,))
             if st.session_state.get('demo_started'):
                 st.caption('FICTIONAL HOUSEHOLD · 3 PEOPLE')
                 for label,page in [('1 · Prepare together','Protect'),('2 · Find immediate help','Respond'),('3 · Build a recovery plan','Recover')]:
-                    if st.button(label,key='demo_'+page,width='stretch'): go(page)
+                    st.button(label,key='demo_'+page,width='stretch',on_click=navigate,args=(page,))
         st.caption('DEMO DAY 2026 · TEAM MAI-45')
 
 
@@ -43,7 +38,7 @@ def home():
         with left:
             st.markdown('<div class="rr-hero"><div class="rr-eyebrow">PREPARE WITH CONFIDENCE</div><h1>A little more ready.<br><em>A lot less alone.</em></h1><p>From preparing your household to finding your next step after a storm. Clear information. Help you can understand. Progress you control.</p></div>',unsafe_allow_html=True)
             a,b=st.columns(2)
-            if a.button('Explore your next step',icon=':material/arrow_forward:',type='primary',width='stretch'): go('Protect')
+            a.button('Explore your next step',icon=':material/arrow_forward:',type='primary',width='stretch',on_click=navigate,args=('Protect',))
             if b.button('Meet the demo household',icon=':material/play_circle:',width='stretch'):
                 load_demo(st.session_state)
                 st.rerun()
@@ -56,7 +51,7 @@ def home():
         for col,(number,symbol,page,title,copy,action) in zip(st.columns(3,gap='medium'),cards):
             with col,st.container(border=True,key='home_card_'+page):
                 st.markdown(f'<div class="rr-card-top">{icon(symbol)}<span>{number} / {page.upper()}</span></div><h3>{title}</h3><p class="rr-card-copy">{copy}</p>',unsafe_allow_html=True)
-                if st.button(action,icon=':material/arrow_forward:',key='home_'+page,width='stretch'):go(page)
+                st.button(action,icon=':material/arrow_forward:',key='home_'+page,width='stretch',on_click=navigate,args=(page,))
     st.markdown('<div class="rr-note"><b>You stay in control.</b> Review every proposed change. See the source behind guidance. Know what is live, simulated or unavailable.</div>',unsafe_allow_html=True)
 
 
@@ -81,15 +76,16 @@ def household():
         go('Protect')
 
 
+def update_alert_context():
+    change_context(st.session_state, st.session_state['alert_location_picker'], st.session_state['alert_mode_picker'])
+
+
 def protect():
     heading('01 / Protect', 'A clearer picture. A better next step.', 'Start with official alert information, then consider what your household needs.')
     with st.container(border=True,key='alert_controls'):
         a, b = st.columns(2)
-        mode = a.radio('Alert mode', list(AppMode), index=list(AppMode).index(st.session_state['mode']), format_func=lambda m:m.value, horizontal=True, key='alert_mode_picker')
-        location = b.selectbox('Check an area', list(LOCATIONS), index=list(LOCATIONS).index(st.session_state['location_id']), format_func=LOCATIONS.get, key='alert_location_picker')
-        if location != st.session_state['location_id'] or mode != st.session_state['mode']:
-            change_context(st.session_state, location, mode)
-            st.rerun()
+        mode = a.radio('Alert mode', list(AppMode), index=list(AppMode).index(st.session_state['mode']), format_func=lambda m:m.value, horizontal=True, key='alert_mode_picker', on_change=update_alert_context)
+        location = b.selectbox('Check an area', list(LOCATIONS), index=list(LOCATIONS).index(st.session_state['location_id']), format_func=LOCATIONS.get, key='alert_location_picker', on_change=update_alert_context)
         if st.button('Show simulated alert' if mode == AppMode.DEMO else 'Check official alerts', type='primary'):
             try:
                 result = nws_alerts.get_alerts(location, mode)
