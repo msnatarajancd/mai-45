@@ -21,3 +21,12 @@ theme and tour callbacks update state before rendering, avoiding redundant expli
 Local warm navigation measured approximately 330–430ms both before and after this change;
 this is not a claim of zero-latency routing. Search suggestions and tour location feedback
 run in the browser. Grounding checks and recovery approval semantics remain unchanged.
+
+
+The expanded audit covers all seven screens in both themes at three sizes (42 combinations),
+button-label clipping, horizontal overflow, footer reachability, sidebar caption/hover overlap,
+chat open/expand/minimize/close, and actual sidebar animation with reduced-motion checks.
+Icon-only controls retain accessible names and are excluded from visible-label clipping checks.
+The desktop/tablet sidebar uses one toolbar button and a 240ms horizontal transition; reduced
+motion disables the transition. No live weather, model generation or recovery writes are used
+by these presentation tests. These checks do not certify every possible populated task or chat state.

@@ -3,9 +3,10 @@ from streamlit.components.v2 import component
 
 _toggle = component(
     'readyrelief_navigation_toggle',
-    html='<button type="button" data-nav-toggle aria-label="Hide navigation" aria-expanded="true" aria-controls="stSidebar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>',
-    css='''button {display:grid;place-items:center;width:44px;height:44px;border-radius:12px;border:1px solid var(--rr-border);background:var(--rr-surface);color:var(--rr-ink);cursor:pointer;} button:hover {background:var(--rr-soft);} button:active {filter:brightness(.94);} button:focus-visible {outline:2px solid var(--rr-accent);outline-offset:2px;} @media(max-width:700px){button{display:none;}}''',
-    js='''export default function({parentElement}) {
+    html='<div class="nav-row"><button type="button" data-nav-toggle aria-label="Hide navigation" aria-expanded="true" aria-controls="stSidebar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><strong data-page></strong></div>',
+    css='''.nav-row {display:flex;align-items:center;gap:12px;height:44px;} strong {font:600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--rr-ink);white-space:nowrap;} button {display:grid;place-items:center;flex:0 0 44px;width:44px;box-sizing:border-box;height:44px;border-radius:12px;border:1px solid var(--rr-border);background:var(--rr-surface);color:var(--rr-ink);cursor:pointer;} button:hover {background:var(--rr-soft);} button:active {filter:brightness(.94);} button:focus-visible {outline:2px solid var(--rr-accent);outline-offset:2px;} @media(max-width:700px){button{display:none;}}''',
+    js='''export default function({parentElement, data}) {
+        parentElement.querySelector("[data-page]").textContent=data.page;
         const button=parentElement.querySelector('button');
         const root=document.documentElement;
         if (!root.dataset.rrNavCollapsed) {
@@ -17,6 +18,8 @@ _toggle = component(
             button.setAttribute('aria-expanded',String(!collapsed));
             button.setAttribute('aria-label',collapsed?'Show navigation':'Hide navigation');
             button.title=collapsed?'Show navigation':'Hide navigation';
+            const sidebar=document.querySelector('[data-testid=stSidebar]');
+            if(sidebar) sidebar.inert=collapsed;
         };
         button.onclick=()=>{
             root.dataset.rrNavCollapsed=String(root.dataset.rrNavCollapsed!=='true');
@@ -31,5 +34,5 @@ _toggle = component(
 )
 
 
-def render_toggle(key):
-    _toggle(key=key)
+def render_toggle(key, page):
+    _toggle(key=key, data={'page': page})

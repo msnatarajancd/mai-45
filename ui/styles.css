@@ -208,11 +208,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
 
 /* Collapse is browser-local, with a persistent reopen button in the toolbar. */
 @media(min-width:701px) {
- html[data-rr-nav-collapsed="true"] [data-testid="stSidebar"] {display:none !important;}
+ [data-testid="stSidebar"] {margin-right:0;transform:translateX(0) !important;transition:transform 240ms cubic-bezier(.2,.8,.2,1),margin-right 240ms cubic-bezier(.2,.8,.2,1),visibility 0s !important;}
+ html[data-rr-nav-collapsed="true"] [data-testid="stSidebar"] {transform:translateX(-100%) !important;margin-right:-232px;visibility:hidden;pointer-events:none;transition:transform 240ms cubic-bezier(.2,.8,.2,1),margin-right 240ms cubic-bezier(.2,.8,.2,1),visibility 0s 240ms !important;}
+ .block-container {max-width:none !important;}
  html[data-rr-nav-collapsed="true"] .block-container {max-width:none !important;}
  .st-key-top_toolbar [data-testid="stColumn"]:first-child > [data-testid="stVerticalBlock"] {flex-direction:row;align-items:center;gap:10px;}
- .st-key-desktop_navigation {width:44px !important;flex:0 0 44px;}
- .st-key-sidebar_toggle {margin-bottom:8px;}
+ .st-key-desktop_navigation {width:100% !important;}
+
 }
 @media(max-width:700px) {.st-key-desktop_navigation,.st-key-sidebar_toggle {display:none;}}
 @media(min-width:701px) {
@@ -234,3 +236,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
 @media(max-width:700px) {
  .st-key-top_toolbar [data-testid="stColumn"]:first-child [data-testid="stVerticalBlock"] {gap:0 !important;}
 }
+
+@media(prefers-reduced-motion:reduce) { [data-testid="stSidebar"],html[data-rr-nav-collapsed="true"] [data-testid="stSidebar"] {transition:none !important;} }
+/* Keep custom sidebar blocks from shrinking their caption beneath the hover fill. */
+.st-key-sidebar_guide {height:auto !important;min-height:96px;gap:8px !important;}
+.st-key-sidebar_guide > [data-testid="stElementContainer"] {flex-shrink:0;}
+[data-testid="stSidebarContent"] {scrollbar-gutter:stable;}
+
+/* Compact, labelled AI launcher: only the decorative sparkle is visible. */
+.st-key-chat_launcher button {width:56px !important;height:56px;min-height:56px;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.st-key-chat_launcher button [data-testid="stMarkdownContainer"] {position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+.st-key-chat_launcher button [data-testid="stIconMaterial"] {font-size:26px;}
+/* Portalled menus sit outside .stApp and need their own theme colors. */
+[data-testid="stPopoverBody"] {background:var(--rr-surface) !important;color:var(--rr-ink);border:1px solid var(--rr-border);}
+[data-testid="stPopoverBody"] p,[data-testid="stPopoverBody"] [data-testid="stCaptionContainer"] {color:var(--rr-ink) !important;}
+[data-testid="stPopoverBody"] button:hover {background:var(--rr-selected);color:var(--rr-ink);}
+.stApp [data-testid="stSelectbox"] input[role="combobox"] {border:0;}
+.stApp [data-testid="stSelectbox"] button {background:var(--rr-soft);color:var(--rr-ink);border:0;}

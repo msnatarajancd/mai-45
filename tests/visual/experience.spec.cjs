@@ -25,8 +25,9 @@ test('readable home, themes, search and persistent navigation',async({page},info
   await expect(page.locator('.st-key-nav_Protect button')).toBeInViewport();
  }
  if(desktop){
+  await expect(page.locator('[data-nav-toggle]:visible')).toHaveCount(1);
   const before=await page.locator('.block-container').boundingBox();
-  await page.locator('.st-key-sidebar_toggle').getByRole('button',{name:'Hide navigation',exact:true}).click();
+  await page.locator('.st-key-toolbar_toggle').getByRole('button',{name:'Hide navigation',exact:true}).click();
   await expect(page.getByTestId('stSidebar')).toBeHidden();
   expect((await page.locator('.block-container').boundingBox()).width).toBeGreaterThan(before.width);
   await screen(page,'home-collapsed.png');
@@ -70,4 +71,68 @@ test('tour locates every control and cleans up',async({page})=>{
  }
  await expect(spotlight).toHaveCount(0);
  await expect(page.locator('.st-key-guided_tour')).toHaveCount(0);
+});
+
+test('sidebar animates horizontally and reverses without losing its control',async({page},info)=>{
+ test.skip(info.project.name==='mobile','Mobile uses its compact navigation menu.');
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await ready(page);
+ const toggle=page.locator('.st-key-toolbar_toggle button');
+ await toggle.click();
+ await expect.poll(()=>page.getByTestId('stSidebar').evaluate(e=>e.getAnimations().length)).toBeGreaterThan(0);
+ await expect(page.getByTestId('stSidebar')).toBeHidden();
+ await expect(toggle).toBeFocused();
+ await toggle.click();
+ await expect.poll(()=>page.getByTestId('stSidebar').evaluate(e=>Math.round(e.getBoundingClientRect().x))).toBe(0);
+ await expect(page.locator('.st-key-nav_Protect button')).toBeInViewport();
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await toggle.click();
+ await expect(page.getByTestId('stSidebar')).toBeHidden();
+ expect(await page.getByTestId('stSidebar').evaluate(e=>e.getAnimations().length)).toBe(0);
+});
+for(const theme of ['bright','dark'])test(`all screens remain readable in ${theme} mode`,async({page},info)=>{
+ await ready(page);
+ if(theme==='dark')await page.getByRole('button',{name:'Switch to dark mode',exact:true}).click();
+ for(const name of ['Home','Protect','Respond','Recover','Household','Evidence','Assistant']){
+  await page.getByTestId('stMain').evaluate(e=>e.scrollTop=0);
+  if(info.project.name==='mobile'){
+   if(!await page.getByTestId('stPopoverBody').isVisible())await page.getByRole('button',{name:'Navigate',exact:true}).click();
+   await page.getByTestId('stPopoverBody').getByRole('button',{name,exact:true}).click();
+  }else await page.locator('.st-key-nav_'+name+' button').click();
+  await expect(page.locator('[data-page]')).toHaveText(name);
+  if(info.project.name==='mobile' && await page.getByTestId('stPopoverBody').isVisible())await page.getByRole('button',{name:'Navigate',exact:true}).click();
+  await expect(page.getByTestId('stException')).toHaveCount(0);
+  await page.getByTestId('stMain').evaluate(e=>e.scrollTop=0);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+  const clipped=await page.locator('button p').evaluateAll(es=>es.filter(e=>!e.closest('.st-key-chat_launcher,.st-key-mobile_nav,.st-key-theme_toggle,.st-key-quick_tour')&&e.getBoundingClientRect().width&&getComputedStyle(e).visibility!=='hidden'&&e.scrollWidth>e.clientWidth+2).map(e=>e.textContent));
+  expect(clipped,`${name} clipped button labels`).toEqual([]);
+  await page.getByTestId('stMain').evaluate(e=>e.scrollTop=e.scrollHeight);
+  await expect(page.locator('.rr-footer')).toBeInViewport();
+ }
+ if(info.project.name!=='mobile'){
+  const guide=page.getByRole('button',{name:'Show me around',exact:true});
+  await guide.hover();
+  const caption=await page.locator('.st-key-sidebar_guide [data-testid=stCaptionContainer]').boundingBox(),button=await guide.boundingBox();
+  expect(caption.y+caption.height).toBeLessThanOrEqual(button.y);
+  await expect(page.getByTestId('stSidebar')).toHaveScreenshot(`sidebar-hover-${theme}.png`);
+ }
+});
+
+test('sparkle launcher and chat controls fit the viewport',async({page})=>{
+ await ready(page);
+ const launcher=page.getByRole('button',{name:'Ask ReadyRelief',exact:true});
+ await expect(launcher).toBeVisible();
+ const r=await launcher.boundingBox();expect(r.width).toBe(56);expect(r.height).toBe(56);
+ await launcher.click();
+ const panel=page.locator('.st-key-chat_panel');await expect(panel).toBeVisible();
+ const bounds=await panel.boundingBox(),viewport=page.viewportSize();
+ expect(bounds.x).toBeGreaterThanOrEqual(0);expect(bounds.x+bounds.width).toBeLessThanOrEqual(viewport.width);
+ await expect(page.getByRole('button',{name:'Expand chat',exact:true})).toBeVisible();
+ await screen(page,'chat-panel.png');
+ await page.getByRole('button',{name:'Expand chat',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Minimize chat',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Minimize chat',exact:true}).click();
+ await expect(panel).toBeVisible();
+ await page.getByRole('button',{name:'Close chat',exact:true}).click();
+ await expect(launcher).toBeVisible();
 });

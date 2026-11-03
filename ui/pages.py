@@ -9,8 +9,6 @@ from ui.capabilities import PAGES, search_pages
 
 def sidebar():
     with st.sidebar:
-        from ui.navigation_component import render_toggle
-        render_toggle('sidebar_toggle')
         st.markdown('<div class="rr-brand"><span class="rr-brand-mark">'+icon('shield')+'</span><div>ReadyRelief<small>A clearer next step.</small></div></div>',unsafe_allow_html=True)
         st.caption('WORKSPACE')
         matches=PAGES  # Search suggestions must never remove primary navigation.
@@ -19,7 +17,7 @@ def sidebar():
             st.button(name,icon=':material/'+PAGES[name][0]+':',key='nav_'+name,
                 type='primary' if st.session_state['page']==name else 'secondary',width='stretch',on_click=navigate,args=(name,))
         with st.container(key='sidebar_guide'):
-            st.markdown('<div class="rr-sidebar-kicker">A little help getting started</div>',unsafe_allow_html=True)
+            st.caption('GUIDED TOUR')
             from ui.tour import start_tour
             st.button('Show me around',icon=':material/explore:',width='stretch',on_click=start_tour)
         with st.container(key='sidebar_demo'):

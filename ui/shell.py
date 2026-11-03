@@ -18,8 +18,7 @@ def toolbar():
         title, search, theme, help_control = st.columns([.65,3,.28,.28],vertical_alignment='center',gap='small')
         with title.container(key='desktop_navigation'):
             from ui.navigation_component import render_toggle
-            render_toggle('toolbar_toggle')
-        title.markdown('<div class="rr-page-label"><strong>'+st.session_state['page']+'</strong></div>',unsafe_allow_html=True)
+            render_toggle('toolbar_toggle', st.session_state['page'])
         with title.container(key='mobile_nav'):
             with st.popover('Navigate',icon=':material/menu:',help='Open navigation',width='stretch'):
                 st.caption('YOUR WORKSPACE')
@@ -65,7 +64,7 @@ def render_dock():
             render(compact=True)
     else:
         with st.container(key='chat_launcher'):
-            if st.button('Ask ReadyRelief',icon=':material/chat:',type='primary'):
+            if st.button('Ask ReadyRelief',icon=':material/auto_awesome:',type='primary',help='Ask ReadyRelief'):
                 st.session_state['chat_open']=True
                 st.rerun()
 
