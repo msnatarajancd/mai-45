@@ -1,0 +1,386 @@
+{
+  "classification": "PROPOSED SYNTHETIC M2 ACCEPTANCE CASES \u2014 pending M4 review, not the team golden dataset",
+  "fixed_time": "2026-11-02T12:00:00+00:00",
+  "cases": [
+    {
+      "id": "M2-G01",
+      "purpose": "Operational alert retains original instructions, even with null geometry.",
+      "payload": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-original",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-original",
+              "status": "Actual",
+              "messageType": "Alert",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "2026-11-02T13:00:00Z",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe"
+            }
+          }
+        ]
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-original"
+        ]
+      }
+    },
+    {
+      "id": "M2-G02",
+      "purpose": "An empty official response must not imply safety.",
+      "payload": {
+        "type": "FeatureCollection",
+        "features": []
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "no_alerts",
+        "alert_ids": []
+      }
+    },
+    {
+      "id": "M2-G03",
+      "purpose": "An expired record must not display as active.",
+      "payload": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-original",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-original",
+              "status": "Actual",
+              "messageType": "Alert",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "2026-11-02T11:59:00Z",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe"
+            }
+          }
+        ]
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "no_alerts",
+        "alert_ids": []
+      }
+    },
+    {
+      "id": "M2-G04",
+      "purpose": "An update supersedes its referenced original regardless of order.",
+      "payload": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-update",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-update",
+              "status": "Actual",
+              "messageType": "Update",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "2026-11-02T13:00:00Z",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe",
+              "references": [
+                {
+                  "identifier": "synthetic-original"
+                }
+              ]
+            }
+          },
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-original",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-original",
+              "status": "Actual",
+              "messageType": "Alert",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "2026-11-02T13:00:00Z",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe"
+            }
+          }
+        ]
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-update"
+        ]
+      }
+    },
+    {
+      "id": "M2-G05",
+      "purpose": "A cancellation suppresses its referenced original.",
+      "payload": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-original",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-original",
+              "status": "Actual",
+              "messageType": "Alert",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "2026-11-02T13:00:00Z",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe"
+            }
+          },
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-cancel",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-cancel",
+              "status": "Actual",
+              "messageType": "Cancel",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "2026-11-02T13:00:00Z",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe",
+              "references": [
+                {
+                  "identifier": "synthetic-original"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "no_alerts",
+        "alert_ids": []
+      }
+    },
+    {
+      "id": "M2-G06",
+      "purpose": "Duplicate records must render once.",
+      "payload": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-original",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-original",
+              "status": "Actual",
+              "messageType": "Alert",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "2026-11-02T13:00:00Z",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe"
+            }
+          },
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-original",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-original",
+              "status": "Actual",
+              "messageType": "Alert",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "2026-11-02T13:00:00Z",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe"
+            }
+          }
+        ]
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-original"
+        ]
+      }
+    },
+    {
+      "id": "M2-G07",
+      "purpose": "A transport outage is unavailable, never empty-success or demo.",
+      "payload": null,
+      "simulate_transport_error": true,
+      "expected": {
+        "status": "unavailable",
+        "alert_ids": []
+      }
+    },
+    {
+      "id": "M2-G08",
+      "purpose": "Malformed upstream content must fail visibly.",
+      "payload": {
+        "features": []
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "unavailable",
+        "alert_ids": []
+      }
+    },
+    {
+      "id": "M2-G09",
+      "purpose": "An active notice can have future onset.",
+      "payload": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-original",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-original",
+              "status": "Actual",
+              "messageType": "Alert",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "2026-11-02T13:00:00Z",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe",
+              "onset": "2026-11-02T12:30:00Z"
+            }
+          }
+        ]
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "alerts",
+        "alert_ids": [
+          "synthetic-original"
+        ]
+      }
+    },
+    {
+      "id": "M2-G10",
+      "purpose": "An exercise/test message must not be presented as actual.",
+      "payload": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-original",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-original",
+              "status": "Test",
+              "messageType": "Alert",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "2026-11-02T13:00:00Z",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe"
+            }
+          }
+        ]
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "no_alerts",
+        "alert_ids": []
+      }
+    },
+    {
+      "id": "M2-G11",
+      "purpose": "Partial paginated results must not appear complete.",
+      "payload": {
+        "type": "FeatureCollection",
+        "features": [],
+        "pagination": {
+          "next": "https://api.weather.gov/alerts?cursor=synthetic"
+        }
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "unavailable",
+        "alert_ids": []
+      }
+    },
+    {
+      "id": "M2-G12",
+      "purpose": "A corrupt date must not silently disappear as no alerts.",
+      "payload": {
+        "type": "FeatureCollection",
+        "features": [
+          {
+            "type": "Feature",
+            "id": "https://api.weather.gov/alerts/synthetic-original",
+            "geometry": null,
+            "properties": {
+              "id": "synthetic-original",
+              "status": "Actual",
+              "messageType": "Alert",
+              "event": "Synthetic Flood Warning",
+              "areaDesc": "Synthetic test area",
+              "senderName": "SYNTHETIC TEST AUTHORITY",
+              "sent": "2026-11-02T11:00:00Z",
+              "expires": "not-a-date",
+              "description": "Synthetic acceptance-test text. Not an official warning.",
+              "instruction": "Synthetic test instruction; not real-world guidance.",
+              "severity": "Severe"
+            }
+          }
+        ]
+      },
+      "simulate_transport_error": false,
+      "expected": {
+        "status": "unavailable",
+        "alert_ids": []
+      }
+    }
+  ]
+}

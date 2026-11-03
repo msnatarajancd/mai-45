@@ -1,0 +1,35 @@
+{
+  "checked_at": "2026-11-03T02:03:00.226373+00:00",
+  "checks": [
+    {
+      "path": "/health",
+      "http_status": 200,
+      "result_status": "ok",
+      "mode": null
+    },
+    {
+      "path": "/v1/alerts?mode=simulated",
+      "http_status": 200,
+      "result_status": "alerts",
+      "mode": "simulated"
+    },
+    {
+      "path": "/v1/alerts?mode=simulated&scenario=unavailable",
+      "http_status": 503,
+      "result_status": "unavailable",
+      "mode": "simulated"
+    },
+    {
+      "path": "/v1/alerts?latitude=91&longitude=0",
+      "http_status": 422,
+      "result_status": null,
+      "mode": null
+    },
+    {
+      "path": "/v1/alerts?latitude=25.7617&longitude=-80.1918",
+      "http_status": 200,
+      "result_status": "alerts",
+      "mode": "live"
+    }
+  ]
+}
