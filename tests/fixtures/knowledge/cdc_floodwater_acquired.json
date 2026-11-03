@@ -1,0 +1,311 @@
+{
+  "source": {
+    "source_id": "cdc-floodwater",
+    "publisher": "Centers for Disease Control and Prevention",
+    "title": "Safety Guidelines: Floodwater",
+    "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+    "source_type": "official_static_web_guidance",
+    "jurisdiction": "US",
+    "hazards": [
+      "flood",
+      "hurricane"
+    ],
+    "disaster_phases": [
+      "respond",
+      "recover"
+    ],
+    "classification": "OFFICIAL_SOURCE",
+    "content_type": "text/html",
+    "charset": "utf-8",
+    "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+    "retrieved_at": "2026-11-03T03:05:29.514595Z",
+    "reviewed_at": null,
+    "review_status": "DOWNLOADED_UNREVIEWED",
+    "reviewer": null,
+    "limitations": [
+      "Candidate source; human review required before publication.",
+      "Static guidance is not live availability or a current evacuation order.",
+      "HTML-only extraction may omit images, embedded documents, or dynamic content."
+    ],
+    "final_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+    "http_status": 200,
+    "byte_count": 56120,
+    "last_attempt_at": "2026-11-03T03:05:29.131603Z",
+    "failure_category": null
+  },
+  "chunks": [
+    {
+      "chunk_id": "952ef2eb6c70c22f13eecb835dff412ec1625ef646176bb8b3a52e9a4a0ea6c7",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater",
+      "guidance_text": "For Everyone \n Aug. 24, 2026 \n Español",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "0d7bafd14b5d20adf424397f3b3afa737a14a39c4231c47b93c2feef9ad1cf0c",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Key points",
+      "guidance_text": "Never drive in flooded areas—turn around, don't drown!\nStay out of floodwater—it can contain many things that can hurt you or make you sick.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "fb7c68740691c5415cf046ef7cf33c371987a032efa5349c24bd0344f50b7352",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Overview",
+      "guidance_text": "Never drive in flooded areas—turn around, don't drown!\nFloodwater and standing water can be dangerous and can make you vulnerable to infectious diseases, chemical hazards, and injuries. Protect yourself and your loved ones from the risks brought by floodwater by following these steps.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "028c2d0201eba657665949e814362ba0d7d2693321c217a9d325a0b31a61e49d",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Overview > Don't drive in flooded areas.",
+      "guidance_text": "Always follow warnings about flooded roads.\nDon't drive in flooded areas—cars or other vehicles won't protect you from floodwaters. They can be swept away or may stall in moving water.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "054a6163a645840b22edd3daf3e5565b477c4490471aeb09b197844cf85a32f1",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Overview > Turn around, don't drown!",
+      "guidance_text": "Floodwater can pose a drowning risk for everyone— regardless of their ability to swim. Swiftly moving shallow water can be deadly, and even shallow standing water can be dangerous for small children.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "5a6739b4103ae566940edbd93627230a7423334ba321a3a63af4e16d4fc930ac",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Stay out of floodwater > Floodwaters contain many things that may harm health.",
+      "guidance_text": "Be Ready! Floods Infographic\nBe Ready! Floods\nDuring\nGather emergency supplies and follow local radio or TV updates.\nUnplug appliances to prevent electrical shock when power comes back on.\nDo NOT drive or walk across flooded roads. Cars and people can be swept away.\nWhen power lines are down, water is in your home, or before you evacuate, TURN OFF gas, power, and water.\nTie down or bring outdoor items inside.\nRecognize Flood Risk\nIdentify flood-prone or landslide-prone areas near you.\nKnow your community's warning signals, evacuation routes, and emergency shelter locations.\nKnow flood evacuation routes near you.\nAfter \nThrow away items that cannot be disinfected, like wall coverings, cloth, rugs, and drywall.\nUse fans, air conditioning units, and dehumidifiers for drying.\nFor cleanup, wear rubber boots and plastic gloves.\nClean walls, hard floors, and other surfaces with soap and water. Use a mixture of 1 cup of bleach and 1 gallon of water to disinfect.\nCaution! Flood water may contain trash.\nPractice safe hygiene\nWash hands with soap and water to help prevent germs.\nListen for information from your local officials on how to safely use water to drink, cook, or clean.\nDownload Infographic PDF: English | Español\nWe don't know exactly what is in floodwater at any given point in time. Floodwater can contain:\nDowned power lines\nHuman and livestock waste\nHousehold, medical, and industrial hazardous waste (chemical, biological, and radiological)\nCoal ash waste that can contain carcinogenic compounds such as arsenic, chromium, and mercury\nOther germs and contaminants that can lead to illness\nPhysical objects such as lumber, vehicles, and debris\nWild or stray animals such as rodents and snakes",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "a608e96740008d4a7b0c837370829628d1c31044252d3595a40844e041ed56f0",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Stay out of floodwater > Exposure to contaminated floodwater can cause:",
+      "guidance_text": "Wound infections\nSkin rash\nGastrointestinal illness\nTetanus\nLeptospirosis (not common)\nMelioidosis (along the Gulf Coast)\nThe best way to protect yourself is to stay out of the water.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "261d3decbbe4bc279e1974775d4e0a0d447baa0028abc270cf1ebfb26078d60b",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Stay out of floodwater > If you come in contact with floodwater:",
+      "guidance_text": "Wash the area with soap and clean water as soon as possible. If you don't have soap or water, use alcohol-based wipes or sanitizer.\nTake care of wounds and seek medical attention if necessary.\nWash clothes contaminated with flood or sewage water in hot water and detergent before reusing them.\nIf you must enter floodwater, wear rubber boots, rubber gloves, and goggles.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "b6766b0860a396f7550d3c54e9a52f6f1be82bc2e7db5e90b19a9a46a3d64ecb",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Prevent injuries.",
+      "guidance_text": "Floodwater may contain sharp objects, such as glass or metal fragments, that can cause injury and lead to infection. Prompt first aid can help heal small wounds and prevent infection.\nIf you receive a puncture wound or a wound contaminated with feces, soil, or saliva, have a health care professional determine whether a tetanus booster is necessary based on individual records.\nKeep Reading \nEmergency Wound Care After a Natural Disaster Factsheet",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "7d3852fe501c4d414f623d3c87bfaf9ab179a224c10c218152087246514a5bbe",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Prevent infection of open wounds and rashes.",
+      "guidance_text": "Open wounds and rashes exposed to floodwater can become infected. Vibrios, for example, are naturally occurring bacteria that live in certain coastal waters and can cause skin infections when an open wound is exposed to them. This can happen during floods. To protect yourself and your family:\nAvoid exposure to floodwater if you have an open wound.\nCover clean, open wounds with a waterproof bandage to reduce chance of infection.\nKeep open wounds as clean as possible by washing well with soap and clean water.\nIf a wound develops redness, swelling, or oozing, seek immediate medical attention.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "9de2afa10a7b898714c0f981c94cc767c98d2e173e338fdad8df01a915ed4688",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Prevent infection of open wounds and rashes. > Seek medical attention as soon as possible if:",
+      "guidance_text": "There is a foreign object (soil, wood, metal, or other objects) embedded in the wound;\nThe wound is at special risk of infection (such as a dog bite or a puncture by a dirty object);\nAn old wound shows signs of becoming infected (increased pain and soreness, swelling, redness, draining, or you develop a fever).\nKeep Reading \nEmergency Wound Care After a Natural Disaster Factsheet",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "29ee34e3fccd7fc859fe228e8ddb03b95613b3c99d0c871fbf14babf9fef5417",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Protect yourself and your loved ones from diarrheal diseases.",
+      "guidance_text": "Be aware that floodwater may contain sewage, and eating or drinking anything contaminated by floodwater can cause diarrheal disease (such as E. coli or Salmonella infection). To protect yourself and your family:\nWash your hands after contact with floodwater. Also be sure to wash children's hands with soap and water often and always before meals.\nDo not allow children to play in floodwater areas.\nDo not allow children to play with toys that have been contaminated by floodwater and have not been disinfected.\nDo not bathe in water that may be contaminated with sewage or toxic chemicals. This includes rivers, streams, or lakes that are contaminated by floodwater.\nKeep Reading \nWater, Sanitation, and Hygiene (WASH)-related Emergencies and Outbreaks",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "d6133e98fb3baf5743113c6adc4c5df5d11a5ab73400a22e696ce27d62021f2d",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Protect yourself from animal and insect bites.",
+      "guidance_text": "Floodwater can displace animals, insects, and reptiles. To protect yourself and your family, be alert and avoid contact.\nKeep Reading \nWhat to Do to Protect Yourself From Animals After a Disaster",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "34a24cec74592287bbdb1c89fb8b945fa025325f082f16af12fc04755c9c18ca",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Be aware of possible chemicals in floodwater.",
+      "guidance_text": "Floods can cause containers of chemicals to move from their normal storage spots. Protect yourself from chemicals released during a natural disaster. \nDon't attempt to move propane tanks you might find— they're dangerous and can cause a fire or explosion. If you find any, contact the police, fire department, or your State Fire Marshal's office immediately.\nBe extremely careful when removing car batteries. Even if they are in floodwater, car batteries may still have an electrical charge. Use insulated gloves and avoid coming in contact with any acid that may have spilled from the damaged car battery.\nKeep Reading \nAbout Chemical Emergencies",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "0b26baf60b774893e1239f8b31e9d960abb4d4e335e60538dd7d06d8d7c0a555",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Protect yourself from illness and injuries > Avoid electrical hazards inside or outside your home.",
+      "guidance_text": "After a hurricane, flood or other natural disaster you need to be careful to avoid electrical hazards both in your home and elsewhere.\nShut off electrical power and natural gas or propane tanks in your home to avoid fire, electrocution, or explosions.\nNEVER touch a fallen power line. Call the power company to report fallen power lines. Avoid contact with overhead power lines during cleanup and other activities.\nDo not drive through standing water if downed power lines are in the water.\nIf you believe someone has been electrocuted, call or have someone else call 911 or emergency medical help.\nKeep Reading \nWhat to Do to Protect Yourself From Electrical Hazards",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "6b0e8ee530fdef3e0d6049a2eec2855215832e4594b1466b8ab807c99823edf2",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > Resources",
+      "guidance_text": "Natural Disasters and Severe Weather\nFlood Safety and Preparedness (weather.gov)\nFlood Safety | Flood Preparedness | American Red Cross\nFloods | Ready.gov",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "4cca344ee985472cfa10d3314156abdc2edb03bffbf95a79794e82cf42a85b12",
+      "source_id": "cdc-floodwater",
+      "section_heading": "Safety Guidelines: Floodwater > On This Page",
+      "guidance_text": "Overview\nStay out of floodwater\nProtect yourself from illness and injuries\nResources\n Aug. 24, 2026 \n Sources and Page Info \n Print \n Share \n Facebook \n LinkedIn \n Twitter \n Syndicate \nContent Source\n National Center for Environmental Health \n About This Page \n Published: May 15, 2024 \n Updated: August 24, 2026 \nThis page was last updated on this date. Updates may include minor edits, image changes, or other modifications to page content.\n Reviewed: August 24, 2026 \nThe information on this page was last reviewed by subject matter experts to ensure accuracy.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "review": null
+}

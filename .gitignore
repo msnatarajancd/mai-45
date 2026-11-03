@@ -20,3 +20,6 @@ venv/
 # Local files
 .DS_Store
 Thumbs.db
+# M3 admin acquisition artifacts
+/data/official_sources/admin.lock
+/data/official_sources/**/*.tmp

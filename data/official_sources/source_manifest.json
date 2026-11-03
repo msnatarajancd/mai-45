@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "source_id": "cdc-flood-reentry",
+      "publisher": "Centers for Disease Control and Prevention",
+      "title": "Safety Guidelines: Reentering Your Flooded Home",
+      "official_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+      "source_type": "official_static_web_guidance",
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "disaster_phases": [
+        "recover"
+      ],
+      "classification": "OFFICIAL_SOURCE",
+      "content_type": "text/html",
+      "charset": "utf-8",
+      "original_content_hash": "61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85",
+      "retrieved_at": "2026-11-03T03:05:29.105758Z",
+      "reviewed_at": null,
+      "review_status": "DOWNLOADED_UNREVIEWED",
+      "reviewer": null,
+      "limitations": [
+        "Candidate source; human review required before publication.",
+        "Static guidance is not live availability or a current evacuation order.",
+        "HTML-only extraction may omit images, embedded documents, or dynamic content."
+      ],
+      "final_url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+      "http_status": 200,
+      "byte_count": 55838,
+      "last_attempt_at": "2026-11-03T03:05:28.469282Z",
+      "failure_category": null
+    },
+    {
+      "source_id": "cdc-floodwater",
+      "publisher": "Centers for Disease Control and Prevention",
+      "title": "Safety Guidelines: Floodwater",
+      "official_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+      "source_type": "official_static_web_guidance",
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "disaster_phases": [
+        "respond",
+        "recover"
+      ],
+      "classification": "OFFICIAL_SOURCE",
+      "content_type": "text/html",
+      "charset": "utf-8",
+      "original_content_hash": "19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8",
+      "retrieved_at": "2026-11-03T03:05:29.514595Z",
+      "reviewed_at": null,
+      "review_status": "DOWNLOADED_UNREVIEWED",
+      "reviewer": null,
+      "limitations": [
+        "Candidate source; human review required before publication.",
+        "Static guidance is not live availability or a current evacuation order.",
+        "HTML-only extraction may omit images, embedded documents, or dynamic content."
+      ],
+      "final_url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+      "http_status": 200,
+      "byte_count": 56120,
+      "last_attempt_at": "2026-11-03T03:05:29.131603Z",
+      "failure_category": null
+    },
+    {
+      "source_id": "miami-dade-eeap",
+      "publisher": "Miami-Dade County",
+      "title": "Emergency & Evacuation Assistance Program (EEAP)",
+      "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+      "source_type": "official_static_web_guidance",
+      "jurisdiction": "US-FL-MIAMI-DADE",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "disaster_phases": [
+        "prepare",
+        "respond"
+      ],
+      "classification": "OFFICIAL_SOURCE",
+      "content_type": "text/html",
+      "charset": "utf-8",
+      "original_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+      "retrieved_at": "2026-11-03T03:05:30.655165Z",
+      "reviewed_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "reviewer": null,
+      "limitations": [
+        "Candidate source; human review required before publication.",
+        "Static guidance is not live availability or a current evacuation order.",
+        "HTML-only extraction may omit images, embedded documents, or dynamic content."
+      ],
+      "final_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+      "http_status": 200,
+      "byte_count": 129366,
+      "last_attempt_at": "2026-11-03T03:05:29.547412Z",
+      "failure_category": "EXTRACTION_FAILED"
+    }
+  ]
+}
