@@ -67,3 +67,49 @@ Choose **Show me around** in the sidebar or the **help icon** in the toolbar. A 
 Narration starts automatically when the guided steps begin. **Mute narration** stops speech and keeps later steps muted; **Unmute narration** resumes, and **Replay step** reads the current step again. A fresh tour starts with narration enabled. Returning to a different page pauses the guide. Closing the tour or activating emergency controls stops narration. Spoken instructions use the browser/device voice service, not Nebius. Voice choices are labelled **On-device** or **Online** using the browser's `localService` flag; on-device voices are preferred unless the user has selected another voice. Online voices can send the fixed narration text to the voice provider for synthesis. The tour does not record a microphone or narrate household records. Voice availability and autoplay policy vary by browser; blocked playback offers an unmute/retry action while written instructions and highlights remain usable. Reduced-motion preferences are respected.
 
 **Details & AI help** contains the longer explanation and the optional, separately requested Nebius product-help call. This is distinct from browser narration.
+
+## Non-executing recovery extraction for M5
+
+`services.assistant.extract_recovery_needs(message, *, confirmed_context=None, client=None)`
+returns `RecoveryExtractionResult`; it is separate from `propose()` / `execute()` and the
+executable `Action` union. The [shared contract](RECOVERY_EXTRACTION_CONTRACT.md) defines
+all fields, enums, statuses, quotes, limits and merge semantics. The DTOs and
+`recovery_context_fingerprint()` are exported from `services.assistant`.
+
+```python
+from services.assistant import (
+    RecoveryConfirmedContext, extract_recovery_needs, recovery_context_fingerprint,
+)
+
+confirmed = RecoveryConfirmedContext(
+    electricity="Unavailable", reported_damage=["Furniture"], children=2,
+    danger_reported=None,
+)
+proposal = extract_recovery_needs(
+    "Electricity came back, but our refrigerator is damaged.",
+    confirmed_context=confirmed,
+)
+# This call has not written anything. M5 renders proposals and exact quotes,
+# obtains corrections/confirmation, and performs its separate safety assessment.
+# Before any save, M5 rebuilds this DTO from its latest authoritative records and
+# compares recovery_context_fingerprint(latest) with proposal.base_context_fingerprint.
+# M5's transaction/version and persisted-danger checks remain authoritative.
+```
+
+Result keys are `status`, `base_context_fingerprint`, `fields`, `new_damage`,
+`clarification_questions`, and `error_code`. Field states are `UNKNOWN` (null),
+`UNCHANGED` (locally preserved confirmed value), and `PROPOSED` (typed value plus exact
+current-message quote). Unknown values never erase confirmed data. New damage is additive;
+recovery-needs lists retain confirmed entries. County is a proposal only, never a city ID.
+
+`SUCCESS` and `NEEDS_CLARIFICATION` contain reviewable data, not approval or safety
+clearance. `DANGER_DETECTED` bypasses Qwen; M5 routes to its existing emergency flow.
+`UNAVAILABLE` covers missing credentials/provider failures; `ERROR` covers rejected input
+or model output. Neither failure status contains proposed changes. A true prior danger
+flag blocks extraction even when the message reports electricity restoration.
+
+The function does not access repositories, Streamlit state, M5 record models, or external
+assistance services. It makes at most two model calls through the existing client. A
+structural/quote check and a separate Qwen support check precede returned proposals; model
+omissions and false positives remain possible, so M5 must review/correct the output.
+See [verification and real Qwen outcomes](RECOVERY_EXTRACTION_VERIFICATION.md).
