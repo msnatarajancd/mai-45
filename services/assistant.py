@@ -70,8 +70,20 @@ class Proposal(Reply):
 def is_danger(text):
     # Conservative pattern interrupt, not a validated safety classifier.
     urgent = r"\b(trapped|water is rising|cannot breathe|can.t breathe|smell gas|gas leak|there is a fire|drowning|unconscious)\b"
-    explicit = r"\b(i am|i'm|we are|we're|in|report) (in )?immediate danger\b"
-    return bool(re.search(urgent,text,re.I) or re.search(explicit,text,re.I) or text.strip().casefold()=='immediate danger')
+    if re.search(urgent, text, re.I) or text.strip().casefold() == 'immediate danger':
+        return True
+    normalized = text.replace('’', "'")
+    explicit = r"\b(?:(?:i am|i'm|we are|we're)\s+in\s+(?:immediate\s+)?danger|(?:in|report)\s+(?:in\s+)?immediate\s+danger)\b"
+    for match in re.finditer(explicit, normalized, re.I):
+        # Scope qualifiers to this sentence, so an earlier hypothetical question
+        # cannot suppress a later explicit current report.
+        prefix = re.split(r'[.!?;\n]', normalized[:match.start()])[-1]
+        if re.search(r'\b(?:if|whether|suppose|imagine|hypothetical(?:ly)?)\b', prefix, re.I):
+            continue
+        if re.search(r'\b(?:not|never|no longer)\s*$', prefix, re.I):
+            continue
+        return True
+    return False
 
 
 def capture(state, repo):

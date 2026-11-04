@@ -86,7 +86,8 @@ def test_returning_household_preserves_confirmed_values_and_inventory():
     assert result.base_context_fingerprint == recovery_context_fingerprint(context)
 
 
-@pytest.mark.parametrize('message', ['We are trapped.', 'Water is rising.', 'I smell gas.', 'We are in immediate danger.'])
+@pytest.mark.parametrize('message', ["I'm in danger", 'We are in danger', 'We are in immediate danger',
+    'We are trapped.', 'Water is rising.', 'I smell gas.', 'We are in immediate danger.'])
 def test_explicit_danger_bypasses_model_and_does_not_mutate(message):
     context = RecoveryConfirmedContext(electricity='Unavailable')
     client = FakeClient()
@@ -96,6 +97,15 @@ def test_explicit_danger_bypasses_model_and_does_not_mutate(message):
     assert not result.new_damage
     assert result.fields.electricity.state == 'UNCHANGED'
     assert context.danger_reported is None
+
+
+@pytest.mark.parametrize('message', ["I'm not in danger", "What should I do if I'm in danger?"])
+def test_negated_or_hypothetical_danger_does_not_interrupt_extraction(message):
+    client = FakeClient({'fields': {}})
+    result = extract_recovery_needs(message, client=client)
+    assert result.status == 'NEEDS_CLARIFICATION'
+    assert len(client.calls) == 2
+    assert result.error_code is None
 
 
 def test_power_restoration_cannot_clear_confirmed_danger():

@@ -2,6 +2,27 @@
 
 Review branch: `m1/recovery-needs-extraction`. No Recovery UI or persistence changes.
 
+## November 4 safety correction
+
+M5 approved contract compatibility and requested one correction to the shared `is_danger()`
+precheck. Explicit current first-person danger reports now interrupt before Qwen, including
+straight/curly apostrophe contractions. Negated reports and hypothetical conditions do not
+match this explicit-report path. Earlier urgent-phrase interrupts remain in place.
+
+| Input | Verified extraction behavior |
+| --- | --- |
+| I'm in danger | DANGER_DETECTED; zero model calls |
+| We are in danger | DANGER_DETECTED; zero model calls |
+| We are in immediate danger | DANGER_DETECTED; zero model calls |
+| I'm not in danger | Normal extraction path; no danger interrupt |
+| What should I do if I'm in danger? | Normal extraction path; no danger interrupt |
+
+The new tests failed before the correction and pass afterward. Extraction, assistant,
+assistant UI, grounded generation/UI, and emergency-tour regressions: **120 passed** on
+the corrected extraction branch. These checks use synthetic provider replies and make no
+live model calls. The schemas, output statuses, extraction validation, and model client
+are unchanged. This remains a bounded pattern precheck, not a complete safety classifier.
+
 ## Automated tests — synthetic provider replies
 
 Command:
