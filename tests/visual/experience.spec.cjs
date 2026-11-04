@@ -76,6 +76,37 @@ test('tour locates every control and cleans up',async({page})=>{
  await expect(page.locator('.st-key-guided_tour')).toHaveCount(0);
 });
 
+test('guided demo visibly starts, advances and restarts',async({page},info)=>{
+ await ready(page);
+ const launch=async()=>{
+  if(info.project.name==='mobile'){
+   await page.getByRole('button',{name:'ReadyRelief home',exact:true}).click();
+   await page.getByRole('button',{name:'Meet the demo household',exact:true}).click();
+  }else await page.getByRole('button',{name:'Start guided demo',exact:true}).click();
+ };
+ await launch();
+ const welcome=page.locator('.st-key-tour_welcome');
+ await expect(welcome).toBeInViewport();
+ await expect(welcome).toContainText('Meet the Rivera household.');
+ await expect(welcome).toContainText('No live requests or recovery changes made.');
+ await expect(page.getByRole('button',{name:'Start demo tour',exact:true})).toBeInViewport({ratio:1});
+ await screen(page,'demo-welcome.png');
+ await page.getByRole('button',{name:'Start demo tour',exact:true}).click();
+ for(const [index,name] of ['Protect','Respond','Recover'].entries()){
+  await expect(page.locator('.st-key-guided_tour')).toContainText(`STEP ${index+1} OF 3 · ${name.toUpperCase()}`);
+  await expect(page.getByTestId('stApp')).not.toHaveAttribute('data-test-script-state','running');
+  await expect(page.getByTestId('rr-tour-spotlight')).toBeVisible();
+  await page.getByRole('button',{name:'Locate control',exact:true}).click();
+  await expect(page.getByRole('status').filter({hasText:`Step ${index+1} control located.`})).toBeVisible();
+  await page.getByRole('button',{name:index===2?'Finish tour':'Next step',exact:true}).click();
+ }
+ await expect(page.locator('.st-key-guided_tour')).toHaveCount(0);
+ await launch();
+ await expect(welcome).toBeInViewport();
+ await page.getByRole('button',{name:'End tour',exact:true}).click();
+ await expect(welcome).toHaveCount(0);
+});
+
 test('sidebar animates horizontally and reverses without losing its control',async({page},info)=>{
  test.skip(info.project.name==='mobile','Mobile uses its compact navigation menu.');
  await page.emulateMedia({reducedMotion:'no-preference'});
@@ -196,4 +227,31 @@ test('header controls share one centerline',async({page},info)=>{
  const centers=[];
  for(const selector of selectors){const control=page.locator(selector+':visible').first();await expect(control).toBeVisible();const box=await control.boundingBox();centers.push(box.y+box.height/2);}
  expect(Math.max(...centers)-Math.min(...centers)).toBeLessThanOrEqual(3);
+});
+
+test('brand returns home with pointer and keyboard',async({page})=>{
+ await ready(page);
+ await page.getByRole('button',{name:'Explore your next step',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Show simulated alert',exact:true})).toBeVisible();
+ const brand=page.getByRole('button',{name:'ReadyRelief home',exact:true});
+ await brand.click();
+ await expect(page.getByRole('button',{name:'Explore your next step',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Explore your next step',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Show simulated alert',exact:true})).toBeVisible();
+ await brand.focus();await brand.press('Enter');
+ await expect(page.getByRole('button',{name:'Explore your next step',exact:true})).toBeVisible();
+});
+
+test('branded loading indicator follows processing state',async({page})=>{
+ await ready(page);
+ const indicator=page.locator('.st-key-app_loading');
+ await expect(indicator).toBeHidden();
+ // Deterministic visual state coverage; real server transitions are checked separately.
+ await page.getByTestId('stApp').evaluate(e=>e.setAttribute('data-test-script-state','running'));
+ await expect(indicator).toBeVisible();
+ await expect(indicator).toContainText('Working on your request');
+ await expect(indicator).toHaveCSS('pointer-events','none');
+ await expect(indicator).toHaveScreenshot('loading-indicator.png');
+ await page.getByTestId('stApp').evaluate(e=>e.setAttribute('data-test-script-state','notRunning'));
+ await expect(indicator).toBeHidden();
 });

@@ -6,11 +6,12 @@ from ui.capabilities import TOUR
 
 
 def start_tour():
-    st.session_state['tour_run']=uuid4().hex
-    st.session_state['tour_step']=0
-    st.session_state['tour_welcome']=True
-    st.session_state['page']='Home'
-    st.session_state.pop('tour_explanation',None)
+    from ui.state import start_walkthrough
+    start_walkthrough(st.session_state)
+
+
+def tour_steps():
+    return TOUR[2:5] if st.session_state.get('tour_demo') else TOUR
 
 
 def begin_exploring():
@@ -18,13 +19,15 @@ def begin_exploring():
 
 
 def move_step(index):
+    steps = tour_steps()
     st.session_state.pop('tour_explanation', None)
-    if index >= len(TOUR) or index < 0:
+    if index >= len(steps) or index < 0:
         st.session_state.pop('tour_step', None)
         st.session_state.pop('tour_welcome', None)
+        st.session_state.pop('tour_demo', None)
     else:
         st.session_state['tour_step'] = index
-        st.session_state['page'] = TOUR[index][0]
+        st.session_state['page'] = steps[index][0]
 
 
 def render_tour():
@@ -32,20 +35,27 @@ def render_tour():
         st.session_state.pop('tour_step',None)
         st.session_state.pop('tour_explanation',None)
     if 'tour_step' not in st.session_state: return
+    steps = tour_steps()
+    demo = st.session_state.get('tour_demo', False)
     if st.session_state.get('tour_welcome'):
         with st.container(key='tour_welcome', border=True):
-            st.caption('WELCOME · YOUR GUIDED TOUR')
-            st.title("Let's find your next step.")
-            st.write('Explore ReadyRelief in six short steps. We will highlight each control and explain how to use it. You can listen along, choose a narrator, or read at your own pace.')
-            st.caption('You stay in control. No changes are saved by taking the tour.')
+            st.caption('SIMULATED DEMO · THREE GUIDED STEPS' if demo else 'WELCOME · YOUR GUIDED TOUR')
+            st.title('Meet the Rivera household.' if demo else "Let's find your next step.")
+            if demo:
+                st.write('Three people, mobility support, no vehicle, and pets. Their fictional preferences are loaded.')
+                st.info('First, try “Show simulated alert” in Protect. Then follow the guide through Respond and Recover.')
+                st.caption('No live requests or recovery changes made. Review and approve any plan before saving.')
+            else:
+                st.write('Explore ReadyRelief in six short steps. We will highlight each control and explain how to use it. You can listen along, choose a narrator, or read at your own pace.')
+                st.caption('You stay in control. No changes are saved by taking the tour.')
             start, close = st.columns(2)
-            start.button('Start exploring', type='primary', width='stretch', on_click=begin_exploring)
+            start.button('Start demo tour' if demo else 'Start exploring', type='primary', width='stretch', on_click=begin_exploring)
             close.button('End tour', width='stretch', on_click=move_step, args=(-1,))
         return
-    index=max(0,min(int(st.session_state['tour_step']),len(TOUR)-1))
-    page,title,body,hint=TOUR[index]
+    index=max(0,min(int(st.session_state['tour_step']),len(steps)-1))
+    page,title,body,hint=steps[index]
     with st.container(border=True,key='guided_tour'):
-        st.caption(f'STEP {index+1} OF {len(TOUR)} · {page.upper()}')
+        st.caption(f'STEP {index+1} OF {len(steps)} · {page.upper()}')
         st.subheader(title)
         st.write(hint)
         targets = {
@@ -70,14 +80,14 @@ def render_tour():
             narration=narration[page],
             active=st.session_state['page']==page,
         )
-        st.progress((index+1)/len(TOUR))
+        st.progress((index+1)/len(steps))
         if st.session_state['page']!=page:
             if st.button('Take me to this step'):
                 st.session_state['page']=page
                 st.rerun()
         cols=st.columns(3)
         cols[0].button('Previous step',disabled=index==0,width='stretch',on_click=move_step,args=(index-1,))
-        cols[1].button('Next step' if index<len(TOUR)-1 else 'Finish tour',type='primary',width='stretch',on_click=move_step,args=(index+1,))
+        cols[1].button('Next step' if index<len(steps)-1 else 'Finish tour',type='primary',width='stretch',on_click=move_step,args=(index+1,))
         cols[2].button('End tour',width='stretch',on_click=move_step,args=(-1,))
         with st.expander('Details & AI help'):
             st.write(body)

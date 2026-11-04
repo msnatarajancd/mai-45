@@ -36,9 +36,7 @@ def home():
             st.markdown('<div class="rr-hero"><div class="rr-eyebrow">PREPARE WITH CONFIDENCE</div><h1>A little more ready.<br><em>A lot less alone.</em></h1><p>From preparing your household to finding your next step after a storm. Clear information. Help you can understand. Progress you control.</p></div>',unsafe_allow_html=True)
             a,b=st.columns(2)
             a.button('Explore your next step',icon=':material/arrow_forward:',type='primary',width='stretch',on_click=navigate,args=('Protect',))
-            if b.button('Meet the demo household',icon=':material/play_circle:',width='stretch'):
-                load_demo(st.session_state)
-                st.rerun()
+            b.button('Meet the demo household',icon=':material/play_circle:',width='stretch',on_click=load_demo,args=(st.session_state,))
             st.markdown('<div class="rr-trustline"><span>✓ No account needed</span><span>◎ Miami-Dade, Florida</span></div>',unsafe_allow_html=True)
         with right:
             st.markdown('<div class="rr-journey-visual"><div class="rr-orbit rr-orbit-one"></div><div class="rr-orbit rr-orbit-two"></div><div class="rr-visual-heading"><span class="rr-live-dot"></span> BUILT AROUND YOUR HOUSEHOLD</div><div class="rr-shield-hero">'+icon('shield')+'</div><div class="rr-journey-title">Your next step,<br>made clearer.</div><div class="rr-journey-flow"><div><b>01</b><span>Protect</span><small>Prepare together</small></div><i>›</i><div><b>02</b><span>Respond</span><small>Find the right help</small></div><i>›</i><div><b>03</b><span>Recover</span><small>Move forward</small></div></div><div class="rr-visual-foot">Official sources. Thoughtful guidance. Your decisions.</div></div>',unsafe_allow_html=True)

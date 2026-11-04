@@ -10,13 +10,21 @@ def toggle_theme():
 
 
 
+def open_home():
+    navigate('Home')
+    st.session_state['nav_search'] = ''
+
+
 def toolbar():
     if st.session_state.pop('_clear_nav_search',False):
         st.session_state['nav_search']=''
     st.session_state.setdefault('appearance','Bright')
     with st.container(key='top_toolbar'):
+        with st.container(key='app_loading'):
+            st.markdown('<div class="rr-loading" role="status" aria-live="polite"><span class="rr-loading-mark">'+icon('shield')+'</span><div><strong>ReadyRelief</strong><span>Working on your request…</span></div></div>', unsafe_allow_html=True)
         with st.container(key='header_brand'):
             st.markdown('<div class="rr-brand"><span class="rr-brand-mark">'+icon('shield')+'</span><div>ReadyRelief<small>A clearer next step.</small></div></div>',unsafe_allow_html=True)
+            st.button('ReadyRelief home', key='brand_home', width='stretch', on_click=open_home)
         title, search, theme, help_control = st.columns([.65,3,.28,.28],vertical_alignment='center',gap='small')
         with title.container(key='desktop_navigation'):
             from ui.navigation_component import render_toggle

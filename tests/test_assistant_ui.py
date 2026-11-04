@@ -35,6 +35,40 @@ def test_tour_navigation_and_exit(app):
     assert 'tour_step' not in app.session_state
 
 
+@pytest.mark.parametrize('entry', ['Start guided demo', 'Meet the demo household'])
+def test_demo_opens_visible_guide_and_can_restart(app, entry):
+    button(app, entry).click().run()
+    assert any('Meet the Rivera household.' in item.value for item in app.title)
+    button(app, 'Start demo tour').click().run()
+    for index, page in enumerate(('Protect', 'Respond', 'Recover')):
+        assert app.session_state['page'] == page
+        assert any(f'STEP {index + 1} OF 3' in item.value for item in app.caption)
+        assert not app.exception
+        button(app, 'Finish tour' if index == 2 else 'Next step').click().run()
+    assert 'tour_step' not in app.session_state
+    button(app, 'Start guided demo').click().run()
+    assert app.session_state['tour_welcome']
+    assert app.session_state['page'] == 'Protect'
+    button(app, 'End tour').click().run()
+    button(app, 'Show me around').click().run()
+    button(app, 'Start exploring').click().run()
+    assert app.session_state['page'] == 'Home'
+    assert any('STEP 1 OF 6' in item.value for item in app.caption)
+
+
+def test_demo_restart_preserves_recovery_and_emergency_state():
+    from ui.state import initialize, load_demo
+    state = {'rr_case_id': 'existing-case', 'rr_emergency': True, 'rr_pending_danger': ['existing-case']}
+    initialize(state)
+    load_demo(state)
+    first_run = state['tour_run']
+    load_demo(state)
+    assert state['tour_run'] != first_run
+    assert state['rr_case_id'] == 'existing-case'
+    assert state['rr_pending_danger'] == ['existing-case']
+    assert state['rr_emergency'] is True
+
+
 def test_local_chat_requires_action_confirmation(app):
     app.session_state['page']='Assistant'; app.run()
     next(r for r in app.radio if r.label=='Assistant mode').set_value('Local guide · no AI').run()

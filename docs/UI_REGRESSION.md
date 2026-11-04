@@ -39,3 +39,16 @@ voices vary by browser/device; the app lists actual English voices and remembers
 within the tab. Natural/neural voices are preferred if the browser supplies them. Narration is
 opt-in; no external speech service or invented voice is used. Voice orchestration tests use labelled
 browser API test doubles, which do not certify perceived voice quality.
+
+The header brand is a keyboard-accessible Home action that preserves the session and clears
+navigation search. The branded loading indicator follows Streamlit's actual `running` state,
+uses a short reveal delay to avoid flashing on very quick work, and never intercepts clicks.
+For a real slow-request check, start `python -m streamlit run tests/fixtures/loading_app.py --server.port=8502`
+in another terminal, then run `node tests/loading_browser.cjs`.
+The fixture deliberately waits two seconds and makes no external requests.
+
+“Start guided demo” loads the fictional Rivera household and opens a visible welcome panel,
+then a three-step Protect → Respond → Recover guide. It shares the narrator and control
+highlighting with the six-step product tour. Regression checks cover both demo entry points,
+each step, finishing, restarting, and switching back to the product tour. Loading a demo
+does not request live alerts, create recovery records, or clear an emergency state.
