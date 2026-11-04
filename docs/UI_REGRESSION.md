@@ -36,8 +36,12 @@ Header checks verify logo/search visibility after scrolling and sidebar collapse
 cover a centered welcome card, a larger step panel, header clearance, and browser voice selection.
 David/Mark (male) and Zira (female) were detected on the development Windows machine. Available
 voices vary by browser/device; the app lists actual English voices and remembers the user's choice
-within the tab. Natural/neural voices are preferred if the browser supplies them. Narration is
-opt-in; no external speech service or invented voice is used. Voice orchestration tests use labelled
+within the tab. On-device voices are preferred by default, then natural/neural voices. Narration
+starts automatically when guided steps begin. Mute persists across steps; a new tour starts with
+narration enabled. If autoplay fails, the UI provides an unmute/retry action. Voices are labelled
+On-device or Online using the browser's `localService` property. Online voices may send the fixed
+tour narration text to the voice provider; no microphone or household data is used. No separate
+speech API is configured. Voice orchestration tests use labelled
 browser API test doubles, which do not certify perceived voice quality.
 
 The header brand is a keyboard-accessible Home action that preserves the session and clears

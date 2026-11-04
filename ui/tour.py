@@ -46,7 +46,7 @@ def render_tour():
                 st.info('First, try “Show simulated alert” in Protect. Then follow the guide through Respond and Recover.')
                 st.caption('No live requests or recovery changes made. Review and approve any plan before saving.')
             else:
-                st.write('Explore ReadyRelief in six short steps. We will highlight each control and explain how to use it. You can listen along, choose a narrator, or read at your own pace.')
+                st.write('Explore ReadyRelief in six short steps. We will highlight each control and explain how to use it. Narration starts automatically; mute it or choose a different voice at any time.')
                 st.caption('You stay in control. No changes are saved by taking the tour.')
             start, close = st.columns(2)
             start.button('Start demo tour' if demo else 'Start exploring', type='primary', width='stretch', on_click=begin_exploring)

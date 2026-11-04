@@ -187,13 +187,13 @@ test('header and branding stay fixed while the page scrolls',async({page},info)=
  }
  await screen(page,'header-scrolled.png');
 });
-test('narrator choices persist and audio remains opt-in',async({page})=>{
+test('narration starts automatically and mute persists between steps',async({page})=>{
  // Test doubles verify selection and orchestration, not perceived voice quality.
  await page.addInitScript(()=>{
   window.__spoken=[];
   window.SpeechSynthesisUtterance=class {constructor(text){this.text=text;}};
   Object.defineProperty(window,'speechSynthesis',{value:{
-   getVoices:()=>[{name:'Microsoft David - English (United States)',voiceURI:'david',lang:'en-US'},{name:'Microsoft Zira - English (United States)',voiceURI:'zira',lang:'en-US'}],
+   getVoices:()=>[{name:'Google English',voiceURI:'google',lang:'en-US',localService:false},{name:'Microsoft David - English (United States)',voiceURI:'david',lang:'en-US',localService:true},{name:'Microsoft Zira - English (United States)',voiceURI:'zira',lang:'en-US',localService:true}],
    cancel(){},addEventListener(){},removeEventListener(){},
    speak(u){window.__spoken.push({voice:u.voice.voiceURI,text:u.text});u.onstart?.();},speaking:true
   }});
@@ -204,19 +204,55 @@ test('narrator choices persist and audio remains opt-in',async({page})=>{
  const voices=page.getByRole('combobox',{name:'Narrator voice',exact:true});
  await expect(voices).toBeVisible();
  await expect(voices).toContainText('Male');await expect(voices).toContainText('Female');
- expect(await page.evaluate(()=>window.__spoken.length)).toBe(0);
+ await expect.poll(()=>page.evaluate(()=>window.__spoken.at(-1)?.voice)).toBe('david');
+ await expect(voices).toContainText('On-device');await expect(voices).toContainText('Online');
  await voices.selectOption('zira');
- await page.getByRole('button',{name:'Listen to this step',exact:true}).click();
  await expect.poll(()=>page.evaluate(()=>window.__spoken.at(-1)?.voice)).toBe('zira');
  await page.getByRole('button',{name:'Next step',exact:true}).click();
  await expect(voices).toHaveValue('zira');
  await voices.selectOption('david');
  await expect.poll(()=>page.evaluate(()=>window.__spoken.at(-1)?.voice)).toBe('david');
- await page.getByRole('button',{name:'Stop audio',exact:true}).click();
+ await page.getByRole('button',{name:'Mute narration',exact:true}).click();
  const count=await page.evaluate(()=>window.__spoken.length);
  await page.getByRole('button',{name:'Next step',exact:true}).click();
  await expect(page.locator('.st-key-guided_tour')).toContainText('STEP 3');
+ await expect(page.getByTestId('rr-tour-spotlight')).toBeVisible();
+ await expect(page.getByRole('button',{name:'Unmute narration',exact:true})).toHaveAttribute('aria-pressed','true');
  expect(await page.evaluate(()=>window.__spoken.length)).toBe(count);
+ await voices.selectOption('google');
+ await expect(page.locator('[data-voice-info]')).toContainText('processed by the voice provider');
+ expect(await page.evaluate(()=>window.__spoken.length)).toBe(count);
+ await page.getByRole('button',{name:'Unmute narration',exact:true}).click();
+ await expect.poll(()=>page.evaluate(()=>window.__spoken.at(-1)?.voice)).toBe('google');
+ await page.getByRole('button',{name:'Mute narration',exact:true}).click();
+ await page.getByRole('button',{name:'End tour',exact:true}).click();
+ await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();
+ await page.getByRole('button',{name:'Start exploring',exact:true}).click();
+ await expect.poll(()=>page.evaluate(()=>window.__spoken.length)).toBeGreaterThan(count+1);
+});
+
+test('delayed voices and blocked autoplay provide a working retry',async({page})=>{
+ await page.addInitScript(()=>{
+  window.__availableVoices=[];window.__voiceListener=null;window.__attempts=0;
+  window.SpeechSynthesisUtterance=class {constructor(text){this.text=text;}};
+  Object.defineProperty(window,'speechSynthesis',{value:{
+   getVoices:()=>window.__availableVoices,
+   addEventListener(event,fn){if(event==='voiceschanged')window.__voiceListener=fn;},
+   removeEventListener(){window.__voiceListener=null;},cancel(){},speaking:false,
+   speak(u){window.__attempts++;if(window.__attempts===1)u.onerror?.({error:'not-allowed'});else u.onstart?.();}
+  }});
+ });
+ await ready(page);
+ await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();
+ await page.getByRole('button',{name:'Start exploring',exact:true}).click();
+ await expect(page.getByTestId('rr-tour-spotlight')).toBeVisible();
+ expect(await page.evaluate(()=>window.__attempts)).toBe(0);
+ await page.evaluate(()=>{window.__availableVoices=[{name:'Microsoft Zira',voiceURI:'zira',lang:'en-US',localService:true}];window.__voiceListener();});
+ await expect(page.locator('[data-status]')).toContainText('blocked or could not play');
+ await page.getByRole('button',{name:'Unmute narration',exact:true}).click();
+ await expect(page.locator('[data-status]')).toContainText('Reading this step');
+ expect(await page.evaluate(()=>window.__attempts)).toBe(2);
+ await page.getByRole('button',{name:'End tour',exact:true}).click();
 });
 
 test('header controls share one centerline',async({page},info)=>{
