@@ -12,6 +12,16 @@ Choose **Show me around** in the sidebar. The guide visits Home, Household, Prot
 
 ## Ask ReadyRelief
 
+The top **Find a screen…** search is navigation-only. It accepts route names, aliases
+such as weather/tasks/family, and commands such as “open recovery” or “go to household”.
+Select a suggestion or press Enter. An unmatched search does not call AI; use chat for questions.
+
+Chat uses the same route vocabulary and normalization. A clear single destination opens
+immediately without a model call or confirmation, in either assistant mode. Ambiguous
+matches offer screen choices. Questions such as “How does recovery work?” stay in chat
+and use the selected assistant mode. Data-changing requests still require the existing
+proposal/confirmation flow, and emergency detection still runs before route matching.
+
 Choose **Assistant** or the **Ask ReadyRelief** button on any ordinary screen. Modes:
 
 - **Nebius AI:** natural-language explanations and structured action proposals. Requires the server's NEBIUS_API_KEY. Uses NEBIUS_CHAT_MODEL, then NEBIUS_MODEL, otherwise Qwen/Qwen3-235B-A22B-Instruct-2507 (the school-planning reference app's model).
@@ -54,6 +64,6 @@ Open **Ask ReadyRelief** at the bottom right of any regular screen. **Expand cha
 
 Choose **Show me around** in the sidebar or the **help icon** in the toolbar. A floating guide highlights the relevant control and scrolls it into view. Use **Show me where** to locate it again. **Next step**, **Previous step** and **End tour** never submit forms or change saved recovery data.
 
-Audio starts off. Select **Listen to this step** to enable browser narration; subsequent steps are narrated until **Stop audio** is selected. Returning to a different page pauses the guide. Closing the tour or activating emergency controls stops narration. A fresh tour starts muted. Spoken instructions use the browser/device voice service, not Nebius; voice availability and playback policy vary by browser. If unavailable or blocked, the guide displays a clear fallback and keeps written instructions and highlights usable. Reduced-motion preferences are respected.
+Narration starts automatically when the guided steps begin. **Mute narration** stops speech and keeps later steps muted; **Unmute narration** resumes, and **Replay step** reads the current step again. A fresh tour starts with narration enabled. Returning to a different page pauses the guide. Closing the tour or activating emergency controls stops narration. Spoken instructions use the browser/device voice service, not Nebius. Voice choices are labelled **On-device** or **Online** using the browser's `localService` flag; on-device voices are preferred unless the user has selected another voice. Online voices can send the fixed narration text to the voice provider for synthesis. The tour does not record a microphone or narrate household records. Voice availability and autoplay policy vary by browser; blocked playback offers an unmute/retry action while written instructions and highlights remain usable. Reduced-motion preferences are respected.
 
 **Details & AI help** contains the longer explanation and the optional, separately requested Nebius product-help call. This is distinct from browser narration.

@@ -9,7 +9,7 @@ globalThis.MutationObserver = class {constructor(fn){this.fn=fn;observers.push(t
 const source=readFileSync(new URL('../ui/tour_assets/tour.js',import.meta.url),'utf8');
 const {default:render}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
 function mount(step){
- const nodes={}; const parentElement={isConnected:true,querySelector(selector){return nodes[selector]??= {};}};
+ const nodes={}; const parentElement={isConnected:true,querySelector(selector){return nodes[selector]??= {replaceChildren(){},appendChild(){},setAttribute(){}};}};
  return {parentElement,cleanup:render({parentElement,data:{run:'one',step,active:false}})};
 }
 const first=mount(0);

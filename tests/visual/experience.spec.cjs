@@ -52,9 +52,31 @@ test('readable home, themes, search and persistent navigation',async({page},info
   await expect(page.getByTestId('stPopoverBody').getByRole('button',{name:'Household',exact:true})).toBeVisible();
  }
 });
+test('search and chat route consistently without turning search into AI',async({page})=>{
+ await ready(page);
+ const search=page.getByRole('combobox',{name:'Search menu',exact:true});
+ await search.fill('open weather');
+ await expect(page.getByRole('option',{name:'Protect',exact:true})).toBeVisible();
+ await search.press('Enter');
+ await expect(page.getByRole('button',{name:'Show simulated alert',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Ask ReadyRelief',exact:true}).click();
+ const input=page.locator('.st-key-chat_panel textarea');
+ await input.fill('go to the family page');await input.press('Enter');
+ await expect(page.getByRole('button',{name:'Save household preferences',exact:true})).toBeVisible();
+ await expect(page.locator('.st-key-chat_panel')).toHaveCount(0);
+ await search.fill('why does the moon glow');
+ await expect(page.getByRole('status').filter({hasText:'No matching screens.'})).toBeVisible();
+ await search.press('Enter');
+ await expect(page.getByRole('button',{name:'Save household preferences',exact:true})).toBeVisible();
+ await expect(page.locator('.st-key-chat_panel')).toHaveCount(0);
+});
+
 test('tour locates every control and cleans up',async({page})=>{
  await ready(page);
  await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();
+ await expect(page.locator('.st-key-tour_welcome')).toBeInViewport();
+ await screen(page,'tour-welcome.png');
+ await page.getByRole('button',{name:'Start exploring',exact:true}).click();
  const spotlight=page.getByTestId('rr-tour-spotlight');
  for(let step=1;step<=6;step++){
   await expect(page.locator('.st-key-guided_tour')).toContainText(`STEP ${step} OF 6`);
@@ -64,13 +86,44 @@ test('tour locates every control and cleans up',async({page})=>{
   await expect(page.getByRole('status').filter({hasText:`Step ${step} control located.`})).toBeVisible();
   await expect.poll(async()=>{const r=await spotlight.boundingBox(),c=await page.locator('.st-key-guided_tour').boundingBox();return !!r && r.y>=20 && (r.y+r.height<=c.y || r.x+r.width<=c.x);}).toBe(true);
   const ring=await spotlight.boundingBox(),card=await page.locator('.st-key-guided_tour').boundingBox();
-  expect(ring.y).toBeGreaterThanOrEqual(20);
+  expect(ring.y).toBeGreaterThanOrEqual((await page.locator(".st-key-top_toolbar").boundingBox()).height);
   expect(ring.y+ring.height<=card.y || ring.x+ring.width<=card.x).toBeTruthy();
   if(step===3)await screen(page,'tour-protect.png');
   await page.getByRole('button',{name:step===6?'Finish tour':'Next step',exact:true}).click();
  }
  await expect(spotlight).toHaveCount(0);
  await expect(page.locator('.st-key-guided_tour')).toHaveCount(0);
+});
+
+test('guided demo visibly starts, advances and restarts',async({page},info)=>{
+ await ready(page);
+ const launch=async()=>{
+  if(info.project.name==='mobile'){
+   await page.getByRole('button',{name:'ReadyRelief home',exact:true}).click();
+   await page.getByRole('button',{name:'Meet the demo household',exact:true}).click();
+  }else await page.getByRole('button',{name:'Start guided demo',exact:true}).click();
+ };
+ await launch();
+ const welcome=page.locator('.st-key-tour_welcome');
+ await expect(welcome).toBeInViewport();
+ await expect(welcome).toContainText('Meet the Rivera household.');
+ await expect(welcome).toContainText('No live requests or recovery changes made.');
+ await expect(page.getByRole('button',{name:'Start demo tour',exact:true})).toBeInViewport({ratio:1});
+ await screen(page,'demo-welcome.png');
+ await page.getByRole('button',{name:'Start demo tour',exact:true}).click();
+ for(const [index,name] of ['Protect','Respond','Recover'].entries()){
+  await expect(page.locator('.st-key-guided_tour')).toContainText(`STEP ${index+1} OF 3 · ${name.toUpperCase()}`);
+  await expect(page.getByTestId('stApp')).not.toHaveAttribute('data-test-script-state','running');
+  await expect(page.getByTestId('rr-tour-spotlight')).toBeVisible();
+  await page.getByRole('button',{name:'Locate control',exact:true}).click();
+  await expect(page.getByRole('status').filter({hasText:`Step ${index+1} control located.`})).toBeVisible();
+  await page.getByRole('button',{name:index===2?'Finish tour':'Next step',exact:true}).click();
+ }
+ await expect(page.locator('.st-key-guided_tour')).toHaveCount(0);
+ await launch();
+ await expect(welcome).toBeInViewport();
+ await page.getByRole('button',{name:'End tour',exact:true}).click();
+ await expect(welcome).toHaveCount(0);
 });
 
 test('sidebar animates horizontally and reverses without losing its control',async({page},info)=>{
@@ -135,4 +188,125 @@ test('sparkle launcher and chat controls fit the viewport',async({page})=>{
  await expect(panel).toBeVisible();
  await page.getByRole('button',{name:'Close chat',exact:true}).click();
  await expect(launcher).toBeVisible();
+});
+
+test('header and branding stay fixed while the page scrolls',async({page},info)=>{
+ await ready(page);
+ const header=page.locator('.st-key-top_toolbar'),brand=page.locator('.st-key-header_brand');
+ const before=await header.boundingBox();
+ await page.getByTestId('stMain').evaluate(e=>e.scrollTop=e.scrollHeight);
+ await expect(header).toBeInViewport();await expect(brand).toBeInViewport();
+ expect((await header.boundingBox()).y).toBe(before.y);
+ expect(before.y).toBe(0);
+ await expect(page.getByRole('combobox',{name:'Search menu',exact:true})).toBeInViewport();
+ if(info.project.name!=='mobile'){
+  expect((await page.getByTestId('stSidebar').boundingBox()).y).toBeGreaterThanOrEqual(before.height);
+  await page.locator('.st-key-toolbar_toggle button').click();
+  await expect(brand).toBeInViewport();expect((await header.boundingBox()).y).toBe(0);
+ }
+ await screen(page,'header-scrolled.png');
+});
+test('narration starts automatically and mute persists between steps',async({page})=>{
+ // Test doubles verify selection and orchestration, not perceived voice quality.
+ await page.addInitScript(()=>{
+  window.__spoken=[];
+  window.SpeechSynthesisUtterance=class {constructor(text){this.text=text;}};
+  Object.defineProperty(window,'speechSynthesis',{value:{
+   getVoices:()=>[{name:'Google English',voiceURI:'google',lang:'en-US',localService:false},{name:'Microsoft David - English (United States)',voiceURI:'david',lang:'en-US',localService:true},{name:'Microsoft Zira - English (United States)',voiceURI:'zira',lang:'en-US',localService:true}],
+   cancel(){},addEventListener(){},removeEventListener(){},
+   speak(u){window.__spoken.push({voice:u.voice.voiceURI,text:u.text});u.onstart?.();},speaking:true
+  }});
+ });
+ await ready(page);
+ await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();
+ await page.getByRole('button',{name:'Start exploring',exact:true}).click();
+ const voices=page.getByRole('combobox',{name:'Narrator voice',exact:true});
+ await expect(voices).toBeVisible();
+ await expect(voices).toContainText('Male');await expect(voices).toContainText('Female');
+ await expect.poll(()=>page.evaluate(()=>window.__spoken.at(-1)?.voice)).toBe('david');
+ await expect(voices).toContainText('On-device');await expect(voices).toContainText('Online');
+ await voices.selectOption('zira');
+ await expect.poll(()=>page.evaluate(()=>window.__spoken.at(-1)?.voice)).toBe('zira');
+ await page.getByRole('button',{name:'Next step',exact:true}).click();
+ await expect(voices).toHaveValue('zira');
+ await voices.selectOption('david');
+ await expect.poll(()=>page.evaluate(()=>window.__spoken.at(-1)?.voice)).toBe('david');
+ await page.getByRole('button',{name:'Mute narration',exact:true}).click();
+ const count=await page.evaluate(()=>window.__spoken.length);
+ await page.getByRole('button',{name:'Next step',exact:true}).click();
+ await expect(page.locator('.st-key-guided_tour')).toContainText('STEP 3');
+ await expect(page.getByTestId('rr-tour-spotlight')).toBeVisible();
+ await expect(page.getByRole('button',{name:'Unmute narration',exact:true})).toHaveAttribute('aria-pressed','true');
+ expect(await page.evaluate(()=>window.__spoken.length)).toBe(count);
+ await voices.selectOption('google');
+ await expect(page.locator('[data-voice-info]')).toContainText('processed by the voice provider');
+ expect(await page.evaluate(()=>window.__spoken.length)).toBe(count);
+ await page.getByRole('button',{name:'Unmute narration',exact:true}).click();
+ await expect.poll(()=>page.evaluate(()=>window.__spoken.at(-1)?.voice)).toBe('google');
+ await page.getByRole('button',{name:'Mute narration',exact:true}).click();
+ await page.getByRole('button',{name:'End tour',exact:true}).click();
+ await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();
+ await page.getByRole('button',{name:'Start exploring',exact:true}).click();
+ await expect.poll(()=>page.evaluate(()=>window.__spoken.length)).toBeGreaterThan(count+1);
+});
+
+test('delayed voices and blocked autoplay provide a working retry',async({page})=>{
+ await page.addInitScript(()=>{
+  window.__availableVoices=[];window.__voiceListener=null;window.__attempts=0;
+  window.SpeechSynthesisUtterance=class {constructor(text){this.text=text;}};
+  Object.defineProperty(window,'speechSynthesis',{value:{
+   getVoices:()=>window.__availableVoices,
+   addEventListener(event,fn){if(event==='voiceschanged')window.__voiceListener=fn;},
+   removeEventListener(){window.__voiceListener=null;},cancel(){},speaking:false,
+   speak(u){window.__attempts++;if(window.__attempts===1)u.onerror?.({error:'not-allowed'});else u.onstart?.();}
+  }});
+ });
+ await ready(page);
+ await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();
+ await page.getByRole('button',{name:'Start exploring',exact:true}).click();
+ await expect(page.getByTestId('rr-tour-spotlight')).toBeVisible();
+ expect(await page.evaluate(()=>window.__attempts)).toBe(0);
+ await page.evaluate(()=>{window.__availableVoices=[{name:'Microsoft Zira',voiceURI:'zira',lang:'en-US',localService:true}];window.__voiceListener();});
+ await expect(page.locator('[data-status]')).toContainText('blocked or could not play');
+ await page.getByRole('button',{name:'Unmute narration',exact:true}).click();
+ await expect(page.locator('[data-status]')).toContainText('Reading this step');
+ expect(await page.evaluate(()=>window.__attempts)).toBe(2);
+ await page.getByRole('button',{name:'End tour',exact:true}).click();
+});
+
+test('header controls share one centerline',async({page},info)=>{
+ await ready(page);
+ const selectors=info.project.name==='mobile'
+  ? ['.st-key-mobile_nav button','.st-key-nav_search [data-testid="stTextInputRootElement"]','.st-key-theme_toggle button','.st-key-quick_tour button']
+  : ['.rr-brand','.st-key-toolbar_toggle button','.st-key-nav_search [data-testid="stTextInputRootElement"]','.st-key-theme_toggle button','.st-key-quick_tour button'];
+ const centers=[];
+ for(const selector of selectors){const control=page.locator(selector+':visible').first();await expect(control).toBeVisible();const box=await control.boundingBox();centers.push(box.y+box.height/2);}
+ expect(Math.max(...centers)-Math.min(...centers)).toBeLessThanOrEqual(3);
+});
+
+test('brand returns home with pointer and keyboard',async({page})=>{
+ await ready(page);
+ await page.getByRole('button',{name:'Explore your next step',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Show simulated alert',exact:true})).toBeVisible();
+ const brand=page.getByRole('button',{name:'ReadyRelief home',exact:true});
+ await brand.click();
+ await expect(page.getByRole('button',{name:'Explore your next step',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Explore your next step',exact:true}).click();
+ await expect(page.getByRole('button',{name:'Show simulated alert',exact:true})).toBeVisible();
+ await brand.focus();await brand.press('Enter');
+ await expect(page.getByRole('button',{name:'Explore your next step',exact:true})).toBeVisible();
+});
+
+test('branded loading indicator follows processing state',async({page})=>{
+ await ready(page);
+ const indicator=page.locator('.st-key-app_loading');
+ await expect(indicator).toBeHidden();
+ // Deterministic visual state coverage; real server transitions are checked separately.
+ await page.getByTestId('stApp').evaluate(e=>e.setAttribute('data-test-script-state','running'));
+ await expect(indicator).toBeVisible();
+ await expect(indicator).toContainText('Working on your request');
+ await expect(indicator).toHaveCSS('pointer-events','none');
+ await expect(indicator).toHaveScreenshot('loading-indicator.png');
+ await page.getByTestId('stApp').evaluate(e=>e.setAttribute('data-test-script-state','notRunning'));
+ await expect(indicator).toBeHidden();
 });

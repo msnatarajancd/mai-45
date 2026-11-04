@@ -1,4 +1,5 @@
 """Shared navigation and product-guide knowledge; no emergency advice corpus."""
+import re
 PAGES = {
     'Home': ('home', 'start overview welcome'),
     'Protect': ('shield', 'prepare preparation weather alerts hurricane guardian forecast'),
@@ -19,6 +20,33 @@ TOUR = [
 GUIDE = '\n'.join(f'{page}: {title}. {text} {hint}' for page,title,text,hint in TOUR) + '\nEvidence: M2 live county alerts and M3 reviewed CDC recovery retrieval are connected. M1 provides constrained Qwen explanations with citations. Reviewed resource directory and M4 rules remain pending. M5 recovery is connected. No dispatch, real-time shelter inventory, safety assessment or benefit eligibility decisions.'
 
 
+# Shared with the browser suggestions: the route vocabulary and normalization rules
+# originate here so chat and the top search cannot maintain different alias lists.
+ROUTE_NORMALIZERS = [
+    [r'[.!?]+$', ''],
+    [r'^(?:(?:can|could|would) you (?:please )?|please )', ''],
+    [r'^(?:open|go to|take me to|navigate to|switch to)\s+(?:the\s+)?', ''],
+    [r'\s+(?:page|screen|section|workspace)(?:\s+please)?$', ''],
+    [r'\s+please$', ''],
+]
+
+
+def navigation_query(query):
+    query = query.casefold().strip()
+    for pattern, replacement in ROUTE_NORMALIZERS:
+        query = re.sub(pattern, replacement, query).strip()
+    return query
+
+
 def search_pages(query):
-    tokens = query.casefold().split()
+    tokens = navigation_query(query).split()
+    if not tokens:
+        return []
     return [page for page, (_, words) in PAGES.items() if all(t in (page+' '+words).casefold() for t in tokens)]
+
+
+def chat_routes(query):
+    normalized = navigation_query(query)
+    if re.match(r'^(how|what|why|where|when|which|who|can|could|would|should|do|does|did|is|are|explain|help)\b', normalized):
+        return []
+    return search_pages(query)

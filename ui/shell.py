@@ -1,7 +1,7 @@
 """Compact top toolbar and a shared floating/full-screen assistant."""
 import streamlit as st
 from ui.capabilities import search_pages, PAGES
-from ui.components import navigate
+from ui.components import navigate, icon
 from ui.tour import start_tour
 
 
@@ -10,11 +10,21 @@ def toggle_theme():
 
 
 
+def open_home():
+    navigate('Home')
+    st.session_state['nav_search'] = ''
+
+
 def toolbar():
     if st.session_state.pop('_clear_nav_search',False):
         st.session_state['nav_search']=''
     st.session_state.setdefault('appearance','Bright')
     with st.container(key='top_toolbar'):
+        with st.container(key='app_loading'):
+            st.markdown('<div class="rr-loading" role="status" aria-live="polite"><span class="rr-loading-mark">'+icon('shield')+'</span><div><strong>ReadyRelief</strong><span>Working on your request…</span></div></div>', unsafe_allow_html=True)
+        with st.container(key='header_brand'):
+            st.markdown('<div class="rr-brand"><span class="rr-brand-mark">'+icon('shield')+'</span><div>ReadyRelief<small>A clearer next step.</small></div></div>',unsafe_allow_html=True)
+            st.button('ReadyRelief home', key='brand_home', width='stretch', on_click=open_home)
         title, search, theme, help_control = st.columns([.65,3,.28,.28],vertical_alignment='center',gap='small')
         with title.container(key='desktop_navigation'):
             from ui.navigation_component import render_toggle
@@ -25,7 +35,7 @@ def toolbar():
                 for page in PAGES:
                     st.button(page,key='mobile_nav_'+page,width='stretch',on_click=navigate,args=(page,))
 
-        search.text_input('Search menu',placeholder='Search anything…',help='Suggestions appear as you type. Use arrow keys and Enter, or select a screen.',key='nav_search',label_visibility='collapsed',icon=':material/search:')
+        search.text_input('Search menu',placeholder='Find a screen…',help='Navigation only. Try weather, tasks, or open household. Use chat for questions.',key='nav_search',label_visibility='collapsed',icon=':material/search:')
         with search:
             from ui.search_component import render_suggestions
             render_suggestions()
@@ -44,7 +54,7 @@ def toolbar():
                         st.session_state['page']=page
                         st.rerun()
         else:
-            st.caption('No matching screens. Try tasks, weather, family or chat.')
+            st.caption('No matching screens. For questions, use Ask ReadyRelief.')
 
 
 def render_dock():

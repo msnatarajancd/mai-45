@@ -15,19 +15,31 @@ def test_dock_expand_minimize_preserves_conversation(app):
     assert app.session_state['page']=='Home'
     next(r for r in app.radio if r.label=='Assistant mode').set_value('Local guide · no AI').run()
     app.chat_input[0].set_value('open Recover').run()
-    pending=app.session_state['assistant_pending']
+    assert app.session_state['page']=='Recover'
+    assert 'assistant_pending' not in app.session_state
+    assert not app.session_state['chat_open']
+    messages=[message.copy() for message in app.session_state['assistant_messages']]
+    assert [(message['role'],message['content']) for message in messages]==[
+        ('user','open Recover'),('assistant','Opened Recover.')]
+    button(app,'Ask ReadyRelief').click().run()
+    assert app.session_state['assistant_messages']==messages
     button(app,'Expand chat').click().run()
     assert app.session_state['page']=='Assistant'
-    assert app.session_state['assistant_pending']==pending
+    assert app.session_state['assistant_messages']==messages
+    assert 'assistant_pending' not in app.session_state
     button(app,'Minimize chat').click().run()
-    assert app.session_state['page']=='Home'
-    assert app.session_state['assistant_pending']==pending
+    assert app.session_state['page']=='Recover'
+    assert app.session_state['chat_open']
+    assert app.session_state['assistant_messages']==messages
+    assert 'assistant_pending' not in app.session_state
     button(app,'Close chat').click().run()
     assert not app.session_state['chat_open']
+    assert app.session_state['assistant_messages']==messages
     button(app,'Ask ReadyRelief').click().run()
     assert next(r for r in app.radio if r.label=='Assistant mode').value=='Local guide · no AI'
     assert not app.exception
-    assert app.session_state['assistant_pending']==pending
+    assert app.session_state['assistant_messages']==messages
+    assert 'assistant_pending' not in app.session_state
 
 def test_dark_theme_preserves_household_and_emergency_access(app):
     button(app,'Switch to dark mode').click().run()

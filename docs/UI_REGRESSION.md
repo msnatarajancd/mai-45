@@ -30,3 +30,31 @@ Icon-only controls retain accessible names and are excluded from visible-label c
 The desktop/tablet sidebar uses one toolbar button and a 240ms horizontal transition; reduced
 motion disables the transition. No live weather, model generation or recovery writes are used
 by these presentation tests. These checks do not certify every possible populated task or chat state.
+
+
+Header checks verify logo/search visibility after scrolling and sidebar collapse. Tour checks
+cover a centered welcome card, a larger step panel, header clearance, and browser voice selection.
+David/Mark (male) and Zira (female) were detected on the development Windows machine. Available
+voices vary by browser/device; the app lists actual English voices and remembers the user's choice
+within the tab. On-device voices are preferred by default, then natural/neural voices. Narration
+starts automatically when guided steps begin. Mute persists across steps; a new tour starts with
+narration enabled. If autoplay fails, the UI provides an unmute/retry action. Voices are labelled
+On-device or Online using the browser's `localService` property. Online voices may send the fixed
+tour narration text to the voice provider; no microphone or household data is used. No separate
+speech API is configured. Voice orchestration tests use labelled
+browser API test doubles, which do not certify perceived voice quality.
+Automated Playwright browsers launch with `--mute-audio` so UI checks do not play through
+the developer's speakers. Speech event checks remain active; audible checks must be deliberate.
+
+The header brand is a keyboard-accessible Home action that preserves the session and clears
+navigation search. The branded loading indicator follows Streamlit's actual `running` state,
+uses a short reveal delay to avoid flashing on very quick work, and never intercepts clicks.
+For a real slow-request check, start `python -m streamlit run tests/fixtures/loading_app.py --server.port=8502`
+in another terminal, then run `node tests/loading_browser.cjs`.
+The fixture deliberately waits two seconds and makes no external requests.
+
+“Start guided demo” loads the fictional Rivera household and opens a visible welcome panel,
+then a three-step Protect → Respond → Recover guide. It shares the narrator and control
+highlighting with the six-step product tour. Regression checks cover both demo entry points,
+each step, finishing, restarting, and switching back to the product tour. Loading a demo
+does not request live alerts, create recovery records, or clear an emergency state.

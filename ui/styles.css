@@ -253,3 +253,74 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
 [data-testid="stPopoverBody"] button:hover {background:var(--rr-selected);color:var(--rr-ink);}
 .stApp [data-testid="stSelectbox"] input[role="combobox"] {border:0;}
 .stApp [data-testid="stSelectbox"] button {background:var(--rr-soft);color:var(--rr-ink);border:0;}
+
+/* One persistent site header, independent of the sliding navigation rail. */
+:root {--rr-header-height:80px;}
+.st-key-top_toolbar {position:fixed;inset:0 0 auto 0;width:100% !important;height:var(--rr-header-height);box-sizing:border-box;padding:16px 24px 16px 264px;margin:0;background:var(--rr-bg);border-bottom:1px solid var(--rr-border);z-index:1000;box-shadow:0 2px 12px var(--rr-shadow);}
+.st-key-header_brand {position:absolute;left:20px;top:18px;width:212px !important;}
+.st-key-header_brand .rr-brand {margin:0;}
+.block-container {padding-top:calc(var(--rr-header-height) + 24px) !important;}
+[data-testid="stSidebar"] {top:var(--rr-header-height) !important;height:calc(100dvh - var(--rr-header-height)) !important;min-height:0 !important;}
+[data-testid="stSidebarHeader"] {height:12px !important;min-height:12px !important;}
+[data-testid="stSidebar"] .stButton button {min-height:50px;}
+[data-testid="stSidebar"] .stButton button p {font-size:16px !important;line-height:1.4;}
+[data-testid="stSidebar"] .stButton button [data-testid="stIconMaterial"] {font-size:21px !important;}
+[data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {font-size:13px;}
+[data-testid="stMain"] {scroll-padding-top:calc(var(--rr-header-height) + 24px);}
+/* Tour targets reserve space for their step marker beneath the header. */
+.st-key-home_card_Protect,.st-key-household_form_target [data-testid="stTextInput"],.st-key-alert_controls [data-testid="stRadio"],.st-key-assistance_controls [data-testid="stRadio"],.st-key-recovery_workspace [role="combobox"],.st-key-full_chat [data-testid="stChatInput"] {scroll-margin-top:40px;}
+@media(max-width:700px) {
+ :root {--rr-header-height:112px;}
+ .st-key-top_toolbar {padding:56px 16px 12px;}
+ .st-key-header_brand {left:16px;top:10px;width:auto !important;}
+ .st-key-header_brand .rr-brand {font-size:18px;gap:8px;}
+ .st-key-header_brand .rr-brand small {display:none;}
+ .st-key-header_brand .rr-icon {width:30px;height:30px;border-radius:9px;}
+ .st-key-header_brand .rr-icon svg {width:19px;height:19px;}
+}
+
+/* A visible introduction, followed by a larger nonblocking step panel. */
+.st-key-tour_welcome {position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:540px !important;max-width:calc(100vw - 32px);max-height:calc(100dvh - var(--rr-header-height) - 32px);overflow:auto;padding:28px;border:2px solid var(--rr-accent);border-radius:24px;background:var(--rr-surface);box-shadow:0 20px 90px var(--rr-shadow);z-index:1002;}
+.st-key-tour_welcome h1 {font-size:2rem !important;}
+.st-key-guided_tour {width:420px !important;padding:22px;border-top:4px solid var(--rr-accent);max-height:min(680px,75dvh);}
+.st-key-guided_tour p {font-size:.95rem;line-height:1.5;}
+.st-key-guided_tour h3 {font-size:1.3rem !important;}
+.stApp:has(.st-key-tour_welcome) .st-key-chat_launcher {display:none;}
+@media(max-width:700px) {
+ .st-key-tour_welcome {top:calc(var(--rr-header-height) + 220px);transform:translateX(-50%);padding:20px;max-height:calc(100dvh - var(--rr-header-height) - 236px);}
+ .st-key-guided_tour {width:calc(100vw - 16px) !important;padding:14px;max-height:43dvh;}
+}
+.st-key-top_toolbar {gap:0 !important;}
+.st-key-header_brand .rr-brand {line-height:1.1;}
+.st-key-header_brand .rr-brand-mark {display:flex;}
+
+/* A single header rhythm: brand and controls share a 44px centerline. */
+@media(min-width:701px) {
+ .st-key-top_toolbar {padding:18px 24px 18px 248px;}
+ .st-key-header_brand {top:20px;}
+ .st-key-header_brand .rr-brand small {display:none;}
+ .st-key-top_toolbar [data-testid="stColumn"]:first-child {flex:0 0 152px !important;}
+}
+.st-key-nav_search [data-testid="stTextInputRootElement"] {height:44px;min-height:44px;}
+.st-key-theme_toggle button,.st-key-quick_tour button {background:transparent;border-color:transparent;}
+.st-key-theme_toggle button:hover,.st-key-quick_tour button:hover {background:var(--rr-soft);}
+
+/* Keep the existing brand artwork with a native, keyboard-accessible Home action. */
+.st-key-header_brand .st-key-brand_home {position:absolute;inset:0;width:100% !important;height:44px;}
+.st-key-brand_home button {width:100%;height:44px;min-height:44px;border:0;background:transparent !important;box-shadow:none !important;border-radius:10px;cursor:pointer;}
+.st-key-brand_home button [data-testid="stMarkdownContainer"] {position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+.st-key-header_brand:has(.st-key-brand_home button:hover) .rr-brand {color:var(--rr-link);}
+
+/* Actual Streamlit processing state drives this nonblocking branded indicator. */
+.st-key-app_loading {display:none;position:fixed;top:calc(var(--rr-header-height) + 10px);right:24px;width:auto !important;z-index:1003;pointer-events:none;}
+[data-testid="stApp"][data-test-script-state="running"][data-test-connection-state="CONNECTED"] .st-key-app_loading {display:block;}
+.rr-loading {display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--rr-surface);color:var(--rr-ink);border:1px solid var(--rr-border);border-radius:16px;box-shadow:0 8px 24px var(--rr-shadow);opacity:0;animation:rr-loading-reveal 1ms 150ms forwards;}
+.rr-loading strong {font-size:14px;display:block;}
+.rr-loading div>span {font-size:13px;display:block;color:var(--rr-muted);}
+.rr-loading-mark {position:relative;display:flex;}
+.rr-loading-mark .rr-icon {width:32px;height:32px;border-radius:50%;}
+.rr-loading-mark::after {content:"";position:absolute;inset:-4px;border:2px solid transparent;border-top-color:var(--rr-accent);border-right-color:var(--rr-accent);border-radius:50%;animation:rr-loading-spin 900ms linear infinite;}
+@keyframes rr-loading-spin {to {transform:rotate(360deg);}}
+@keyframes rr-loading-reveal {to {opacity:1;}}
+@media(max-width:700px) {.st-key-app_loading {right:12px;max-width:calc(100vw - 24px);}}
+@media(prefers-reduced-motion:reduce) {.rr-loading {animation:none;opacity:1;}.rr-loading-mark::after {animation:none;}}
