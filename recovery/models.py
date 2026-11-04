@@ -1,6 +1,7 @@
 from datetime import date, datetime, timezone
 from enum import StrEnum
 from uuid import UUID, uuid4
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -35,6 +36,7 @@ class RecoveryRecords(BaseModel):
     """One versioned aggregate, including damage IDs, bound to a single case."""
     model_config = ConfigDict(extra='forbid')
     case_id: UUID
+    reported_county: Literal['Miami-Dade'] | None = None
     version: int = Field(default=0, ge=0, strict=True)
     household: HouseholdRecoveryDetails = Field(default_factory=HouseholdRecoveryDetails)
     damage_records: list[DamageRecord] = Field(default_factory=list, max_length=100)

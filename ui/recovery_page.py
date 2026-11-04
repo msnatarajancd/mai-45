@@ -13,6 +13,8 @@ from recovery.models import (RecoveryIntake, RecoveryPlan, TaskStatus, RecoveryR
 from recovery.insurance import insurance_discussion_summary
 from recovery.reassessment import preview_reassessment, ReassessmentPreview
 from ui.components import heading
+from recovery.extraction_consumer import (ExtractionReview, CHOICES, prepare_review,
+    require_current, selected_changes, revision_for_selection, accept_review)
 
 
 NEEDS = ['Temporary housing', 'Water and household supplies', 'Transportation', 'Damage documentation']
@@ -28,6 +30,21 @@ def repository():
 def clear_view():
     from ui.state import clear_recovery_view
     clear_recovery_view(st.session_state)
+
+
+def guard_pending_danger():
+    """Fail closed before rendering/each write; the global emergency workflow retries.
+
+    Do not clear the pending report here. Only successful danger persistence may
+    acknowledge it. Invalidating transient approvals prevents replay after reruns.
+    """
+    if not (st.session_state.get('rr_pending_danger') or st.session_state.get('rr_emergency')):
+        return
+    for key in ('rr_extraction_review', 'rr_extraction_ready', 'rr_revision', 'rr_notice'):
+        st.session_state.pop(key, None)
+    st.session_state['rr_emergency'] = True
+    st.rerun()
+
 
 def intake_fields(prefix, defaults=None):
     default_needs = defaults.household_recovery_needs if defaults else []
@@ -58,6 +75,14 @@ def intake_fields(prefix, defaults=None):
 
 
 def new_case(repo):
+    guard_pending_danger()
+    seed = None
+    ready = st.session_state.get('rr_extraction_ready')
+    if ready and st.session_state.get('rr_extraction_review'):
+        candidate = ExtractionReview.model_validate_json(st.session_state['rr_extraction_review'])
+        if candidate.previous_case is None and ready['review_id'] == candidate.review_id:
+            seed = candidate
+    defaults = selected_changes(seed, ready['selected'], ready['corrections'])[0] if seed else None
     a, b = st.columns([1.3, 1], gap='large')
     with a:
         st.subheader('Tell us what has changed.')
@@ -68,13 +93,25 @@ def new_case(repo):
             st.session_state['rr_emergency'] = True
             st.rerun()
         with st.form('rr_intake'):
-            fields = intake_fields('new_')
+            fields = intake_fields('new_'+seed.review_id if seed else 'new_', defaults)
+            seed_confirmed = False
+            if seed:
+                st.caption('The intake is prefilled from your selected review. Household, county and damage changes shown in that review will also be saved only when you confirm and create the case.')
+                seed_confirmed = st.checkbox('I confirm the selected household and damage details with this intake')
             submitted = st.form_submit_button('Create draft plan', type='primary')
         if submitted:
             if danger != DANGER[1]:
                 st.error('Select an explicit danger assessment before creating a case. Nothing has been saved.')
                 return
-            case = start_recovery_case(RecoveryIntake(**fields, immediate_danger=False), repo)
+            intake = RecoveryIntake(**fields, immediate_danger=False)
+            guard_pending_danger()
+            if seed:
+                case = accept_review(repo, seed, ready['selected'], corrections=ready['corrections'],
+                    explicitly_confirmed=seed_confirmed, safety_answer=False, reviewed_intake=intake)
+                st.session_state.pop('rr_extraction_review', None)
+                st.session_state.pop('rr_extraction_ready', None)
+            else:
+                case = start_recovery_case(intake, repo)
             clear_view()
             st.session_state['rr_case_id'] = str(case.case_id)
             st.session_state['rr_draft'] = create_demo_draft_plan(case).model_dump_json()
@@ -93,6 +130,7 @@ def new_case(repo):
                 case = repo.get_case(UUID(case_id.strip()))
                 if not case:
                     raise ValueError('No saved case was found on this machine.')
+                guard_pending_danger()
                 clear_view()
                 st.session_state['rr_case_id'] = str(case.case_id)
                 st.rerun()
@@ -109,6 +147,7 @@ def evidence(task):
 
 
 def planning(repo, case):
+    guard_pending_danger()
     st.subheader('A manageable plan. Ready for your review.')
     st.info('SIMULATED RECOVERY · These organization steps are not official guidance. Review every task before approving.')
     if 'rr_draft' not in st.session_state:
@@ -130,8 +169,11 @@ def planning(repo, case):
         if not approved:
             st.error('Review every task and check the approval box first. The draft is not active.')
         else:
+            guard_pending_danger()
             if repo.get_plan(draft.plan_id) is None:
+                guard_pending_danger()
                 repo.save_draft_plan(draft)
+            guard_pending_danger()
             repo.approve_plan(draft.plan_id)
             clear_view()
             st.session_state['rr_notice'] = 'Plan approved and saved locally. You can now track your next steps.'
@@ -140,6 +182,7 @@ def planning(repo, case):
 
 
 def reassessment(repo, case, plan):
+    guard_pending_danger()
     with st.expander('Circumstances changed? Review an update'):
         st.caption('Your accepted plan stays active until you approve a revision. Existing tasks and completed progress are retained.')
         danger = st.selectbox('Updated immediate danger assessment', DANGER, key='rr_update_danger')
@@ -180,6 +223,7 @@ def reassessment(repo, case, plan):
                 st.caption(task.explanation)
             st.success(f'{len(preview.completed_tasks)} completed tasks preserved. No existing tasks will be removed.')
             if st.button('Approve this revision', type='primary'):
+                guard_pending_danger()
                 repo.approve_reassessment(preview, explicitly_approved=True)
                 st.session_state.pop('rr_revision', None)
                 st.session_state['rr_notice'] = 'Revision approved. Your earlier progress and plan history are preserved.'
@@ -187,6 +231,7 @@ def reassessment(repo, case, plan):
 
 
 def dashboard(repo, case, plan):
+    guard_pending_danger()
     version_key = 'rr_displayed_version:' + str(plan.plan_id)
     rendered_version = st.session_state.get(version_key, plan.progress_version)
     completed = sum(t.status == TaskStatus.COMPLETED for t in plan.proposed_tasks)
@@ -213,6 +258,7 @@ def dashboard(repo, case, plan):
                 options = list(TaskStatus)
                 status = st.selectbox('Status · ' + task.title, options, index=options.index(task.status), format_func=lambda s:s.value.replace('_', ' ').title(), key=f'rr_progress:{task.task_id}:{plan.progress_version}')
                 if st.form_submit_button('Save progress', width='stretch'):
+                    guard_pending_danger()
                     repo.update_task_status(plan.plan_id, task.task_id, status, expected_progress_version=rendered_version)
                     st.session_state['rr_notice'] = 'Progress saved locally.'
                     st.rerun()
@@ -232,6 +278,7 @@ def dashboard(repo, case, plan):
 
 
 def insurance_preview(repo, case):
+    guard_pending_danger()
     st.subheader('Prepare for an insurance discussion')
     st.caption('Only confirmed saved information is included. Coverage has not been determined and no claim has been submitted.')
     saved_case = repo.get_case(case.case_id)
@@ -245,6 +292,7 @@ def insurance_preview(repo, case):
 
 
 def recovery_records(repo, case):
+    guard_pending_danger()
     st.subheader('Household details and damage records')
     st.caption('Use fictional information only. Save only details you have reviewed. Unknown values stay unknown. No photographs are uploaded here.')
     current = repo.get_recovery_records(case.case_id)
@@ -268,6 +316,8 @@ def recovery_records(repo, case):
         options = ['Unknown', 'Yes', 'No']
         insurance = st.selectbox('Would you like insurance preparation help?', options,
                                 index=options.index({None: 'Unknown', True: 'Yes', False: 'No'}[h.wants_insurance_help]))
+        county = st.selectbox('Confirmed county (optional)', ['Unknown', 'Miami-Dade'],
+                              index=1 if snapshot.reported_county else 0)
         confirmed = st.checkbox('I confirm these household details')
         save = st.form_submit_button('Save confirmed household details')
     if save:
@@ -284,6 +334,8 @@ def recovery_records(repo, case):
             proposal.household = HouseholdRecoveryDetails(children=count(children), adults=count(adults),
                 reported_property_damage=damage.strip() or None,
                 wants_insurance_help={'Unknown': None, 'Yes': True, 'No': False}[insurance])
+            proposal.reported_county = None if county == 'Unknown' else county
+            guard_pending_danger()
             saved = repo.save_recovery_records(proposal, expected_version=snapshot.version, explicitly_confirmed=True)
             st.session_state[snapshot_key] = saved.model_dump_json()
             st.session_state['rr_notice'] = 'Confirmed household details saved.'
@@ -319,6 +371,7 @@ def recovery_records(repo, case):
             proposal.damage_records = [updated if old.damage_id == updated.damage_id else old for old in proposal.damage_records]
             if item is None:
                 proposal.damage_records.append(updated)
+            guard_pending_danger()
             saved = repo.save_recovery_records(proposal, expected_version=snapshot.version, explicitly_confirmed=True)
             st.session_state[snapshot_key] = saved.model_dump_json()
             st.session_state['rr_notice'] = 'Confirmed damage record saved.'
@@ -333,6 +386,7 @@ def recovery_landing():
     with st.form('rr_start_description'):
         description = st.text_area("Describe what's happening or what you need help with.", max_chars=2500)
         submitted = st.form_submit_button('Help me get started', type='primary')
+    st.caption('AI recovery extraction is not connected yet. You can continue with structured input; emergency access never requires AI.')
     if submitted:
         from services.assistant import is_danger
         explicit_danger = re.search(r"\b(?:i am|i'm|we are|we're) (?:in )?danger\b", description, re.I)
@@ -372,13 +426,133 @@ def assistance():
     grounded_guidance('recover')
 
 
+def stage_extraction_result(state, repo, result, message, *, case_snapshot=None,
+                            records_snapshot=None, plan_snapshot=None):
+    """Future M1 delivery boundary. Never invokes extraction or writes recovery data."""
+    if state.get('rr_pending_danger') or state.get('rr_emergency'):
+        raise ValueError('recovery proposals are paused while danger is pending or reported')
+    case_id = state.get('rr_case_id')
+    expected_id = str(case_snapshot.case_id) if case_snapshot else None
+    if case_id != expected_id:
+        raise ValueError('stale extraction: active case changed or original snapshots are missing')
+    review = prepare_review(result, message, case=case_snapshot,
+                            records=records_snapshot, plan=plan_snapshot)
+    require_current(repo, review)
+    state['rr_extraction_review'] = review.model_dump_json()
+    state.pop('rr_extraction_ready', None)
+
+
+def extraction_confirmation(repo):
+    guard_pending_danger()
+    raw = st.session_state.get('rr_extraction_review')
+    if not raw:
+        return
+    review = ExtractionReview.model_validate_json(raw)
+    if st.button('Reject proposal and use structured input'):
+        st.session_state.pop('rr_extraction_review', None)
+        st.session_state.pop('rr_extraction_ready', None)
+        st.rerun()
+    expected_id = str(review.previous_case.case_id) if review.previous_case else None
+    if st.session_state.get('rr_case_id') != expected_id:
+        st.warning('This proposal belongs to a different recovery context. Reject it and request a fresh proposal.')
+        return
+    try:
+        require_current(repo, review)
+    except ValueError:
+        st.warning('Saved information changed. Reject this stale proposal and request a fresh one. Structured input remains available.')
+        return
+    status = review.result['status']
+    if status == 'DANGER_DETECTED':
+        st.session_state['rr_emergency'] = True
+        st.rerun()
+    if status in {'UNAVAILABLE', 'ERROR'}:
+        st.warning('Extraction is unavailable or invalid. No proposed information was saved. Use the structured input below.')
+        return
+    st.subheader("Here's what I understood. Please review.")
+    st.caption('Nothing is saved automatically. Select changes, correct them, and review the preview before confirming.')
+    if review.previous_case:
+        st.caption('Unmentioned saved information and existing damage records will be preserved.')
+    for question in review.result['clarification_questions']:
+        st.text(question)
+    for name in review.unresolved:
+        st.warning(name.replace('_', ' ').capitalize() + ' remains unresolved. Use structured input to clarify it.')
+    selected, corrections = [], {}
+    with st.form('rr_extraction_edit:' + review.review_id):
+        for name, value in review.proposed.items():
+            label = ('Damaged item ' + name.split(':')[1] if name.startswith('damage:') else name.replace('_', ' ').capitalize())
+            if st.checkbox('Include ' + label, value=True, key=review.review_id+':select:'+name):
+                selected.append(name)
+            if name in CHOICES and name != 'household_recovery_needs':
+                corrections[name] = st.selectbox(label, CHOICES[name], index=CHOICES[name].index(value), key=review.review_id+':value:'+name)
+            elif name == 'household_recovery_needs':
+                corrections[name] = st.multiselect(label, CHOICES[name], default=value, key=review.review_id+':value:'+name)
+            elif name in ('adults', 'children'):
+                corrections[name] = st.number_input(label, min_value=0, max_value=100, value=value, step=1, key=review.review_id+':value:'+name)
+            elif name == 'insurance_preparation_requested':
+                answer = st.selectbox(label, ['Yes', 'No'], index=0 if value else 1, key=review.review_id+':value:'+name)
+                corrections[name] = answer == 'Yes'
+            else:
+                corrections[name] = st.text_input(label, value=value, key=review.review_id+':value:'+name)
+            st.text('Supporting quote: ' + review.quotes[name])
+        unknown = [name.replace('_', ' ') for name, field in review.result['fields'].items() if field['state'] == 'UNKNOWN']
+        st.caption('Unknown (not inferred): ' + (', '.join(unknown) or 'none'))
+        preview = st.form_submit_button('Review selected changes')
+    if preview:
+        st.session_state.pop('rr_extraction_ready', None)
+        if not selected:
+            st.error('Select at least one resolved change. Nothing was saved.')
+        else:
+            intake, _ = selected_changes(review, selected, corrections)
+            revision = revision_for_selection(review, selected, corrections)
+            st.session_state['rr_extraction_ready'] = dict(review_id=review.review_id, selected=selected,
+                corrections=corrections, revision=revision.model_dump_json() if revision else None,
+                needs_safety=review.previous_case is None or intake != review.previous_case.intake)
+    ready = st.session_state.get('rr_extraction_ready')
+    if not ready or ready['review_id'] != review.review_id:
+        return
+    st.markdown('#### Selected changes awaiting confirmation')
+    st.caption('Confirmation applies to this displayed preview. After editing, use Review selected changes again.')
+    for name in ready['selected']:
+        st.text(name.replace('_', ' ') + ': ' + str(ready['corrections'][name]))
+    revision = ReassessmentPreview.model_validate_json(ready['revision']) if ready['revision'] else None
+    if revision:
+        for change in revision.changed_circumstances:
+            st.write(change.explanation)
+        for recommendation in revision.new_tasks:
+            st.text('Proposed task: ' + recommendation.task.title)
+        st.caption('Approval creates a revised approved plan and preserves existing tasks and history.')
+    danger = None
+    if ready['needs_safety']:
+        answer = st.selectbox('Safety assessment for selected changes', DANGER, key='rr_extraction_safety:'+review.review_id)
+        if answer == DANGER[2]:
+            st.session_state['rr_emergency'] = True
+            st.rerun()
+        danger = False if answer == DANGER[1] else None
+    confirmed = st.checkbox('I confirm the selected changes shown above', key='rr_extraction_confirm:'+review.review_id+str(ready['selected'])+str(ready['corrections']))
+    if st.button('Confirm selected changes', type='primary'):
+        guard_pending_danger()
+        case = accept_review(repo, review, ready['selected'], corrections=ready['corrections'],
+            explicitly_confirmed=confirmed, safety_answer=danger, approved_revision=revision)
+        st.session_state['rr_case_id'] = str(case.case_id)
+        st.session_state.pop('rr_extraction_review', None)
+        st.session_state.pop('rr_extraction_ready', None)
+        st.session_state.pop('rr_records_snapshot:'+str(case.case_id), None)
+        clear_view()
+        st.session_state['rr_notice'] = 'Selected recovery changes confirmed and saved. No external submission was made.'
+        st.session_state['rr_focus'] = 'Continue my recovery'
+        st.rerun()
+
+
 def render():
+    guard_pending_danger()
     focus = recovery_landing()
     notice = st.session_state.pop('rr_notice', None)
     if notice:
         st.success(notice)
     try:
         repo = repository()
+        guard_pending_danger()
+        extraction_confirmation(repo)
         case_id = st.session_state.get('rr_case_id')
         if not case_id:
             if focus == 'Find assistance':
@@ -388,11 +562,7 @@ def render():
             with st.expander('Use structured intake or resume a saved case', expanded=focus == 'Continue my recovery'):
                 new_case(repo)
             return
-        pending = set(st.session_state.get('rr_pending_danger', []))
-        if case_id in pending:
-            repo.report_immediate_danger(UUID(case_id))
-            pending.discard(case_id)
-            st.session_state['rr_pending_danger'] = list(pending)
+        guard_pending_danger()
         case = repo.get_case(UUID(case_id))
         if case is None:
             st.error('This case is not available on this machine. Resume a saved case or start a new fictional case.')
@@ -417,6 +587,7 @@ def render():
                     else:
                         planning(repo, case)
         if st.button('Open a different case'):
+            guard_pending_danger()
             st.session_state.pop('rr_case_id', None)
             clear_view()
             st.rerun()

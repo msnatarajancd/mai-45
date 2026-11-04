@@ -86,7 +86,8 @@ class SQLiteRecoveryRepository:
         return RecoveryRecords.model_validate_json(row[0]) if row else RecoveryRecords(case_id=case_id)
 
     def save_recovery_records(self, records: RecoveryRecords, *, expected_version: int,
-                              explicitly_confirmed: bool = False) -> RecoveryRecords:
+                              explicitly_confirmed: bool = False,
+                              expected_case: RecoveryCase | None = None) -> RecoveryRecords:
         """Persist only confirmed records, with safety and concurrency under one lock.
 
         Intake, plan approvals and task progress are deliberately never written here.
@@ -97,43 +98,58 @@ class SQLiteRecoveryRepository:
         records = RecoveryRecords.model_validate_json(records.model_dump_json())
         with self._connection() as connection:
             connection.execute('BEGIN IMMEDIATE')
-            row = connection.execute('SELECT case_json FROM recovery_cases WHERE case_id = ?',
+            return self._write_recovery_records(connection, records, expected_version, expected_case)
+
+    def _write_recovery_records(self, connection, records, expected_version, expected_case=None):
+        """Called only inside the caller's write transaction, including reassessment."""
+        records = RecoveryRecords.model_validate_json(records.model_dump_json())
+        row = connection.execute('SELECT case_json FROM recovery_cases WHERE case_id = ?',
                                      (str(records.case_id),)).fetchone()
-            if row is None:
-                raise ValueError('recovery case does not exist')
-            case = RecoveryCase.model_validate_json(row[0])
-            if case.intake.immediate_danger is not False:
-                raise ValueError('record changes require an explicit no-immediate-danger assessment')
-            row = connection.execute('SELECT records_json FROM recovery_records WHERE case_id = ?',
+        if row is None:
+            raise ValueError('recovery case does not exist')
+        case = RecoveryCase.model_validate_json(row[0])
+        if case.intake.immediate_danger is not False:
+            raise ValueError('record changes require an explicit no-immediate-danger assessment')
+        if expected_case is not None and case != expected_case:
+            raise ValueError('stale records: saved assessment changed')
+        row = connection.execute('SELECT records_json FROM recovery_records WHERE case_id = ?',
                                      (str(records.case_id),)).fetchone()
-            current = RecoveryRecords.model_validate_json(row[0]) if row else RecoveryRecords(case_id=records.case_id)
-            if expected_version != current.version or records.version != current.version:
-                raise ValueError('stale records: reload saved information before editing')
-            ids = [item.damage_id for item in records.damage_records]
-            if len(ids) != len(set(ids)) or any(item.case_id != records.case_id for item in records.damage_records):
-                raise ValueError('damage IDs must be unique and belong to this case')
-            if not {item.damage_id for item in current.damage_records}.issubset(ids):
-                raise ValueError('existing damage records must be preserved')
-            foreign_ids = {
+        current = RecoveryRecords.model_validate_json(row[0]) if row else RecoveryRecords(case_id=records.case_id)
+        if expected_version != current.version or records.version != current.version:
+            raise ValueError('stale records: reload saved information before editing')
+        ids = [item.damage_id for item in records.damage_records]
+        if len(ids) != len(set(ids)) or any(item.case_id != records.case_id for item in records.damage_records):
+            raise ValueError('damage IDs must be unique and belong to this case')
+        if not {item.damage_id for item in current.damage_records}.issubset(ids):
+            raise ValueError('existing damage records must be preserved')
+        foreign_ids = {
                 item.damage_id
                 for other in connection.execute('SELECT records_json FROM recovery_records WHERE case_id != ?',
                                                  (str(records.case_id),))
                 for item in RecoveryRecords.model_validate_json(other[0]).damage_records
-            }
-            if set(ids) & foreign_ids:
-                raise ValueError('damage IDs cannot cross recovery cases')
-            saved = records.model_copy(deep=True, update={'version': current.version + 1})
-            connection.execute('INSERT INTO recovery_records (case_id, records_json) VALUES (?, ?) '
+        }
+        if set(ids) & foreign_ids:
+            raise ValueError('damage IDs cannot cross recovery cases')
+        saved = records.model_copy(deep=True, update={'version': current.version + 1})
+        connection.execute('INSERT INTO recovery_records (case_id, records_json) VALUES (?, ?) '
                                'ON CONFLICT(case_id) DO UPDATE SET records_json = excluded.records_json',
                                (str(records.case_id), saved.model_dump_json()))
         return saved
 
-    def create_case(self, case: RecoveryCase) -> None:
+    def create_case(self, case: RecoveryCase, *, confirmed_records: RecoveryRecords | None = None,
+                    explicitly_confirmed: bool = False) -> None:
+        if confirmed_records is not None and explicitly_confirmed is not True:
+            raise ValueError('explicit confirmation is required for initial recovery records')
         with self._connection() as connection:
+            connection.execute('BEGIN IMMEDIATE')
             connection.execute(
                 "INSERT INTO recovery_cases (case_id, case_json) VALUES (?, ?)",
                 (str(case.case_id), case.model_dump_json()),
             )
+            if confirmed_records is not None:
+                if confirmed_records.case_id != case.case_id:
+                    raise ValueError('records do not belong to this case')
+                self._write_recovery_records(connection, confirmed_records, 0, case)
 
     def get_case(self, case_id: UUID) -> RecoveryCase | None:
         with self._connection() as connection:
@@ -320,6 +336,8 @@ class SQLiteRecoveryRepository:
 
     def approve_reassessment(
         self, preview: "ReassessmentPreview", *, explicitly_approved: bool = False,
+        confirmed_records: RecoveryRecords | None = None,
+        expected_records_version: int | None = None,
     ) -> RecoveryPlan:
         """Accept the reviewed preview atomically, rejecting stale or altered drafts.
 
@@ -350,6 +368,15 @@ class SQLiteRecoveryRepository:
             current_assessment = evaluate_recovery_intake(case.intake)
             if current_assessment.outcome is not RecoveryAssessmentOutcome.CONTINUE_RECOVERY:
                 raise RecoveryIntakeNotPermitted(current_assessment)
+            if confirmed_records is not None and (confirmed_records.case_id != case.case_id
+                                                  or expected_records_version is None):
+                raise ValueError('case-bound records and their displayed version are required')
+            if expected_records_version is not None:
+                records_row = connection.execute('SELECT records_json FROM recovery_records WHERE case_id = ?',
+                                                  (str(case.case_id),)).fetchone()
+                version = RecoveryRecords.model_validate_json(records_row[0]).version if records_row else 0
+                if version != expected_records_version:
+                    raise ValueError('stale reassessment: recovery records changed')
             if row[1] != str(preview.previous_plan_id):
                 raise ValueError("stale reassessment: active plan changed; generate a new preview")
             plan_row = connection.execute(
@@ -396,6 +423,8 @@ class SQLiteRecoveryRepository:
                 expected.proposed_revision.proposed_tasks[old_count + index].task_id = task_id
             if preview != expected:
                 raise ValueError("review evidence differs from the reassessment proposal")
+            if confirmed_records is not None:
+                self._write_recovery_records(connection, confirmed_records, expected_records_version, case)
             approved = proposed.model_copy(deep=True, update={'approval_status': PlanStatus.APPROVED})
             accepted_case = case.model_copy(deep=True, update={
                 'intake': preview.updated_intake.model_copy(deep=True),
