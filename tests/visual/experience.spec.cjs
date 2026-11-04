@@ -52,6 +52,25 @@ test('readable home, themes, search and persistent navigation',async({page},info
   await expect(page.getByTestId('stPopoverBody').getByRole('button',{name:'Household',exact:true})).toBeVisible();
  }
 });
+test('search and chat route consistently without turning search into AI',async({page})=>{
+ await ready(page);
+ const search=page.getByRole('combobox',{name:'Search menu',exact:true});
+ await search.fill('open weather');
+ await expect(page.getByRole('option',{name:'Protect',exact:true})).toBeVisible();
+ await search.press('Enter');
+ await expect(page.getByRole('button',{name:'Show simulated alert',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Ask ReadyRelief',exact:true}).click();
+ const input=page.locator('.st-key-chat_panel textarea');
+ await input.fill('go to the family page');await input.press('Enter');
+ await expect(page.getByRole('button',{name:'Save household preferences',exact:true})).toBeVisible();
+ await expect(page.locator('.st-key-chat_panel')).toHaveCount(0);
+ await search.fill('why does the moon glow');
+ await expect(page.getByRole('status').filter({hasText:'No matching screens.'})).toBeVisible();
+ await search.press('Enter');
+ await expect(page.getByRole('button',{name:'Save household preferences',exact:true})).toBeVisible();
+ await expect(page.locator('.st-key-chat_panel')).toHaveCount(0);
+});
+
 test('tour locates every control and cleans up',async({page})=>{
  await ready(page);
  await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();

@@ -12,6 +12,16 @@ Choose **Show me around** in the sidebar. The guide visits Home, Household, Prot
 
 ## Ask ReadyRelief
 
+The top **Find a screen…** search is navigation-only. It accepts route names, aliases
+such as weather/tasks/family, and commands such as “open recovery” or “go to household”.
+Select a suggestion or press Enter. An unmatched search does not call AI; use chat for questions.
+
+Chat uses the same route vocabulary and normalization. A clear single destination opens
+immediately without a model call or confirmation, in either assistant mode. Ambiguous
+matches offer screen choices. Questions such as “How does recovery work?” stay in chat
+and use the selected assistant mode. Data-changing requests still require the existing
+proposal/confirmation flow, and emergency detection still runs before route matching.
+
 Choose **Assistant** or the **Ask ReadyRelief** button on any ordinary screen. Modes:
 
 - **Nebius AI:** natural-language explanations and structured action proposals. Requires the server's NEBIUS_API_KEY. Uses NEBIUS_CHAT_MODEL, then NEBIUS_MODEL, otherwise Qwen/Qwen3-235B-A22B-Instruct-2507 (the school-planning reference app's model).

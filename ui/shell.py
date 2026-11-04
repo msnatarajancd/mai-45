@@ -35,7 +35,7 @@ def toolbar():
                 for page in PAGES:
                     st.button(page,key='mobile_nav_'+page,width='stretch',on_click=navigate,args=(page,))
 
-        search.text_input('Search menu',placeholder='Search anything…',help='Suggestions appear as you type. Use arrow keys and Enter, or select a screen.',key='nav_search',label_visibility='collapsed',icon=':material/search:')
+        search.text_input('Search menu',placeholder='Find a screen…',help='Navigation only. Try weather, tasks, or open household. Use chat for questions.',key='nav_search',label_visibility='collapsed',icon=':material/search:')
         with search:
             from ui.search_component import render_suggestions
             render_suggestions()
@@ -54,7 +54,7 @@ def toolbar():
                         st.session_state['page']=page
                         st.rerun()
         else:
-            st.caption('No matching screens. Try tasks, weather, family or chat.')
+            st.caption('No matching screens. For questions, use Ask ReadyRelief.')
 
 
 def render_dock():

@@ -1,7 +1,8 @@
 """Conversational UI with separately reviewed, app-validated operations."""
 import os
 import streamlit as st
-from services.assistant import Proposal,propose,local_proposal,execute,capture
+from services.assistant import Proposal,propose,local_proposal,execute,capture,is_danger
+from ui.capabilities import chat_routes, PAGES
 from recovery.models import RecoveryPlan
 from ui.components import heading
 
@@ -15,6 +16,17 @@ def get_repo():
 def append_message(role,text,provider=''):
     messages=st.session_state.get('assistant_messages',[])
     st.session_state['assistant_messages']=(messages+[dict(role=role,content=text,provider=provider)])[-30:]
+
+
+def open_chat_route(page):
+    if page not in PAGES or st.session_state.get('rr_emergency'):
+        return
+    st.session_state['page'] = page
+    st.session_state['chat_open'] = False
+    st.session_state.pop('assistant_routes', None)
+    message = 'Opened ' + page + '.'
+    append_message('assistant', message, 'Navigation · no AI')
+    st.session_state['assistant_result_notice'] = message
 
 
 def preview_action(proposal):
@@ -107,6 +119,7 @@ def render(compact=False):
             st.session_state.pop('assistant_messages',None)
             st.session_state.pop('assistant_pending',None)
             st.session_state.pop('assistant_queued',None)
+            st.session_state.pop('assistant_routes',None)
             st.rerun()
     if repo is None: st.warning('Recovery storage is unavailable. Product help and navigation remain available.')
     with st.container(height=300 if compact else 430, key='chat_transcript'):
@@ -118,6 +131,8 @@ def render(compact=False):
                 if message['provider']: st.caption(message['provider'])
                 st.write(message['content'])
         pending_action(repo)
+        for page in st.session_state.get('assistant_routes', []):
+            st.button('Open ' + page, key='chat_route_'+page, on_click=open_chat_route, args=(page,))
         if st.session_state.get('rr_draft'):
             with st.expander('Current unapproved draft · review the tasks'):
                 show_draft(st.session_state['rr_draft'])
@@ -126,8 +141,19 @@ def render(compact=False):
     prompt=prompt or st.session_state.pop('assistant_queued',None)
     if prompt:
         st.session_state.pop('assistant_pending',None)
+        st.session_state.pop('assistant_routes',None)
         history=[dict(role=m['role'],content=m['content']) for m in st.session_state.get('assistant_messages',[])][-6:]
         append_message('user',prompt)
+        # Only local, allowlisted navigation bypasses confirmation. Danger detection
+        # precedes route matching; all data-changing actions retain their review flow.
+        routes = [] if is_danger(prompt) or st.session_state.get('rr_emergency') else chat_routes(prompt)
+        if len(routes) == 1:
+            open_chat_route(routes[0])
+            st.rerun()
+        if routes:
+            st.session_state['assistant_routes'] = routes
+            append_message('assistant', 'Which screen would you like to open?', 'Navigation · no AI')
+            st.rerun()
         try:
             with st.spinner('Understanding your request…'):
                 proposal=(propose(prompt,st.session_state,repo,history=history) if mode=='Nebius AI' else local_proposal(prompt,st.session_state,repo))

@@ -69,14 +69,54 @@ def test_demo_restart_preserves_recovery_and_emergency_state():
     assert state['rr_emergency'] is True
 
 
-def test_local_chat_requires_action_confirmation(app):
+@pytest.mark.parametrize('mode', ['Local guide · no AI', 'Nebius AI'])
+def test_chat_navigation_is_immediate(app, monkeypatch, mode):
+    import ui.assistant_page as screen
+    monkeypatch.setattr(screen, 'local_proposal', lambda *args, **kwargs: pytest.fail('Navigation must not call the planner'))
+    monkeypatch.setattr(screen, 'propose', lambda *args, **kwargs: pytest.fail('Navigation must not call the model'))
     app.session_state['page']='Assistant'; app.run()
-    next(r for r in app.radio if r.label=='Assistant mode').set_value('Local guide · no AI').run()
+    next(r for r in app.radio if r.label=='Assistant mode').set_value(mode).run()
     app.chat_input[0].set_value('open Recover').run()
-    assert app.session_state['page']=='Assistant'
-    button(app,'Confirm action').click().run()
     assert app.session_state['page']=='Recover'
+    assert 'assistant_pending' not in app.session_state
     assert not app.exception
+
+
+def test_chat_question_stays_in_chat_and_uses_assistant(app, monkeypatch):
+    import ui.assistant_page as screen
+    from services.assistant import Proposal
+    calls = []
+    def answer(text, *args, **kwargs):
+        calls.append(text)
+        return Proposal(answer='Use the recovery screen to review a proposed plan.')
+    monkeypatch.setattr(screen, 'propose', answer)
+    monkeypatch.setenv('NEBIUS_API_KEY', 'test-key-not-used')
+    app.session_state['page'] = 'Assistant'
+    app.session_state['assistant_mode_preference'] = 'Nebius AI'
+    app.run()
+    app.chat_input[0].set_value('How does recovery work?').run()
+    assert calls == ['How does recovery work?']
+    assert app.session_state['page'] == 'Assistant'
+    assert 'assistant_pending' not in app.session_state
+
+
+def test_chat_ambiguous_route_asks_instead_of_guessing(app, monkeypatch):
+    import ui.assistant_page as screen
+    monkeypatch.setattr(screen, 'propose', lambda *a, **kw: pytest.fail('No AI needed'))
+    monkeypatch.setattr(screen, 'local_proposal', lambda *a, **kw: pytest.fail('No AI needed'))
+    app.session_state['page'] = 'Assistant'; app.run()
+    app.chat_input[0].set_value('open re').run()
+    assert app.session_state['page'] == 'Assistant'
+    assert len(app.session_state['assistant_routes']) > 1
+    button(app, 'Open Recover').click().run()
+    assert app.session_state['page'] == 'Recover'
+
+
+def test_chat_danger_still_interrupts_before_navigation(app):
+    app.session_state['page'] = 'Assistant'; app.run()
+    next(r for r in app.radio if r.label == 'Assistant mode').set_value('Local guide · no AI').run()
+    app.chat_input[0].set_value('Open Recover, we are trapped').run()
+    assert app.session_state['rr_emergency'] is True
 
 
 def test_ai_profile_action_preview_then_confirm(app,monkeypatch):

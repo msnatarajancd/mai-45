@@ -21,11 +21,13 @@ export default function({data, parentElement, setTriggerValue}) {
     };
     const update=()=>{
         if(disposed)return;
-        const terms=input.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
+        let query=input.value.trim().toLowerCase();
+        for(const [pattern,replacement] of data.normalizers)query=query.replace(new RegExp(pattern),replacement).trim();
+        const terms=query.split(/\s+/).filter(Boolean);
         if(!terms.length){matches=[];close();return;}
-        matches=data.filter(item=>terms.every(term=>(item.page+' '+item.keywords).toLocaleLowerCase().includes(term)));
+        matches=data.pages.filter(item=>terms.every(term=>(item.page+' '+item.keywords).toLowerCase().includes(term)));
         list.replaceChildren();active=-1;
-        if(!matches.length){const empty=document.createElement('div');empty.textContent='No matching screens. Try tasks, weather or family.';empty.setAttribute('role','status');empty.style.cssText='padding:14px;font-size:13px;color:var(--rr-muted)';list.appendChild(empty);}
+        if(!matches.length){const empty=document.createElement('div');empty.textContent='No matching screens. For questions, use Ask ReadyRelief.';empty.setAttribute('role','status');empty.style.cssText='padding:14px;font-size:13px;color:var(--rr-muted)';list.appendChild(empty);}
         matches.forEach((item,i)=>{
             const option=document.createElement('div');option.id=id+'-'+i;option.setAttribute('role','option');option.setAttribute('aria-selected','false');
             option.style.cssText='padding:11px 14px;border-radius:10px;cursor:pointer;font:500 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--rr-ink)';
