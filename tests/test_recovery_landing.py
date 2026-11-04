@@ -123,7 +123,7 @@ def test_saved_danger_cannot_be_cleared_through_description(saved, monkeypatch):
 
 def test_assistance_is_honest_and_emergency_survives_storage_failure(app, monkeypatch):
     button(app, 'Find assistance').click().run()
-    assert any('discovery is not connected' in w.value for w in app.info)
+    assert any('not live availability' in w.value for w in app.info)
     from ui import recovery_page
     monkeypatch.setattr(recovery_page, 'repository', lambda: (_ for _ in ()).throw(sqlite3.OperationalError('synthetic outage')))
     describe(app, 'Help me find housing')

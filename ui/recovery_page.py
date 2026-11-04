@@ -419,9 +419,32 @@ def recovery_landing():
     return st.session_state.get('rr_focus', 'Continue my recovery' if st.session_state.get('rr_case_id') else 'Find assistance')
 
 
-def assistance():
-    st.info('Verified housing and utility assistance discovery is not connected yet. ReadyRelief cannot confirm availability, eligibility or placement.')
-    st.caption('You can use the existing reviewed-guidance flow for source-supported explanations. It does not find available assistance.')
+def assistance(county=None):
+    guard_pending_danger()
+    st.subheader('Official assistance pathways')
+    st.info('Verified official links, not live availability. ReadyRelief cannot confirm shelter openings, placement, eligibility, restoration times or application outcomes. No application is submitted here.')
+    st.caption('Using confirmed Miami-Dade county.' if county == 'Miami-Dade' else
+               'County is unknown. Showing general US and Florida pathways; no county or utility provider is assumed.')
+    needs = st.multiselect('What assistance would you like to find?',
+        ['Housing', 'Disaster assistance', 'Electricity', 'Water'],
+        default=['Housing', 'Disaster assistance', 'Electricity', 'Water'])
+    from services.resources import find_resources
+    try:
+        resources = find_resources(' '.join(needs), county=county)
+    except (OSError, ValueError):
+        resources = []
+        st.warning('The official pathway directory is unavailable. No availability or eligibility has been checked.')
+    if not resources:
+        st.info('No matching official pathways in this small directory. Try another category. This does not mean assistance is unavailable.')
+    for resource in resources:
+        with st.container(border=True):
+            st.subheader(resource.title)
+            st.caption(resource.organization + ' · ' + resource.geography + ' · ' + resource.category)
+            st.write(resource.purpose)
+            st.link_button('Open official page: ' + resource.title, resource.url)
+            st.caption('Official URL and purpose checked: ' + resource.last_checked + '. Not checked live on this visit.')
+            st.write(resource.caveat)
+    st.caption('Directory links are not M3-reviewed guidance and are not supplied to Qwen as verified evidence. Separately reviewed guidance remains available below.')
     from ui.guidance import render as grounded_guidance
     grounded_guidance('recover')
 
@@ -575,7 +598,7 @@ def render():
             else:
                 st.caption('Using your saved confirmed case. Your description does not overwrite it.')
                 if focus == 'Find assistance':
-                    assistance()
+                    assistance(repo.get_recovery_records(case.case_id).reported_county)
                 elif focus == 'Document damage':
                     recovery_records(repo, case)
                 elif focus == 'Prepare for insurance':
