@@ -43,6 +43,8 @@ On-device or Online using the browser's `localService` property. Online voices m
 tour narration text to the voice provider; no microphone or household data is used. No separate
 speech API is configured. Voice orchestration tests use labelled
 browser API test doubles, which do not certify perceived voice quality.
+Automated Playwright browsers launch with `--mute-audio` so UI checks do not play through
+the developer's speakers. Speech event checks remain active; audible checks must be deliberate.
 
 The header brand is a keyboard-accessible Home action that preserves the session and clears
 navigation search. The branded loading indicator follows Streamlit's actual `running` state,
