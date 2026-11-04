@@ -1,8 +1,43 @@
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from enum import StrEnum
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+
+class HouseholdRecoveryDetails(BaseModel):
+    """Additional confirmed facts; absent values are never household defaults."""
+    model_config = ConfigDict(extra='forbid')
+    children: int | None = Field(default=None, ge=0, strict=True)
+    adults: int | None = Field(default=None, ge=0, strict=True)
+    reported_property_damage: str | None = Field(default=None, max_length=2000)
+    wants_insurance_help: bool | None = Field(default=None, strict=True)
+
+
+class DamageRecord(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    damage_id: UUID = Field(default_factory=uuid4)
+    case_id: UUID
+    item_description: str = Field(min_length=1, max_length=500)
+    damage_description: str = Field(min_length=1, max_length=2000)
+    incident_date: date | None = None
+    notes: str | None = Field(default=None, max_length=2000)
+
+    @field_validator('item_description', 'damage_description')
+    @classmethod
+    def require_reported_text(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError('a reported description is required')
+        return value
+
+
+class RecoveryRecords(BaseModel):
+    """One versioned aggregate, including damage IDs, bound to a single case."""
+    model_config = ConfigDict(extra='forbid')
+    case_id: UUID
+    version: int = Field(default=0, ge=0, strict=True)
+    household: HouseholdRecoveryDetails = Field(default_factory=HouseholdRecoveryDetails)
+    damage_records: list[DamageRecord] = Field(default_factory=list, max_length=100)
 
 
 class TaskPriority(StrEnum):

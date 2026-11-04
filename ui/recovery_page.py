@@ -1,5 +1,6 @@
 """M1 presentation over M5's public domain/repository APIs; no duplicate persistence."""
 import os
+import re
 import sqlite3
 from pathlib import Path
 from uuid import UUID
@@ -7,7 +8,9 @@ import streamlit as st
 from recovery.assessment import start_recovery_case, RecoveryIntakeNotPermitted
 from recovery.database import SQLiteRecoveryRepository
 from recovery.demo_planner import create_demo_draft_plan
-from recovery.models import RecoveryIntake, RecoveryPlan, TaskStatus
+from recovery.models import (RecoveryIntake, RecoveryPlan, TaskStatus, RecoveryRecords,
+                             HouseholdRecoveryDetails, DamageRecord)
+from recovery.insurance import insurance_discussion_summary
 from recovery.reassessment import preview_reassessment, ReassessmentPreview
 from ui.components import heading
 
@@ -27,13 +30,12 @@ def clear_view():
     clear_recovery_view(st.session_state)
 
 def intake_fields(prefix, defaults=None):
-    h = st.session_state['household']
-    default_needs = defaults.household_recovery_needs if defaults else ['Temporary housing', 'Water and household supplies'] + ([] if h.has_vehicle else ['Transportation'])
+    default_needs = defaults.household_recovery_needs if defaults else []
     a, b = st.columns(2)
-    disaster_options = ['Hurricane', 'Flood']
-    disaster_default = defaults.disaster_type if defaults else 'Hurricane'
+    disaster_options = ['Unknown', 'Hurricane', 'Flood']
+    disaster_default = defaults.disaster_type if defaults else 'Unknown'
     disaster = a.selectbox('Disaster type', list(dict.fromkeys(disaster_options + [disaster_default])), index=(disaster_options + ([] if disaster_default in disaster_options else [disaster_default])).index(disaster_default), key=prefix+'disaster')
-    housing_options = ['Minor reported damage', 'Major reported damage', 'No damage reported']
+    housing_options = ['Unknown', 'Minor reported damage', 'Major reported damage', 'No damage reported']
     housing_default = defaults.housing_condition if defaults else housing_options[0]
     housing_options = list(dict.fromkeys(housing_options + [housing_default]))
     housing = b.selectbox('Housing condition', housing_options, index=housing_options.index(housing_default), key=prefix+'housing')
@@ -47,7 +49,7 @@ def intake_fields(prefix, defaults=None):
         selected = {None: 'Unknown', True: 'Available', False: 'Unavailable'}[value]
         answer = col.selectbox(name.capitalize() + ' availability', options, index=options.index(selected), key=prefix+name)
         utility[name] = {'Unknown': None, 'Available': True, 'Unavailable': False}[answer]
-    accommodations = ['Staying with others', 'Staying in temporary lodging', 'No lodging arranged']
+    accommodations = ['Unknown', 'Staying with others', 'Staying in temporary lodging', 'No lodging arranged']
     default_accommodation = defaults.temporary_accommodation_status if defaults else accommodations[0]
     accommodations = list(dict.fromkeys(accommodations + [default_accommodation]))
     accommodation = st.selectbox('Temporary accommodation', accommodations, index=accommodations.index(default_accommodation), key=prefix+'accommodation')
@@ -59,7 +61,7 @@ def new_case(repo):
     a, b = st.columns([1.3, 1], gap='large')
     with a:
         st.subheader('Tell us what has changed.')
-        st.caption('Use this intake only for a fictional post-storm scenario. Your household preferences prefill reported transportation needs.')
+        st.caption('Review these details before creating a case. Unknown values can stay unknown. Use fictional information only.')
         # Outside a form: a danger selection interrupts immediately, before submit.
         danger = st.selectbox('Immediate danger assessment', DANGER, key='rr_initial_danger')
         if danger == DANGER[2]:
@@ -229,9 +231,149 @@ def dashboard(repo, case, plan):
                 st.caption(task.title + ' · ' + task.status.value)
 
 
+def insurance_preview(repo, case):
+    st.subheader('Prepare for an insurance discussion')
+    st.caption('Only confirmed saved information is included. Coverage has not been determined and no claim has been submitted.')
+    saved_case = repo.get_case(case.case_id)
+    summary = insurance_discussion_summary(saved_case, repo.get_recovery_records(case.case_id))
+    st.text(summary)
+    st.download_button('Download insurance discussion draft', summary,
+                       file_name='readyrelief-insurance-discussion.txt', mime='text/plain')
+    if st.button('Add or update household and damage details'):
+        st.session_state['rr_focus'] = 'Document damage'
+        st.rerun()
+
+
+def recovery_records(repo, case):
+    st.subheader('Household details and damage records')
+    st.caption('Use fictional information only. Save only details you have reviewed. Unknown values stay unknown. No photographs are uploaded here.')
+    current = repo.get_recovery_records(case.case_id)
+    snapshot_key = 'rr_records_snapshot:' + str(case.case_id)
+    if snapshot_key not in st.session_state:
+        st.session_state[snapshot_key] = current.model_dump_json()
+    snapshot = RecoveryRecords.model_validate_json(st.session_state[snapshot_key])
+    if snapshot.version != current.version:
+        st.warning('Saved records changed in another session. Reload before making further edits.')
+    if st.button('Reload saved household and damage records'):
+        st.session_state[snapshot_key] = current.model_dump_json()
+        st.session_state[snapshot_key + ':reload'] = st.session_state.get(snapshot_key + ':reload', 0) + 1
+        st.rerun()
+    prefix = f'rr_records:{case.case_id}:{snapshot.version}:{st.session_state.get(snapshot_key + ":reload", 0)}:'
+    h = snapshot.household
+    with st.form(prefix + 'household'):
+        st.caption('Leave a count blank if unknown. Do not infer adults or total household size.')
+        children = st.text_input('Number of children (if known)', '' if h.children is None else str(h.children))
+        adults = st.text_input('Number of adults (if known)', '' if h.adults is None else str(h.adults))
+        damage = st.text_area('Reported property damage', h.reported_property_damage or '', max_chars=2000)
+        options = ['Unknown', 'Yes', 'No']
+        insurance = st.selectbox('Would you like insurance preparation help?', options,
+                                index=options.index({None: 'Unknown', True: 'Yes', False: 'No'}[h.wants_insurance_help]))
+        confirmed = st.checkbox('I confirm these household details')
+        save = st.form_submit_button('Save confirmed household details')
+    if save:
+        if not confirmed:
+            st.error('Confirm the details first. Nothing was saved.')
+        else:
+            def count(text):
+                if not text.strip():
+                    return None
+                if not text.strip().isascii() or not text.strip().isdigit():
+                    raise ValueError('Household counts must be whole nonnegative numbers or blank.')
+                return int(text.strip())
+            proposal = snapshot.model_copy(deep=True)
+            proposal.household = HouseholdRecoveryDetails(children=count(children), adults=count(adults),
+                reported_property_damage=damage.strip() or None,
+                wants_insurance_help={'Unknown': None, 'Yes': True, 'No': False}[insurance])
+            saved = repo.save_recovery_records(proposal, expected_version=snapshot.version, explicitly_confirmed=True)
+            st.session_state[snapshot_key] = saved.model_dump_json()
+            st.session_state['rr_notice'] = 'Confirmed household details saved.'
+            st.rerun()
+    for item in current.damage_records:
+        with st.container(border=True):
+            st.text(item.item_description + '\n' + item.damage_description)
+            st.caption(f'Incident date: {item.incident_date or "Unknown"}')
+            if item.notes:
+                st.text(item.notes)
+    options = ['New damage record'] + [str(item.damage_id) for item in snapshot.damage_records]
+    labels = {str(item.damage_id): item.item_description for item in snapshot.damage_records}
+    selected = st.selectbox('Add or edit a damage record', options,
+                            format_func=lambda value: labels.get(value, value), key=prefix+'selection')
+    item = next((item for item in snapshot.damage_records if str(item.damage_id) == selected), None)
+    with st.form(prefix + selected):
+        description = st.text_input('Item or area description', item.item_description if item else '', max_chars=500)
+        reported = st.text_area('User-reported damage description', item.damage_description if item else '', max_chars=2000)
+        incident = st.date_input('Incident date (leave blank if unknown)', value=item.incident_date if item else None)
+        notes = st.text_area('Optional notes', (item.notes or '') if item else '', max_chars=2000)
+        confirmed = st.checkbox('I confirm this damage record')
+        save = st.form_submit_button('Save confirmed damage record')
+    if save:
+        if not confirmed:
+            st.error('Confirm the damage record first. Nothing was saved.')
+        else:
+            fields = dict(case_id=case.case_id, item_description=description,
+                          damage_description=reported, incident_date=incident, notes=notes.strip() or None)
+            if item:
+                fields['damage_id'] = item.damage_id
+            updated = DamageRecord(**fields)
+            proposal = snapshot.model_copy(deep=True)
+            proposal.damage_records = [updated if old.damage_id == updated.damage_id else old for old in proposal.damage_records]
+            if item is None:
+                proposal.damage_records.append(updated)
+            saved = repo.save_recovery_records(proposal, expected_version=snapshot.version, explicitly_confirmed=True)
+            st.session_state[snapshot_key] = saved.model_dump_json()
+            st.session_state['rr_notice'] = 'Confirmed damage record saved.'
+            st.rerun()
+    st.caption('Unsubmitted edits are not saved. Reload saved records to discard edits; reopening uses saved information only.')
+
+
+def recovery_landing():
+    """Local navigation only: text never becomes confirmed facts or a model prompt."""
+    heading('03 / Recover', 'What do you need help with today?')
+    st.caption('SIMULATED RECOVERY · Use fictional information only. Your description is not saved to your case.')
+    with st.form('rr_start_description'):
+        description = st.text_area("Describe what's happening or what you need help with.", max_chars=2500)
+        submitted = st.form_submit_button('Help me get started', type='primary')
+    if submitted:
+        from services.assistant import is_danger
+        explicit_danger = re.search(r"\b(?:i am|i'm|we are|we're) (?:in )?danger\b", description, re.I)
+        if is_danger(description) or explicit_danger:
+            st.session_state['rr_emergency'] = True
+            if st.session_state.get('rr_case_id'):
+                pending = set(st.session_state.get('rr_pending_danger', []))
+                pending.add(st.session_state['rr_case_id'])
+                st.session_state['rr_pending_danger'] = list(pending)
+            st.rerun()
+        if not description.strip():
+            st.info('Choose a quick action or tell us briefly what you need.')
+        else:
+            # Select a section, never infer household facts or a safety assessment.
+            if re.search(r'\b(insurance|insurer|claim)\b', description, re.I):
+                focus = 'Prepare for insurance'
+            elif re.search(r'\b(damage|damaged|document|furniture|refrigerator)\b', description, re.I):
+                focus = 'Document damage'
+            elif re.search(r'\b(continue|update|electricity|resume|progress)\b', description, re.I):
+                focus = 'Continue my recovery'
+            else:
+                focus = 'Find assistance'
+            st.session_state['rr_focus'] = focus
+            st.session_state['rr_description_received'] = True
+    for column, label in zip(st.columns(4), ['Find assistance', 'Document damage', 'Prepare for insurance', 'Continue my recovery']):
+        if column.button(label, width='stretch'):
+            st.session_state['rr_focus'] = label
+    if st.session_state.get('rr_description_received'):
+        st.info('Your description selected a section only. No details were extracted or saved. Review confirmed details using the structured controls below.')
+    return st.session_state.get('rr_focus', 'Continue my recovery' if st.session_state.get('rr_case_id') else 'Find assistance')
+
+
+def assistance():
+    st.info('Verified housing and utility assistance discovery is not connected yet. ReadyRelief cannot confirm availability, eligibility or placement.')
+    st.caption('You can use the existing reviewed-guidance flow for source-supported explanations. It does not find available assistance.')
+    from ui.guidance import render as grounded_guidance
+    grounded_guidance('recover')
+
+
 def render():
-    heading('03 / Recover', 'Small steps. Steady progress.', 'Turn reported needs into a plan you can review, accept, and return to.')
-    st.caption('SIMULATED RECOVERY · Fictional local single-user demonstration in both alert modes')
+    focus = recovery_landing()
     notice = st.session_state.pop('rr_notice', None)
     if notice:
         st.success(notice)
@@ -239,9 +381,12 @@ def render():
         repo = repository()
         case_id = st.session_state.get('rr_case_id')
         if not case_id:
-            new_case(repo)
-            from ui.guidance import render as grounded_guidance
-            grounded_guidance('recover')
+            if focus == 'Find assistance':
+                assistance()
+            else:
+                st.info('Open a saved case to reuse confirmed information, or review the optional intake to create one. Nothing has been saved from your description.')
+            with st.expander('Use structured intake or resume a saved case', expanded=focus == 'Continue my recovery'):
+                new_case(repo)
             return
         pending = set(st.session_state.get('rr_pending_danger', []))
         if case_id in pending:
@@ -258,13 +403,19 @@ def render():
             if case.intake.immediate_danger is not False:
                 st.warning('This case has a danger report or an incomplete assessment. Routine changes are paused. Emergency controls remain above; this UI cannot clear a saved danger report.')
             else:
-                from ui.guidance import render as grounded_guidance
-                grounded_guidance('recover')
-                plan = repo.get_active_plan(case.case_id)
-                if plan:
-                    dashboard(repo, case, plan)
+                st.caption('Using your saved confirmed case. Your description does not overwrite it.')
+                if focus == 'Find assistance':
+                    assistance()
+                elif focus == 'Document damage':
+                    recovery_records(repo, case)
+                elif focus == 'Prepare for insurance':
+                    insurance_preview(repo, case)
                 else:
-                    planning(repo, case)
+                    plan = repo.get_active_plan(case.case_id)
+                    if plan:
+                        dashboard(repo, case, plan)
+                    else:
+                        planning(repo, case)
         if st.button('Open a different case'):
             st.session_state.pop('rr_case_id', None)
             clear_view()

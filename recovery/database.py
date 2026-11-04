@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Iterator
 from uuid import UUID
 
-from .models import PlanStatus, RecoveryCase, RecoveryPlan, RecoveryTask, TaskStatus
+from .models import PlanStatus, RecoveryCase, RecoveryPlan, RecoveryTask, TaskStatus, RecoveryRecords
 
 
 class SQLiteRecoveryRepository:
@@ -53,6 +53,12 @@ class SQLiteRecoveryRepository:
                     preview_json TEXT NOT NULL
                 )"""
             )
+            connection.execute(
+                """CREATE TABLE IF NOT EXISTS recovery_records (
+                    case_id TEXT PRIMARY KEY REFERENCES recovery_cases (case_id),
+                    records_json TEXT NOT NULL
+                )"""
+            )
             evidence_columns = {row[1] for row in connection.execute(
                 "PRAGMA table_info(recovery_reassessments)")}
             if "approval_action" not in evidence_columns:
@@ -69,6 +75,58 @@ class SQLiteRecoveryRepository:
                     REFERENCES recovery_plans (plan_id)
                     """
                 )
+
+    def get_recovery_records(self, case_id: UUID) -> RecoveryRecords:
+        with self._connection() as connection:
+            if connection.execute('SELECT 1 FROM recovery_cases WHERE case_id = ?',
+                                  (str(case_id),)).fetchone() is None:
+                raise ValueError('recovery case does not exist')
+            row = connection.execute('SELECT records_json FROM recovery_records WHERE case_id = ?',
+                                     (str(case_id),)).fetchone()
+        return RecoveryRecords.model_validate_json(row[0]) if row else RecoveryRecords(case_id=case_id)
+
+    def save_recovery_records(self, records: RecoveryRecords, *, expected_version: int,
+                              explicitly_confirmed: bool = False) -> RecoveryRecords:
+        """Persist only confirmed records, with safety and concurrency under one lock.
+
+        Intake, plan approvals and task progress are deliberately never written here.
+        Existing damage IDs must be carried forward; this API does not delete records.
+        """
+        if explicitly_confirmed is not True:
+            raise ValueError('explicit confirmation is required')
+        records = RecoveryRecords.model_validate_json(records.model_dump_json())
+        with self._connection() as connection:
+            connection.execute('BEGIN IMMEDIATE')
+            row = connection.execute('SELECT case_json FROM recovery_cases WHERE case_id = ?',
+                                     (str(records.case_id),)).fetchone()
+            if row is None:
+                raise ValueError('recovery case does not exist')
+            case = RecoveryCase.model_validate_json(row[0])
+            if case.intake.immediate_danger is not False:
+                raise ValueError('record changes require an explicit no-immediate-danger assessment')
+            row = connection.execute('SELECT records_json FROM recovery_records WHERE case_id = ?',
+                                     (str(records.case_id),)).fetchone()
+            current = RecoveryRecords.model_validate_json(row[0]) if row else RecoveryRecords(case_id=records.case_id)
+            if expected_version != current.version or records.version != current.version:
+                raise ValueError('stale records: reload saved information before editing')
+            ids = [item.damage_id for item in records.damage_records]
+            if len(ids) != len(set(ids)) or any(item.case_id != records.case_id for item in records.damage_records):
+                raise ValueError('damage IDs must be unique and belong to this case')
+            if not {item.damage_id for item in current.damage_records}.issubset(ids):
+                raise ValueError('existing damage records must be preserved')
+            foreign_ids = {
+                item.damage_id
+                for other in connection.execute('SELECT records_json FROM recovery_records WHERE case_id != ?',
+                                                 (str(records.case_id),))
+                for item in RecoveryRecords.model_validate_json(other[0]).damage_records
+            }
+            if set(ids) & foreign_ids:
+                raise ValueError('damage IDs cannot cross recovery cases')
+            saved = records.model_copy(deep=True, update={'version': current.version + 1})
+            connection.execute('INSERT INTO recovery_records (case_id, records_json) VALUES (?, ?) '
+                               'ON CONFLICT(case_id) DO UPDATE SET records_json = excluded.records_json',
+                               (str(records.case_id), saved.model_dump_json()))
+        return saved
 
     def create_case(self, case: RecoveryCase) -> None:
         with self._connection() as connection:
