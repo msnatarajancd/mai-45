@@ -50,6 +50,8 @@ def review_ready(saved, monkeypatch):
     button(app, 'Review selected changes').click().run()
     next(w for w in app.selectbox if w.label == 'Safety assessment for selected changes').select('No immediate danger reported')
     next(w for w in app.checkbox if w.label == 'I confirm the selected changes shown above').check()
+    if any(w.label == 'I approve the proposed plan revision' for w in app.checkbox):
+        next(w for w in app.checkbox if w.label == 'I approve the proposed plan revision').check()
     return app, review
 
 

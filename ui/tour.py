@@ -63,7 +63,7 @@ def render_tour():
             'Household': '.st-key-household_form_target [data-testid="stTextInput"]',
             'Protect': '.st-key-alert_controls [data-testid="stRadio"]',
             'Respond': '.st-key-assistance_controls [data-testid="stRadio"]',
-            'Recover': '.st-key-recovery_workspace [role="combobox"]',
+            'Recover': '.st-key-rr_continue_review button',
             'Assistant': '.st-key-full_chat [data-testid="stChatInput"]',
         }
         narration = {
@@ -71,7 +71,7 @@ def render_tour():
             'Household': "Here you can describe your demo household. Add the number of people and any transport, mobility, or pet needs. Use fictional details, then save your preferences.",
             'Protect': "This is Protect. Choose an alert mode and an area, then use the button to check alerts. Simulated demo shows an example. Live check requests official information. The labels tell you which you're viewing.",
             'Respond': "This is Respond. Choose the kind of assistance you need to explore official resources. Emergency options are separate from the AI assistant. This app does not contact or dispatch responders.",
-            'Recover': "This is Recover. Start with the immediate danger assessment, then describe your household's situation. Review the draft plan before accepting it. You're in control of every saved change.",
+            'Recover': "This is Recover. Describe your situation and choose Continue to Review. Confirm supported details and the safety assessment, then review and approve your plan. Saved changes remain under your control.",
             'Assistant': "You can also ask ReadyRelief for help in chat. Ask how a feature works, or request an action. You'll review proposed changes before confirming them. You can minimize this screen to keep chatting while you explore.",
         }
         render_spotlight(

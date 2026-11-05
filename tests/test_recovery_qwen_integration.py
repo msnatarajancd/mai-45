@@ -25,6 +25,7 @@ def new_reply():
 
 
 def install(monkeypatch, reply, *, error=None, callback=None):
+    monkeypatch.setenv('NEBIUS_API_KEY','synthetic-test-key')
     clients = []
     class Provider(FakeClient):
         def complete(self, messages):
@@ -40,9 +41,10 @@ def install(monkeypatch, reply, *, error=None, callback=None):
 
 
 def submit(app, message):
-    next(w for w in app.checkbox if w.label == 'Use Qwen to propose details for my review').check()
+    if not any(w.label == "Describe what's happening or what you need help with." for w in app.text_area):
+        button(app, 'Update My Situation').click().run()
     next(w for w in app.text_area if w.label == "Describe what's happening or what you need help with.").input(message)
-    button(app, 'Help me get started').click().run()
+    button(app, 'Continue to Review').click().run()
     assert not app.exception
 
 
@@ -50,6 +52,8 @@ def confirm(app):
     button(app, 'Review selected changes').click().run()
     next(w for w in app.selectbox if w.label == 'Safety assessment for selected changes').select('No immediate danger reported')
     next(w for w in app.checkbox if w.label == 'I confirm the selected changes shown above').check()
+    if any(w.label == 'I approve the proposed plan revision' for w in app.checkbox):
+        next(w for w in app.checkbox if w.label == 'I approve the proposed plan revision').check()
     button(app, 'Confirm selected changes').click().run()
     assert not app.exception
 
@@ -61,7 +65,7 @@ def test_new_household_real_service_review_then_explicit_save(app, monkeypatch):
     submit(app, NEW)
     assert len(clients) == 1 and len(clients[0].calls) == 2
     assert dump(path) == before
-    assert any(w.value == "Here's what I understood. Please review." for w in app.subheader)
+    assert any(w.value == 'Review What We Understood' for w in app.subheader)
     assert any('Supporting quote: Our house flooded' == w.value for w in app.text)
     from recovery.extraction_consumer import ExtractionReview
     review = ExtractionReview.model_validate_json(app.session_state['rr_extraction_review'])
@@ -136,9 +140,12 @@ def test_model_failures_and_clarification_leave_structured_input(app, monkeypatc
     path = __import__('os').environ['READYRELIEF_DB_PATH'];before = dump(path)
     submit(app, 'Please help with recovery')
     assert dump(path) == before
-    assert any(w.label == 'Create draft plan' for w in app.button)
+    if failure != 'clarification':
+        assert any(w.label == 'Create draft plan' for w in app.button)
     if failure == 'clarification':
         assert any('What household conditions' in w.value for w in app.text)
+        button(app, 'Reject proposal and use structured input').click().run()
+        assert any(w.label == 'Create draft plan' for w in app.button)
     else:
         assert any('unavailable or invalid' in w.value for w in app.warning)
     assert not any('private error' in w.value for w in app.warning)
@@ -237,3 +244,54 @@ def test_emergency_epoch_change_during_extraction_discards_late_result(app, monk
     assert dump(path)==before
     assert 'rr_extraction_review' not in app.session_state
     assert any('Emergency state changed' in w.value for w in app.error)
+
+
+def test_review_is_primary_without_qwen_checkbox_and_before_any_write(app,monkeypatch):
+    install(monkeypatch,new_reply())
+    before=dump(__import__('os').environ['READYRELIEF_DB_PATH'])
+    assert not any('Use Qwen' in w.label for w in app.checkbox)
+    submit(app,NEW)
+    assert any(w.value=='Review What We Understood' for w in app.subheader)
+    assert not any(w.label.startswith('Open Official Resource:') for w in app.get('link_button'))
+    assert dump(__import__('os').environ['READYRELIEF_DB_PATH'])==before
+
+
+def test_plan_revision_requires_approval_separate_from_factual_confirmation(saved,monkeypatch):
+    from test_pending_danger import review_ready
+    path,repo,case=saved
+    app,_=review_ready(saved,monkeypatch)
+    next(w for w in app.checkbox if w.label=='I approve the proposed plan revision').uncheck()
+    before=dump(path)
+    button(app,'Confirm selected changes').click().run()
+    assert dump(path)==before
+    assert any('explicitly approve the plan revision' in w.value for w in app.error)
+
+
+def test_generic_current_flood_concern_pauses_for_clarification_without_clearance(app,monkeypatch):
+    clients=install(monkeypatch,new_reply())
+    before=dump(__import__('os').environ['READYRELIEF_DB_PATH'])
+    submit(app,'My home is flooding')
+    assert not clients
+    assert any('risk needs clarification' in w.value for w in app.warning)
+    assert not app.session_state['rr_emergency']
+    assert 'rr_extraction_review' not in app.session_state
+    assert dump(__import__('os').environ['READYRELIEF_DB_PATH'])==before
+
+
+def test_medical_uncertainty_still_interrupts_before_extraction(app,monkeypatch):
+    clients=install(monkeypatch,new_reply())
+    submit(app,'I have a medical concern now')
+    assert not clients
+    assert_emergency(app)
+
+
+def test_help_now_remains_independent_during_staged_review(app,monkeypatch):
+    install(monkeypatch,new_reply());submit(app,NEW)
+    raw=app.session_state['rr_extraction_review']
+    before=dump(__import__('os').environ['READYRELIEF_DB_PATH'])
+    button(app,'Find Help Now').click().run()
+    assert any(w.label.startswith('Open Official Resource:') for w in app.get('link_button'))
+    assert app.session_state['rr_extraction_review']==raw
+    button(app,'Return to Review Details').click().run()
+    assert any(w.value=='Review What We Understood' for w in app.subheader)
+    assert dump(__import__('os').environ['READYRELIEF_DB_PATH'])==before

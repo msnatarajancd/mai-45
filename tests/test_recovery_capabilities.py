@@ -123,6 +123,8 @@ def test_full_personalized_plan_progress_and_confirmed_reassessment(app,monkeypa
     assert dump(path)==before
     next(w for w in app.selectbox if w.label=='Safety assessment for selected changes').select('No immediate danger reported')
     next(w for w in app.checkbox if w.label=='I confirm the selected changes shown above').check()
+    if any(w.label == 'I approve the proposed plan revision' for w in app.checkbox):
+        next(w for w in app.checkbox if w.label == 'I approve the proposed plan revision').check()
     button(app,'Confirm selected changes').click().run();assert not app.exception
     current=repo.get_active_plan(case_id);records=repo.get_recovery_records(case_id)
     assert [t.status for t in current.proposed_tasks[:len(old_plan.proposed_tasks)]]==[t.status for t in old_plan.proposed_tasks]

@@ -343,6 +343,8 @@ def test_ui_new_review_edit_confirmation_and_cancellation(tmp_path, monkeypatch)
     assert 'rr_case_id' not in app.session_state
     next(w for w in app.selectbox if w.label == 'Safety assessment for selected changes').select('No immediate danger reported')
     next(w for w in app.checkbox if w.label == 'I confirm the selected changes shown above').check()
+    if any(w.label == 'I approve the proposed plan revision' for w in app.checkbox):
+        next(w for w in app.checkbox if w.label == 'I approve the proposed plan revision').check()
     button(app, 'Confirm selected changes').click().run()
     assert not app.exception
     repo = SQLiteRecoveryRepository(tmp_path / 'ui.sqlite3')
@@ -408,6 +410,8 @@ def test_ui_returning_review_approves_existing_reassessment_path(saved, monkeypa
     assert not app.exception and dump(path) == before
     next(w for w in app.selectbox if w.label == 'Safety assessment for selected changes').select('No immediate danger reported')
     next(w for w in app.checkbox if w.label == 'I confirm the selected changes shown above').check()
+    if any(w.label == 'I approve the proposed plan revision' for w in app.checkbox):
+        next(w for w in app.checkbox if w.label == 'I approve the proposed plan revision').check()
     button(app, 'Confirm selected changes').click().run()
     assert not app.exception
     assert repo.get_case(case.case_id).intake.utility_availability['electricity'] is True

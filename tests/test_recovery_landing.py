@@ -15,12 +15,15 @@ def button(app, label):
 
 
 def describe(app, text):
+    if not any(w.label == "Describe what's happening or what you need help with." for w in app.text_area):
+        button(app, "Update My Situation").click().run()
     next(w for w in app.text_area if w.label == "Describe what's happening or what you need help with.").input(text)
-    button(app, 'Help me get started').click().run()
+    button(app, 'Continue to Review').click().run()
 
 
 @pytest.fixture
 def app(tmp_path, monkeypatch):
+    monkeypatch.delenv('NEBIUS_API_KEY', raising=False)
     monkeypatch.setenv('READYRELIEF_DB_PATH', str(tmp_path / 'landing.sqlite3'))
     app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app.py'), default_timeout=20).run()
     app.session_state['page'] = 'Recover'
@@ -35,8 +38,8 @@ def test_new_household_can_start_without_intake_or_extraction(app, monkeypatch):
     describe(app, 'Our apartment flooded. We have two children and damaged furniture.')
     assert not app.exception
     assert 'rr_case_id' not in app.session_state
-    assert app.session_state['rr_focus'] == 'Document damage'
-    assert any('No details were extracted or saved' in w.value for w in app.info)
+    assert not app.session_state.get('rr_extraction_review')
+    assert any('not configured' in w.value for w in app.warning)
     assert any(w.label == 'Use structured intake or resume a saved case' for w in app.expander)
     assert next(w for w in app.selectbox if w.label == 'Housing condition').value == 'Unknown'
     assert next(w for w in app.selectbox if w.label == 'Temporary accommodation').value == 'Unknown'
@@ -70,6 +73,7 @@ def test_opt_out_keeps_structured_input_without_model_calls(app, monkeypatch, mo
 def test_returning_household_uses_confirmed_data_without_silent_changes(saved, monkeypatch):
     path, repo, case = saved
     repo.save_recovery_records(inventory(repo, case), expected_version=0, explicitly_confirmed=True)
+    monkeypatch.delenv('NEBIUS_API_KEY', raising=False)
     monkeypatch.setenv('READYRELIEF_DB_PATH', str(path))
     app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app.py'), default_timeout=20).run()
     app.session_state['page'] = 'Recover'
@@ -108,6 +112,7 @@ def test_description_danger_interrupts_before_database(app, monkeypatch, descrip
 def test_saved_danger_cannot_be_cleared_through_description(saved, monkeypatch):
     path, repo, case = saved
     repo.report_immediate_danger(case.case_id)
+    monkeypatch.delenv('NEBIUS_API_KEY', raising=False)
     monkeypatch.setenv('READYRELIEF_DB_PATH', str(path))
     app = AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app.py'), default_timeout=20).run()
     app.session_state['page'] = 'Recover'
@@ -143,11 +148,11 @@ def test_help_now_presentation_keeps_no_write_and_emergency_boundaries(app, monk
     assert app.session_state['rr_focus'] == 'Find assistance'
     assert 'rr_case_id' not in app.session_state
     assert dump(path) == before
-    assert any(w.value == 'Recovery Copilot' for w in app.subheader)
+    assert any(w.value == 'Recovery Copilot' for w in app.title)
     assert any('Returning household' in w.value for w in app.markdown)
     official = [w for w in app.get('link_button') if w.label.startswith('Open Official Resource:')]
     assert official
     assert all(w.proto.type == 'primary' for w in official)
-    assert any('Optional Qwen extraction proposes reported details' in w.value for w in app.caption)
+    assert any('Extraction proposes reported facts' in w.value for w in app.caption)
     assert 'Call 911' in [w.label for w in app.get('link_button')]
     assert "I Can't Call 911" in [w.label for w in app.button]

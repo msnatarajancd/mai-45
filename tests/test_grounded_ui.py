@@ -18,6 +18,7 @@ def test_guidance_available_on_journey_without_automatic_calls(app,page,monkeypa
     def forbidden(*a,**k):raise AssertionError('No automatic generation')
     monkeypatch.setattr(generation,'explain',forbidden)
     app.session_state['page']=page;app.run()
+    if page=='Recover':button(app,'Find Help Now').click().run()
     assert not app.exception
     assert 'Generate cited explanation' in [b.label for b in app.button]
     assert 'Call 911' in [b.label for b in app.get('link_button')]
@@ -28,6 +29,7 @@ def test_partial_cited_generation_rerender_and_revocation(app,monkeypatch,eviden
     client=FakeClient()
     monkeypatch.setattr(generation,'explain',lambda *a,**k:original(*a,**k,client=client))
     app.session_state['page']='Recover';app.run()
+    button(app,'Find Help Now').click().run()
     next(s for s in app.selectbox if s.label=='Evidence hazard').select('flood').run()
     button(app,'Generate cited explanation').click().run()
     assert not app.exception
