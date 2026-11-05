@@ -30,6 +30,13 @@ from services.emergency import route_situation
     ('The water is rapidly rising', {'flood'}),
     ('Floodwater is coming through the door', {'flood'}),
     ('We cannot leave the house because of flooding', {'trapped', 'flood'}),
+    ("I'm in danger", {'unknown'}),
+    ('I’m in danger', {'unknown'}),
+    ('We are in danger', {'unknown'}),
+    ("We're in danger", {'unknown'}),
+    ('I am in danger', {'unknown'}),
+    ("If I'm in danger, I will call. We are in danger now.", {'unknown'}),
+    ("I'm not in danger, but my child is not breathing", {'medical'}),
 ])
 def test_present_threats_interrupt_and_queue_report(text, types):
     result = evaluate_situation(SituationInput(text=text))
@@ -54,6 +61,10 @@ def test_present_threats_interrupt_and_queue_report(text, types):
     'I am not in immediate danger',
     'If the water is rising and my father is trapped, what should I do?',
     'What if I cannot call 911 and I am trapped?',
+    "I'm not in danger",
+    'We are not in danger',
+    "What should I do if I'm in danger?",
+    "If we're in danger and my father is trapped, what should we do?",
 ])
 def test_clear_negation_history_and_hypothetical_do_not_persist(text):
     result = evaluate_situation(SituationInput(text=text))

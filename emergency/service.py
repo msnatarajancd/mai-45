@@ -96,3 +96,26 @@ def screen_report(text: str, *, entrypoint: str) -> RouteResult | None:
     if re.search(r'\b(?:danger|is (?:my|our|the) (?:home|house) safe|cannot call 911|can\x27t call 911)\b', normalized):
         return result
     return None
+
+
+def recovery_requires_emergency(text: str) -> bool:
+    """Pause fact extraction for current threats, including serious uncertainty.
+
+    Unlike open-ended assistance routing, this stateless boundary permits
+    ordinary recovery facts such as restored electricity and uncertain utility
+    availability. It neither establishes safety nor changes a danger report.
+    The same phrase rules and clause qualifications still govern threat checks.
+    """
+    decision = screen_report(text, entrypoint='recovery')
+    if decision is None or not decision.interrupt_routine:
+        return False
+    if decision.persist_danger:
+        return True
+    current = [(rule, clause) for rule, clause, qualifier in matches(text)
+               if qualifier in (None, 'uncertain')]
+    if any(rule.immediate or rule.code == 'uncertain_breathing' for rule, _ in current):
+        return True
+    codes = {rule.code for rule, clause in current if not PLANNING.search(clause)}
+    # A generic utility update can be a recovery fact. Current medical and flood
+    # concerns remain paused, including water near electrical equipment.
+    return bool(codes & {'medical_context', 'flood_context'})

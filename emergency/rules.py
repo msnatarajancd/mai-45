@@ -8,7 +8,7 @@ import re
 
 from domain.contracts import IncidentType as T
 
-POLICY_VERSION = 'cap04-rules-1.0'
+POLICY_VERSION = 'cap04-rules-1.1'
 
 
 @dataclass(frozen=True)
@@ -29,7 +29,7 @@ RULES = (
     Rule('gas_hazard', r'\b(?:smell(?:ing|s)? (?:of )?(?:natural )?gas|gas (?:smell|leak|odor|odour)|(?:natural )?gas (?:is )?leaking)\b', (T.UTILITY_HAZARD,)),
     Rule('active_fire', r'\b(?:on fire|(?:there is|there\x27s) (?:a )?fire|(?:house|home|building|room) (?:is )?burning|smoke (?:is )?(?:filling|coming into))\b', (T.UNKNOWN,)),
     Rule('electrical_hazard', r'\b(?:(?:downed|fallen|live) (?:power |electric(?:al)? )?(?:lines?|wires?)|(?:power |electric(?:al)? )(?:lines?|wires?) (?:is |are |has |have )?(?:down|fallen|sparking)|sparks (?:from|at) (?:the )?(?:outlet|panel))\b', (T.UTILITY_HAZARD,)),
-    Rule('explicit_current_danger', r'\b(?:immediate danger|life[- ]threatening|life is in danger)\b', (T.UNKNOWN,)),
+    Rule('explicit_current_danger', r'\b(?:immediate danger|life[- ]threatening|life is in danger|(?:i am|i\x27m|we are|we\x27re) (?:not )?in (?:immediate )?danger)\b', (T.UNKNOWN,)),
     Rule('flood_context', r'\b(?:flood(?:ing|water|s)?|water near|water is near)\b', (T.FLOOD,), False),
     Rule('utility_context', r'\b(?:electrical panel|electrical outlet|electricity|power lines?|gas)\b', (T.UTILITY_HAZARD,), False),
     Rule('medical_context', r'\b(?:medical|ambulance|injur(?:y|ed))\b', (T.MEDICAL,), False),

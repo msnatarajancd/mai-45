@@ -110,7 +110,7 @@ class RouteResult(BaseModel):
     interrupt_routine: bool = False
     persist_danger: bool = False
     reason_codes: list[str] = Field(default_factory=list)
-    policy_version: str = 'cap04-rules-1.0'
+    policy_version: str = 'cap04-rules-1.1'
     resource_categories: list[str] = Field(default_factory=list)
     guidance_topics: list[str] = Field(default_factory=list)
 

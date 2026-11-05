@@ -1,5 +1,25 @@
 # Verification record
 
+## PR #4 conflict resolution — November 4, 2026
+
+Merged `main` at `1653ae6` into `feature/M4-EmergencyAssistance`. The conflict was
+the assistant danger precheck: main added M5-approved, non-executing recovery
+extraction while CAP-04 introduced the shared clause-qualified routing policy.
+Both features remain present. Policy `cap04-rules-1.1` recognizes explicit
+personal reports such as “I'm in danger” while retaining negation and
+hypothetical scope. The extraction-specific shared-policy check permits routine
+utility updates, pauses current threats and medical/flood concerns, and changes
+neither session state nor persisted danger. The extraction DTOs and fingerprints
+remain unchanged.
+
+Fresh combined verification: **779 passed, 11 skipped, 10 subtests passed** in
+10.52 seconds. Golden evaluation **24/24** and development evaluation **48/48**
+passed with proposed labels; compilation and whitespace checks passed. Added
+regressions reproduced the integration failures before correction, including
+ordinary restored-electricity reports and current danger mixed with planning.
+Independent review confirmed the final precheck preserves both workflows.
+No live provider call or source approval was performed for this merge.
+
 ## CAP-04 implementation — November 4, 2026
 
 Environment: macOS arm64, Python 3.12.15, repository-pinned dependencies, Node 22.23.4 and Playwright Chromium. The integrated app runs at `http://127.0.0.1:8501` with the AI key removed from its process environment and `.local/cap04-demo.sqlite3` as its isolated demo database. The health endpoint returned HTTP 200. See [implementation handoff](CAP04_IMPLEMENTATION.md) for all seven delivery areas.
