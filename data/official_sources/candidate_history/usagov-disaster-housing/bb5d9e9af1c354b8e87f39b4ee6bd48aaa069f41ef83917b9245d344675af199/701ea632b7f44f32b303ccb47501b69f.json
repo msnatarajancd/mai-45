@@ -1,0 +1,75 @@
+{
+  "chunk_id": "bb5d9e9af1c354b8e87f39b4ee6bd48aaa069f41ef83917b9245d344675af199",
+  "source_id": "usagov-disaster-housing",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.usa.gov/disaster-housing-shelter",
+  "original_content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+  "parent_chunk_id": "41425b779ac21c95d361155dfaec59ed299314b800993f182272dd03c2ae541e",
+  "section_heading": "How to find housing after a disaster",
+  "passage_start": 0,
+  "passage_end": 66,
+  "original_passage": "Learn where to search for temporary housing or a shelter near you.",
+  "proposed_chunk": "Learn where to search for temporary housing or a shelter near you.",
+  "surrounding_context": [
+    {
+      "chunk_id": "41425b779ac21c95d361155dfaec59ed299314b800993f182272dd03c2ae541e",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster",
+      "guidance_text": "Learn where to search for temporary housing or a shelter near you. Find out if you qualify for financial help to pay for housing after a disaster.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "86aed4193867b4912bf96474c9e9c24f494465bec49093c38eebcdf1bf427728",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Find a shelter",
+      "guidance_text": "If you live in a presidentially declared disaster area, there are programs and organizations that can help you find shelter.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "f16fe9aef5adb826d7f27e44ccf457ce570facfdc1fd42344d7e18454199b562",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Find a shelter > Find transitional shelter in a hotel",
+      "guidance_text": "After you register for disaster assistance with FEMA, you will find out if you qualify for transitional housing. The Transitional Sheltering Assistance (TSA) program will pay for your hotel stay while you are displaced. \nEnter your FEMA registration number to find a hotel that participates in the TSA program and contact them to reserve a room.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood"
+  ],
+  "phases": [
+    "recover"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification.",
+    "Static information pathway only: no current housing, shelter opening, room, placement, transportation, funding or personal eligibility is established.",
+    "Program registration, geographic declaration and individual requirements must be confirmed with the official program; no application is submitted here."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

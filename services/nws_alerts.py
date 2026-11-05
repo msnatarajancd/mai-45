@@ -28,7 +28,7 @@ def get_alerts(location_id: str, mode: AppMode) -> AlertResult:
         headline=('SIMULATED • ' if simulated else '') + (item['headline'] or item['event']),
         severity=item['severity'] or 'Unknown',
         description=item['description'],
-        expires_at=item['expires'], sent_at=item['sent'],
+        expires_at=item['expires'], ends_at=item.get('ends'), sent_at=item['sent'],
         effective_at=item['effective'], instruction=item['instruction'],
         area=item['area'], sender=item['sender'], source_url=item['source_url'],
     ) for item in result['alerts']]

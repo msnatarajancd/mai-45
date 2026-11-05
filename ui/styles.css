@@ -327,3 +327,22 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
 @keyframes rr-loading-reveal {to {opacity:1;}}
 @media(max-width:700px) {.st-key-app_loading {right:12px;max-width:calc(100vw - 24px);}}
 @media(prefers-reduced-motion:reduce) {.rr-loading {animation:none;opacity:1;}.rr-loading-mark::after {animation:none;}}
+
+/* Demo presentation: native controls, shared semantic palette, no generated IDs. */
+.st-key-recovery_workspace {max-width:1120px;margin-inline:auto;}
+.st-key-recovery_workspace .st-key-rr_start_description {border-top:4px solid var(--rr-accent);box-shadow:0 8px 26px var(--rr-shadow);}
+.st-key-recovery_workspace textarea {min-height:120px;font-size:1rem;line-height:1.6;}
+.st-key-recovery_help_now {background:var(--rr-info);border-radius:16px;padding:16px;}
+.st-key-recovery_help_now p {margin-bottom:.4rem;}
+.stApp .stLinkButton a[kind="primary"] {background:var(--rr-accent);color:var(--rr-onaccent);border-color:var(--rr-accent);}
+.stApp .stLinkButton a[kind="primary"] * {color:var(--rr-onaccent) !important;}
+.stApp .stLinkButton a {white-space:normal;overflow-wrap:anywhere;text-align:left;}
+.stApp button,.stApp a {touch-action:manipulation;}
+.st-key-emergency_bar button,.st-key-emergency_bar a {min-height:44px;}
+@media(max-width:700px) {
+ .st-key-recovery_workspace [data-testid="stHorizontalBlock"] {flex-wrap:wrap;}
+ .st-key-recovery_workspace [data-testid="stColumn"] {min-width:0 !important;flex:1 1 100% !important;}
+ .st-key-recovery_workspace [data-testid="stForm"] {padding:16px;}
+ .rr-topline {flex-wrap:wrap;overflow-wrap:anywhere;}
+ .st-key-recovery_workspace h1 {font-size:1.9rem !important;}
+}

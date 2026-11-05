@@ -57,11 +57,16 @@ def preview_action(proposal):
 
 def show_draft(draft_json):
     plan=RecoveryPlan.model_validate_json(draft_json)
+    from ui.recovery_page import evidence
     for i,t in enumerate(plan.proposed_tasks,1):
-        st.write(f'**{i}. {t.title}** · {t.priority.value}')
-        st.write(t.description)
-        st.caption('Why: '+t.reason_for_recommendation)
-        st.caption('Source: '+(t.source_reference or 'No verified official source attached'))
+        review=plan.task_reviews.get(str(t.task_id))
+        if review and not review.applicable:
+            st.caption(f'Historical / no longer applicable: {t.title} / saved status {t.status.value}')
+            st.caption(review.explanation)
+            continue
+        st.write(f'**{i}. {t.title}** / {(review.priority if review and review.priority else t.priority).value}')
+        st.write(review.description if review else t.description)
+        evidence(t,review=review)
     if plan.planning_disclosure: st.warning(plan.planning_disclosure)
 
 

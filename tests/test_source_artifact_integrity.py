@@ -41,9 +41,12 @@ def test_captured_original_and_history_match_provenance(source):
     for history in histories:
         snapshot = SourceBundle.model_validate_json(history.read_bytes())
         if snapshot.source.original_content_hash is None:
+            # Failed first acquisitions are authentic history, not missing captures.
             assert snapshot.source.review_status is ReviewStatus.UNAVAILABLE
             assert snapshot.source.failure_category is not None
-            assert not snapshot.chunks
+            assert snapshot.source.last_attempt_at is not None
+            assert snapshot.source.retrieved_at is None and snapshot.source.byte_count is None
+            assert snapshot.review is None and not snapshot.chunks
             continue
         original = DATA / 'originals' / (snapshot.source.original_content_hash + '.bin')
         assert original.is_file()

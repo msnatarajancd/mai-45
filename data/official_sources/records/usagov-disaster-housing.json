@@ -1,0 +1,176 @@
+{
+  "extracted_at": null,
+  "extraction_version": null,
+  "source": {
+    "source_id": "usagov-disaster-housing",
+    "publisher": "USAGov / U.S. General Services Administration",
+    "title": "How to find housing after a disaster",
+    "official_url": "https://www.usa.gov/disaster-housing-shelter",
+    "source_type": "official_static_web_guidance",
+    "jurisdiction": "US",
+    "hazards": [
+      "flood",
+      "hurricane"
+    ],
+    "disaster_phases": [
+      "recover"
+    ],
+    "classification": "OFFICIAL_SOURCE",
+    "content_type": "text/html",
+    "charset": "utf-8",
+    "original_content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+    "retrieved_at": "2026-11-04T18:37:15.431013Z",
+    "reviewed_at": "2026-11-04T20:36:21.935830Z",
+    "review_status": "REVIEWED",
+    "reviewer": "<YOUR_OWN_REVIEWER_IDENTITY>",
+    "limitations": [
+      "Candidate source; human review required before publication.",
+      "Static guidance is not live availability or a current evacuation order.",
+      "HTML-only extraction may omit images, embedded documents, or dynamic content."
+    ],
+    "final_url": "https://www.usa.gov/disaster-housing-shelter",
+    "http_status": 200,
+    "byte_count": 40906,
+    "last_attempt_at": "2026-11-04T18:37:15.012805Z",
+    "failure_category": null
+  },
+  "chunks": [
+    {
+      "chunk_id": "41425b779ac21c95d361155dfaec59ed299314b800993f182272dd03c2ae541e",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster",
+      "guidance_text": "Learn where to search for temporary housing or a shelter near you. Find out if you qualify for financial help to pay for housing after a disaster.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "86aed4193867b4912bf96474c9e9c24f494465bec49093c38eebcdf1bf427728",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Find a shelter",
+      "guidance_text": "If you live in a presidentially declared disaster area, there are programs and organizations that can help you find shelter.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "5b207dbbd65bfbce4f8c71c8d1b04b0e09ce7d7067eaa8ab261170ab54b25c36",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Find a shelter > Find a FEMA shelter",
+      "guidance_text": "FEMA offers housing programs to help if you have to leave your home due to a disaster. You can search for open FEMA shelters during a disaster in three ways:\nText SHELTER and your ZIP Code to 43362. For example, text SHELTER 01234.\nFind emergency shelters on the FEMA app. Download the free app from your smartphone's app store.\nSearch online for shelters and disaster recovery centers.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "f16fe9aef5adb826d7f27e44ccf457ce570facfdc1fd42344d7e18454199b562",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Find a shelter > Find transitional shelter in a hotel",
+      "guidance_text": "After you register for disaster assistance with FEMA, you will find out if you qualify for transitional housing. The Transitional Sheltering Assistance (TSA) program will pay for your hotel stay while you are displaced. \nEnter your FEMA registration number to find a hotel that participates in the TSA program and contact them to reserve a room.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "a39a1b2a7d1de311ccfee3f6799d261b85ea78d122fc067addf1d6d15c00c254",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Find a shelter > Find a Red Cross shelter",
+      "guidance_text": "The Red Cross offers shelters if you have to evacuate your home during a disaster. Find an open shelter near you using their online map.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "074c5c504ad8823012516c78498ec83f9a5ff41584d4a7e72f4abc787fcd7ae8",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Find a shelter > Dial 211 for help locating emergency housing",
+      "guidance_text": "In most parts of the U.S., dial 211 to connect with local social services and referrals for emergency housing.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "1c32796ebf8758580ee46eeee4ca39845fb7e3913596338ac6e000ae90ec8913",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Get help paying for housing",
+      "guidance_text": "Some Low Income Home Energy Assistance Programs (LIHEAPs) set aside money to help people get shelter after a natural disaster. Each office sets its own criteria for who can receive funds. Contact the LIHEAP office that serves your state. Or contact the LIHEAP office in your tribal area.\nImage\nFind more programs and services to help with life after a disaster.\nLAST UPDATED: \n November 3, 2026\n SHARE THIS PAGE:",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    },
+    {
+      "chunk_id": "c85660c97916d703d7b8df5e1ef63194364803ac53fefe82bd44fa91839b39b5",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Have a question?",
+      "guidance_text": "Ask a real person any government-related question for free. They will get you the answer or let you know where to find it.\n Call USAGov\n Chat with USAGov\n Top",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEWED"
+    }
+  ],
+  "review": {
+    "reviewer": "<YOUR_OWN_REVIEWER_IDENTITY>",
+    "reviewed_at": "2026-11-04T20:36:21.935830Z",
+    "content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+    "context_hash": "99ff6d7727a153ba8f66f2f44db83a7d38cdca31178d36e1339e9eb402235f03",
+    "decision": {
+      "reviewer": "<YOUR_OWN_REVIEWER_IDENTITY>",
+      "expected_content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+      "expected_context_hash": "99ff6d7727a153ba8f66f2f44db83a7d38cdca31178d36e1339e9eb402235f03",
+      "provenance_checked": true,
+      "content_checked": true,
+      "geographic_scope_checked": true,
+      "applicability_checked": true,
+      "caveats_preserved": true,
+      "standalone_passage_checked": false
+    }
+  }
+}

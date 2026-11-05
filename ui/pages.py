@@ -4,6 +4,7 @@ from domain.contracts import AppMode, Household, LOCATIONS
 from services import nws_alerts, knowledge, emergency, resources
 from ui.components import ROOT, go, navigate, heading, icon
 from ui.state import change_context, load_demo
+from ui.alert_freshness import snapshot_staleness
 from ui.capabilities import PAGES, search_pages
 
 
@@ -81,7 +82,12 @@ def protect():
         a, b = st.columns(2)
         mode = a.radio('Alert mode', list(AppMode), index=list(AppMode).index(st.session_state['mode']), format_func=lambda m:m.value, horizontal=True, key='alert_mode_picker', on_change=update_alert_context)
         location = b.selectbox('Check an area', list(LOCATIONS), index=list(LOCATIONS).index(st.session_state['location_id']), format_func=LOCATIONS.get, key='alert_location_picker', on_change=update_alert_context)
-        if st.button('Show simulated alert' if mode == AppMode.DEMO else 'Check official alerts', type='primary'):
+        st.info('On-demand snapshots only, not continuous monitoring. An idle screen does not update automatically. Explicitly check or recheck official alerts for updates; alerts may change before five minutes. No returned alerts does not establish household safety.')
+        previous = st.session_state.get('alerts')
+        recheck = mode == AppMode.LIVE and (snapshot_staleness(previous) is not None
+                                            or previous is not None and previous.status == 'unavailable')
+        action = 'Show simulated alert' if mode == AppMode.DEMO else ('Recheck Official Alerts' if recheck else 'Check official alerts')
+        if st.button(action, type='primary'):
             try:
                 result = nws_alerts.get_alerts(location, mode)
                 # Reject an adapter that crosses the live/demo boundary.
@@ -93,21 +99,31 @@ def protect():
                 st.session_state['alerts'] = AlertResult(status='unavailable', message='The alert service could not be reached. Current conditions are unknown; check NWS directly.')
     result = st.session_state.get('alerts')
     if result:
+        stale = snapshot_staleness(result)
+        if stale:
+            st.warning('STALE / UNVERIFIED OFFICIAL SNAPSHOT. ' + stale +
+                       ' Recheck Official Alerts above. Historical information below does not establish current conditions or household safety.')
         if result.status == 'alerts':
             for alert in result.alerts:
-                st.markdown(f'<div class="rr-warning"><div class="rr-eyebrow">{"SIMULATED SCENARIO · NOT CURRENT CONDITIONS" if result.simulated else "OFFICIAL ALERT RESULT"}</div><h3>{escape(alert.headline)}</h3><p>{escape(alert.description)}</p><span class="rr-badge">{escape(alert.severity)}</span></div>', unsafe_allow_html=True)
+                label = ('SIMULATED SCENARIO · NOT CURRENT CONDITIONS' if result.simulated else
+                         'HISTORICAL OFFICIAL ALERT · STALE / UNVERIFIED' if stale else 'OFFICIAL ALERT RESULT')
+                st.markdown(f'<div class="rr-warning"><div class="rr-eyebrow">{label}</div><h3>{escape(alert.headline)}</h3><p>{escape(alert.description)}</p><span class="rr-badge">{escape(alert.severity)}</span></div>', unsafe_allow_html=True)
                 if alert.sent_at:
                     st.caption('Issued: ' + alert.sent_at + ' · Effective: ' + (alert.effective_at or 'Not supplied'))
                 if alert.expires_at:
                     st.caption('Expires: ' + alert.expires_at)
+                ends_at = getattr(alert, 'ends_at', None)
+                if ends_at is not None:
+                    st.caption('NWS event ends: ' + ends_at)
                 st.caption('Area: ' + (alert.area or 'Not supplied') + ' · Sender: ' + (alert.sender or 'NWS'))
                 if alert.instruction:
-                    with st.expander('Official alert instructions'):
+                    with st.expander('Historical official alert instructions — recheck before relying on this snapshot' if stale else 'Official alert instructions'):
                         st.text(alert.instruction)
                 if alert.source_url and not result.simulated:
                     st.link_button('Original official alert', alert.source_url)
         elif result.status == 'none':
-            st.info('No active alerts returned for this area. This does not mean the area or your household is safe.')
+            st.info(('Historical lookup returned no matching alerts. Current alert status is unknown. ' if stale else
+                     'No active alerts returned for this area. ') + 'This does not mean the area or your household is safe.')
         else:
             st.warning(result.message)
         st.caption(result.message)
@@ -115,6 +131,9 @@ def protect():
             st.caption('Fixture loaded for the walkthrough. No official issue time or live check is claimed.')
         elif result.checked_at:
             st.caption('Lookup started: ' + result.checked_at + ' · On-demand only; not continuous monitoring.')
+        if not result.simulated:
+            st.caption('Official snapshot source: ' + result.source +
+                       ' · Five-minute display window; alerts may change sooner. NWS alerts are not county evacuation orders.')
         st.link_button('Open National Weather Service', 'https://www.weather.gov/mfl/')
     else:
         st.info('No alert check has been made. Choose a mode above to begin.')

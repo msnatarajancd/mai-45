@@ -60,3 +60,36 @@ def test_top_walkthrough_and_mobile_menu_keep_navigation_available(app):
     assert 'tour_step' not in app.session_state
     assert 'Call 911' in [b.label for b in app.get('link_button')]
     assert not app.exception
+
+
+def test_navigation_preserves_conversation_without_pending_approval(app):
+    button(app,'Ask ReadyRelief').click().run()
+    assert app.session_state['chat_open']
+    assert app.session_state['page']=='Home'
+    next(r for r in app.radio if r.label=='Assistant mode').set_value('Local guide · no AI').run()
+    app.chat_input[0].set_value('open Recover').run()
+    assert app.session_state['page']=='Recover'
+    assert 'assistant_pending' not in app.session_state
+    assert not app.session_state['chat_open']
+    messages=[message.copy() for message in app.session_state['assistant_messages']]
+    assert [(message['role'],message['content']) for message in messages]==[
+        ('user','open Recover'),('assistant','Opened Recover.')]
+    button(app,'Ask ReadyRelief').click().run()
+    assert app.session_state['assistant_messages']==messages
+    button(app,'Expand chat').click().run()
+    assert app.session_state['page']=='Assistant'
+    assert app.session_state['assistant_messages']==messages
+    assert 'assistant_pending' not in app.session_state
+    button(app,'Minimize chat').click().run()
+    assert app.session_state['page']=='Recover'
+    assert app.session_state['chat_open']
+    assert app.session_state['assistant_messages']==messages
+    assert 'assistant_pending' not in app.session_state
+    button(app,'Close chat').click().run()
+    assert not app.session_state['chat_open']
+    assert app.session_state['assistant_messages']==messages
+    button(app,'Ask ReadyRelief').click().run()
+    assert next(r for r in app.radio if r.label=='Assistant mode').value=='Local guide · no AI'
+    assert not app.exception
+    assert app.session_state['assistant_messages']==messages
+    assert 'assistant_pending' not in app.session_state

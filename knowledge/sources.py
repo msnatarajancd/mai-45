@@ -43,6 +43,15 @@ CURATED_SOURCES = (
     _spec('fcc-text-911', 'Federal Communications Commission', 'Text to 911: What You Need to Know',
           'https://www.fcc.gov/consumers/guides/what-you-need-know-about-text-911', 'US',
           [DisasterPhase.PREPARE, DisasterPhase.RESPOND], ('911',)),
+
+    _spec('nfip-document-flood-damage', 'FEMA National Flood Insurance Program (FloodSmart)',
+          'How to document flood damage',
+          'https://www.floodsmart.gov/recover/document-damage',
+          'US', [DisasterPhase.RECOVER], ('document flood damage',)),
+    _spec('usagov-disaster-housing', 'USAGov / U.S. General Services Administration',
+          'How to find housing after a disaster',
+          'https://www.usa.gov/disaster-housing-shelter',
+          'US', [DisasterPhase.RECOVER], ('housing after a disaster',)),
 )
 
 

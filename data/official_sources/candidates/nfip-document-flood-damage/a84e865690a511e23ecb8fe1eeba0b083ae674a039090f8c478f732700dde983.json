@@ -1,0 +1,60 @@
+{
+  "chunk_id": "a84e865690a511e23ecb8fe1eeba0b083ae674a039090f8c478f732700dde983",
+  "source_id": "nfip-document-flood-damage",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.floodsmart.gov/recover/document-damage",
+  "original_content_hash": "fc9693d31c3fbbb1353a9365ff328e770de53e91800978b1dbfdb3145a0f2f9f",
+  "parent_chunk_id": "5004880fe006404b5bc5298e8d9256da9d6452a587bf29b092ae8cafe345b1ce",
+  "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+  "passage_start": 0,
+  "passage_end": 376,
+  "original_passage": "Photos and videos are key for your flood insurance claim. Be sure to capture:\nWater levels on walls, furniture and appliances.\nStructural damage to floors, ceilings and foundations.\nSerial numbers on damaged electronics and appliances.\nAfter taking photos, immediately throw away anything that could be a health risk, like spoiled food or moldy clothing, cushions and pillows.",
+  "proposed_chunk": "Photos and videos are key for your flood insurance claim. Be sure to capture:\nWater levels on walls, furniture and appliances.\nStructural damage to floors, ceilings and foundations.\nSerial numbers on damaged electronics and appliances.\nAfter taking photos, immediately throw away anything that could be a health risk, like spoiled food or moldy clothing, cushions and pillows.",
+  "surrounding_context": [
+    {
+      "chunk_id": "5004880fe006404b5bc5298e8d9256da9d6452a587bf29b092ae8cafe345b1ce",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+      "guidance_text": "Photos and videos are key for your flood insurance claim. Be sure to capture:\nWater levels on walls, furniture and appliances.\nStructural damage to floors, ceilings and foundations.\nSerial numbers on damaged electronics and appliances.\nAfter taking photos, immediately throw away anything that could be a health risk, like spoiled food or moldy clothing, cushions and pillows.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "2aab798d4f6894db8be6dfadb5eba6475664833fcf562c5b428d384a9400d62d",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage",
+      "guidance_text": "Recovery begins once floodwaters recede. If you have flood insurance, you don’t have to go through it alone.\nWhen it’s safe to return home, act quickly to document flood damage. Early action can support your flood insurance claim and gets you on the road to recovery.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood"
+  ],
+  "phases": [
+    "recover"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification.",
+    "The source conditions documentation on safe return. This passage is not permission to enter or handle hazards; preserve existing reentry and electrical warnings.",
+    "NFIP documentation information only; no insurance coverage, reimbursement or claim outcome is established."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

@@ -188,7 +188,7 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
         message=('SIMULATED: '+result.alerts[0].headline) if result.simulated and result.alerts else result.message or ('No active alerts returned; this does not establish safety.' if result.status=='none' else 'Alert result loaded.')
     elif kind=='show_plan':
         if not plan: message='No approved plan is open. Open or resume a recovery case first.'
-        else: message='Saved plan:\n'+'\n'.join(f'{i}. {t.title} — {t.status.value}' for i,t in enumerate(plan.proposed_tasks,1))
+        else: message='Saved plan:\n'+'\n'.join(f'{i}. {t.title} — {t.status.value}' + (' (historical / no longer applicable)' if str(t.task_id) in plan.task_reviews and not plan.task_reviews[str(t.task_id)].applicable else '') for i,t in enumerate(plan.proposed_tasks,1))
     elif kind=='resume_case':
         resumed=repo.get_case(a.case_id)
         if not resumed: raise ValueError('That fictional case was not found on this machine.')
@@ -444,6 +444,11 @@ def extract_recovery_needs(
         'Extract every supported field independently. A report that a home/apartment flooded supports BOTH '
         'disaster_type=Flood and housing_condition=Flooded; do not omit disaster_type when extracting housing. '
         'Never infer adults or children from we, parents, family, pronouns or total household size. '
+        'COUNTEREXAMPLE: "We are five people at home, including an elderly family member" '
+        'does NOT report five adults or zero children. Omit BOTH adults and children unless their '
+        'respective counts are explicitly stated; the application retains UNKNOWN or confirmed values. '
+        'Zero is a reported count, never a substitute for unknown. An elderly family member alone '
+        'does not establish a count by category or a need for transportation, mobility or medical services. '
         'Housing damage severity must be explicit, not inferred from flooding or utility outages. '
         'Utility restoration never establishes safety. Never emit safety, danger clearance, approvals, IDs or actions. '
         'County must be explicitly named; do not convert to a city or location ID. '

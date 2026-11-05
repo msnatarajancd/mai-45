@@ -1,0 +1,42 @@
+{
+  "fields": {
+    "disaster_type": {
+      "state": "PROPOSED",
+      "value": "Flood",
+      "source_quote": "Our house flooded"
+    },
+    "housing_condition": {
+      "state": "PROPOSED",
+      "value": "Flooded",
+      "source_quote": "Our house flooded"
+    },
+    "electricity": {
+      "state": "PROPOSED",
+      "value": "Unavailable",
+      "source_quote": "the electricity is out"
+    },
+    "temporary_accommodation": {
+      "state": "PROPOSED",
+      "value": "Needed",
+      "source_quote": "we need somewhere to stay"
+    },
+    "adults": {
+      "state": "PROPOSED",
+      "value": 5,
+      "source_quote": "We are five people at home"
+    },
+    "children": {
+      "state": "PROPOSED",
+      "value": 0,
+      "source_quote": "We are five people at home"
+    }
+  },
+  "new_damage": [
+    {
+      "state": "PROPOSED",
+      "value": "house",
+      "source_quote": "Our house flooded"
+    }
+  ],
+  "clarification_fields": []
+}
