@@ -45,3 +45,14 @@ def test_ordinary_decision_does_not_start_an_emergency():
     state = {'rr_case_id': 'case-1'}
     begin_emergency(state, evaluate_situation(SituationInput(text='transport next week')), entrypoint='respond', event_id='future-1')
     assert not state.get('rr_emergency') and not state.get('rr_pending_danger')
+
+
+def test_emergency_clears_recovery_proposals_without_inventing_persisted_danger():
+    from emergency.service import screen_report
+    from emergency.workflow import begin_emergency
+    state={'rr_case_id':'fictional','rr_extraction_review':'old','rr_extraction_ready':{},'rr_extraction_message':'old'}
+    decision=screen_report('I am not sure whether my child is breathing.',entrypoint='recovery')
+    begin_emergency(state,decision,entrypoint='recovery',event_id='synthetic-review-interrupt')
+    assert state['rr_emergency'] is True
+    assert not any(k.startswith('rr_extraction') for k in state)
+    assert not state.get('rr_pending_danger')

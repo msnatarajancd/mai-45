@@ -1,0 +1,77 @@
+{
+  "chunk_id": "8630330fbd12aabc3c31bff38cd811d234bc3e214e05021a322d6f082d9f2b48",
+  "source_id": "usagov-disaster-housing",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.usa.gov/disaster-housing-shelter",
+  "original_content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+  "parent_chunk_id": "f16fe9aef5adb826d7f27e44ccf457ce570facfdc1fd42344d7e18454199b562",
+  "section_heading": "How to find housing after a disaster > Find a shelter > Find transitional shelter in a hotel",
+  "passage_start": 0,
+  "passage_end": 112,
+  "original_passage": "After you register for disaster assistance with FEMA, you will find out if you qualify for transitional housing.",
+  "proposed_chunk": "After you register for disaster assistance with FEMA, you will find out if you qualify for transitional housing.",
+  "surrounding_context": [
+    {
+      "chunk_id": "f16fe9aef5adb826d7f27e44ccf457ce570facfdc1fd42344d7e18454199b562",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Find a shelter > Find transitional shelter in a hotel",
+      "guidance_text": "After you register for disaster assistance with FEMA, you will find out if you qualify for transitional housing. The Transitional Sheltering Assistance (TSA) program will pay for your hotel stay while you are displaced. \nEnter your FEMA registration number to find a hotel that participates in the TSA program and contact them to reserve a room.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "86aed4193867b4912bf96474c9e9c24f494465bec49093c38eebcdf1bf427728",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Find a shelter",
+      "guidance_text": "If you live in a presidentially declared disaster area, there are programs and organizations that can help you find shelter.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood"
+  ],
+  "phases": [
+    "recover"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification.",
+    "Static information pathway only: no current housing, shelter opening, room, placement, transportation, funding or personal eligibility is established.",
+    "Program registration, geographic declaration and individual requirements must be confirmed with the official program; no application is submitted here.",
+    "Registration does not establish qualification, an approved hotel payment or a room reservation. The remaining hotel-program description stays administrative context only."
+  ],
+  "review_status": "APPROVED",
+  "review": {
+    "reviewer": "<YOUR_OWN_REVIEWER_IDENTITY>",
+    "reviewed_at": "2026-11-04T20:36:31.264816Z",
+    "content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+    "context_hash": "3034b531f7dcb800f4473cef6de4867826f8c888c384cb3a5c7665a33d219cc4",
+    "decision": {
+      "reviewer": "<YOUR_OWN_REVIEWER_IDENTITY>",
+      "expected_content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+      "expected_context_hash": "3034b531f7dcb800f4473cef6de4867826f8c888c384cb3a5c7665a33d219cc4",
+      "provenance_checked": true,
+      "content_checked": true,
+      "geographic_scope_checked": true,
+      "applicability_checked": true,
+      "caveats_preserved": true,
+      "standalone_passage_checked": true
+    }
+  },
+  "rejection": null
+}

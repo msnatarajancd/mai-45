@@ -52,7 +52,12 @@ export default function(component) {
         const emergency = document.querySelector('.st-key-emergency_bar')?.getBoundingClientRect();
         const guide = document.querySelector('.st-key-guided_tour')?.getBoundingClientRect();
         // Reserve room for both persistent controls and the numbered marker.
-        const top = Math.max(0, header?.bottom || 0, emergency?.bottom || 0) + 32;
+        // Scrolling moves the action bar to its sticky header boundary. Use
+        // that final position rather than its initial lower Home-page position.
+        const emergencyBottom = scroll && emergency
+            ? Math.min(emergency.bottom, (header?.bottom || 0) + 2 + emergency.height)
+            : emergency?.bottom || 0;
+        const top = Math.max(0, header?.bottom || 0, emergencyBottom) + 32;
         const rect = target.getBoundingClientRect();
         const bottom = guide && rect.right > guide.left && rect.left < guide.right ? guide.top : window.innerHeight;
         if (rect.height + 10 > bottom - top) {

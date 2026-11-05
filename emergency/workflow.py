@@ -21,7 +21,7 @@ def begin_emergency(state: MutableMapping[str, object], decision: RouteResult,
     state['rr_emergency_entrypoint'] = entrypoint
     for key in list(state):
         if (key.startswith('tour_') or key.endswith('_generated_guidance')
-                or key.startswith(('rr_revision', 'rr_reviewed'))
+                or key.startswith(('rr_revision', 'rr_reviewed', 'rr_extraction'))
                 or key in {'assistant_pending', 'assistant_result_notice', 'assistant_result',
                            'guidance', 'resources', 'route_result'}):
             state.pop(key, None)

@@ -370,3 +370,56 @@ def test_recovery_current_threat_or_serious_uncertainty_stops_extraction(message
     assert result.fields.electricity.value == 'Unavailable'
     assert result.base_context_fingerprint == recovery_context_fingerprint(context)
     assert context.danger_reported is False
+
+# Recorded real-model output for a fictional household, not production evidence.
+def _recorded_household_total_reply():
+    from pathlib import Path
+    return (Path(__file__).parent / 'fixtures' / 'synthetic_qwen_household_total_rejected.json').read_text(encoding='utf-8')
+
+
+def test_recorded_total_inference_is_schema_valid_but_must_still_be_rejected():
+    from services.assistant import _strict_extraction_json, _RecoveryModelExtraction, _check_recovery_quotes
+    message = ('We are five people at home, including an elderly family member. '
+        'Our house flooded, the electricity is out, and we need somewhere to stay.')
+    raw = _recorded_household_total_reply()
+    proposal = _strict_extraction_json(raw, _RecoveryModelExtraction)
+    assert proposal.fields.adults.value == 5 and proposal.fields.children.value == 0
+    with pytest.raises(ValueError, match='Household count is not explicit'):
+        _check_recovery_quotes(proposal, message, RecoveryConfirmedContext())
+    client = FakeClient(raw)
+    result = extract_recovery_needs(message, client=client)
+    assert result.status == 'ERROR' and result.error_code == 'invalid_model_output'
+    assert len(client.calls) == 1  # Rejected before the semantic model audit.
+    assert not result.new_damage
+    assert all(field.state == 'UNKNOWN' for field in result.fields.__dict__.values())
+
+
+def test_valid_provider_reply_leaves_household_total_unclassified():
+    message = ('We are five people at home, including an elderly family member. '
+        'Our house flooded, the electricity is out, and we need somewhere to stay.')
+    # Simulate a provider COMPLYING with the prompt; production never repairs output.
+    valid = json.loads(_recorded_household_total_reply())
+    del valid['fields']['adults']
+    del valid['fields']['children']
+    result = extract_recovery_needs(message, client=FakeClient(valid))
+    assert result.status == 'SUCCESS'
+    assert result.fields.adults.state == result.fields.children.state == 'UNKNOWN'
+    assert result.fields.adults.value is result.fields.children.value is None
+    assert result.fields.household_recovery_needs.state == 'UNKNOWN'
+    assert result.fields.electricity.value == 'Unavailable'
+
+
+@pytest.mark.parametrize('value,quote', [(5, 'We are five people at home'), (0, 'including an elderly family member')])
+def test_exact_total_or_age_quote_cannot_support_adult_counts(value, quote):
+    message = 'We are five people at home, including an elderly family member.'
+    result = extract_recovery_needs(message, client=FakeClient(
+        {'fields': {'adults': proposed(value, quote)}}))
+    assert result.status == 'ERROR' and result.fields.adults.value is None
+
+
+def test_recorded_format_does_not_relax_exact_quote_validation():
+    valid = json.loads(_recorded_household_total_reply())
+    valid['fields'].pop('adults');valid['fields'].pop('children')
+    valid['fields']['electricity']['source_quote'] = 'Electricity is unavailable (invented wording)'
+    result = extract_recovery_needs('Our house flooded, the electricity is out, and we need somewhere to stay.', client=FakeClient(valid))
+    assert result.status == 'ERROR' and not result.new_damage

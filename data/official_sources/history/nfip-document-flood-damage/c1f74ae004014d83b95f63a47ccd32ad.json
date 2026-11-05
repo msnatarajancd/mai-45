@@ -1,0 +1,39 @@
+{
+  "extracted_at": null,
+  "extraction_version": null,
+  "source": {
+    "source_id": "nfip-document-flood-damage",
+    "publisher": "FEMA National Flood Insurance Program (FloodSmart)",
+    "title": "How to document flood damage",
+    "official_url": "https://www.floodsmart.gov/recover/document-damage",
+    "source_type": "official_static_web_guidance",
+    "jurisdiction": "US",
+    "hazards": [
+      "flood",
+      "hurricane"
+    ],
+    "disaster_phases": [
+      "recover"
+    ],
+    "classification": "OFFICIAL_SOURCE",
+    "content_type": null,
+    "charset": null,
+    "original_content_hash": null,
+    "retrieved_at": null,
+    "reviewed_at": null,
+    "review_status": "UNAVAILABLE",
+    "reviewer": null,
+    "limitations": [
+      "Candidate source; human review required before publication.",
+      "Static guidance is not live availability or a current evacuation order.",
+      "HTML-only extraction may omit images, embedded documents, or dynamic content."
+    ],
+    "final_url": null,
+    "http_status": null,
+    "byte_count": null,
+    "last_attempt_at": "2026-11-04T18:36:56.232073Z",
+    "failure_category": "TLS_ERROR"
+  },
+  "chunks": [],
+  "review": null
+}
