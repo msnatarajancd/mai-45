@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import Literal
 from pydantic import BaseModel, Field
 
 
@@ -85,10 +86,33 @@ class GuidanceResult(BaseModel):
     missing_information: list[str] = Field(default_factory=list)
 
 
+class IncidentType(StrEnum):
+    FLOOD = 'flood'
+    TRAPPED = 'trapped'
+    MEDICAL = 'medical'
+    EVACUATION_SUPPORT = 'evacuation_support'
+    UTILITY_HAZARD = 'utility_hazard'
+    UNKNOWN = 'unknown'
+
+
+class Urgency(StrEnum):
+    IMMEDIATE = 'immediate'
+    URGENT = 'urgent'
+    ORDINARY = 'ordinary'
+    UNCERTAIN = 'uncertain'
+
+
 class RouteResult(BaseModel):
-    route: str  # emergency | resources
-    urgency: str
+    route: Literal['emergency', 'resources']
+    urgency: Urgency
     message: str
+    incident_types: list[IncidentType] = Field(default_factory=lambda: [IncidentType.UNKNOWN])
+    interrupt_routine: bool = False
+    persist_danger: bool = False
+    reason_codes: list[str] = Field(default_factory=list)
+    policy_version: str = 'cap04-rules-1.1'
+    resource_categories: list[str] = Field(default_factory=list)
+    guidance_topics: list[str] = Field(default_factory=list)
 
 
 class Resource(BaseModel):

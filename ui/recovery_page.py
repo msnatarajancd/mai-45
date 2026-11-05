@@ -63,7 +63,8 @@ def new_case(repo):
         # Outside a form: a danger selection interrupts immediately, before submit.
         danger = st.selectbox('Immediate danger assessment', DANGER, key='rr_initial_danger')
         if danger == DANGER[2]:
-            st.session_state['rr_emergency'] = True
+            from ui.emergency_page import _report_danger
+            _report_danger('recovery')
             st.rerun()
         with st.form('rr_intake'):
             fields = intake_fields('new_')
@@ -143,7 +144,8 @@ def reassessment(repo, case, plan):
         danger = st.selectbox('Updated immediate danger assessment', DANGER, key='rr_update_danger')
         if danger == DANGER[2]:
             st.session_state.pop('rr_revision', None)
-            st.session_state['rr_emergency'] = True
+            from ui.emergency_page import _report_danger
+            _report_danger('recovery')
             st.rerun()
         if danger != DANGER[1]:
             st.session_state.pop('rr_revision', None)

@@ -1,103 +1,91 @@
 # ReadyRelief — Protect. Respond. Recover.
 
-A Miami-Dade hurricane/flood course prototype for a five-person team. M1 provides a complete Streamlit application; M5's Recovery Copilot from PR #1 is integrated through its existing Python services. M2 Guardian and M3 reviewed CDC retrieval are integrated. M1 owns constrained Nebius/Qwen explanations; M4 safety review and the resource directory remain owner TODOs.
+A Miami-Dade hurricane/flood course prototype. The Streamlit app integrates M2 Guardian county alerts, M3 reviewed CDC retrieval, CAP-04 local emergency routing, optional constrained Qwen explanations, and M5 recovery planning and SQLite persistence. Emergency routing requires no AI. The directory publication machinery is implemented; all eight prepared directory listings still await review.
 
-## Run the demo
+## Run locally
 
-Python **3.12** is the tested version. No API key is needed for the complete deterministic demonstration.
-
-```powershell
-cd "D:\Documents\Code Repos\mai-45"
-uv venv --python 3.12
-uv pip install --python .venv/Scripts/python.exe -r requirements.txt
-.venv/Scripts/python.exe -m streamlit run app.py
-```
-
-Or use standard Python:
+Python **3.12** is the tested version. From this repository, create and activate a virtual environment:
 
 ```sh
-python -m venv .venv
-# Activate .venv for your operating system, then:
+python3.12 -m venv .venv
+source .venv/bin/activate
 python -m pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-Open the local URL printed by Streamlit. Choose **Start guided demo**. The sidebar walks through Protect → Respond → Recover → Evidence. [Rehearsal script](docs/DEMO_SCRIPT.md) covers a 6–8 minute presentation.
+On Windows PowerShell, use `py -3.12 -m venv .venv` and `.venv\Scripts\Activate.ps1`, then the same install and run commands. No API key is needed for the deterministic demonstration. Open the local URL printed by Streamlit and choose **Start guided demo**. The [rehearsal script](docs/DEMO_SCRIPT.md) includes CAP-04 and a separate fictional recovery scene.
 
 ## What is implemented
 
-- Polished bright/dark workspace with an icon theme switch, searchable navigation, a mobile menu, and a floating assistant that expands into a full chat screen.
-- Responsive home and searchable top-toolbar navigation (names and synonyms such as tasks, weather, mobility); persistent emergency access on all six pages.
-- Optional fictional household preferences and supported Miami-Dade area selection.
-- Explicit simulated/live alert modes, context invalidation, unavailable service handling.
-- Conservative emergency interruption and official-information links.
-- Actual M5 recovery intake, deterministic draft, explicit approval, SQLite task updates, resume by case ID, reviewable reassessment, preserved history, and plan download.
-- Retrieval-first Qwen explanations in Protect, Respond, Recover and expanded Assistant, with official citations, partial-evidence limits, provider-failure fallback and review-revocation checks. No ungrounded task generator is exposed in the integrated app.
-- Evidence screen explaining connected capabilities and remaining integrations.
-- Six-step spotlight walkthrough with optional browser narration, Listen/Stop controls, automatic control highlighting, and optional Nebius product explanations.
-- Conversational Assistant for product help and validated app operations, with review cards before execution. [Assistant guide](docs/ASSISTANT.md).
+- Responsive bright/dark shell, searchable navigation, mobile menu, guided tour, and a floating assistant that expands into a full chat screen.
+- Optional, session-only fictional household preferences and area selection.
+- Explicit simulated/live alert modes. Live checks request official county-wide NWS alerts on demand; failures remain unavailable and never become simulated alerts.
+- **I Need Help Now** workspace with **Call 911** first and **I Can't Call 911** second. Neither action requires AI, a profile, classification, location, or a database write. A user-initiated telephone link expresses call intent; it does not confirm connection or dispatch.
+- Deterministic classification of multiple incident types and four urgency levels; uncertain requests retain emergency access. Current reported danger interrupts routine Guardian, chat, guidance, and recovery work, invalidates stale proposals, and queues best-effort danger persistence.
+- Optional current incident county and communication needs, stable cannot-call information, desktop dialing fallback, and explicit connectivity limits. Saved or monitored location never establishes current incident location.
+- Reviewed directory lookup with source, passage, listing, scope, expiry, and integrity gates. Pending entries stay hidden; official entry links are labeled separately from verified matches.
+- M5 intake, deterministic draft, explicit approval, SQLite task updates, resume by case ID, reviewable reassessment, preserved history, and plan download.
+- Retrieval-first Qwen explanations with approved citations, partial-evidence limits, provider-failure fallback, and revocation checks. Generation never supplies the emergency routing decision or automatically changes a recovery task.
+- Six synthetic emergency demos, three fictional profiles, nine failure-state descriptions, 48 development cases, and 24 independently authored golden cases. Expectations are **PROPOSED**, not human-approved safety evidence.
 
-## What is intentionally pending
+## Review readiness and remaining work
 
-| Owner | Handoff | Current behavior |
-| --- | --- | --- |
-| M2 | `services/nws_alerts.py` | Integrated Guardian county alerts; PR #2 is ready for review; optional HTTP deployment remains with M2 |
-| M3 | `services/knowledge.py`, `services/resources.py` | Reviewed CDC recovery evidence connected; additional phase coverage and resource directory remain pending |
-| M4 | `services/emergency.py` | Emergency controls work; conservative fallback only; reviewed rules/golden safety cases pending |
-| M5 | Existing `recovery/` | Integrated unchanged from PR #1; source grounding, household persistence and any recovery-policy changes remain with M5/M3 |
+| Area | Current state |
+| --- | --- |
+| M2 Guardian | Integrated county alerts; no continuous monitoring or household-level conditions |
+| M3 guidance | Five approved CDC recovery passages; other phases and sources remain limited by their actual review state |
+| CAP-04 routing | Local policy, shared interruptions, UI, and synthetic evaluation implemented; synthetic success is not real-world safety certification |
+| CAP-04 directory | Eight PENDING listings: seven have acquired-source passages; FCC acquisition failed and has no publishable capture. No new source, passage, or listing approval was fabricated |
+| M5 recovery | Local persistence and reassessment integrated; source-grounded task planning, durable household context, and an explicit danger-clearance workflow remain future work |
 
-[Detailed contracts, TODOs, acceptance checks](docs/INTEGRATION.md). [Design](docs/superpowers/specs/2026-11-02-m1-design.md). The supplied ReadyRelief_Plan.docx remains the requirements authority.
+See [integration contracts](docs/INTEGRATION.md), [CAP-04 implementation](docs/CAP04_IMPLEMENTATION.md), and the [directory review packet](docs/CAP04_SOURCE_REVIEW.md). Returning from an emergency view does not clear a saved danger report or establish safety.
 
 ## Storage and configuration
 
-The integrated app defaults to `.local/recovery.sqlite3` (ignored by Git). Override with an absolute `READYRELIEF_DB_PATH`. The standalone M5 `dev_recovery_preview.py` retains its original path behavior. Save your fictional case ID to resume after a browser/server restart on the same machine. Household preferences are session-only. Switching household preferences does not rewrite existing recovery cases.
+The app defaults to `.local/recovery.sqlite3` (ignored by Git). Override with an absolute `READYRELIEF_DB_PATH`. Save the fictional case ID to resume after a browser/server restart on the same machine. Household preferences and chat are session-only; changing preferences does not rewrite existing recovery cases.
 
-`.env.example` documents configuration; the application does **not** automatically load `.env` files. For optional AI (also used by the new Assistant):
+`.env.example` documents optional AI configuration; the app does **not** automatically load `.env` files. Set `NEBIUS_API_KEY` in the server environment only when using AI. `NEBIUS_CHAT_MODEL` selects the chat/tour model; `NEBIUS_MODEL` is also supported by the M5 client. Never commit keys. Missing or bad provider configuration produces an explicit unavailable/no-generation notice. Emergency access, local routing, and the deterministic demo make no provider calls.
 
-```powershell
-$env:NEBIUS_API_KEY = "your-key"
-# Optional for chat/tour: $env:NEBIUS_CHAT_MODEL = "Qwen/Qwen3-235B-A22B-Instruct-2507"
-# Optional for M5 planner: $env:NEBIUS_MODEL = "provider-model-id"
-.venv/Scripts/python.exe -m streamlit run app.py
-```
-
-Never commit keys. Missing/bad provider configuration shows reviewed excerpts with an explicit no-generation notice; saved tasks are unchanged. AI is not invoked by navigation, emergency access, or the default demo.
-
-## Test
+## Verification
 
 ```sh
 python -m pytest -q
-python -m compileall -q app.py domain services ui recovery
+python -m emergency.evaluation.run --dataset golden --output artifacts/cap04-evaluation.json
+python -m emergency.evaluation.run --dataset development --output artifacts/cap04-development.json
+python -m compileall -q app.py domain services ui recovery emergency knowledge m2_guardian
+node tests/tour_lifecycle.mjs
+node tests/search_suggestions.mjs
 ```
 
-On Windows, M3 fixtures can exceed the default temporary path length; use a dedicated short path, for example `python -m pytest -q --basetemp="D:/Documents/Code Repos/.t-m1"`. Pytest owns and clears that temporary directory.
+For browser checks, install the Node dependencies and Chromium with `npm ci` and `npx playwright install chromium`, then run `npm run test:visual`. The emergency suite is `npm run test:visual -- tests/visual/emergency.spec.cjs`; it inspects the telephone target without dialing.
 
-The combined suite includes M2/M3 and the original M5 tests plus M1 service contracts, navigation, safety access, mode isolation, approval, persistence/resume, and stale-write checks. [Verification notes](docs/VERIFICATION.md) record the tested environment and limits.
+The evaluator records type, urgency, routing, safety, critical misses, bounded forbidden-claim checks, and measured provider/network attempts with policy and dataset versions. Its guarded Python/provider boundaries are documented in [evaluation notes](emergency/evaluation/README.md); this is not an operating-system sandbox. [Verification notes](docs/VERIFICATION.md) hold the coordinated results and remaining limitations. On Windows, a short dedicated `--basetemp` path may be needed for M3 fixtures; pytest owns and clears that directory.
 
 ## Team layout
 
 ```text
 app.py                 single application entry point
-ui/                    shared shell, seven screens, product tour, M5 presentation
-assets/journey.svg     original local vector illustration (no remote asset dependency)
-domain/contracts.py    M1–M4 integration data contracts
-services/              M2/M3/M4 adapters, validated assistant planner/executor
-recovery/              existing M5 domain, SQLite, planners, reassessment (unchanged)
-tests/                 existing M5 + M1 regression tests
-.streamlit/config.toml theme and local server defaults
-docs/                  integration guide, demo script, design, verification
+ui/                    shared shell, emergency workspace, tour and M5 presentation
+domain/                application and directory contracts
+services/              M2/M3/M4 adapters, constrained generation and assistant actions
+emergency/             local policy, interruption state, demo loader and evaluation
+knowledge/             acquired sources, review gates, retrieval and directory
+recovery/              M5 domain, SQLite, planners and reassessment
+m2_guardian/            official alert integration and simulated alert fixtures
+data/emergency_demo/   explicitly synthetic presentation and failure inputs
+data/official_sources/ original captures, review records and pending directory entries
+tests/                 Python, JavaScript and browser regression checks
+docs/                  integration, review packets, demo and verification records
 ```
 
-## Deployment
+## Scope and deployment
 
-Use a local single-user demo for the contest; run the command above before rehearsing. Keep a backup recording. A hosted Streamlit demo uses `app.py`, Python 3.12, and `requirements.txt`, but **local SQLite may disappear on restart/redeploy**. This has no authentication or private multi-user isolation; case IDs are not access credentials. Do not expose real household data. An external store and access controls require M5/team work before any operational or public-user deployment.
+Use fictional data in a local single-user demonstration and keep a backup recording. This educational prototype has no authentication or private multi-user isolation; case IDs are not access credentials. Hosted local SQLite can disappear on restart or redeploy. External storage, access control, and retention need separate team work before any operational deployment.
 
-## Scope and honesty
+The app is online only. Local deterministic routing means independence from AI, not offline operation or guaranteed server/browser connectivity. There is no automated dispatch, message sending, rescue confirmation, transport booking, guaranteed pickup, live shelter capacity, push alerting, insurance submission, benefit eligibility decision, or household safety verification. A successful click proves none of those outcomes. Simulated warnings are never current weather; no-alert responses do not establish safety.
 
-Educational prototype, not an emergency service. Online only. No dispatch, rescue requests, live shelter inventory, push alerts, maps, insurance submission, FEMA eligibility determination, or safety verification. Simulated warnings are never current weather. No-alert responses do not establish safety. Recovery templates are not claimed to be source-grounded. No contest-win or measured-impact claim is made.
+## Optional grounded generation
 
-## Grounded generation demonstration
+In Recover, expand **Ask Qwen about reviewed guidance**, select **flood**, and request **electrical hazards**. Approved CDC evidence may support only a partial answer; keep that limitation visible. Unsupported eligibility questions produce no generated answer. Protect and Respond use their own phase and cannot silently reuse recovery evidence.
 
-Open **Recover → Ask Qwen about reviewed guidance**. Select **flood**, retain **electrical hazards**, then choose **Generate cited explanation**. The reviewed CDC passage may be insufficient for a complete answer; its partial status must stay visible. Open the evidence expander to inspect the exact passage and citation. An unsupported eligibility question produces no model answer. Protect and Respond honor their own evidence phase; recovery evidence is never silently reused for them.
-
-A real, credential-free acceptance record is in [Qwen evidence](docs/evidence/m1-qwen-live-2026-11-03.json). Reproduce it explicitly with `python scripts/verify_grounded_generation.py --live`. This makes paid provider calls using the server environment key; unit tests use clearly labeled doubles. See [current M1 handoff](docs/M1_COMPLETION_HANDOFF.md).
+Historical real-provider evidence is recorded in [Qwen evidence](docs/evidence/m1-qwen-live-2026-11-03.json). `python scripts/verify_grounded_generation.py --live` explicitly makes paid calls using the server key; normal tests use labeled doubles. See the [M1 handoff](docs/M1_COMPLETION_HANDOFF.md) and [assistant guide](docs/ASSISTANT.md).

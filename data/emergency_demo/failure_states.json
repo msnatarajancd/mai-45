@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0",
+  "dataset_version": "2026-11-04.1",
+  "classification": "SIMULATED_DEMO",
+  "expectation_status": "PROPOSED",
+  "failure_states": [
+    {
+      "id": "failure-ai_missing",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED FAILURE \u00b7 AI credentials absent",
+      "fault": "ai_missing",
+      "expected_behaviors": [
+        "Emergency actions remain accessible",
+        "Routing makes no provider calls"
+      ],
+      "limitations": [
+        "Test setup description only; loading this record does not inject a live outage."
+      ]
+    },
+    {
+      "id": "failure-ai_timeout",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED FAILURE \u00b7 AI response does not finish",
+      "fault": "ai_timeout",
+      "expected_behaviors": [
+        "Emergency actions remain accessible",
+        "Discard stale routine output after interruption"
+      ],
+      "limitations": [
+        "Test setup description only; loading this record does not inject a live outage."
+      ]
+    },
+    {
+      "id": "failure-directory_missing",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED FAILURE \u00b7 Reviewed directory unavailable",
+      "fault": "directory_missing",
+      "expected_behaviors": [
+        "Emergency actions remain accessible",
+        "Show directory unavailable rather than verified matches"
+      ],
+      "limitations": [
+        "Test setup description only; loading this record does not inject a live outage."
+      ]
+    },
+    {
+      "id": "failure-stale_source",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED FAILURE \u00b7 Source review has expired",
+      "fault": "stale_source",
+      "expected_behaviors": [
+        "Remove verified listing on next render",
+        "Preserve official entry links and emergency access"
+      ],
+      "limitations": [
+        "Test setup description only; loading this record does not inject a live outage."
+      ]
+    },
+    {
+      "id": "failure-revoked_source",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED FAILURE \u00b7 Source approval revoked during session",
+      "fault": "revoked_source",
+      "expected_behaviors": [
+        "Remove verified listing on next render",
+        "Do not reuse stale displayed evidence"
+      ],
+      "limitations": [
+        "Test setup description only; loading this record does not inject a live outage."
+      ]
+    },
+    {
+      "id": "failure-unknown_county",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED FAILURE \u00b7 No current incident county selected",
+      "fault": "unknown_county",
+      "expected_behaviors": [
+        "Keep emergency actions accessible",
+        "Do not assume local text service coverage"
+      ],
+      "limitations": [
+        "Test setup description only; loading this record does not inject a live outage."
+      ]
+    },
+    {
+      "id": "failure-database_failure",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED FAILURE \u00b7 Danger persistence fails",
+      "fault": "database_failure",
+      "expected_behaviors": [
+        "Keep emergency workspace open",
+        "Keep danger report pending without claiming it was saved"
+      ],
+      "limitations": [
+        "Test setup description only; loading this record does not inject a live outage."
+      ]
+    },
+    {
+      "id": "failure-unsupported_dialer",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED FAILURE \u00b7 Device cannot open a telephone link",
+      "fault": "unsupported_dialer",
+      "expected_behaviors": [
+        "Keep the visible 911 number and desktop fallback",
+        "Do not claim a call connected"
+      ],
+      "limitations": [
+        "Test setup description only; loading this record does not inject a live outage."
+      ]
+    },
+    {
+      "id": "failure-no_connection",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED FAILURE \u00b7 No usable phone or messaging connection",
+      "fault": "no_connection",
+      "expected_behaviors": [
+        "Do not promise an in-app control restores connectivity",
+        "Online-only application has no offline continuity guarantee"
+      ],
+      "limitations": [
+        "Test setup description only; loading this record does not inject a live outage."
+      ]
+    }
+  ]
+}

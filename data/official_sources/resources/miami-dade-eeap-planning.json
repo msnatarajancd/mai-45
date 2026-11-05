@@ -1,0 +1,75 @@
+{
+  "resource": {
+    "resource_id": "miami-dade-eeap-planning",
+    "source_id": "miami-dade-eeap",
+    "official_name": "Emergency & Evacuation Assistance Program (EEAP)",
+    "service_category": "evacuation",
+    "service_area": "US-FL-MIAMI-DADE",
+    "official_contact": null,
+    "contact_evidence_chunk_id": null,
+    "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+    "prerequisites": [],
+    "limitations": [
+      "Current availability not verified.",
+      "No connection, enrollment, dispatch, rescue, or transportation is confirmed.",
+      "For immediate danger, call 911."
+    ],
+    "availability_status": "UNKNOWN"
+  },
+  "provider": "Miami-Dade County",
+  "description": "The Emergency & Evacuation Assistance Program (EEAP) provides free evacuation\n assistance to eligible residents living in Miami-Dade County who need specialized\n transportation and/or sheltering or who would like to receive a wellness call after\n a disaster.\nPrior to an emergency, residents who may require medical monitoring, assistance\n with daily living or have life-saving medical equipment dependent on electricity should\n register for the EEAP to ensure help is available when needed. Pre-registered residents\n will receive priority during an emergency. It may also be utilized post-disaster to\n provide other assistance.\nThis program is for individuals who live alone or with families and may have access/functional\n needs. Residents living in long-term care facilities such as nursing homes, assisted\n living facilities or group homes are not eligible for this program as these facilities\n are required by law to develop an emergency plan and provide emergency assistance\n for their clients.\nWhen an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.",
+  "enrollment_timing": "If more than one eligible person living in the same household requires assistance\n during evacuations, each person must complete and submit a separate application.\nIf you require a higher level of medical care, your primary care physician should\n complete and sign the application before submission.\nRegistration (online and paper application) for the EEAP closes before an evacuation\n order is pronounced. Do not wait until an evacuation order is issued to request to\n be added to the EEAP Registry.",
+  "matching_tags": [
+    "transportation",
+    "evacuation_support",
+    "accessible_transport"
+  ],
+  "counties": [
+    "US-FL-MIAMI-DADE"
+  ],
+  "phases": [
+    "prepare"
+  ],
+  "purposes": [
+    "planning"
+  ],
+  "hazards": [
+    "hurricane"
+  ],
+  "hazard_independent": false,
+  "supporting_candidate_ids": [
+    "9bcb64480708d821a9b0b0d8373af13064420537a9fc99c3068ead8dc31852d1",
+    "7d79b4586449195f46f7ef80385dde00241df006f892674b0c39a627013e9349",
+    "15627d254d98b3cdb0d95737ba7177031d4a0c9067cbc3de1a4b6c00db45e017",
+    "f8a045039bb7ab2b702116a082a43dd1b1ae83e8aa3140c3c2f2424f8ce34a5c"
+  ],
+  "field_evidence": {
+    "official_name": [
+      "9bcb64480708d821a9b0b0d8373af13064420537a9fc99c3068ead8dc31852d1"
+    ],
+    "service_category": [
+      "9bcb64480708d821a9b0b0d8373af13064420537a9fc99c3068ead8dc31852d1"
+    ],
+    "description": [
+      "9bcb64480708d821a9b0b0d8373af13064420537a9fc99c3068ead8dc31852d1"
+    ],
+    "enrollment_timing": [
+      "f8a045039bb7ab2b702116a082a43dd1b1ae83e8aa3140c3c2f2424f8ce34a5c"
+    ]
+  },
+  "source_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+  "review": {
+    "status": "PENDING",
+    "reviewer": null,
+    "reviewed_at": null,
+    "review_due_at": "2026-12-04T01:53:38.339858Z",
+    "fingerprint": null,
+    "revoked_at": null,
+    "revoked_by": null,
+    "revocation_reason": null
+  },
+  "preparation_notes": [
+    "Existing source and all supporting passages remain pending; no human approval recorded.",
+    "Reviewer must assess complete eligibility exclusions, caregiver conditions and advance enrollment timing."
+  ]
+}

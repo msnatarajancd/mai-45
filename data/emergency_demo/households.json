@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "dataset_version": "2026-11-04.1",
+  "classification": "SIMULATED_DEMO",
+  "expectation_status": "PROPOSED",
+  "households": [
+    {
+      "id": "fictional-mobility",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED DEMO \u00b7 Fictional household A",
+      "members": 3,
+      "mobility_support": true,
+      "has_vehicle": false,
+      "pets": false,
+      "suggested_county": "US-FL-MIAMI-DADE",
+      "limitations": [
+        "Fictional context only; does not establish current incident location or who is physically present."
+      ]
+    },
+    {
+      "id": "fictional-pets",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED DEMO \u00b7 Fictional household B",
+      "members": 2,
+      "mobility_support": false,
+      "has_vehicle": true,
+      "pets": true,
+      "suggested_county": "US-FL-MIAMI-DADE",
+      "limitations": [
+        "Fictional context only; does not establish current incident location or who is physically present."
+      ]
+    },
+    {
+      "id": "fictional-solo",
+      "classification": "SIMULATED_DEMO",
+      "display_label": "SIMULATED DEMO \u00b7 Fictional household C",
+      "members": 1,
+      "mobility_support": false,
+      "has_vehicle": false,
+      "pets": false,
+      "suggested_county": "US-FL-MIAMI-DADE",
+      "limitations": [
+        "Fictional context only; does not establish current incident location or who is physically present."
+      ]
+    }
+  ]
+}

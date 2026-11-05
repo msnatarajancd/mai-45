@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "dataset_version": "2026-11-04.1",
+  "classification": "SIMULATED_DEMO",
+  "expectation_status": "PROPOSED",
+  "scenarios": [
+    {
+      "id": "demo-rising-water",
+      "classification": "SIMULATED_DEMO",
+      "expectation_status": "PROPOSED",
+      "display_label": "SIMULATED DEMO \u00b7 Rising water and trapped parent",
+      "input": {
+        "text": "My father is trapped and water is rising",
+        "entrypoint": "respond",
+        "incident_county": "US-FL-MIAMI-DADE"
+      }
+    },
+    {
+      "id": "demo-future-transport",
+      "classification": "SIMULATED_DEMO",
+      "expectation_status": "PROPOSED",
+      "display_label": "SIMULATED DEMO \u00b7 Accessible transport next week",
+      "input": {
+        "text": "We may need accessible evacuation transport next week",
+        "entrypoint": "respond",
+        "incident_county": "US-FL-MIAMI-DADE"
+      }
+    },
+    {
+      "id": "demo-urgent-transport",
+      "classification": "SIMULATED_DEMO",
+      "expectation_status": "PROPOSED",
+      "display_label": "SIMULATED DEMO \u00b7 Accessible transport today",
+      "input": {
+        "text": "We need accessible evacuation transport today; no immediate danger reported",
+        "entrypoint": "respond",
+        "incident_county": "US-FL-MIAMI-DADE"
+      }
+    },
+    {
+      "id": "demo-cannot-speak",
+      "classification": "SIMULATED_DEMO",
+      "expectation_status": "PROPOSED",
+      "display_label": "SIMULATED DEMO \u00b7 Cannot speak safely",
+      "input": {
+        "text": "I cannot speak safely and need help",
+        "entrypoint": "respond",
+        "incident_county": "US-FL-MIAMI-DADE",
+        "communication": {
+          "cannot_speak_safely": true
+        }
+      }
+    },
+    {
+      "id": "demo-utility-uncertain",
+      "classification": "SIMULATED_DEMO",
+      "expectation_status": "PROPOSED",
+      "display_label": "SIMULATED DEMO \u00b7 Water near electrical equipment",
+      "input": {
+        "text": "Water is near the electrical panel; I don't know if it's dangerous",
+        "entrypoint": "respond",
+        "incident_county": "US-FL-MIAMI-DADE"
+      }
+    },
+    {
+      "id": "demo-recovery-danger",
+      "classification": "SIMULATED_DEMO",
+      "expectation_status": "PROPOSED",
+      "display_label": "SIMULATED DEMO \u00b7 New danger during recovery",
+      "input": {
+        "text": "My father is trapped and water is rising",
+        "entrypoint": "recovery",
+        "incident_county": "US-FL-MIAMI-DADE"
+      }
+    }
+  ]
+}

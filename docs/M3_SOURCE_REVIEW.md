@@ -1,157 +1,67 @@
-﻿# M3 source review queue and procedure
+# M3 source review state and procedure
 
-This is a safety-sensitive educational prototype, not an operational emergency
-service. Government origin, downloading, extraction, and unit tests are not human
-review. **No actual source has been marked REVIEWED. No real reviewer signoff was
-created.** All approvals in tests exist only in temporary test directories.
+Government origin, downloading, extraction, and tests do not constitute human review. The authoritative source/candidate records determine publication, not an old packet or a successful web request. This educational prototype is not an operational emergency service.
 
+## Current review state
 
-## M3-2A extraction and candidate-packet update
+| Source | Acquisition/extraction state | Publication state |
+| --- | --- | --- |
+| CDC flood reentry | Original bytes retained; 13 sections | REVIEWED; five APPROVED recovery candidates and one PENDING candidate |
+| CDC floodwater | Original bytes retained; 17 sections | DOWNLOADED_UNREVIEWED; six PENDING candidates |
+| Miami-Dade EEAP | Original bytes retained; repaired extraction has 7 sections | REVIEW_REQUIRED; five PENDING candidates |
+| Miami-Dade Text 911 | Original bytes retained; 1 section | REVIEW_REQUIRED; one PENDING candidate |
+| Miami-Dade Weather Ready contacts | Original bytes retained; 3 sections | REVIEW_REQUIRED; four PENDING candidates |
+| FCC Text-to-911 | HTTP acquisition failed; no original capture or extracted sections | UNAVAILABLE; no publishable evidence |
 
-The acquisition table below is the historical M3-1 outcome. EEAP has now been
-re-extracted from its original captured bytes: **7 sections**, still
-**REVIEW_REQUIRED**, no reviewer/signoff. Its original URL, HTTP timestamp,
-byte count and SHA-256 are unchanged. The original failed-extraction snapshot
-remains in history; a separate extraction timestamp/version records the repair.
+CAP-04 added eight proposed directory listings. **All eight are PENDING:** seven reference acquired-source passages, while the FCC listing remains blocked by failed acquisition. No CAP-04 source, passage, or listing approval was created. Existing CDC review artifacts were preserved. The [CAP-04 review packet](CAP04_SOURCE_REVIEW.md) contains current listing evidence, inspection commands, and unresolved conditions.
 
-The original page contains a hidden `service-data` service record, an escaped
-`longDescription` and six escaped FAQ answers. The generic parser had stopped at
-metadata before any usable heading. The source-scoped repair uses those fields
-without browser execution, without unrelated organization/featured-service text,
-and without attempting to reconstruct obfuscated contact information.
+The earlier [M3 candidate packet](M3_REVIEW_PACKET.md) records historical preparation, including candidates that have since been reviewed. It is not the authoritative current queue. CDC recovery coverage does not authorize emergency-response advice or publication of a directory listing.
 
-See [M3_REVIEW_PACKET.md](M3_REVIEW_PACKET.md) for **16 PENDING candidates**
-(6 reentry, 6 floodwater, 4 EEAP), exact passages, full linked surrounding context,
-proposed applicability, editorial caveats, and ready-to-fill per-candidate commands.
-The `knowledge.review` CLI now accepts `--chunk-id` for `inspect`, `approve`, and
-`reject`. Without `--chunk-id`, existing source-level behavior is unchanged.
-Candidate decisions are separate from source review and cannot publish a source.
-No approval/rejection command was run against the real source store.
+## Preserved provenance
 
-Safe damage documentation has no supported passage in the selected captures.
-PROTECT phase tags are explicitly proposed from the acquired infographic's
-Before/Recognize Flood Risk text, not approved expansions of current source scope.
-Retrieval and resource search still return UNAVAILABLE. No ranking is implemented.
+Original HTTP bytes live in `data/official_sources/originals/<sha256>.bin`; authoritative per-source bundles are under `records/`. The manifest is an index, and immutable history retains earlier attempts. The initial captures were:
 
-## Actual acquisition (historical M3-1)
+| Source | Retrieved at (UTC) | Original bytes | SHA-256 |
+| --- | --- | ---: | --- |
+| CDC reentry | 2026-11-03T03:05:29.105758Z | 55,838 | `61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85` |
+| CDC floodwater | 2026-11-03T03:05:29.514595Z | 56,120 | `19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8` |
+| EEAP | 2026-11-03T03:05:30.655165Z | 129,366 | `4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2` |
 
+EEAP's original failed-extraction snapshot remains in history. Its repaired extractor reads the captured service record and escaped FAQ text without executing page scripts or reconstructing obscured contacts. The original URL, acquisition timestamp, byte count, and hash remain unchanged; extraction has its own timestamp/version.
 
-The following are results of running the acquisition utility, not browser-search
-results or assumed successes. Timestamps below are recorded UTC instants. Each
-final URL was identical to its requested official URL; no redirect was followed.
+The CAP-04 packet records the additional captures. Search/extraction service output is not substituted for missing original bytes. A failed request stays UNAVAILABLE; a successful download with unusable extraction stays REVIEW_REQUIRED. Neither creates publishable evidence.
 
-| Source | HTTP | Retrieved at (UTC) | Content type | Bytes | Sections | Current status |
-| --- | --- | --- | --- | ---: | ---: | --- |
-| CDC flood reentry | 200 | 2026-11-03T03:05:29.105758Z | text/html | 55,838 | 13 | DOWNLOADED_UNREVIEWED |
-| CDC floodwater | 200 | 2026-11-03T03:05:29.514595Z | text/html | 56,120 | 17 | DOWNLOADED_UNREVIEWED |
-| Miami-Dade EEAP | 200 | 2026-11-03T03:05:30.655165Z | text/html | 129,366 | 0 | REVIEW_REQUIRED / EXTRACTION_FAILED |
+## Review procedure
 
-Requested and final URLs:
+Inspect from the repository root:
 
-- `cdc-flood-reentry`:
-  https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html
-- `cdc-floodwater`:
-  https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html
-- `miami-dade-eeap`:
-  https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672
-
-SHA-256 of downloaded original bytes:
-
-```text
-cdc-flood-reentry
-61ee0c0add7e00bf7295b316e4edaffdd55b5612b8706f7dff3710aa18abba85
-cdc-floodwater
-19ff095397e4369d1937673322c1a27e9d5bfea970d96f57af64fdcf912020b8
-miami-dade-eeap
-4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2
-```
-
-Originals are `data/official_sources/originals/<sha256>.bin`. They are preserved
-bytes, not rendered HTML. Per-source records contain metadata and extracted text;
-immutable history snapshots retain previous attempts. `source_manifest.json` is
-the index/summary. Per-source bundles are authoritative for export checks.
-
-Miami-Dade's original HTML was acquired, but the bounded static extractor found
-readable content before a usable heading. The response has no h1 and includes
-dynamic content. No content was invented or taken from a model/browser cache to
-replace it. It needs an explicit, tested extraction improvement and human review
-before it can yield evidence. Re-running an unchanged parser is not a review.
-
-## Queue
-
-1. **CDC reentry:** check all extracted sections against the original, especially
-   warnings and conditional electrical/gas, water, and building-reentry guidance.
-   Check parent context and infographic text. No household safety conclusion may
-   be inferred from utility restoration. Remove/reject navigation or resource-link
-   sections as publishable guidance through a future reviewed extraction change.
-2. **CDC floodwater:** check conditional headings, medical/water caveats and
-   hazard applicability. Ensure every separately exported excerpt is sufficiently
-   self-contained. National guidance does not establish a county evacuation order.
-3. **Miami-Dade EEAP:** resolve extraction failure first, then check county scope,
-   registration prerequisites and caveats against acquired content. This is not
-   proof of active transport, shelter space, enrollment or individual eligibility.
-
-Initial hazard/phase/geographic tags are provisional curated metadata. A reviewer
-must check them; the downloader's tags are not a review. Any missing context or
-unsafe section boundary means reject/defer, not sign off with a caveat omitted.
-M3-1 has no manual snippet editor or partial-source publication workflow.
-
-## Manually invoked commands
-
-Run from the repository root using a Python environment with Pydantic 2:
-
-```powershell
-python -m knowledge.ingestion --all --root data/official_sources
+```sh
 python -m knowledge.review inspect --source-id cdc-floodwater --root data/official_sources
+python -m knowledge.review inspect --source-id <source-id> --chunk-id <candidate-id> --root data/official_sources
+python -m knowledge.resources inspect --resource-id <resource-id> --root data/official_sources
 ```
 
-The inspector prints complete plain-text sections, provenance, and a context
-hash. Inspect the corresponding original bytes using a safe text viewer; never
-execute acquired scripts or render untrusted HTML. A real human must verify:
+Use a safe text viewer for original bytes; do not execute acquired scripts. A real human reviewer must check provenance, exact passage and heading boundaries, geographic scope, phase/hazard applicability, warnings, and conditions. Candidate approval additionally requires that the passage and its caveats stand alone without publishing unapproved surrounding instructions.
 
-- Original official provenance, HTTP metadata and SHA-256.
-- Actual acquired excerpts, complete headings, warnings and conditional language.
-- Geographic scope and phase/hazard applicability.
-- Every excerpt's suitability as a standalone citation, including parent context.
-- All five explicit review checks, with their own nonblank reviewer identity.
+Source, candidate, and directory approval are distinct. The source/candidate CLI requires the actual reviewer identity, expected hashes, and explicit attestations; directory approval requires the actual reviewer and expected listing fingerprint. Do not create identities, backdate timestamps, or approve records to make a demo pass. Preparation notes and synthetic test approvals do not satisfy these gates.
 
-Only after that human check, an administrator can run the following template.
-Replace the placeholders with the reviewer's identity and the hashes printed by
-inspection. **This command was not run against the real source store.**
+Source review binds original bytes and extracted context. Candidate review binds exact spans and context hashes. Directory review binds rendered fields, applicability, evidence IDs/hashes, limitations, and the review deadline. Actual review timestamps cannot be future-dated. Directory review deadlines must follow approval and remain within 30 days; this is a project policy, not a guarantee of current service information.
 
-```powershell
-python -m knowledge.review approve --source-id cdc-floodwater --root data/official_sources --reviewer "<human reviewer identity>" --expected-content-hash "<acquired SHA-256>" --expected-context-hash "<inspection context hash>" --provenance-checked --content-checked --geographic-scope-checked --applicability-checked --caveats-preserved
+Publication rechecks these records and requested scope locally. Changed or revoked evidence, a changed listing fingerprint, or an expired listing deadline prevents verified display on the next lookup. Reacquisition resets eligibility even when bytes are unchanged. Runtime help requests never fetch and automatically approve updates.
+
+To mark a source stale or revoke a listing:
+
+```sh
+python -m knowledge.review stale --source-id <source-id> --root data/official_sources
+python -m knowledge.resources revoke --resource-id <resource-id> --reviewer "<actual reviewer>" --reason "<reason>" --root data/official_sources
 ```
 
-The review operation records its actual timestamp; it accepts no supplied review
-time. It verifies original bytes and exact extracted sections, checks both
-inspection hashes, and records all attestations. Export rechecks the review,
-original hash, context fingerprint, and requested geographic/hazard/phase scope.
-Conditional heading paths are included in M5 guidance. Oversized headed excerpts
-are rejected, never truncated. Wrong-context or unreviewed content fails closed.
-
-Any reacquisition resets publication eligibility, even if bytes are unchanged.
-Changed bytes receive a new hash/chunk IDs and REVIEW_REQUIRED. Old originals and
-snapshots remain available. A timeout, network/TLS failure, HTTP failure, rejected
-redirect/type, or size failure is recorded UNAVAILABLE with its category; a
-successful HTTP download with failed extraction is REVIEW_REQUIRED. No failed
-attempt is represented as a successful extraction.
-
-To revoke eligibility explicitly:
-
-```powershell
-python -m knowledge.review stale --source-id cdc-floodwater --root data/official_sources
-```
+Emergency controls and separately labeled official entry links remain available when review or retrieval fails. Static evidence never establishes live transport, shelter capacity, enrollment, eligibility, message delivery, dispatch, rescue, or household safety.
 
 ## Administrative trust boundary
 
-The JSON store and CLI are trusted local admin tools, not runtime user/LLM input
-routes. Human identity is recorded, not authenticated. Anyone allowed to rewrite
-the store and code can forge local records; M3-1 does not provide cryptographic
-signatures or multi-user authorization. Protect write access before deployment.
-The exclusive admin lock prevents concurrent review/acquisition replacement; if a
-process crashes, verify that no admin process is running before an administrator
-removes a stale lock. It is never removed automatically by another process.
-Atomic per-file writes preserve authoritative bundles; a disk failure during the
-separate manifest-summary update may require rebuilding that summary. Such a
-failure cannot create a valid review record or verified export.
+The JSON store and CLI are trusted local administrative tools, not runtime user/model input routes. Reviewer identity is recorded, not authenticated or cryptographically signed. Protect write access before deployment.
+
+Review, acquisition, and directory operations share an exclusive administrative lock and atomic writes. Never remove another process's active lock. A crash may require an administrator to verify no writer is running before removing a stale lock. A manifest-summary failure can require rebuilding the index but cannot create a valid source/candidate/listing approval.
+
+Positive publication tests use temporary stores, reserved `.test` URLs where applicable, and explicitly synthetic review identities. Their success does not approve the production store. Consult [verification](VERIFICATION.md) for coordinated results.

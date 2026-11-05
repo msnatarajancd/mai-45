@@ -1,4 +1,73 @@
-# Verification record — November 2, 2026
+# Verification record
+
+## PR #4 Windows visual CI correction — November 4, 2026
+
+Runs `41956656777` and `41956651511` each failed 14 experience tests at
+pixel comparisons against stale Windows screenshots. Their Python jobs and
+the 42 browser tests that reached completion passed. The baseline still showed
+the older toolbar/search and pre-CAP-04 emergency strip. A local Windows run
+reproduced the same first mismatch before refreshing the images.
+
+Reviewed and refreshed 25 Windows/Chromium screenshots for the current header,
+navigation search, emergency strip, Home, chat, and tours at desktop, tablet,
+and mobile sizes. The tour screenshot test supplies deterministic speech voices
+and synchronous speech-start events; separate narration behavior tests remain.
+No production files, screenshot tolerances, CI gates, or extraction contracts
+were changed. Automated browser audio remains muted.
+
+Python regression: **779 passed, 11 skipped, 10 subtests passed**. Golden
+evaluation: **24/24**; development evaluation: **48/48**, using the existing
+PROPOSED expectations (not a new human safety review). Both Node regression
+scripts, Python compilation, and whitespace checks passed. The initial local
+browser refresh had one initial-load timeout while Python tests ran concurrently.
+The subsequent full Windows browser run with normal screenshot comparisons
+enabled passed: **56 passed, 1 skipped** in 6.3 minutes, exit 0. The skip is the
+desktop sidebar animation test on mobile, which uses compact navigation.
+
+## PR #4 conflict resolution — November 4, 2026
+
+Merged `main` at `1653ae6` into `feature/M4-EmergencyAssistance`. The conflict was
+the assistant danger precheck: main added M5-approved, non-executing recovery
+extraction while CAP-04 introduced the shared clause-qualified routing policy.
+Both features remain present. Policy `cap04-rules-1.1` recognizes explicit
+personal reports such as “I'm in danger” while retaining negation and
+hypothetical scope. The extraction-specific shared-policy check permits routine
+utility updates, pauses current threats and medical/flood concerns, and changes
+neither session state nor persisted danger. The extraction DTOs and fingerprints
+remain unchanged.
+
+Fresh combined verification: **779 passed, 11 skipped, 10 subtests passed** in
+10.52 seconds. Golden evaluation **24/24** and development evaluation **48/48**
+passed with proposed labels; compilation and whitespace checks passed. Added
+regressions reproduced the integration failures before correction, including
+ordinary restored-electricity reports and current danger mixed with planning.
+Independent review confirmed the final precheck preserves both workflows.
+No live provider call or source approval was performed for this merge.
+
+## CAP-04 implementation — November 4, 2026
+
+Environment: macOS arm64, Python 3.12.15, repository-pinned dependencies, Node 22.23.4 and Playwright Chromium. The integrated app runs at `http://127.0.0.1:8501` with the AI key removed from its process environment and `.local/cap04-demo.sqlite3` as its isolated demo database. The health endpoint returned HTTP 200. See [implementation handoff](CAP04_IMPLEMENTATION.md) for all seven delivery areas.
+
+- Full Python regression: **684 passed, 11 skipped, 10 subtests passed** in 10.87 seconds. The skipped tests are optional HTTP integration coverage. This includes original M1–M5 tests and new routing, workflow, publication, synthetic-data and UI coverage.
+- Golden evaluation: **24/24**; development evaluation: **48/48**. Both report zero critical misses, bounded forbidden claims, provider calls and network calls. Dataset version `2026-11-04.1`, policy `cap04-rules-1.0`. Labels remain **PROPOSED**, `human_reviewed=false`; no real-world reliability or human safety review is claimed.
+- CAP-04 browser suite: **15/15**, desktop 1440×1000, tablet 1024×900 and mobile 390×844. Tests inspect `tel:911` without activating it, action ordering and focus, interruption, geography, connectivity limits, scrolling below the toolbar and enlarged text. No real calls or texts were initiated.
+- Bright/dark readability checks pass on all seven pages at all three sizes (**6/6**). The clipping assertion now excludes the existing intentionally hidden accessible brand label; pointer and keyboard brand navigation retain separate coverage.
+- Final complete functional browser run: **56 passed, 1 skipped** in 1.1 minutes, exit 0 (`npm run test:visual -- --ignore-snapshots --output=artifacts/browser-accepted-tests`). The one skip is the desktop/sidebar-animation test on mobile, where the compact menu is used. This includes all 15 emergency checks, both navigation tours, and narration lifecycle checks.
+- Python compilation and both Node regression scripts passed. `git diff --check` passed.
+
+Independent review found and reproduced newline/colon routing downgrades, planning wording overriding a separate current hazard, concatenated directory needs, and event context overridden by negated flood mentions. Regression tests failed before the fixes and now pass. Directory tests exercise publication and revocation in isolated TEST ONLY stores; no production source, candidate or listing approval was performed.
+
+Browser testing found that Streamlit's wrapper constrained sticky positioning and that mobile toolbar height exceeded the old fixed offset. The emergency strip now sticks through the layout wrapper with the actual responsive header offset. Current desktop and mobile screenshots were visually inspected. Native screen-reader and actual phone-handler operation were not tested.
+
+The tour now measures toolbar and emergency-strip clearance when locating its target. On smaller screens, an oversized card highlights its actual control so it fits above the tour panel. The test waits for complete unobstructed geometry instead of checking a transient partial position. All three focused tour checks and the Node tour lifecycle regression passed after restarting Streamlit to reload its imported JavaScript asset.
+
+A broader run exposed a test race where speech's asynchronous start message replaced a successful locate message. Both navigation tests now verify the correct step marker and unobstructed control geometry rather than transient narration copy. Six bounded repeated tablet checks passed before the final full browser run; production narration behavior was not changed.
+
+All eight directory listings remain PENDING, with seven acquired-source-backed records and one failed FCC acquisition. The app presently offers official entry links rather than verified EEAP timing/service cards. [The source review packet](CAP04_SOURCE_REVIEW.md) records the remaining content release gate. Golden expectations also need actual human safety review. Online access remains required.
+
+Existing pixel baselines were captured on Windows. Functional browser runs on this Mac use `--ignore-snapshots` for the older experience suite; they do not approve pixel differences. Windows baseline refresh/review and the Windows visual CI job remain unverified. Baselines were not overwritten with Mac screenshots.
+
+## Original M1 verification — November 2, 2026
 
 Environment: Windows, Python 3.12.15, Streamlit 1.66.1, Pydantic 2.14.2, pytest 9.2.0. The existing pinned M5 requirements were retained.
 

@@ -16,6 +16,12 @@ and commit reviewed baselines. Never update snapshots automatically in CI. Failu
 expected/actual/difference images and browser traces. Other platforms create their own
 platform-specific snapshots; use Windows for comparison against this reviewed baseline.
 
+The tour screenshot test supplies a fixed browser speech API voice list and
+synchronous start callback. This keeps installed voices and speech event timing
+out of the pixel comparison. Separate behavior tests still check automatic
+narration, male/female selection, mute persistence, delayed voices, online-voice
+disclosure and blocked-autoplay retry. Production narration is unchanged.
+
 The native Streamlit UI still requires a server round trip for page changes. Navigation,
 theme and tour callbacks update state before rendering, avoiding redundant explicit reruns.
 Local warm navigation measured approximately 330–430ms both before and after this change;

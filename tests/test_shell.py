@@ -9,13 +9,23 @@ def app(tmp_path,monkeypatch):
 
 def button(a,label): return next(b for b in a.button if b.label==label)
 
-def test_dock_expand_minimize_preserves_conversation(app):
+def test_dock_expand_minimize_preserves_conversation(app,monkeypatch):
+    import ui.assistant_page as screen
+    from services.assistant import Proposal, capture
+    def propose_household_update(text,state,repo):
+        assert text == 'We have 4 people'
+        return Proposal(answer='Review the proposed household update.',
+                        action={'kind':'update_household','members':4},
+                        snapshot=capture(state,repo),provider='Local test proposal')
+    monkeypatch.setattr(screen,'local_proposal',propose_household_update)
     button(app,'Ask ReadyRelief').click().run()
     assert app.session_state['chat_open']
     assert app.session_state['page']=='Home'
     next(r for r in app.radio if r.label=='Assistant mode').set_value('Local guide · no AI').run()
-    app.chat_input[0].set_value('open Recover').run()
+    app.chat_input[0].set_value('We have 4 people').run()
     pending=app.session_state['assistant_pending']
+    assert Proposal.model_validate_json(pending).action.kind=='update_household'
+    assert app.session_state['household'].members==1
     button(app,'Expand chat').click().run()
     assert app.session_state['page']=='Assistant'
     assert app.session_state['assistant_pending']==pending

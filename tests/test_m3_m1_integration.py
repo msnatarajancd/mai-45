@@ -237,7 +237,7 @@ def test_protect_displays_exact_excerpts_without_model_call(reviewed_store, monk
     assert any(reviewed_store[2][0].original_passage == t.value for t in app.text)
     assert any(reviewed_store[2][0].chunk_id in c.value for c in app.caption)
     assert 'Call 911' in [b.label for b in app.get('link_button')]
-    assert "I can't call 911" in [b.label for b in app.button]
+    assert "I Can't Call 911" in [b.label for b in app.button]
     # A later source revocation must remove the previously displayed excerpt.
     mark_stale(reviewed_store[0], reviewed_store[1].source.source_id)
     app.run()
@@ -259,5 +259,5 @@ def test_m3_failure_keeps_both_emergency_controls(monkeypatch, tmp_path):
     button(app, 'Explain with verified sources').click().run()
     assert not app.exception
     assert 'Call 911' in [b.label for b in app.get('link_button')]
-    button(app, "I can't call 911").click().run()
+    button(app, "I Can't Call 911").click().run()
     assert any('cannot send a text or contact responders' in i.value for i in app.info)

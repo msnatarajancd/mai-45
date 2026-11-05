@@ -1,0 +1,73 @@
+{
+  "resource": {
+    "resource_id": "miami-dade-eeap-inquiry",
+    "source_id": "miami-dade-eeap",
+    "official_name": "Emergency & Evacuation Assistance Program (EEAP)",
+    "service_category": "evacuation",
+    "service_area": "US-FL-MIAMI-DADE",
+    "official_contact": "311",
+    "contact_evidence_chunk_id": "1dceb9df1efd2dc78c44c34dc7d315c66d945f52bdd0ffe3959aaf9e13909549",
+    "official_url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+    "prerequisites": [],
+    "limitations": [
+      "Current availability not verified.",
+      "No connection, enrollment, dispatch, rescue, or transportation is confirmed.",
+      "For immediate danger, call 911."
+    ],
+    "availability_status": "UNKNOWN"
+  },
+  "provider": "Miami-Dade County",
+  "description": "When an emergency arises, pre-registered residents will have priority over those\n who have not registered for the program.\nResidents not currently enrolled in the EEAP, who need emergency and evacuation\n assistance, should call 311 to request assistance. Contacting the 311 Contact Center\n does not guarantee that a resident will receive assistance in the event of an emergency\n or are enrolled in the EEAP. Residents who have not pre-registered with the EEAP are\n encouraged to seek alternate transportation and sheltering arrangements with family\n and friends.",
+  "enrollment_timing": null,
+  "matching_tags": [
+    "transportation",
+    "evacuation_support",
+    "accessible_transport"
+  ],
+  "counties": [
+    "US-FL-MIAMI-DADE"
+  ],
+  "phases": [
+    "respond"
+  ],
+  "purposes": [
+    "urgent_assistance"
+  ],
+  "hazards": [
+    "hurricane"
+  ],
+  "hazard_independent": false,
+  "supporting_candidate_ids": [
+    "9bcb64480708d821a9b0b0d8373af13064420537a9fc99c3068ead8dc31852d1",
+    "1dceb9df1efd2dc78c44c34dc7d315c66d945f52bdd0ffe3959aaf9e13909549"
+  ],
+  "field_evidence": {
+    "official_name": [
+      "9bcb64480708d821a9b0b0d8373af13064420537a9fc99c3068ead8dc31852d1"
+    ],
+    "service_category": [
+      "9bcb64480708d821a9b0b0d8373af13064420537a9fc99c3068ead8dc31852d1"
+    ],
+    "description": [
+      "1dceb9df1efd2dc78c44c34dc7d315c66d945f52bdd0ffe3959aaf9e13909549"
+    ],
+    "official_contact": [
+      "1dceb9df1efd2dc78c44c34dc7d315c66d945f52bdd0ffe3959aaf9e13909549"
+    ]
+  },
+  "source_content_hash": "4829fd8bd62991c0ce9276d9bc45d08578cb9a35a05e6f15d8c72633048ad3e2",
+  "review": {
+    "status": "PENDING",
+    "reviewer": null,
+    "reviewed_at": null,
+    "review_due_at": "2026-12-04T01:53:38.339858Z",
+    "fingerprint": null,
+    "revoked_at": null,
+    "revoked_by": null,
+    "revocation_reason": null
+  },
+  "preparation_notes": [
+    "311 is an evacuation-assistance inquiry, not a substitute for 911 during immediate danger.",
+    "Source and standalone candidates require human review before directory approval."
+  ]
+}

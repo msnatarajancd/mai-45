@@ -1,0 +1,69 @@
+{
+  "resource": {
+    "resource_id": "miami-dade-sheriff-nonemergency",
+    "source_id": "miami-dade-weather-contacts",
+    "official_name": "Miami-Dade Sheriff's Office",
+    "service_category": "Non-Emergencies",
+    "service_area": "US-FL-MIAMI-DADE",
+    "official_contact": null,
+    "contact_evidence_chunk_id": null,
+    "official_url": "https://www.miamidade.gov/initiative/weather-ready/contact.page",
+    "prerequisites": [],
+    "limitations": [
+      "Current availability not verified.",
+      "No connection, enrollment, dispatch, rescue, or transportation is confirmed.",
+      "For immediate danger, call 911."
+    ],
+    "availability_status": "UNKNOWN"
+  },
+  "provider": "Miami-Dade County",
+  "description": "Miami-Dade Sheriff's Office\nEmergencies: 911\nNon-Emergencies: 305-Sheriff (743-7433)",
+  "enrollment_timing": null,
+  "matching_tags": [
+    "nonemergency_assistance",
+    "local_assistance"
+  ],
+  "counties": [
+    "US-FL-MIAMI-DADE"
+  ],
+  "phases": [
+    "prepare",
+    "respond",
+    "recover"
+  ],
+  "purposes": [
+    "planning",
+    "urgent_assistance"
+  ],
+  "hazards": [],
+  "hazard_independent": true,
+  "supporting_candidate_ids": [
+    "470b6feed8ee8310acbb8f3d287bb66c52f7fb078f30eeff1e0fe27cca5ebfe6"
+  ],
+  "field_evidence": {
+    "official_name": [
+      "470b6feed8ee8310acbb8f3d287bb66c52f7fb078f30eeff1e0fe27cca5ebfe6"
+    ],
+    "service_category": [
+      "470b6feed8ee8310acbb8f3d287bb66c52f7fb078f30eeff1e0fe27cca5ebfe6"
+    ],
+    "description": [
+      "470b6feed8ee8310acbb8f3d287bb66c52f7fb078f30eeff1e0fe27cca5ebfe6"
+    ]
+  },
+  "source_content_hash": "9f300a0e02258db8dfd6e23ac56ff467af943958171f24384f18ee3ed4186f87",
+  "review": {
+    "status": "PENDING",
+    "reviewer": null,
+    "reviewed_at": null,
+    "review_due_at": "2026-12-04T01:53:38.339858Z",
+    "fingerprint": null,
+    "revoked_at": null,
+    "revoked_by": null,
+    "revocation_reason": null
+  },
+  "preparation_notes": [
+    "Source and passage reviews pending; service category is an exact source string.",
+    "General directory scope does not establish a specific service outcome or eligibility."
+  ]
+}

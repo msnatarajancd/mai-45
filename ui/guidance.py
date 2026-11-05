@@ -65,15 +65,18 @@ def render(phase,*,key=None):
         if st.button('Generate cited explanation',key=key+'_generate_guidance',type='primary'):
             if not query.strip(): st.info('Enter a general guidance question first.')
             else:
-                from services.assistant import is_danger
-                if is_danger(query):
-                    st.session_state['rr_emergency']=True
+                from emergency.service import screen_report
+                from emergency.workflow import begin_emergency
+                from uuid import uuid4
+                decision = screen_report(query, entrypoint='guidance')
+                if decision and decision.interrupt_routine:
+                    begin_emergency(st.session_state, decision, entrypoint='guidance', event_id=str(uuid4()))
                     st.rerun()
                 with st.spinner('Retrieving reviewed evidence and checking the explanation…'):
-                    result=generation.explain(query,phase,hazard=None if hazard=='Select a hazard' else hazard,jurisdiction=jurisdiction)
+                    result=generation.explain(query,phase,hazard=None if hazard=='Select a hazard' else hazard,jurisdiction=jurisdiction,state=st.session_state)
                 st.session_state[state_key]=result
         result=st.session_state.get(state_key)
         if result:
-            result=generation.revalidate(result)
+            result=generation.revalidate(result,state=st.session_state)
             st.session_state[state_key]=result
             show(result)

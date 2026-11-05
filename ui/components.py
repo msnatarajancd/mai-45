@@ -33,41 +33,8 @@ def heading(kicker, title, description=''):
 
 
 def emergency_controls():
-    with st.container(key='emergency_bar'):
-        cols = st.columns([1.2, 1, 1.25, 1])
-        cols[0].markdown('<div class="rr-emergency-label">Need urgent help?</div>', unsafe_allow_html=True)
-        cols[1].link_button('Call 911', 'tel:911', width='stretch')
-        if cols[2].button("I can't call 911", width='stretch'):
-            st.session_state['rr_alternative'] = not st.session_state.get('rr_alternative', False)
-        if cols[3].button('Immediate danger', width='stretch'):
-            st.session_state['rr_emergency'] = True
-            st.rerun()
-    if st.session_state.get('rr_alternative'):
-        st.info('If you cannot call, text-to-911 may be an option. Local network and device availability vary; delivery is not guaranteed. This app cannot send a text or contact responders. If possible, ask someone nearby to call for you.')
-        st.link_button('Read county Text-to-911 information', 'https://www.miamidade.gov/global/release.page?Mduid_release=rel1748353190014356')
-    if st.session_state['rr_emergency']:
-        st.session_state.pop('tour_step', None)
-        st.session_state.pop('tour_explanation', None)
-        st.error('Emergency access comes first. ReadyRelief has not contacted or dispatched anyone. Routine recovery actions are paused.')
-        st.write('If you are in immediate danger, call 911. Follow instructions from emergency services and local authorities.')
-        # Persist interruption for the active M5 case when possible, without gating controls.
-        if st.session_state.get('rr_case_id'):
-            pending = set(st.session_state.get('rr_pending_danger', []))
-            pending.add(st.session_state['rr_case_id'])
-            st.session_state['rr_pending_danger'] = list(pending)
-            try:
-                from ui.recovery_page import repository
-                from uuid import UUID
-                repository().report_immediate_danger(UUID(st.session_state['rr_case_id']))
-                pending.discard(st.session_state['rr_case_id'])
-                st.session_state['rr_pending_danger'] = list(pending)
-            except Exception:
-                st.warning('The danger report could not be saved. Emergency contact controls remain available.')
-        if st.button('Return to app — this does not confirm safety'):
-            st.session_state['rr_emergency'] = False
-            st.session_state['page'] = 'Respond'
-            st.rerun()
-        st.stop()
+    from ui.emergency_page import render_access_controls
+    render_access_controls()
 
 
 def apply_style():

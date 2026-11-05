@@ -1,8 +1,9 @@
-# M3-3A.1 trusted knowledge integration contract
+# M3 trusted knowledge and CAP-04 directory integration contract
 
-M3 is a local Python service using Python 3.11+, Pydantic 2 and the existing
-pytest/Streamlit environment. No new dependency, API server, model client, vector
-store, automatic review, or external submission is introduced.
+M3 is a local Python service using Pydantic 2 and the existing pytest/Streamlit
+environment. The integrated application is tested on Python 3.12. No new
+dependency, API server, model client, vector store, automatic review, or external
+submission is introduced.
 
 ## Actual interfaces
 
@@ -12,6 +13,10 @@ retrieve_guidance(request: KnowledgeRequest) -> knowledge.models.GuidanceResult
 find_resources(request: KnowledgeRequest) -> ResourceResult
 export_to_m5(source_id: str, chunk_id: str, request: KnowledgeRequest) -> dict[str, object]
 validate_resource(resource: ResourceRecord) -> ResourceRecord
+
+# services.resources; request/result DTOs live in domain.resources
+lookup_resources(request: ResourceQuery, now=None, *, store=None) -> ResourceLookupResult
+find_resources(needs: str, county: str | None = None) -> list[Resource]
 
 # services.knowledge -- existing positional M1 contract retained
 retrieve_guidance(
@@ -86,7 +91,10 @@ export raises sanitized PublicationError and M1 returns an unavailable response.
 No runtime request or LLM output can approve a record.
 
 Source validity uses explicit stored review/stale states and integrity checks.
-There is no automatic review-expiry interval. The JSON/CLI store is admin-owned;
+General source review has no automatic expiry interval. CAP-04 directory
+publication separately requires an unexpired listing review deadline, no more
+than 30 days after its actual approval. This project policy is not an official
+accuracy or service-availability guarantee. The JSON/CLI store is admin-owned;
 reviewer identity is recorded, not authenticated or cryptographically signed.
 
 ## M1 display contract
@@ -157,17 +165,19 @@ It is never truncated. If the complete text exceeds M5's 6000-character limit,
 export fails closed. reviewed_at is the earlier source/candidate review timestamp;
 retrieved_at remains the source acquisition timestamp.
 
-M5 planner, Recovery UIs, database and deterministic reassessment are unchanged.
-They are not wired to M3 in this milestone and still pass empty evidence to AI
-planning. M5 still limits evidence to 20 unique IDs and 60KB combined context;
+The integrated recovery planner remains a deterministic template without a
+claim of source grounding. Reviewed explanations are displayed separately and
+do not write task state. CAP-04 adds shared danger interruptions to recovery
+intake/reassessment and reuses the existing danger-persistence methods. M5 still
+limits evidence to 20 unique IDs and 60KB combined context;
 citation membership alone does not prove semantic support for a task. Durable
 plan-to-citation snapshot resolution remains a future integration decision.
 
 ## Emergency and live-information boundaries
 
 Call 911 and I Can't Call 911 are rendered before retrieval, chat and page work.
-They do not depend on evidence, LLMs, location, login or network requests. M3
-imports are lazy at the M1 adapter boundary. Retrieval failure does not hide
+Rendering these actions does not wait for evidence, LLMs, location, login, or
+external service requests. M3 imports are lazy at the M1 adapter boundary. Retrieval failure does not hide
 emergency controls. The app does not send texts, dispatch responders, or verify
 safety. Streamlit itself still requires its server/browser environment.
 
@@ -177,31 +187,57 @@ safety. A conservative operational-query guard abstains; it is not a complete
 semantic classifier or an emergency triage mechanism. No current alert state is
 inferred from static documents.
 
-find_resources remains UNAVAILABLE. validate_resource now accepts listing detail
-and contact support only from individually approved standalone candidate passages,
-never whole parent text; contact_evidence_chunk_id means a candidate citation ID.
-This closes the otherwise dormant parent-context validation path. It does not
-create a resource finder or establish live availability.
-Existing official directory links are not
-verified available services. No resource availability or enrollment is invented.
+## CAP-04 directory publication
 
-## Real review queue and remaining cross-team work
+`knowledge.resources.lookup_resources` now backs both the M1 directory boundary
+and `FoundationKnowledgeService.find_resources`. The UI receives
+`ResourceLookupResult(status=matches|no_match|review_required|unavailable)`.
+Unknown incident county does not default to Miami-Dade. Query phase, purpose,
+and hazard are explicit; a future planning request cannot borrow response
+applicability, or a response request borrow preparation-only evidence. Unknown
+hazard can match only a listing approved as hazard-independent.
 
-All 16 real candidates remain PENDING. No real source/candidate approval or
-publication was performed. The actual unreviewed store returns zero verified
-excerpts/citations. Existing source captures, hashes and acquisition history are
-unchanged.
+`ResourceListing` wraps the existing `ResourceRecord` with display-field evidence,
+matching tags, scope, and `DirectoryReview`. Exact supported names, descriptions,
+prerequisites, enrollment timing, and any contact must pass the source and
+standalone-candidate gates. `contact_evidence_chunk_id` means a candidate citation
+ID. Full parent context cannot supply unsupported contact information.
 
-M1's action-proposal assistant already uses the shared Nebius client for product
-help. It is unchanged and is not an unrestricted disaster chatbot. M3 display
-needs no model. Do not add another Qwen client.
+Listing approval is separate from source/candidate approval. It binds rendered
+fields, matching/applicability metadata, evidence and source hashes, limitations,
+and the review deadline into an expected fingerprint. Actual review timestamps
+cannot be in the future; a future deadline is allowed within the bounded review
+interval. Lookup derives acquisition/source review times from authoritative
+records, checks the current listing review, and validates all evidence under one
+shared store lock. Mutations, expiry, or revocation remove publication eligibility
+on the next lookup. Runtime requests do not reacquire or auto-approve content.
 
-M2 is not integrated in this checkout. Its remote explanation boundary expects a
-snippets dictionary, unique evidence IDs and ISO timestamps; guardian phase
-mapping needs agreement. Its domain allowlist excludes cdc.gov and it imposes a
-30-day review policy absent from M3. Those require coordinated M2 work, not an
-adapter that silently weakens its gates. Alert snapshot fields are also richer
-than current M1 Alert records. M4 reviewed routing remains a separate owner task.
+`python -m knowledge.resources inspect --resource-id <id>` prepares inspection;
+`approve` requires the actual reviewer and expected fingerprint, and `revoke`
+records the reviewer and reason. These are trusted administrative operations.
+Every published result retains `availability_status=UNKNOWN`; no transport,
+capacity, enrollment, connection, or rescue outcome follows from publication.
+
+## Actual review state and remaining work
+
+The CDC flood-reentry source is REVIEWED with five APPROVED recovery candidates
+and one PENDING candidate. CDC floodwater and EEAP are not published as reviewed
+guidance. The older M3-2A packet is a historical preparation snapshot; authoritative
+source and candidate records determine present eligibility.
+
+All eight CAP-04 directory listings are PENDING. Seven have acquired-source
+passages; the FCC record has an HTTP acquisition failure and no original bytes or
+candidate evidence. No CAP-04 source, candidate, or listing approval was invented.
+The [directory review packet](CAP04_SOURCE_REVIEW.md) lists the evidence and gaps.
+Official entry links remain available separately; they are not verified available
+services. M3/M4 human review is required before listing publication.
+
+M2 county alerts are integrated through `services/nws_alerts.py`; the separate M2
+explanation helper is not the integrated M3 generation path. M1's optional product
+assistant and constrained evidence explanations reuse the shared Nebius client.
+CAP-04 screens present danger locally before routine model work. Its 24 golden
+and 48 development expectations are proposed synthetic checks, not official
+source review, approved clinical guidance, or proof of safety.
 
 ## Verification
 

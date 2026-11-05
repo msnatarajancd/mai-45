@@ -1,0 +1,93 @@
+{
+  "extracted_at": "2026-11-05T01:49:39.162166Z",
+  "extraction_version": "M3-2A-static-fields-v1",
+  "source": {
+    "source_id": "miami-dade-weather-contacts",
+    "publisher": "Miami-Dade County",
+    "title": "Resources and Contact Information",
+    "official_url": "https://www.miamidade.gov/initiative/weather-ready/contact.page",
+    "source_type": "official_static_web_guidance",
+    "jurisdiction": "US-FL-MIAMI-DADE",
+    "hazards": [
+      "flood",
+      "hurricane"
+    ],
+    "disaster_phases": [
+      "prepare",
+      "respond",
+      "recover"
+    ],
+    "classification": "OFFICIAL_SOURCE",
+    "content_type": "text/html",
+    "charset": "utf-8",
+    "original_content_hash": "9f300a0e02258db8dfd6e23ac56ff467af943958171f24384f18ee3ed4186f87",
+    "retrieved_at": "2026-11-05T01:48:40.329790Z",
+    "reviewed_at": null,
+    "review_status": "REVIEW_REQUIRED",
+    "reviewer": null,
+    "limitations": [
+      "Candidate source; human review required before publication.",
+      "Static guidance is not live availability or a current evacuation order.",
+      "HTML-only extraction may omit images, embedded documents, or dynamic content."
+    ],
+    "final_url": "https://www.miamidade.gov/initiative/weather-ready/contact.page",
+    "http_status": 200,
+    "byte_count": 48185,
+    "last_attempt_at": "2026-11-05T01:48:39.957414Z",
+    "failure_category": null
+  },
+  "chunks": [
+    {
+      "chunk_id": "e665025c85e1ff075202fcb386cc550288806fbeae94a2aa0a54015525063d48",
+      "source_id": "miami-dade-weather-contacts",
+      "section_heading": "Resources and Contact Information",
+      "guidance_text": "Share:\nFor all emergencies, dial 911.\nFor non-emergencies, call 305-SHERIFF (305-743-7433).",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "8f258167af83a52d17db52370b853ad8611f618c510f4e797e73c4c809925bfc",
+      "source_id": "miami-dade-weather-contacts",
+      "section_heading": "Resources and Contact Information > Miami-Dade County",
+      "guidance_text": "Miami-Dade County Contact Center\n311 or 305-468-5900\nTTY/TDD: 711\n[email protected]\n@MiamiDadeCounty\n@MiamiDade311\nDepartment of Emergency Management\n305-468-5400\n[email protected]\n@MiamiDadeEM\nFire Rescue\n786-331-5000\n[email protected]\n@MiamiDadeFire\nMiami-Dade Water and Sewer Department\nEmergency Communications Center\n305-274-9272\n[email protected]\n@MiamiDadeWater\nMiami-Dade Sheriff's Office\nEmergencies: 911\nNon-Emergencies: 305-Sheriff (743-7433)\n@MiamiDade_SO\nMiami-Dade County Public Schools\n305-995-1000\n@MDCPS",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "5a39c4a479e757e3764b648b1f229fcaa2d942ecff5a2d04c4bcfdfd4136289b",
+      "source_id": "miami-dade-weather-contacts",
+      "section_heading": "Resources and Contact Information > Outside Organizations",
+      "guidance_text": "National Hurricane Center\n@NWSNHC\nNational Weather Service - Miami\n@NWSMiami\nFederal Emergency Management Agency (FEMA)\n1-800-621-FEMA (3362)\nTTY: 1-800-462-7585\n@FEMA\nFlorida Division of Emergency Management\n@FLSERT\nFlorida Office of the Attorney General - Price Gouging Complaints\n1-866-966-7226\nFlorida Power and Light\n1-800-4-OUTAGE (468-8243)\nTTY: 711\n@InsideFPL\nTraffic Information\n511\n@FL511_Southeast\nAmerican Red Cross - South Florida Region\n305-644-1200\n@SFLRedCross\nPoison Control\n1-800-222-1222",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond",
+        "recover"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    }
+  ],
+  "review": null
+}

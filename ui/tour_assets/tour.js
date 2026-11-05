@@ -48,7 +48,25 @@ export default function(component) {
         if (disposed) return false;
         target = data.active ? document.querySelector(data.target) : null;
         if (!target) return false;
-        if (scroll) target.scrollIntoView({block:'start', behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
+        const header = document.querySelector('.st-key-top_toolbar')?.getBoundingClientRect();
+        const emergency = document.querySelector('.st-key-emergency_bar')?.getBoundingClientRect();
+        const guide = document.querySelector('.st-key-guided_tour')?.getBoundingClientRect();
+        // Reserve room for both persistent controls and the numbered marker.
+        const top = Math.max(0, header?.bottom || 0, emergency?.bottom || 0) + 32;
+        const rect = target.getBoundingClientRect();
+        const bottom = guide && rect.right > guide.left && rect.left < guide.right ? guide.top : window.innerHeight;
+        if (rect.height + 10 > bottom - top) {
+            // A whole card may not fit between the sticky actions and mobile
+            // tour. Highlight its actual control without focusing or clicking it.
+            const control = target.querySelector('button:not([disabled])') || target.querySelector('input,select,[role="combobox"],a[href]');
+            if (control?.getBoundingClientRect().height) target = control;
+        }
+        if (scroll) {
+            const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+            const main = target.closest('[data-testid="stMain"]');
+            if (main) main.scrollBy({top:target.getBoundingClientRect().top - top, behavior});
+            else target.scrollIntoView({block:'start', behavior});
+        }
         placeRing();
         return true;
     };

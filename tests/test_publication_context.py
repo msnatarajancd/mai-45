@@ -231,7 +231,7 @@ def test_m1_renderer_never_shows_context_even_from_stale_dto(adjacent_candidates
     assert any(t.value==selected.original_passage for t in app.text)
     assert not any('Cover windows with storm shutters or plywood.' in t.value for t in app.text)
     assert 'Call 911' in [b.label for b in app.get('link_button')]
-    assert "I can't call 911" in [b.label for b in app.button]
+    assert "I Can't Call 911" in [b.label for b in app.button]
 
 
 def test_real_store_candidates_and_full_context_unchanged():

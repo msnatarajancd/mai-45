@@ -1,0 +1,606 @@
+      <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Text 911 - Miami-Dade Sheriff's Office</title>
+
+    <link href="https://mdso.nationbuilder.com/themes/34/6a51724c3006361328a8d41d/0/attachments/17837226511793816351/default/theme.scss" rel="stylesheet" />
+
+    <!-- start of content for header -->
+    
+
+<script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
+
+
+
+<meta content="authenticity_token" name="csrf-param" />
+<meta content="omlNac+2SIHiPync5zUknBTVPrdRo4lm4/edVVLyRPA=" name="csrf-token" />
+
+  <link rel="canonical" href="https://www.mdso.com/text-911" />
+    <meta name="Title" content="Text 911">
+    <meta property="og:title" content="Text 911"/>
+  <meta property="og:url" content="https://www.mdso.com/text-911">
+    <meta property="og:description" content="Miami-Dade Sheriff&#39;s Office">
+    <meta property="og:type" content="article">
+      <link rel="image_src" href="https://assets.nationbuilder.com/mdso/sites/34/meta_images/original/mdsobadge_transparent_%281%29.png?1780958613" />
+      <meta property="og:image" content="https://assets.nationbuilder.com/mdso/sites/34/meta_images/original/mdsobadge_transparent_%281%29.png?1780958613" />
+  <meta property="og:site_name" content="Miami-Dade Sheriff&#39;s Office"/>
+
+<script type="text/javascript">
+  var NB = NB || {};
+
+  NB.environment = "production";
+  NB.pageId = "92";
+  NB.Liquid = NB.Liquid || {
+    Theme: {
+      version: 3,
+      name: "Miami-Dade Sheriff's Office",
+      parent: "bootstrap_v4",
+      variation: ""
+    },
+    Localization: {
+      locale: "en",
+      strings: {
+        'liquid.event_ticket_level.confirm_purchase_popup':
+          "You have indicated that you are purchasing more than 10 tickets. If this is a mistake, please click Cancel. To proceed with your purchase of more than 10 tickets, click OK."
+      }
+    },
+    FeatureFlags: {
+      confirmTicketPurchaseOptOut: "false",
+      hideZipCodeConditionals: false
+    }
+  };
+  NB.payments = NB.payments || {elements: {}};
+  NB.payments.decimal_mark = "."
+  NB.payments.thousands_separator = ","
+  NB.payments.currency = "usd";
+  NB.authProvider = NB.authProvider || { providerId: "", redirectHost: "" };
+    NB.authProvider.providerId = "org_jSOPBfbiejqXhmys";
+    NB.authProvider.redirectHost = "mdso.nationbuilder.com";
+</script>
+
+<script type="text/javascript">
+    //<![CDATA[
+      window._auth_token_name = "authenticity_token";
+      window._auth_token = "omlNac+2SIHiPync5zUknBTVPrdRo4lm4/edVVLyRPA=";
+    //]]>
+</script>
+
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/themes/cupertino/jquery-ui.css" type="text/css" media="all">
+
+      <link rel="icon" type="image/x-icon" href="https://assets.nationbuilder.com/mdso/sites/34/favicon_images/original/favicon_logo.png?1790956036" />
+
+
+
+    <script src="https://assets.nationbuilder.com/assets/liquid/v3/main-da4942b31b5e0338b7a1dbd97307e366f1a13f596e54be449e5eda6bd676967c.js"></script>
+
+<script type="text/javascript">
+  window.twttr = (function (d,s,id) {
+    var t, js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return; js=d.createElement(s); js.id=id;
+    js.src="//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
+    return window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
+  }(document, "script", "twitter-wjs"));
+</script>
+
+<script type="text/javascript">
+  NB.FBAppId = '1679673749184434';
+</script>
+
+
+
+
+
+
+
+
+
+<!-- The following line of CSS hides a checkbox in social share prompts for posting to Facebook;
+As of Aug 1 2018, FB has deprecated the ability for apps to post to personal profile pages, so this is a temporary fix
+while we re-configure the social share prompt -->
+<style>label[for="face_tweet_is_facebook"]{display:none;}</style>
+
+<!-- The following CSS hides elements related to authentication now deprecated
+due to the migration to an external auth provider as of Jan 2025.
+Currently in place to cover any custom themes that
+might not be updated to remove password inputs or social login links. -->
+  <style>
+    label[for="user_session_password"] {display: none;}
+    #user_session_password {display: none;}
+
+    label[for="activation_password_confirmation"] {display: none;}
+    #activation_password_confirmation {display: none;}
+
+    label[for="activation_password"] {display: none;}
+    #activation_password {display: none;}
+
+    .oauth-links:has(a.login-button-facebook) {display: none;}
+    .oauth-links:has(a.connect-button-facebook) {display: none;}
+    .signin-with-facebook:has(a[href*="facebook/connect"]) {display: none !important;}
+    .social_connect:has(a[href*="facebook/connect"]) {display: none !important;}
+    a[href*="facebook/connect"] {display: none !important;}
+
+    .hidden-first-word {display: none !important;}
+
+    *:has(.hidden-first-word):first-letter {
+      text-transform: uppercase;
+    }
+
+    .content-user-sessions-new-wide hr {
+      display: none;
+    }
+
+    .sign-in-with-email .or-button {
+      display: none;
+    }
+  </style>
+
+    <!-- end of content for header -->
+
+    <script type="text/javascript">
+      NB.appConfig.userIsLoggedIn = false;
+    </script>
+
+    <!-- MDSO Google Fonts — Barlow Condensed (display), DM Sans (body), Source Serif 4 (editorial) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome 5 (for social icons in footer) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+  <body class="bootstrap-theme v3-theme  page-type-basic page-pages-show-basic-wide js">
+
+    <a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    
+      <nav id="header" class="navbar navbar-expand-lg navbar-dark" aria-label="Main navigation">
+  <div class="container-fluid">
+
+    <a class="navbar-brand d-flex align-items-center" href="/" aria-label="Miami-Dade Sheriff's Office, Sheriff Rosie Cordero-Stutz, home">
+      <img src="https://assets.nationbuilder.com/themes/6a51724c3006361328a8d41d/attachments/original/1785878933/mdsobadge_transparent.png?1785878933" alt="" aria-hidden="true" class="mr-3" style="width:48px;height:48px;object-fit:contain;flex-shrink:0">
+      <span class="mdso-brand-lockup">
+        <span class="d-block" style="font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;line-height:1;color:#fff">Miami-Dade</span>
+        <span class="d-block" style="font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;line-height:1;color:#C99C37;margin-top:3px">Sheriff's Office</span>
+        <span class="d-block" style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:400;letter-spacing:.04em;line-height:1.1;color:rgba(255,255,255,.88);margin-top:5px;text-transform:none">Sheriff Rosie Cordero-Stutz</span>
+      </span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mdso-nav" aria-controls="mdso-nav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mdso-nav">
+      <ul class="navbar-nav mx-auto">
+  
+    
+      <li class="nav-item dropdown">
+        <a href="/" class="nav-link dropdown-toggle" id="about34" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          About
+        </a>
+        <div class="dropdown-menu" aria-labelledby="about34">
+          
+          
+            <a class="dropdown-item" href="/contact-sheriffs-office">Contact Sheriff's Office</a>
+          
+            <a class="dropdown-item" href="/guiding-principles">Guiding Principles</a>
+          
+            <a class="dropdown-item" href="/mdso-district-stations">MDSO District Stations</a>
+          
+            <a class="dropdown-item" href="/court-services">Court Services</a>
+          
+            <a class="dropdown-item" href="/victim-services">Victim Services</a>
+          
+            <a class="dropdown-item" href="/mdso_budget">MDSO 2026/2027 Budget Presentation</a>
+          
+        </div>
+      </li>
+    
+  
+    
+      <li class="nav-item dropdown">
+        <a href="/get-involved" class="nav-link dropdown-toggle" id="get-involved73" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Get Involved
+        </a>
+        <div class="dropdown-menu" aria-labelledby="get-involved73">
+          
+          
+            <a class="dropdown-item" href="/non-emergency-report">File a Non-Emergency Police Report</a>
+          
+            <a class="dropdown-item" href="/report-hoa-fraud">Report HOA & Condo Fraud</a>
+          
+            <a class="dropdown-item" href="/report-an-agricultural-crime">Report an Agricultural Crime</a>
+          
+            <a class="dropdown-item" href="/report-suspicious-activity">Report Suspicious Activity</a>
+          
+            <a class="dropdown-item" href="/solve-cold-cases">Help Us Solve Cold Cases</a>
+          
+            <a class="dropdown-item" href="/report-public-corruption">Report Public Corruption</a>
+          
+            <a class="dropdown-item" href="/community-outreach">Community Outreach</a>
+          
+            <a class="dropdown-item" href="/help-fight-crime">Help Fight Crime</a>
+          
+            <a class="dropdown-item" href="/ceu-presentations">Community Education Unit </a>
+          
+            <a class="dropdown-item" href="/predator-offender-registration">Sexual Predator & Offender Registration</a>
+          
+        </div>
+      </li>
+    
+  
+    
+      <li class="nav-item dropdown">
+        <a href="/careers-training" class="nav-link dropdown-toggle" id="careers-training390" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Careers & Training
+        </a>
+        <div class="dropdown-menu" aria-labelledby="careers-training390">
+          
+          
+            <a class="dropdown-item" href="/mdso-careers">MDSO Careers</a>
+          
+            <a class="dropdown-item" href="/training-center">Training Center</a>
+          
+            <a class="dropdown-item" href="/intern-mdso">Internships</a>
+          
+            <a class="dropdown-item" href="/sheriff-volunteer-programs">Sheriff Volunteer Programs</a>
+          
+        </div>
+      </li>
+    
+  
+    
+      <li class="nav-item dropdown">
+        <a href="/safety-support" class="nav-link dropdown-toggle" id="safety-support102" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Safety & Support
+        </a>
+        <div class="dropdown-menu" aria-labelledby="safety-support102">
+          
+          
+            <a class="dropdown-item" href="/text-911">Text 911</a>
+          
+            <a class="dropdown-item" href="/safety-tips">Safety Tips</a>
+          
+            <a class="dropdown-item" href="/protect-yourself">Protect Yourself</a>
+          
+            <a class="dropdown-item" href="/off-duty-deputy-services">Off-Duty Deputy Services</a>
+          
+            <a class="dropdown-item" href="/child-car-seat">Child's Car Seat Checks & Installation</a>
+          
+            <a class="dropdown-item" href="/occupant-with-autism-program">Occupant with Autism Program</a>
+          
+            <a class="dropdown-item" href="/register-renew-burglar-alarm">Register & Renew Your Burglar Alarm</a>
+          
+            <a class="dropdown-item" href="/predators-near-you">Predators Near You</a>
+          
+        </div>
+      </li>
+    
+  
+    
+      <li class="nav-item dropdown">
+        <a href="/data-statistics" class="nav-link dropdown-toggle" id="data-statistics374" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Data & Statistics
+        </a>
+        <div class="dropdown-menu" aria-labelledby="data-statistics374">
+          
+          
+            <a class="dropdown-item" href="/crime-statistics">Crime Statistics</a>
+          
+            <a class="dropdown-item" href="/crime-map">Crime Map</a>
+          
+            <a class="dropdown-item" href="/residence-address-compliance">Residence Address Compliance</a>
+          
+            <a class="dropdown-item" href="/request-reports-records">Request Reports & Records</a>
+          
+        </div>
+      </li>
+    
+  
+    
+      <li class="nav-item dropdown">
+        <a href="/newsroom" class="nav-link dropdown-toggle" id="newsroom359" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Newsroom
+        </a>
+        <div class="dropdown-menu" aria-labelledby="newsroom359">
+          
+          
+            <a class="dropdown-item" href="/news-stories">News Stories</a>
+          
+            <a class="dropdown-item" href="/alert-newsletter-archive">Alert Newsletter Archive</a>
+          
+            <a class="dropdown-item" href="/press_releases">Press Releases</a>
+          
+            <a class="dropdown-item" href="/public_notices">Public Notices</a>
+          
+        </div>
+      </li>
+    
+  
+  <li class="nav-item position-relative">
+    <a id="search-toggle" href="/search" class="nav-link" aria-label="Search the site"><i class="fas fa-search"></i><span class="d-lg-none ml-1">Search</span></a>
+    <form id="search-form" action="/search" method="get"
+          role="search" style="display:none; position:absolute; top:100%; right:0; z-index:1000; background:#fff; padding:.5rem; border:1px solid #ccc; border-radius:4px; box-shadow:0 4px 12px rgba(0,0,0,0.15); min-width:260px;">
+      <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search&hellip;" aria-label="Search query">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit">Go</button>
+        </div>
+      </div>
+    </form>
+  </li>
+</ul>
+
+
+      <div class="d-none d-lg-flex align-items-center ml-2" style="gap:.5rem">
+        <a href="tel:305-743-7433" style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;color:#B5A369;white-space:nowrap;text-decoration:none" aria-label="Call 305-Sheriff (743-7433)">305-Sheriff (743-7433)</a>
+        <a href="/non-emergency-report" class="btn btn-success btn-sm" aria-label="Report a Crime">Report a Crime</a>
+        <a href="tel:911" class="btn btn-mdso-911 btn-sm" aria-label="Call 911 emergency">911</a>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+      
+      
+      
+<section class="mdso-page-hero">
+  <div class="mdso-page-hero-inner">
+    
+      <p class="mdso-page-hero-kicker">SAFETY & SUPPORT</p>
+    
+    <h1 class="mdso-page-hero-title">Text 911</h1>
+  </div>
+</section>
+
+
+      <main id="content" role="main">
+        <div class="content-pages-show-basic-wide">
+  <div class="row">
+  <div class="col-12 col-lg-9 mx-auto">
+
+    
+
+
+
+<p> </p>
+<div class="row mb-5">
+  <div class="col-12">
+    <p class="lead" style="color: #6c757d; line-height: 1.7;">This new service allows residents to send a text message to 911 in situations where calling may not be possible or safe. This initiative is part of our commitment to leveraging technology to enhance public safety and ensure that all members of our community have access to emergency assistance when they need it most.</p>
+    <p style="color: #6c757d; line-height: 1.8;">Whether you're deaf, hard of hearing, have a speech disability, or find yourself in a scenario where speaking could put you in danger, Text-to-911 ensures you can still reach emergency services.</p>
+  </div>
+</div>
+
+<div class="mb-5 p-4" style="background: #f8f5f0; border-radius: 6px; border-left: 4px solid #1c7f3f;">
+  Please remember, voice calls to 911 are still the fastest and most efficient way to reach emergency services. Text-to-911 should only be used in emergency situations when calling is not an option.
+</div>
+
+<div class="mb-5 p-4" style="background: #f8f5f0; border-radius: 6px; border-left: 4px solid #C99C37;">
+  <ul style="color: #6c757d; line-height: 1.8; padding-left: 1.25rem;">
+<li class="mb-2">General Public</li>
+<li class="mb-2">Deaf, hard of hearing, or individuals with speech disabilities</li>
+<li class="mb-2">Domestic violence advocates</li>
+<li class="mb-2">Individuals unable to speak due to medical or other conditions</li>
+</ul>
+<ul style="color: #6c757d; line-height: 1.8; padding-left: 1.25rem;">
+<li class="mb-2">Calling 911 provides enhanced location information that may be limited when texting 911</li>
+<li class="mb-2">Communication over text message is only available in English at this time</li>
+<li class="mb-2">Photo and video sharing over text is not available. Some 911 Centers may message you separately to share multimedia</li>
+<li class="mb-2">Wireless phone carriers have set a 160-character count limitation for texts</li>
+</ul>
+</div>
+
+
+
+    
+
+
+    
+
+    <div class="mt-4 pt-4 like-page border-top">
+  <div class="row">
+    <div class="col">
+      <p class="mb-1"><strong>Do you like this page?</strong></p>
+      <div class="sharetable d-flex flex-wrap align-items-center">
+        <div class="facebook-cell">
+          
+            <div class="d-none d-sm-block">
+              <fb:like href="https://www.mdso.com/text-911" show_faces="false" width="300" colorscheme="light" send="true" action="like"></fb:like>
+            </div>
+            <div class="d-block d-sm-none">
+              <fb:like href="https://www.mdso.com/text-911" show_faces="false" width="245" colorscheme="light" send="false" action="like"></fb:like>
+            </div>
+          
+        </div>
+        <div class="twitter-cell" style="transform:translateY(5px);">
+          
+            <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-text="Text 911" data-via="">Tweet</a>
+          
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+
+    
+
+  </div>
+</div>
+
+</div>
+
+      </main>
+      <footer class="site-footer py-5">
+  <div class="container">
+    <div class="row mb-4 pb-4" style="border-bottom:1px solid rgba(181,163,105,.12)">
+
+      <!-- Brand column -->
+      <div class="col-lg-3 mb-4 mb-lg-0">
+        <div class="d-flex align-items-flex-start mb-3" style="gap:.6rem">
+          <!-- IMG-COUNTY -->
+          <img src="https://assets.nationbuilder.com/mdso/sites/34/meta_images/original/mdsobadge_transparent_%281%29.png?1780958613"
+               alt="MDSO Star Logo"
+               style="width:22px;height:22px;flex-shrink:0;margin-top:2px"
+               onerror="this.style.display='none';document.getElementById('mdso-star-fallback').style.display='';">
+          <svg id="mdso-star-fallback" style="fill:#C99C37;width:22px;height:22px;flex-shrink:0;margin-top:2px;display:none" viewBox="0 0 100 100" aria-hidden="true">
+            <polygon points="50,2 61,35 96,35 68,57 79,91 50,70 21,91 32,57 4,35 39,35"/>
+          </svg>
+          <div>
+            <div class="footer-agency-name">Miami-Dade Sheriff's Office</div>
+            <div class="footer-sheriff-name">Sheriff Rosie Cordero-Stutz</div>
+          </div>
+        </div>
+        <p class="footer-tagline" style="font-size:.8rem;color:rgba(255,255,255,.55);font-style:italic;line-height:1.6">
+          Protecting with courage, serving with professionalism.
+        </p>
+        <!-- Emergency contact text: light colors for visibility on dark footer background (fixed .site-footer SCSS) -->
+        <p style="font-size:.75rem;color:rgba(255,255,255,.7);margin-top:.5rem">
+          Emergencies: <a href="tel:911" style="color:#fff;font-weight:700;text-decoration:none">911</a>&nbsp;·&nbsp;
+          Non-Emergency: <a href="tel:305-743-7433" style="color:#C99C37;text-decoration:none;font-weight:600">305-Sheriff (743-7433)</a>
+        </p>
+        <!-- Social icons -->
+        <div style="font-size:.65rem;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;color:#C99C37;margin-top:.75rem">MDSO Socials</div>
+        <div class="d-flex" style="gap:.4rem">
+          <a href="https://www.facebook.com/MiamiDadeSheriffsOffice" class="mdso-social-icon" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+          <a href="https://twitter.com/miamidade_so" class="mdso-social-icon" aria-label="X (Twitter)"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          <a href="https://twitter.com/MDSOenEspanol" class="mdso-social-icon" aria-label="X en Español"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          <a href="https://www.instagram.com/miamidadesheriffsoffice" class="mdso-social-icon" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+          <a href="https://www.youtube.com/MiamiDadeSheriffsOffice" class="mdso-social-icon" aria-label="YouTube"><i class="fab fa-youtube" aria-hidden="true"></i></a>
+          <a href="https://www.linkedin.com/company/MiamiDadeSheriffsOffice" class="mdso-social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+          <a href="https://linktr.ee/Miami-Dade-Sheriffs-Office" class="mdso-social-icon" aria-label="Linktree"><i class="fas fa-tree" aria-hidden="true"></i></a>
+        </div>
+        <div style="font-size:.65rem;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;color:#C99C37;margin-top:.5rem">Sheriff Rosie Socials</div>
+        <div class="d-flex" style="gap:.4rem">
+          <a href="https://twitter.com/Sheriff_Rosie" class="mdso-social-icon" aria-label="X (Twitter)"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          <a href="https://www.instagram.com/Sheriff_Rosie" class="mdso-social-icon" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+          <a href="https://www.facebook.com/SheriffRosieCorderoStutz" class="mdso-social-icon" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a>
+          <a href="https://www.linkedin.com/in/rosanna-rosie-cordero-stutz" class="mdso-social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in" aria-hidden="true"></i></a>
+          <a href="https://linktr.ee/SheriffRosie" class="mdso-social-icon" aria-label="Linktree"><i class="fas fa-tree" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <!-- About column -->
+      <div class="col-6 col-lg-2 mb-4 mb-lg-0">
+        <h2 class="footer-heading">About MDSO</h2>
+        <a class="footer-link d-block mb-1" href="/mission-vision">Guiding Principles</a>
+        <a class="footer-link d-block mb-1" href="/contact-sheriffs-office">Contact MDSO</a>
+        <a class="footer-link d-block mb-1" href="/court-services">Court Services</a>
+        <a class="footer-link d-block mb-1" href="/mdso-district-stations">District Stations</a>
+      </div>
+
+      <!-- Get Involved column -->
+      <div class="col-6 col-lg-2 mb-4 mb-lg-0">
+        <h2 class="footer-heading">Get Involved</h2>
+        <a class="footer-link d-block mb-1" href="/help-fight-crime">Help Fight Crime</a>
+        <a class="footer-link d-block mb-1" href="/community-outreach">Community Outreach</a>
+        <a class="footer-link d-block mb-1" href="/text-911">Text 911</a>
+        <a class="footer-link d-block mb-1" href="/non-emergency-report">File a Report</a>
+        <a class="footer-link d-block mb-1" href="/report-hoa-fraud">Report HOA Fraud</a>
+        <a class="footer-link d-block mb-1" href="/intern-mdso">Internships</a>
+      </div>
+
+      <!-- Accreditation column -->
+      <div class="col-6 col-lg-3 mb-4 mb-lg-0">
+        <h2 class="footer-heading">Accreditation</h2>
+        <div class="mb-3">
+          <img src="https://assets.nationbuilder.com/themes/6a51724c3006361328a8d41d/attachments/original/1785878930/calea_accreditation_logo_smaller.png?1785878930" alt="CALEA Accredited" style="max-width:120px;margin-bottom:.5rem;display:block">
+          <span style="display:block;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;color:#c9a84c;font-size:.85rem">CALEA Accredited</span>
+        </div>
+        <div class="mb-3">
+          <img src="https://assets.nationbuilder.com/themes/6a51724c3006361328a8d41d/attachments/original/1785878930/cfa_logo.png?1785878930" alt="CFA Florida Accredited" style="max-width:120px;margin-bottom:.5rem;display:block">
+          <span style="display:block;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;color:#c9a84c;font-size:.85rem">CFA Florida Accredited</span>
+        </div>
+      </div>
+
+      <!-- Legal column -->
+      <div class="col-6 col-lg-2">
+        <h2 class="footer-heading">Legal &amp; Info</h2>
+        <a class="footer-link d-block mb-1" href="/privacy-and-security">Privacy Statement</a>
+        <a class="footer-link d-block mb-1" href="/ada-notice">ADA Notice</a>
+        <a class="footer-link d-block mb-1" href="/disclaimer">Disclaimer</a>
+        <a class="footer-link d-block mb-1" href="/news-stories">News Releases</a>
+        <a class="footer-link d-block mb-1" href="/sitemap">Sitemap</a>
+      </div>
+
+    </div>
+
+    <!-- Footer bottom bar -->
+    <!-- The NationBuilder attribution link below is required per NationBuilder terms. Do not remove. -->
+    <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <span style="color:rgba(255,255,255,.55)">© 2026 Miami-Dade Sheriff's Office. All rights reserved. &nbsp;·&nbsp; <a href="https://www.MDSO.com" style="color:rgba(255,255,255,.55)">www.MDSO.com</a></span>
+      <span class="footer-ada-badge d-flex align-items-center mt-2 mt-md-0" style="gap:.75rem">
+        <span>✓ ADA Compliant</span>
+        <span>· <a href="https://nationbuilder.com/?utm_source=footer&utm_medium=referral&utm_campaign=mdso" style="color:#1c7f3f">NationBuilder</a></span>
+        <span>· CALEA &amp; CFA Accredited</span>
+      </span>
+    </div>
+
+  </div>
+</footer>
+
+    
+
+    <div id="flash_container">
+  
+
+</div>
+
+
+    <div id="fb-root"></div>
+
+  <script type="text/javascript">
+  window.fbAsyncInit = function() {
+    FB.init({
+      channelUrl : "//mdso.nationbuilder.com/channel.html", // channelUrl has been deprecated since API version 8.0.24 in 2013.
+      status     : true,
+      version    : "v18.0",
+      cookie     : true,
+      xfbml      : true
+    });
+  };
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.async = true;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<script src="https://assets.nationbuilder.com/assets/liquid-afd4cb8734a76f96f5097a424ed61c3c3354d9f9472cc52b6d1513ee749d49ec.js"></script>
+
+
+
+
+
+
+
+
+    
+
+    <script src="https://mdso.nationbuilder.com/themes/34/6a51724c3006361328a8d41d/0/attachments/17837226511793816351/default/bootstrap.min.js"></script>
+    <script src="https://mdso.nationbuilder.com/themes/34/6a51724c3006361328a8d41d/0/attachments/17837226511793816351/default/bs-custom-file-input.min.js"></script>
+    <script src="https://mdso.nationbuilder.com/themes/34/6a51724c3006361328a8d41d/0/attachments/17837226511793816351/default/theme.js"></script>
+    <script>
+    if ( window.self !== window.top ) {
+      var referrer_origin = "";
+      if ( window.location.origin !== referrer_origin ) {
+        var xhttp = new XMLHttpRequest();
+        var params = "iframe_req_path=" + window.location.pathname + "&referrer_origin=" + referrer_origin;
+        xhttp.open("GET", "iframe_requests?" + params, true);
+        xhttp.send();
+      }
+    }
+  </script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"ff633690ee944cc4bb4fa2453466614e","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a558328c4aea8674',t:'MTc5Mzg0MzMxOQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a558328c4aea8674',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+</html>
+

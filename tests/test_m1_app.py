@@ -21,7 +21,7 @@ def test_every_page_renders_with_emergency_access(app, page):
     app.run()
     assert not app.exception
     assert 'Call 911' in [b.label for b in app.get('link_button')]
-    assert "I can't call 911" in [b.label for b in app.button]
+    assert "I Can't Call 911" in [b.label for b in app.button]
 
 
 def test_guided_demo_loads_household_and_warning(app):
@@ -42,7 +42,7 @@ def test_emergency_interrupts_recovery(app):
 
 
 def test_alternative_contact_is_always_available(app):
-    button(app, "I can't call 911").click().run()
+    button(app, "I Can't Call 911").click().run()
     assert any('availability' in m.value.lower() for m in app.info)
 
 

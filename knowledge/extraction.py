@@ -1,4 +1,4 @@
-﻿"""Bounded static HTML-to-text extraction. Never executes or renders acquired HTML."""
+"""Bounded static HTML-to-text extraction. Never executes or renders acquired HTML."""
 import hashlib
 import re
 from html.parser import HTMLParser
@@ -199,6 +199,54 @@ def _eeap_sections(html, source):
     return sections
 
 
+class _DirectoryTitle(HTMLParser):
+    """Read the actual page H1; never substitute an expected title for evidence."""
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.active = False
+        self.parts = []
+        self.titles = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == 'h1':
+            self.active = True
+            self.parts = []
+
+    def handle_endtag(self, tag):
+        if tag == 'h1' and self.active:
+            self.titles.append(' '.join(''.join(self.parts).split()))
+            self.active = False
+
+    def handle_data(self, data):
+        if self.active:
+            self.parts.append(data)
+
+
+class _DirectorySections(_Sections):
+    def flush(self):
+        # County breadcrumbs precede H1. They are page chrome, not guidance.
+        if not self.levels:
+            self.parts = []
+            return
+        super().flush()
+
+
+def _directory_sections(html, source):
+    titles = _DirectoryTitle()
+    titles.feed(html)
+    titles.close()
+    if titles.titles != [source.title] or not re.search(r'<main\b', html, re.I):
+        raise ExtractionError('unique directory H1 and main content are required')
+    parser = _DirectorySections('main')
+    if source.source_id == 'miami-dade-text-911':
+        # MDSO has its actual H1 in the hero, followed by a heading-free main.
+        parser.levels = [(1, titles.titles[0])]
+    parser.feed(html)
+    parser.close()
+    parser.flush()
+    return parser.sections
+
+
 def extract_sections(raw: bytes, source, *, charset: str = 'utf-8') -> list[EvidenceChunk]:
     if charset.casefold() not in {'utf-8', 'utf8', 'us-ascii', 'ascii', 'iso-8859-1', 'windows-1252'}:
         raise DecodeError('unsupported character encoding')
@@ -209,6 +257,11 @@ def extract_sections(raw: bytes, source, *, charset: str = 'utf-8') -> list[Evid
     if (source.source_id == 'miami-dade-eeap' and source.official_url ==
             'https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672'):
         sections = _eeap_sections(html, source)
+    elif (source.source_id, source.official_url) in {
+        ('miami-dade-text-911', 'https://www.mdso.com/text-911'),
+        ('miami-dade-weather-contacts', 'https://www.miamidade.gov/initiative/weather-ready/contact.page'),
+    }:
+        sections = _directory_sections(html, source)
     else:
         target = ('main' if re.search(r'<main\b', html, re.I)
                   else 'article' if re.search(r'<article\b', html, re.I) else 'body')

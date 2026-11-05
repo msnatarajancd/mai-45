@@ -1,0 +1,81 @@
+{
+  "resource": {
+    "resource_id": "miami-dade-text-911",
+    "source_id": "miami-dade-text-911",
+    "official_name": "Text-to-911",
+    "service_category": "emergency services",
+    "service_area": "US-FL-MIAMI-DADE",
+    "official_contact": null,
+    "contact_evidence_chunk_id": null,
+    "official_url": "https://www.mdso.com/text-911",
+    "prerequisites": [
+      "Communication over text message is only available in English at this time",
+      "Photo and video sharing over text is not available. Some 911 Centers may message you separately to share multimedia",
+      "Wireless phone carriers have set a 160-character count limitation for texts"
+    ],
+    "limitations": [
+      "Current availability not verified.",
+      "No connection, enrollment, dispatch, rescue, or transportation is confirmed.",
+      "For immediate danger, call 911."
+    ],
+    "availability_status": "UNKNOWN"
+  },
+  "provider": "Miami-Dade Sheriff's Office",
+  "description": "This new service allows residents to send a text message to 911 in situations where calling may not be possible or safe.",
+  "enrollment_timing": null,
+  "matching_tags": [
+    "communication_access",
+    "cannot_call",
+    "hearing_speech_access"
+  ],
+  "counties": [
+    "US-FL-MIAMI-DADE"
+  ],
+  "phases": [
+    "prepare",
+    "respond"
+  ],
+  "purposes": [
+    "communication_access"
+  ],
+  "hazards": [],
+  "hazard_independent": true,
+  "supporting_candidate_ids": [
+    "c9052df8db4490a789062c2a2525f17d41e9680c6c36f7d689a39253d28afa80"
+  ],
+  "field_evidence": {
+    "official_name": [
+      "c9052df8db4490a789062c2a2525f17d41e9680c6c36f7d689a39253d28afa80"
+    ],
+    "service_category": [
+      "c9052df8db4490a789062c2a2525f17d41e9680c6c36f7d689a39253d28afa80"
+    ],
+    "description": [
+      "c9052df8db4490a789062c2a2525f17d41e9680c6c36f7d689a39253d28afa80"
+    ],
+    "prerequisites.0": [
+      "c9052df8db4490a789062c2a2525f17d41e9680c6c36f7d689a39253d28afa80"
+    ],
+    "prerequisites.1": [
+      "c9052df8db4490a789062c2a2525f17d41e9680c6c36f7d689a39253d28afa80"
+    ],
+    "prerequisites.2": [
+      "c9052df8db4490a789062c2a2525f17d41e9680c6c36f7d689a39253d28afa80"
+    ]
+  },
+  "source_content_hash": "ef11e602d4f208a62445f4ff20c4d0b000a193066fd5e41f6692d66fd7692be8",
+  "review": {
+    "status": "PENDING",
+    "reviewer": null,
+    "reviewed_at": null,
+    "review_due_at": "2026-12-04T01:53:38.339858Z",
+    "fingerprint": null,
+    "revoked_at": null,
+    "revoked_by": null,
+    "revocation_reason": null
+  },
+  "preparation_notes": [
+    "Hazard-independent applicability is a proposal requiring explicit directory approval.",
+    "The original H1 is outside main; extraction uses that actual H1 and main text only."
+  ]
+}

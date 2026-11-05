@@ -50,7 +50,7 @@ def test_danger_in_question_interrupts_before_generation(app,monkeypatch):
     assert app.session_state['rr_emergency']
     assert not app.exception
     assert 'Call 911' in [b.label for b in app.get('link_button')]
-    button(app,"I can't call 911").click().run()
+    button(app,"I Can't Call 911").click().run()
     assert any('cannot send' in i.value for i in app.info)
 
 def test_persisted_danger_blocks_guidance_after_return_to_app(app,monkeypatch):

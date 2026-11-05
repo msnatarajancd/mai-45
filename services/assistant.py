@@ -7,6 +7,8 @@ from typing import Annotated, Generic, Literal, TypeVar, Union
 from uuid import UUID, uuid4
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from domain.contracts import AppMode, Household
+from emergency.service import recovery_requires_emergency, screen_report
+from emergency.workflow import begin_emergency
 from recovery.models import RecoveryIntake, RecoveryPlan, TaskStatus
 from recovery.llm_client import NebiusClient, PlanningClientError, RecoveryLLMClient
 from ui.capabilities import GUIDE
@@ -68,22 +70,9 @@ class Proposal(Reply):
 
 
 def is_danger(text):
-    # Conservative pattern interrupt, not a validated safety classifier.
-    urgent = r"\b(trapped|water is rising|cannot breathe|can.t breathe|smell gas|gas leak|there is a fire|drowning|unconscious)\b"
-    if re.search(urgent, text, re.I) or text.strip().casefold() == 'immediate danger':
-        return True
-    normalized = text.replace('’', "'")
-    explicit = r"\b(?:(?:i am|i'm|we are|we're)\s+in\s+(?:immediate\s+)?danger|(?:in|report)\s+(?:in\s+)?immediate\s+danger)\b"
-    for match in re.finditer(explicit, normalized, re.I):
-        # Scope qualifiers to this sentence, so an earlier hypothetical question
-        # cannot suppress a later explicit current report.
-        prefix = re.split(r'[.!?;\n]', normalized[:match.start()])[-1]
-        if re.search(r'\b(?:if|whether|suppose|imagine|hypothetical(?:ly)?)\b', prefix, re.I):
-            continue
-        if re.search(r'\b(?:not|never|no longer)\s*$', prefix, re.I):
-            continue
-        return True
-    return False
+    """Compatibility projection; callers needing persistence use the full result."""
+    decision = screen_report(text, entrypoint='assistant')
+    return bool(decision and decision.interrupt_routine)
 
 
 def capture(state, repo):
@@ -92,7 +81,8 @@ def capture(state, repo):
     plan = repo.get_active_plan(case.case_id) if repo and case else None
     return json.dumps(dict(location=state['location_id'],mode=state['mode'],household=state['household'].model_dump(),case_id=case_id,
         case=case.model_dump(mode='json') if case else None,plan=plan.model_dump(mode='json') if plan else None,
-        draft=state.get('rr_draft'),emergency=state.get('rr_emergency',False),pending=state.get('rr_pending_danger',[])),sort_keys=True)
+        draft=state.get('rr_draft'),emergency=state.get('rr_emergency',False),
+        emergency_epoch=state.get('rr_emergency_epoch',0),pending=state.get('rr_pending_danger',[])),sort_keys=True)
 
 
 def app_context(state,repo):
@@ -101,13 +91,15 @@ def app_context(state,repo):
 
 
 def propose(text,state,repo,client=None,history=()):
+    decision = screen_report(text, entrypoint='assistant')
+    if decision and decision.interrupt_routine:
+        begin_emergency(state, decision, entrypoint='assistant', event_id=str(uuid4()))
+        return _emergency_proposal()
+    if state.get('rr_emergency'):
+        return _emergency_proposal()
     if not text.strip() or len(text)>2500:
         raise ValueError('Use a message between 1 and 2,500 characters.')
-    if is_danger(text):
-        state['rr_emergency']=True
-        if state.get('rr_case_id'):
-            state['rr_pending_danger']=list(set(state.get('rr_pending_danger',[])) | {state['rr_case_id']})
-        return Proposal(answer='Emergency access comes first. This app has not contacted anyone. Use the emergency controls above.',provider='Local emergency interrupt')
+    epoch = state.get('rr_emergency_epoch', 0)
     snapshot=capture(state,repo)
     system = ('You are ReadyRelief product support and a bounded action planner. Explain ONLY how to use this prototype, using the GUIDE. '
         'Do not give disaster, medical, insurance or eligibility advice; direct such questions to Respond/official sources. '
@@ -125,14 +117,21 @@ def propose(text,state,repo,client=None,history=()):
     payload=dict(request=text,context=app_context(state,repo),recent_conversation=list(history)[-6:])
     client=client or NebiusClient(model=os.getenv('NEBIUS_CHAT_MODEL') or os.getenv('NEBIUS_MODEL') or 'Qwen/Qwen3-235B-A22B-Instruct-2507',timeout=20)
     raw=client.complete([{'role':'system','content':system},{'role':'user','content':json.dumps(payload)}])
+    if state.get('rr_emergency') or state.get('rr_emergency_epoch', 0) != epoch:
+        return _emergency_proposal()
     reply=Reply.model_validate_json(raw)
     if re.match(r"^\s*(how (do|does|can|should|to)|what|why|where|explain|can you explain)\b",text,re.I):
         reply.action=None
     return Proposal(**reply.model_dump(),snapshot=snapshot)
 
 
+def _emergency_proposal():
+    return Proposal(answer='Emergency access comes first. This app has not contacted anyone. Use the emergency controls above.',provider='Local emergency interrupt')
+
+
 def local_proposal(text,state,repo):
     if is_danger(text): return propose(text,state,repo)
+    if state.get('rr_emergency'): return _emergency_proposal()
     normalized=text.strip().casefold()
     action=None
     if normalized in {'start tour','show me around','walk me through the app'}: action={'kind':'start_tour'}
@@ -430,8 +429,9 @@ def extract_recovery_needs(
         return RecoveryExtractionResult(status=status, base_context_fingerprint=fingerprint,
             fields=kwargs.pop('fields', base), **kwargs)
 
-    # No model or app action runs before this independent, deterministic interruption.
-    if context.danger_reported is True or (isinstance(message, str) and is_danger(message)):
+    # A navigation pause for generic utility context is not itself a danger
+    # report. Current threats still bypass both extraction calls without state I/O.
+    if context.danger_reported is True or (isinstance(message, str) and recovery_requires_emergency(message)):
         return result('DANGER_DETECTED')
     if not isinstance(message, str) or not message.strip() or len(message) > 2500:
         return result('ERROR', error_code='invalid_message')

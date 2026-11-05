@@ -10,6 +10,20 @@ async function screen(page,name){
  await expect(page.getByTestId('stApp')).not.toHaveAttribute('data-test-script-state','running');
  await expect(page).toHaveScreenshot(name,{caret:'hide'});
 }
+async function expectLocatedControl(page,step){
+ await expect(page.getByTestId('rr-tour-spotlight')).toContainText(`Step ${step}`);
+ // Speech callbacks also update the live status. Location is established by
+ // the stable marker and unobstructed control, not an ephemeral narration notice.
+ await expect.poll(()=>page.evaluate(()=>{
+  const ring=document.querySelector('[data-testid="rr-tour-spotlight"]')?.getBoundingClientRect();
+  const card=document.querySelector('.st-key-guided_tour')?.getBoundingClientRect();
+  const header=document.querySelector('.st-key-top_toolbar')?.getBoundingClientRect();
+  const emergency=document.querySelector('.st-key-emergency_bar')?.getBoundingClientRect();
+  return !!ring && !!card && !!header && !!emergency
+   && ring.top>=Math.max(header.bottom,emergency.bottom)
+   && (ring.bottom<=card.top || ring.right<=card.left || ring.left>=card.right);
+ })).toBe(true);
+}
 test('readable home, themes, search and persistent navigation',async({page},info)=>{
  await ready(page);
  const desktop=info.project.name!=='mobile';
@@ -72,6 +86,19 @@ test('search and chat route consistently without turning search into AI',async({
 });
 
 test('tour locates every control and cleans up',async({page})=>{
+ // Screenshot content must not depend on installed OS voices or asynchronous
+ // speech callbacks. Narration selection/autoplay/retry have separate tests.
+ await page.addInitScript(()=>{
+  window.SpeechSynthesisUtterance=class {constructor(text){this.text=text;}};
+  Object.defineProperty(window,'speechSynthesis',{value:{
+   getVoices:()=>[
+    {name:'Microsoft David - English (United States)',voiceURI:'david',lang:'en-US',localService:true},
+    {name:'Microsoft Zira - English (United States)',voiceURI:'zira',lang:'en-US',localService:true}
+   ],
+   cancel(){},addEventListener(){},removeEventListener(){},
+   speak(u){u.onstart?.();},speaking:true
+  }});
+ });
  await ready(page);
  await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();
  await expect(page.locator('.st-key-tour_welcome')).toBeInViewport();
@@ -83,11 +110,7 @@ test('tour locates every control and cleans up',async({page})=>{
   await expect(spotlight).toBeVisible();
   if(step===3)await page.getByTestId('stMain').evaluate(e=>e.scrollBy(0,400));
   await page.getByRole('button',{name:'Locate control',exact:true}).click();
-  await expect(page.getByRole('status').filter({hasText:`Step ${step} control located.`})).toBeVisible();
-  await expect.poll(async()=>{const r=await spotlight.boundingBox(),c=await page.locator('.st-key-guided_tour').boundingBox();return !!r && r.y>=20 && (r.y+r.height<=c.y || r.x+r.width<=c.x);}).toBe(true);
-  const ring=await spotlight.boundingBox(),card=await page.locator('.st-key-guided_tour').boundingBox();
-  expect(ring.y).toBeGreaterThanOrEqual((await page.locator(".st-key-top_toolbar").boundingBox()).height);
-  expect(ring.y+ring.height<=card.y || ring.x+ring.width<=card.x).toBeTruthy();
+  await expectLocatedControl(page,step);
   if(step===3)await screen(page,'tour-protect.png');
   await page.getByRole('button',{name:step===6?'Finish tour':'Next step',exact:true}).click();
  }
@@ -116,7 +139,7 @@ test('guided demo visibly starts, advances and restarts',async({page},info)=>{
   await expect(page.getByTestId('stApp')).not.toHaveAttribute('data-test-script-state','running');
   await expect(page.getByTestId('rr-tour-spotlight')).toBeVisible();
   await page.getByRole('button',{name:'Locate control',exact:true}).click();
-  await expect(page.getByRole('status').filter({hasText:`Step ${index+1} control located.`})).toBeVisible();
+  await expectLocatedControl(page,index+1);
   await page.getByRole('button',{name:index===2?'Finish tour':'Next step',exact:true}).click();
  }
  await expect(page.locator('.st-key-guided_tour')).toHaveCount(0);
@@ -157,7 +180,9 @@ for(const theme of ['bright','dark'])test(`all screens remain readable in ${them
   await expect(page.getByTestId('stException')).toHaveCount(0);
   await page.getByTestId('stMain').evaluate(e=>e.scrollTop=0);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
-  const clipped=await page.locator('button p').evaluateAll(es=>es.filter(e=>!e.closest('.st-key-chat_launcher,.st-key-mobile_nav,.st-key-theme_toggle,.st-key-quick_tour')&&e.getBoundingClientRect().width&&getComputedStyle(e).visibility!=='hidden'&&e.scrollWidth>e.clientWidth+2).map(e=>e.textContent));
+  // The brand's accessible name is intentionally clipped to 1px; its visible
+  // logo and keyboard activation are checked separately below.
+  const clipped=await page.locator('button p').evaluateAll(es=>es.filter(e=>!e.closest('.st-key-chat_launcher,.st-key-mobile_nav,.st-key-theme_toggle,.st-key-quick_tour,.st-key-brand_home')&&e.getBoundingClientRect().width&&getComputedStyle(e).visibility!=='hidden'&&e.scrollWidth>e.clientWidth+2).map(e=>e.textContent));
   expect(clipped,`${name} clipped button labels`).toEqual([]);
   await page.getByTestId('stMain').evaluate(e=>e.scrollTop=e.scrollHeight);
   await expect(page.locator('.rr-footer')).toBeInViewport();

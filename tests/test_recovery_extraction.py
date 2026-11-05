@@ -314,3 +314,59 @@ def test_invalid_message_never_calls_provider(message):
     assert result.status == 'ERROR'
     assert result.error_code == 'invalid_message'
     assert not client.calls
+
+
+@pytest.mark.parametrize('message', [
+    'Electricity came back. The water is unavailable.',
+    'We were trapped yesterday. Electricity came back. The water is unavailable.',
+    'How do I document flood damage? Electricity came back. The water is unavailable.',
+    'We have no medical concerns. Electricity came back. The water is unavailable.',
+])
+def test_recovery_utility_updates_are_extracted_without_asserting_safety(message):
+    context = RecoveryConfirmedContext(electricity='Unavailable', danger_reported=False)
+    client = FakeClient({'fields': {
+        'electricity': proposed('Available', 'Electricity came back'),
+        'water': proposed('Unavailable', 'The water is unavailable'),
+    }})
+    result = extract_recovery_needs(message, confirmed_context=context, client=client)
+    assert result.status == 'SUCCESS'
+    assert result.fields.electricity.state == 'PROPOSED'
+    assert result.fields.electricity.value == 'Available'
+    assert result.fields.water.value == 'Unavailable'
+    assert result.base_context_fingerprint == recovery_context_fingerprint(context)
+    assert context.electricity == 'Unavailable' and context.danger_reported is False
+    assert len(client.calls) == 2
+
+
+def test_recovery_utility_uncertainty_requests_fact_clarification():
+    context = RecoveryConfirmedContext(electricity='Unavailable')
+    client = FakeClient({'fields': {}, 'clarification_fields': ['electricity']})
+    result = extract_recovery_needs('Maybe electricity is available again.',
+                                    confirmed_context=context, client=client)
+    assert result.status == 'NEEDS_CLARIFICATION'
+    assert result.fields.electricity.state == 'UNCHANGED'
+    assert result.fields.electricity.value == 'Unavailable'
+    assert result.clarification_questions == ['Is electricity currently available or unavailable?']
+    assert len(client.calls) == 2
+
+
+@pytest.mark.parametrize('message', [
+    'Electricity came back, but my child is not breathing.',
+    'I am not sure whether my child is breathing.',
+    'Maybe my mother is unconscious.',
+    'Water is near the electrical panel.',
+    'Maybe water is near the electrical panel.',
+    'My father is trapped\nWe need transport next week.',
+    'We need transport next week, but I have a medical concern now.',
+    'My basement is flooding now.',
+])
+def test_recovery_current_threat_or_serious_uncertainty_stops_extraction(message):
+    context = RecoveryConfirmedContext(electricity='Unavailable', danger_reported=False)
+    client = FakeClient()
+    result = extract_recovery_needs(message, confirmed_context=context, client=client)
+    assert result.status == 'DANGER_DETECTED'
+    assert not client.calls and not result.new_damage
+    assert result.fields.electricity.state == 'UNCHANGED'
+    assert result.fields.electricity.value == 'Unavailable'
+    assert result.base_context_fingerprint == recovery_context_fingerprint(context)
+    assert context.danger_reported is False

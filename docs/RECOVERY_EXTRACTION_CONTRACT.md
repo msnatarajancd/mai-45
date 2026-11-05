@@ -66,6 +66,12 @@ Current explicit danger, or `danger_reported=True` in confirmed context, returns
 `DANGER_DETECTED` before any model call. This is a conservative routing signal, not a
 complete danger classifier. Absence of a detected phrase does not establish safety.
 
+The CAP-04 shared phrase policy also pauses extraction for serious current uncertainty,
+such as uncertain breathing or water near electrical equipment. `DANGER_DETECTED`
+is a pause signal; it does not persist or confirm an incident. Ordinary utility
+restoration and uncertainty about utility availability can still be extracted or
+clarified. Neither those proposals nor leaving an emergency view clears reported danger.
+
 No output field may set or clear danger, declare a household safe, approve a plan, or
 execute an action. `SUCCESS` means validated extraction, not completeness, safety,
 approval, or persistence. M5 must still perform its separate safety assessment.

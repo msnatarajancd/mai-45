@@ -1,4 +1,4 @@
-﻿"""Manually curated candidate allowlist; origin does not imply content review."""
+"""Manually curated candidate allowlist; origin does not imply content review."""
 from dataclasses import dataclass
 from .models import Classification, DisasterPhase, Hazard, SourceRecord
 
@@ -34,6 +34,15 @@ CURATED_SOURCES = (
           'Emergency & Evacuation Assistance Program (EEAP)',
           'https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672',
           'US-FL-MIAMI-DADE', [DisasterPhase.PREPARE, DisasterPhase.RESPOND], ('evacuation assistance',)),
+    _spec('miami-dade-text-911', "Miami-Dade Sheriff's Office", 'Text 911',
+          'https://www.mdso.com/text-911', 'US-FL-MIAMI-DADE',
+          [DisasterPhase.PREPARE, DisasterPhase.RESPOND], ('text 911',)),
+    _spec('miami-dade-weather-contacts', 'Miami-Dade County', 'Resources and Contact Information',
+          'https://www.miamidade.gov/initiative/weather-ready/contact.page', 'US-FL-MIAMI-DADE',
+          [DisasterPhase.PREPARE, DisasterPhase.RESPOND, DisasterPhase.RECOVER], ('contact',)),
+    _spec('fcc-text-911', 'Federal Communications Commission', 'Text to 911: What You Need to Know',
+          'https://www.fcc.gov/consumers/guides/what-you-need-know-about-text-911', 'US',
+          [DisasterPhase.PREPARE, DisasterPhase.RESPOND], ('911',)),
 )
 
 
