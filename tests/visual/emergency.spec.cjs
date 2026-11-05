@@ -90,3 +90,29 @@ test('emergency actions remain reachable while scrolling and at enlarged text', 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
   expect(overflow).toBeFalsy();
 });
+
+
+test('Recovery primary action and emergency access remain clear through overlays', async ({page}) => {
+  await page.getByRole('button', {name:'Start my recovery',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Continue to Review',exact:true})).toBeVisible();
+  await page.getByTestId('stMain').evaluate(e=>e.scrollTop=0);
+  await expect(page.getByRole('button',{name:'Continue to Review',exact:true})).toBeInViewport();
+  await expect(page.getByRole('button',{name:'Find Help Now',exact:true})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Resume My Recovery',exact:true})).toBeVisible();
+  const check = async () => {
+    for (const control of [page.getByRole('link',{name:'Call 911',exact:true}),page.getByRole('button',{name:"I Can't Call 911",exact:true})]) {
+      await expect(control).toBeInViewport();
+      expect(await control.evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})).toBeTruthy();
+    }
+  };
+  await page.getByTestId('stMain').evaluate(e=>e.scrollTop=e.scrollHeight);
+  await check();
+  await page.getByRole('button',{name:'Ask ReadyRelief',exact:true}).click();
+  await check();
+  await page.getByRole('button',{name:'Close chat',exact:true}).click();
+  await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();
+  await check();
+  const welcome=await page.locator('.st-key-tour_welcome').boundingBox();
+  const bar=await page.locator('.st-key-emergency_bar').boundingBox();
+  expect(welcome.y).toBeGreaterThanOrEqual(bar.y+bar.height);
+});

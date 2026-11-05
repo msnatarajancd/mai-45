@@ -149,7 +149,7 @@ def test_help_now_presentation_keeps_no_write_and_emergency_boundaries(app, monk
     assert 'rr_case_id' not in app.session_state
     assert dump(path) == before
     assert any(w.value == 'Recovery Copilot' for w in app.title)
-    assert any('Returning household' in w.value for w in app.markdown)
+    assert any(w.label == 'Resume My Recovery' for w in app.button)
     official = [w for w in app.get('link_button') if w.label.startswith('Open Official Resource:')]
     assert official
     assert all(w.proto.type == 'primary' for w in official)

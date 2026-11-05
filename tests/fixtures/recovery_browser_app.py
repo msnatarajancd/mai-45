@@ -20,7 +20,7 @@ class SyntheticClient:
   for item in ['furniture','refrigerator']:
    quote=('our '+item+' is damaged')
    if quote in message:damage.append(fact(item,quote))
-  return json.dumps({'fields':fields,'new_damage':damage,'clarification_fields':[]})
+  return json.dumps({'fields':fields,'new_damage':damage,'clarification_fields':['adults','children'] if '5 members' in message else []})
 assistant.NebiusClient=SyntheticClient
 os.environ['NEBIUS_API_KEY']='synthetic-browser-fixture-not-a-credential'
 try:runpy.run_path(str(ROOT/'app.py'),run_name='__main__')

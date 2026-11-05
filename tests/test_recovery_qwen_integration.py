@@ -54,7 +54,7 @@ def confirm(app):
     next(w for w in app.checkbox if w.label == 'I confirm the selected changes shown above').check()
     if any(w.label == 'I approve the proposed plan revision' for w in app.checkbox):
         next(w for w in app.checkbox if w.label == 'I approve the proposed plan revision').check()
-    button(app, 'Confirm selected changes').click().run()
+    button(app, 'Confirm Details & Continue').click().run()
     assert not app.exception
 
 
@@ -72,11 +72,11 @@ def test_new_household_real_service_review_then_explicit_save(app, monkeypatch):
     assert review.result['fields']['adults']['state'] == review.result['fields']['children']['state'] == 'UNKNOWN'
     assert review.proposed['household_recovery_needs'] == ['Temporary housing']
     button(app, 'Review selected changes').click().run()
-    button(app, 'Confirm selected changes').click().run()
+    button(app, 'Confirm Details & Continue').click().run()
     assert dump(path) == before  # Missing approval/safety cannot create a case.
     next(w for w in app.selectbox if w.label == 'Safety assessment for selected changes').select('No immediate danger reported')
     next(w for w in app.checkbox if w.label == 'I confirm the selected changes shown above').check()
-    button(app, 'Confirm selected changes').click().run()
+    button(app, 'Confirm Details & Continue').click().run()
     assert not app.exception
     repo = SQLiteRecoveryRepository(path)
     case_id = UUID(app.session_state['rr_case_id'])
@@ -262,7 +262,7 @@ def test_plan_revision_requires_approval_separate_from_factual_confirmation(save
     app,_=review_ready(saved,monkeypatch)
     next(w for w in app.checkbox if w.label=='I approve the proposed plan revision').uncheck()
     before=dump(path)
-    button(app,'Confirm selected changes').click().run()
+    button(app,'Confirm Details & Continue').click().run()
     assert dump(path)==before
     assert any('explicitly approve the plan revision' in w.value for w in app.error)
 
