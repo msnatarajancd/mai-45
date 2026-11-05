@@ -62,9 +62,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
 .rr-badge {display:inline-flex;align-items:center;border-radius:20px;padding:5px 10px;font-size:0.75rem;letter-spacing:.06em;font-weight:650;background:var(--rr-warn);color:var(--rr-warntext);}
 .rr-badge.green {background:var(--rr-selected);color:var(--rr-link);}
 .rr-emergency-label {font-weight:600;color:var(--rr-danger);font-size:0.78rem;padding:6px 0;}
-.st-key-emergency_bar {background:var(--rr-emergency);border:1px solid var(--rr-border);border-radius:14px;padding:6px 12px;margin-bottom:2px;}
+.st-key-emergency_bar {background:var(--rr-emergency);border:1px solid var(--rr-border);border-radius:14px;padding:8px 12px;margin-bottom:2px;}
+/* Sticky belongs to Streamlit's layout wrapper; its child cannot scroll beyond
+   a same-height parent. Keep the contact strip below the fixed toolbar. */
+[data-testid="stLayoutWrapper"]:has(> .st-key-emergency_bar) {position:sticky;top:calc(var(--rr-header-height) + 2px);z-index:990;}
 .st-key-emergency_bar [data-testid="stHorizontalBlock"] {align-items:center;}
-.st-key-emergency_bar button,.st-key-emergency_bar a {min-height:35px;font-size:0.78rem;border-radius:9px;}
+.st-key-emergency_bar button,.st-key-emergency_bar a {min-height:44px;font-size:0.85rem;border-radius:9px;}
 .st-key-emergency_bar .stLinkButton a {background:#a63d36;border-color:#a63d36;color:white;}
 .st-key-emergency_bar .stLinkButton a * {color:white !important;}
 .st-key-emergency_bar .stButton button {background:transparent;color:var(--rr-danger);border-color:transparent;box-shadow:none;}

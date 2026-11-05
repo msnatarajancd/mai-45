@@ -1,0 +1,73 @@
+{
+  "resource": {
+    "resource_id": "miami-dade-311",
+    "source_id": "miami-dade-weather-contacts",
+    "official_name": "Miami-Dade County Contact Center",
+    "service_category": "Contact Center",
+    "service_area": "US-FL-MIAMI-DADE",
+    "official_contact": "311",
+    "contact_evidence_chunk_id": "735cc29cc0ce6e6a001968f2fcc18a8f04c7015c3bb91fbef59b4f3729391f90",
+    "official_url": "https://www.miamidade.gov/initiative/weather-ready/contact.page",
+    "prerequisites": [],
+    "limitations": [
+      "Current availability not verified.",
+      "No connection, enrollment, dispatch, rescue, or transportation is confirmed.",
+      "For immediate danger, call 911."
+    ],
+    "availability_status": "UNKNOWN"
+  },
+  "provider": "Miami-Dade County",
+  "description": "Miami-Dade County Contact Center\n311 or 305-468-5900\nTTY/TDD: 711",
+  "enrollment_timing": null,
+  "matching_tags": [
+    "local_assistance",
+    "transportation",
+    "evacuation_support"
+  ],
+  "counties": [
+    "US-FL-MIAMI-DADE"
+  ],
+  "phases": [
+    "prepare",
+    "respond",
+    "recover"
+  ],
+  "purposes": [
+    "planning",
+    "urgent_assistance"
+  ],
+  "hazards": [],
+  "hazard_independent": true,
+  "supporting_candidate_ids": [
+    "735cc29cc0ce6e6a001968f2fcc18a8f04c7015c3bb91fbef59b4f3729391f90"
+  ],
+  "field_evidence": {
+    "official_name": [
+      "735cc29cc0ce6e6a001968f2fcc18a8f04c7015c3bb91fbef59b4f3729391f90"
+    ],
+    "service_category": [
+      "735cc29cc0ce6e6a001968f2fcc18a8f04c7015c3bb91fbef59b4f3729391f90"
+    ],
+    "description": [
+      "735cc29cc0ce6e6a001968f2fcc18a8f04c7015c3bb91fbef59b4f3729391f90"
+    ],
+    "official_contact": [
+      "735cc29cc0ce6e6a001968f2fcc18a8f04c7015c3bb91fbef59b4f3729391f90"
+    ]
+  },
+  "source_content_hash": "9f300a0e02258db8dfd6e23ac56ff467af943958171f24384f18ee3ed4186f87",
+  "review": {
+    "status": "PENDING",
+    "reviewer": null,
+    "reviewed_at": null,
+    "review_due_at": "2026-12-04T01:53:38.339858Z",
+    "fingerprint": null,
+    "revoked_at": null,
+    "revoked_by": null,
+    "revocation_reason": null
+  },
+  "preparation_notes": [
+    "Source and passage reviews pending; service category is an exact source string.",
+    "General directory scope does not establish a specific service outcome or eligibility."
+  ]
+}

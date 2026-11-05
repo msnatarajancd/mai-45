@@ -1,0 +1,1278 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "cap04-development",
+  "dataset_version": "2026-11-04.1",
+  "classification": "SYNTHETIC_EVALUATION",
+  "expectation_status": "PROPOSED",
+  "authorship": {
+    "method": "Hand-authored synthetic variations for development; separate from independently authored golden cases.",
+    "author_role": "fixture_agent",
+    "human_reviewed": false
+  },
+  "limitations": [
+    "Development examples only; not official evidence.",
+    "Proposed expectations have not received human safety review."
+  ],
+  "cases": [
+    {
+      "id": "dev-trapped-basement",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I am trapped in the basement",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "trapped"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-trapped-vehicle",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We are trapped in our car",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "trapped"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-rising-inside",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Water is rising inside the house",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "flood"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-trapped-flood",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Floodwater is rising and we are trapped",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "flood",
+          "trapped"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-not-breathing",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "My son is not breathing",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-unconscious",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "My partner is unconscious",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-ambulance",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I need an ambulance",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-fire",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Our house is on fire",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-gas-leak",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "There is a gas leak",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "utility_hazard"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-gas-smell",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I smell gas in the kitchen",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "utility_hazard"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-flag",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Please help",
+        "entrypoint": "respond",
+        "immediate_danger": true
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-override-category",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "My child is not breathing",
+        "entrypoint": "respond",
+        "category": "evacuation_support"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-mixed-negation",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I am not trapped but my partner is unconscious",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-mixed-future",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We may evacuate next week but my child is not breathing",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support",
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-recovery-trapped",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I am trapped in the basement",
+        "entrypoint": "recovery"
+      },
+      "expected": {
+        "incident_types": [
+          "trapped"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-guardian-rising",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Water is rising inside my home",
+        "entrypoint": "guardian"
+      },
+      "expected": {
+        "incident_types": [
+          "flood"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-assistant-gas",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "There is a gas leak",
+        "entrypoint": "assistant"
+      },
+      "expected": {
+        "incident_types": [
+          "utility_hazard"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-guidance-medical",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "My partner is unconscious",
+        "entrypoint": "guidance"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-today-transport",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We need evacuation transport today",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "urgent",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-today-accessible",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We need accessible evacuation transport today",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "urgent",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-now-transport",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We need evacuation transport now",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "urgent",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-tonight-transport",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We need evacuation transport tonight",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "urgent",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-today-no-danger",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We need evacuation transport today; no immediate danger reported",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "urgent",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-today-guardian",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We need evacuation transport today",
+        "entrypoint": "guardian"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "urgent",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-next-week",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We may need evacuation transport next week",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-planning-transport",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "How can I plan accessible evacuation transport?",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-future-trapped",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "How can I plan in case floodwater traps us?",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "flood",
+          "trapped"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-historical-flood",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We were trapped by floodwater last year",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "flood",
+          "trapped"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-plan-medical",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "How can I prepare in case someone stops breathing?",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-future-gas",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "How can I prepare in case there is a gas leak?",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "utility_hazard"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-historical-gas",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "There was a gas leak last year",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "utility_hazard"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-next-month",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We may need evacuation transport next month",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-next-week-recovery",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We may need evacuation transport next week",
+        "entrypoint": "recovery"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-hypothetical-trapped",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "What if we become trapped?",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "trapped"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-plan-flood",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "How can I prepare in case water is rising?",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "flood"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-empty",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-spaces",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "   ",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-help",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Please help",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-vague",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Something is wrong",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-unknown-language",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Necesito ayuda",
+        "entrypoint": "respond",
+        "language": "es"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-unsure",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I don't know if we are in danger",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-utility-water",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Water is near the electrical panel; I don't know if it's dangerous",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "flood",
+          "utility_hazard"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-cannot-speak",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I cannot speak safely and need help",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-medical-category",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "",
+        "entrypoint": "respond",
+        "category": "medical"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-flood-category",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "",
+        "entrypoint": "respond",
+        "category": "flood"
+      },
+      "expected": {
+        "incident_types": [
+          "flood"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-misspelling",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I am traped",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "trapped"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-unknown-characters",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "???",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "dev-flood-unknown-county",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Water is near the electrical panel; I don't know if it's dangerous",
+        "entrypoint": "respond",
+        "incident_county": null
+      },
+      "expected": {
+        "incident_types": [
+          "flood",
+          "utility_hazard"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    }
+  ]
+}

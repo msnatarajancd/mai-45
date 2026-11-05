@@ -1,0 +1,55 @@
+{
+  "resource": {
+    "resource_id": "fcc-text-911-guidance",
+    "source_id": "fcc-text-911",
+    "official_name": "Text-to-911",
+    "service_category": "911",
+    "service_area": "US",
+    "official_contact": null,
+    "contact_evidence_chunk_id": null,
+    "official_url": "https://www.fcc.gov/consumers/guides/what-you-need-know-about-text-911",
+    "prerequisites": [],
+    "limitations": [
+      "Current availability not verified.",
+      "This record is not publishable without original acquisition and human review."
+    ],
+    "availability_status": "UNKNOWN"
+  },
+  "provider": "Federal Communications Commission",
+  "description": "Text-to-911",
+  "enrollment_timing": null,
+  "matching_tags": [
+    "communication_access",
+    "cannot_call"
+  ],
+  "counties": [
+    "US-FL-MIAMI-DADE"
+  ],
+  "phases": [
+    "prepare",
+    "respond"
+  ],
+  "purposes": [
+    "communication_access"
+  ],
+  "hazards": [],
+  "hazard_independent": true,
+  "supporting_candidate_ids": [],
+  "field_evidence": {},
+  "source_content_hash": null,
+  "review": {
+    "status": "PENDING",
+    "reviewer": null,
+    "reviewed_at": null,
+    "review_due_at": "2026-12-04T01:53:38.339858Z",
+    "fingerprint": null,
+    "revoked_at": null,
+    "revoked_by": null,
+    "revocation_reason": null
+  },
+  "preparation_notes": [
+    "Direct official HTTP acquisition failed. No original hash or candidate evidence is available.",
+    "Tavily read the official URL on 2026-11-04; this does not substitute for M3 original-byte provenance.",
+    "Acquire the official original, prepare exact standalone candidates, then inspect and review."
+  ]
+}

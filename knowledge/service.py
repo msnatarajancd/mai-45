@@ -22,11 +22,8 @@ class FoundationKnowledgeService:
         return retrieve_guidance(self.store, request)
 
     def find_resources(self, request: KnowledgeRequest) -> ResourceResult:
-        return ResourceResult(resources=[], source_metadata=[], matching_context=request,
-            retrieval_status=RetrievalStatus.UNAVAILABLE,
-            limitations=['Resource search is not implemented in M3-1.',
-                         'No live shelter, transport, program availability or eligibility is established.'],
-            missing_information=['No reviewed resource records have been retrieved.'])
+        from .resources import find_knowledge_resources
+        return find_knowledge_resources(self.store, request)
 
     def export_to_m5(self, source_id: str, chunk_id: str, request: KnowledgeRequest) -> dict[str, object]:
         """Export one approved candidate, never a parent-section ID.
@@ -64,33 +61,39 @@ class FoundationKnowledgeService:
     def validate_resource(self, resource: ResourceRecord) -> ResourceRecord:
         """Validate an admin-curated static listing; never infer live availability.
 
-        No resource finder or automatic contact extraction is implemented here.
+        The static directory supplies matching; contacts are never extracted automatically.
         Names, category, prerequisites, area and contacts must be exact strings
         present in individually approved passages to prevent context leakage.
         """
         with self.store.admin_lock():
-            bundle = self.store.load(resource.source_id)
-            if bundle is None:
-                raise PublicationError('resource provenance is unavailable')
-            verify_publication(self.store, bundle)
-            from .candidates import verify_candidate_publication
-            from .models import CandidateStatus
-            published = []
-            for candidate in self.store.list_candidates(resource.source_id):
-                if candidate.review_status is not CandidateStatus.APPROVED:
-                    continue
-                try:
-                    verify_candidate_publication(self.store, candidate)
-                except PublicationError:
-                    continue
-                published.append(candidate)
-            text = '\n'.join(c.original_passage for c in published)
-            if resource.official_url != bundle.source.official_url or resource.service_area != bundle.source.jurisdiction:
-                raise PublicationError('resource URL or service area lacks source provenance')
-            if any(value not in text for value in [resource.official_name, resource.service_category, *resource.prerequisites]):
-                raise PublicationError('resource listing lacks individually approved passage support')
-            if resource.official_contact:
-                chunks = [c for c in published if c.chunk_id == resource.contact_evidence_chunk_id]
-                if len(chunks) != 1 or resource.official_contact not in chunks[0].original_passage:
-                    raise PublicationError('contact information is not supported by reviewed content')
-            return resource
+            return self._validate_resource_locked(resource)
+
+    def _validate_resource_locked(self, resource: ResourceRecord, *, candidate_ids=None) -> ResourceRecord:
+        """Caller holds the shared store lock across listing and evidence checks."""
+        bundle = self.store.load(resource.source_id)
+        if bundle is None:
+            raise PublicationError('resource provenance is unavailable')
+        verify_publication(self.store, bundle)
+        from .candidates import verify_candidate_publication
+        from .models import CandidateStatus
+        published = []
+        for candidate in self.store.list_candidates(resource.source_id):
+            if candidate_ids is not None and candidate.chunk_id not in candidate_ids:
+                continue
+            if candidate.review_status is not CandidateStatus.APPROVED:
+                continue
+            try:
+                verify_candidate_publication(self.store, candidate)
+            except PublicationError:
+                continue
+            published.append(candidate)
+        text = '\n'.join(c.original_passage for c in published)
+        if resource.official_url != bundle.source.official_url or resource.service_area != bundle.source.jurisdiction:
+            raise PublicationError('resource URL or service area lacks source provenance')
+        if any(value not in text for value in [resource.official_name, resource.service_category, *resource.prerequisites]):
+            raise PublicationError('resource listing lacks individually approved passage support')
+        if resource.official_contact:
+            chunks = [c for c in published if c.chunk_id == resource.contact_evidence_chunk_id]
+            if len(chunks) != 1 or resource.official_contact not in chunks[0].original_passage:
+                raise PublicationError('contact information is not supported by reviewed content')
+        return resource

@@ -4,8 +4,11 @@ import json
 import os
 import re
 from typing import Literal
+from uuid import uuid4
 from pydantic import BaseModel, ConfigDict, Field
 from domain.contracts import GuidanceResult
+from emergency.service import screen_report
+from emergency.workflow import begin_emergency
 from services import knowledge
 from recovery.llm_client import NebiusClient
 
@@ -34,6 +37,7 @@ class Explanation(BaseModel):
     provider: str = 'No model generation'
     notice: str = ''
     evidence_fingerprint: str = ''
+    emergency_epoch: int | None = None
 
 
 def public_payload(result):
@@ -58,17 +62,34 @@ def retrieve(query,phase,hazard,jurisdiction):
         return GuidanceResult(answer='Verified evidence is unavailable. No guidance can be generated.')
 
 
-def explain(query,phase,*,hazard,jurisdiction,client=None):
-    from services.assistant import is_danger
+def _interrupted(state, epoch):
+    return state is not None and (state.get('rr_emergency') or state.get('rr_emergency_epoch', 0) != epoch)
+
+
+def _emergency_explanation(query, phase, hazard, jurisdiction, epoch=None):
+    return Explanation(query=query,phase=phase,hazard=hazard,jurisdiction=jurisdiction,
+        retrieval=GuidanceResult(answer='Emergency access comes first.'),generation_status='emergency',
+        emergency_epoch=epoch,
+        notice='Use the emergency controls. ReadyRelief has not contacted or dispatched anyone. Routine generated guidance was discarded.')
+
+
+def explain(query,phase,*,hazard,jurisdiction,client=None,state=None):
+    decision = screen_report(query, entrypoint='guidance')
+    if decision and decision.interrupt_routine:
+        if state is not None:
+            begin_emergency(state, decision, entrypoint='guidance', event_id=str(uuid4()))
+        return _emergency_explanation(query, phase, hazard, jurisdiction,
+                                      state.get('rr_emergency_epoch', 0) if state is not None else None)
+    epoch = state.get('rr_emergency_epoch', 0) if state is not None else None
+    if _interrupted(state, epoch):
+        return _emergency_explanation(query, phase, hazard, jurisdiction, epoch)
     if not query.strip() or len(query)>600:
         raise ValueError('Use a topic between 1 and 600 characters.')
-    if is_danger(query):
-        return Explanation(query=query,phase=phase,hazard=hazard,jurisdiction=jurisdiction,
-            retrieval=GuidanceResult(answer='Emergency access comes first.'),generation_status='emergency',
-            notice='Use the emergency controls. ReadyRelief has not contacted or dispatched anyone.')
     result=retrieve(query,phase,hazard,jurisdiction)
+    if _interrupted(state, epoch):
+        return _emergency_explanation(query, phase, hazard, jurisdiction, epoch)
     out=Explanation(query=query,phase=phase,hazard=hazard,jurisdiction=jurisdiction,
-        retrieval=result,evidence_fingerprint=fingerprint(result))
+        retrieval=result,evidence_fingerprint=fingerprint(result), emergency_epoch=epoch)
     out.notice=('Partial evidence only. This is not a complete answer; the explanation can cover only the reviewed passages below.'
         if result.retrieval_status=='INSUFFICIENT_EVIDENCE' else
         'An explanation of reviewed passages, not a determination of current conditions or personal safety.')
@@ -92,8 +113,11 @@ def explain(query,phase,*,hazard,jurisdiction,client=None):
         'Do not generate new tasks or claim to change saved state. Do not certify a building or household as safe. '
         'Return JSON matching this schema: '+json.dumps(Answer.model_json_schema()))
     try:
-        answer=Answer.model_validate_json(client.complete([
-            {'role':'system','content':system},{'role':'user','content':json.dumps(payload)}]))
+        raw = client.complete([
+            {'role':'system','content':system},{'role':'user','content':json.dumps(payload)}])
+        if _interrupted(state, epoch):
+            return _emergency_explanation(query, phase, hazard, jurisdiction, epoch)
+        answer=Answer.model_validate_json(raw)
         citations={c.citation_id:c for c in result.citations}
         for claim in answer.claims:
             citation=citations.get(claim.citation_id)
@@ -115,6 +139,8 @@ def explain(query,phase,*,hazard,jurisdiction,client=None):
             {'role':'user','content':json.dumps(check)}]))
         if not verdict.supported:
             raise ValueError('Explanation did not pass evidence checking')
+        if _interrupted(state, epoch):
+            return _emergency_explanation(query, phase, hazard, jurisdiction, epoch)
         current=retrieve(query,phase,hazard,jurisdiction)
         if fingerprint(current)!=out.evidence_fingerprint:
             out.retrieval=current
@@ -126,14 +152,18 @@ def explain(query,phase,*,hazard,jurisdiction,client=None):
     except Exception:
         out.generation_status='unavailable'
         out.notice+=' Generation was unavailable or failed evidence validation. No generated guidance is shown; review the source excerpts.'
+    if _interrupted(state, epoch):
+        return _emergency_explanation(query, phase, hazard, jurisdiction, epoch)
     return out
 
 
-def revalidate(out):
+def revalidate(out, *, state=None):
     """No model call on rerender. Hide stale output, including stale quotations."""
+    if _interrupted(state, out.emergency_epoch):
+        return _emergency_explanation(out.query, out.phase, out.hazard, out.jurisdiction, out.emergency_epoch)
     current=retrieve(out.query,out.phase,out.hazard,out.jurisdiction)
     if fingerprint(current)!=out.evidence_fingerprint:
         return Explanation(query=out.query,phase=out.phase,hazard=out.hazard,jurisdiction=out.jurisdiction,
-            retrieval=current,evidence_fingerprint=fingerprint(current),
+            retrieval=current,evidence_fingerprint=fingerprint(current), emergency_epoch=out.emergency_epoch,
             notice='Reviewed evidence changed. Previous generated guidance was removed. Request a fresh explanation.')
     return out

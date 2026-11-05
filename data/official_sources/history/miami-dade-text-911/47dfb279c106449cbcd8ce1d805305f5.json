@@ -1,0 +1,57 @@
+{
+  "extracted_at": "2026-11-05T01:49:39.158259Z",
+  "extraction_version": "M3-2A-static-fields-v1",
+  "source": {
+    "source_id": "miami-dade-text-911",
+    "publisher": "Miami-Dade Sheriff's Office",
+    "title": "Text 911",
+    "official_url": "https://www.mdso.com/text-911",
+    "source_type": "official_static_web_guidance",
+    "jurisdiction": "US-FL-MIAMI-DADE",
+    "hazards": [
+      "flood",
+      "hurricane"
+    ],
+    "disaster_phases": [
+      "prepare",
+      "respond"
+    ],
+    "classification": "OFFICIAL_SOURCE",
+    "content_type": "text/html",
+    "charset": "utf-8",
+    "original_content_hash": "ef11e602d4f208a62445f4ff20c4d0b000a193066fd5e41f6692d66fd7692be8",
+    "retrieved_at": "2026-11-05T01:48:39.944738Z",
+    "reviewed_at": null,
+    "review_status": "REVIEW_REQUIRED",
+    "reviewer": null,
+    "limitations": [
+      "Candidate source; human review required before publication.",
+      "Static guidance is not live availability or a current evacuation order.",
+      "HTML-only extraction may omit images, embedded documents, or dynamic content."
+    ],
+    "final_url": "https://www.mdso.com/text-911",
+    "http_status": 200,
+    "byte_count": 29818,
+    "last_attempt_at": "2026-11-05T01:48:39.539106Z",
+    "failure_category": null
+  },
+  "chunks": [
+    {
+      "chunk_id": "38a4dc13841d331f9bcb6bb9984e619862820001efe0fc39ed5d11a906c5cd11",
+      "source_id": "miami-dade-text-911",
+      "section_heading": "Text 911",
+      "guidance_text": "This new service allows residents to send a text message to 911 in situations where calling may not be possible or safe. This initiative is part of our commitment to leveraging technology to enhance public safety and ensure that all members of our community have access to emergency assistance when they need it most.\nWhether you're deaf, hard of hearing, have a speech disability, or find yourself in a scenario where speaking could put you in danger, Text-to-911 ensures you can still reach emergency services.\n Please remember, voice calls to 911 are still the fastest and most efficient way to reach emergency services. Text-to-911 should only be used in emergency situations when calling is not an option.\nGeneral Public\nDeaf, hard of hearing, or individuals with speech disabilities\nDomestic violence advocates\nIndividuals unable to speak due to medical or other conditions\nCalling 911 provides enhanced location information that may be limited when texting 911\nCommunication over text message is only available in English at this time\nPhoto and video sharing over text is not available. Some 911 Centers may message you separately to share multimedia\nWireless phone carriers have set a 160-character count limitation for texts\nDo you like this page?\n Tweet",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "prepare",
+        "respond"
+      ],
+      "geographic_scope": "US-FL-MIAMI-DADE",
+      "review_status": "REVIEW_REQUIRED"
+    }
+  ],
+  "review": null
+}

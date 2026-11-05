@@ -1,70 +1,51 @@
-# M1 integration handoff
+# ReadyRelief integration handoff
 
-M1 calls services through small adapters. Teammates should keep signatures/return models stable and replace the adapter bodies. UI imports service modules so tests can substitute providers without changing pages. No frontend rebuild, network service, or orchestration layer is required.
+The single Streamlit app calls small Python adapters. Keep public signatures and typed results stable; no additional API server or orchestration layer is required. [CAP-04 implementation](CAP04_IMPLEMENTATION.md) describes emergency ownership and [verification](VERIFICATION.md) records the coordinated acceptance results.
 
 ## M2 — Guardian and alerts
 
-**Connected 2026-11-03:** see [M2 review](M2_M1_REVIEW.md). The bullets below describe the original contract; the current adapter uses explicitly labeled county coverage, not invented municipality coordinates.
+`services.nws_alerts.get_alerts(location_id: str, mode: AppMode) -> AlertResult` is integrated. Supported area IDs are `miami`, `homestead`, and `miami-beach`; the adapter accurately labels county-wide coverage, not household geolocation. See [M2 review](M2_M1_REVIEW.md).
 
-**Implemented M1/M2 contract:** `services/nws_alerts.get_alerts(location_id: str, mode: AppMode) -> AlertResult`.
-
-- Supported IDs: `miami`, `homestead`, `miami-beach`. Supply reviewed representative coordinates; selection is an area, not household geolocation.
-- Return `status=alerts|none|unavailable`, normalized alerts, `checked_at` with timezone, source URL, and accurate `simulated` flag.
-- Use bounded timeouts and an identifying NWS User-Agent. No automatic calls from page load.
-- `none` means a successful empty response, never request failure. Never return fixture alerts in LIVE CHECK.
-- Only use checked_at after a real attempt, and expose expiry/issue metadata as appropriate. M1 clears results when area/mode changes.
-- Add active/empty/timeout/invalid payload tests and one captured successful probe before claiming connected. Update Evidence's status when the integration actually works.
+- Results distinguish `alerts`, `none`, and `unavailable`, with actual check time, source, and simulation status.
+- Live checks are explicit, bounded requests. An empty successful response is not proof of safety; failures never substitute fixtures.
+- Changing area or mode clears stale results. Alerts remain context: absence of an alert cannot override a new danger report.
 
 ## M3 — Knowledge and directory
 
-**Connected from merged PR #3:** `retrieve_guidance(query: str, phase: str, context: Household | None) -> GuidanceResult` in `services/knowledge.py`.
+`services.knowledge.retrieve_guidance(query, phase, context=None, *, hazard=None, jurisdiction=None, service=None)` publishes approved, applicable passages through the existing source and candidate gates. Five CDC recovery candidates are approved; coverage for other phases remains limited. `services.generation` consumes allowlisted public evidence and keeps partial/unavailable status visible. It does not invent missing operational guidance.
 
-- Return answer, actual retrieved source records (title, URL, publisher, reviewed date), insufficient_evidence flag.
-- Download and review the master plan's 8–12 official items. Preserve source bytes and manifest; links alone are not a corpus.
-- Abstain on unsupported claims. Use only validated official HTTPS URLs; render plain text, not provider HTML.
-- The current adapter publishes approved CDC recovery passages and preserves retrieval status. M1 services/generation.py consumes its public fields only; no synthetic evidence is passed off as real. Task planning remains a deterministic template with explicit approval.
+The CAP-04 directory is implemented in `knowledge/resources.py`, with the UI boundary `services.resources.lookup_resources(request, now=None, *, store=None)`. `ResourceQuery`, `VerifiedResource`, and `ResourceLookupResult` live in `domain/resources.py`. `find_resources(needs, county=None)` remains a compatibility projection.
 
-**TODO(M3/M4)** `find_resources(needs: str, county: str='Miami-Dade') -> list[Resource]` in `services/resources.py`.
+- Lookup distinguishes `matches`, `no_match`, `review_required`, and `unavailable` under one consistent store snapshot.
+- Publication requires reviewed source bytes, approved standalone candidates, exact field support, a separate listing approval, current review deadline, and matching county/phase/purpose/hazard scope. Unknown hazard requires an explicitly reviewed hazard-independent listing.
+- Editing a field, matching tag, evidence reference, or deadline invalidates listing approval. Source/candidate changes, revocation, and expiry prevent publication on the next lookup. Runtime lookup does not fetch or approve sources.
+- Availability remains `UNKNOWN`. No match is an assurance of eligibility, enrollment, pickup, placement, or capacity.
+- **All eight prepared listings are PENDING.** Seven have acquired-source passages; the FCC listing is blocked by failed acquisition. Official entry links remain separate and do not imply a verified service match. See the [source review packet](CAP04_SOURCE_REVIEW.md).
 
-- Provide 5–8 reviewed county records with geography, prerequisites, source, last-checked date, contact and explicit availability caveats. Extend the model deliberately for those fields.
-- Empty list currently means no verified match. The UI separately links official entry points; it never claims a pickup, opening, capacity or eligibility.
-- Transport examples must show registration/eligibility caveats. Directory records should never be inferred from model memory.
+The [M3 contract](M3_INTEGRATION_CONTRACT.md) and [review procedure](M3_SOURCE_REVIEW.md) describe evidence and administration boundaries.
 
-## M4 — Emergency routing and review
+## M4 — CAP-04 emergency access and routing
 
-**TODO(M4)** `route_situation(text_or_category: str) -> RouteResult` in `services/emergency.py`.
+`emergency.service.evaluate_situation(SituationInput(...)) -> RouteResult` is the pure local evaluator; `screen_report(text, *, entrypoint)` provides shared screening. `services.emergency.assess_situation` accepts typed input and `route_situation(text_or_category)` preserves the prior adapter signature.
 
-- Call 911 / cannot-call controls are independent of this adapter, AI, location, profile and persistence.
-- Current placeholder permits only exact resource categories; everything else is possible danger. The UI accepts categories, not arbitrary diagnostic chat.
-- Add reviewed hazard rules and 20–24 master-plan golden cases; preserve conservative fallback on uncertainty.
-- Review the alternative-contact wording against local county information. Do not promise delivery or service availability.
-- A danger event pauses routine UI and persists to the active M5 case when possible. Failure to save a danger report does not hide emergency access.
-- Existing M5 policy makes danger-reported cases read-only in this UI. **TODO(M4/M5):** define a reviewed explicit process to clear a persisted danger flag; M1 does not silently clear it.
+Decisions carry multiple incident types (`flood`, `trapped`, `medical`, `evacuation_support`, `utility_hazard`, or `unknown`), urgency (`immediate`, `urgent`, `ordinary`, `uncertain`), route, interruption/persistence flags, reason codes, and policy version. This is a navigation aid, not a diagnosis or proof of safety. Present danger wins over future context, selected category, old household information, and past safety reports; unresolved danger remains conservative.
 
-## M5 — Integrated from PR #1
+`ui/emergency_page.py` renders the shared **Call 911** and **I Can't Call 911** actions before optional page work. Neither needs AI, classification, a profile, incident area, or a storage write. The telephone link is user initiated and does not report a connection. The optional current county controls local alternatives; saved/monitored area is not inferred as the incident location. Cannot-call information acknowledges device/network uncertainty and cannot send messages or restore connectivity.
 
-M1 consumes, without modifying `recovery/`:
+`emergency.workflow.begin_emergency(state, decision, *, entrypoint, event_id)` is the idempotent transition. It advances an emergency epoch, invalidates routine proposals/results and tour state, and queues a danger save only for qualifying reports. Shared screening precedes routine generation and recovery writes. Existing M5 repository guards remain the final write boundary. Failed saves remain pending and cannot remove emergency access. Leaving the view does not clear saved danger.
 
-- `start_recovery_case`, `create_demo_draft_plan`.
-- `SQLiteRecoveryRepository.get_case/save_draft_plan/approve_plan/get_active_plan/update_task_status`.
-- `preview_reassessment`, `approve_reassessment(..., explicitly_approved=True)`.
-- `list_approved_plans`, `report_immediate_danger`.
-- M1 reuses `NebiusClient` for constrained explanations; the integrated UI no longer exposes ungrounded experimental task generation. The standalone M5 implementation remains unchanged.
+Synthetic inputs are isolated from official evidence: 6 demos, 3 profiles, 9 failure descriptions, 48 development cases, and 24 independently authored golden cases. Expectations are **PROPOSED**, with no human safety approval. Live mode cannot load demo scenarios. The UI receives labeled input only; expected labels remain in evaluation files. Run `python -m emergency.evaluation.run --dataset golden --output artifacts/cap04-evaluation.json`; consult its [guard scope and limitations](../emergency/evaluation/README.md).
 
-Shared household preferences prefill transportation needs during intake. The existing case model has no location/profile fields; M1 does not mutate it. **TODO(M5):** agree on versioned household/context persistence if required beyond the session, connect verified M3 evidence to planning, and define safe re-entry for danger-reported cases. Initial plan and task persistence already work locally. Do not replace them with stubs.
+## M5 — Recovery continuity
 
-M1 retains the version the user last saw for task updates; the repository must reject stale writes. Reassessment previews compare snapshots before approval. Existing task IDs and completion states must survive approved revisions. Never automatically accept a draft.
+The app reuses `start_recovery_case`, `create_demo_draft_plan`, `SQLiteRecoveryRepository` persistence and task methods, `preview_reassessment`, `approve_reassessment`, approved-plan history, and `report_immediate_danger`.
 
-## M1 UI status and integration checks
+Household preferences can prefill intake needs but are session-only and do not rewrite saved cases. Plan approval and task updates require explicit user action. Saved revisions retain existing task IDs and completion state; stale writes are rejected. Constrained explanations never automatically create or complete tasks.
 
-1. Implement adapter and its contract tests.
-2. Run the whole suite (`python -m pytest -q`), including M5 tests.
-3. Exercise the service failure path with emergency controls still visible.
-4. Update Evidence and README to reflect actual connectivity; never just remove a TODO label.
-5. Rehearse the single household story. Ensure LIVE CHECK contains no fictional warnings and no-alert still has the safety caveat.
+A danger-reported case stays paused. A reviewed same-case danger-clearance workflow, durable household/context persistence, and verified source-grounded task planning remain M4/M5/M3 follow-up work. Use a separate fictional case after the danger scene in a demonstration.
 
-Only fictional local demonstration data should be used until hosting isolation, authentication and retention are designed by the team.
+## Integration checks and limits
 
-## M1 generation completion
+Run the Python suite, golden evaluation, compilation, JavaScript checks, and relevant browser cases before reporting completion. Exercise AI, directory, source-review, and storage failure paths with emergency controls present. Update product status from runtime behavior and actual review records. Tests use temporary stores and labeled synthetic review identities; they cannot confer production approval.
 
-See [current handoff](M1_COMPLETION_HANDOFF.md) for acceptance evidence, remaining owner work and deployment limits. Public DTO projection excludes review metadata and surrounding context; exact support and citation membership are checked, followed by model entailment checking. Model checking reduces risk but is not a human safety certification. Every rerender revalidates the evidence fingerprint; revocation removes prior output.
+M1's optional generation uses the shared Nebius client, public evidence projections, citation support checks, entailment checking, and rerender revalidation. Model checking is not human safety certification. The app remains an online-only educational prototype with no dispatch, booking, live capacity, authentication, or private multi-user isolation.

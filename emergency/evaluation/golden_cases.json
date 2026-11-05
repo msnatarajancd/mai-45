@@ -1,0 +1,653 @@
+{
+  "schema_version": "1.0",
+  "dataset_id": "cap04-golden",
+  "dataset_version": "2026-11-04.1",
+  "classification": "SYNTHETIC_EVALUATION",
+  "expectation_status": "PROPOSED",
+  "authorship": {
+    "method": "Independently hand-authored from CAP-04 requirements before inspection of emergency rules or service implementation.",
+    "author_role": "independent_fixture_agent",
+    "human_reviewed": false
+  },
+  "limitations": [
+    "Synthetic acceptance inputs, not official guidance or evidence.",
+    "Proposed expectations have not received human safety review.",
+    "Passing does not establish real-world emergency classification reliability."
+  ],
+  "cases": [
+    {
+      "id": "golden-rising-water-parent",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "My father is trapped and water is rising",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "trapped",
+          "flood"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-child-not-breathing",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "My child is not breathing",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-fire-current",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "The house is on fire",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-gas-current",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "There is a gas smell in my home",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "utility_hazard"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-ambulance-request",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I need an ambulance now",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-utility-uncertainty",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Water is near the electrical panel; I don't know if it's dangerous",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "flood",
+          "utility_hazard"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-future-accessible-transport",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We may need accessible evacuation transport next week",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-today-accessible-transport",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We need accessible evacuation transport today; no immediate danger reported",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support"
+        ],
+        "urgency": "urgent",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-hypothetical-trapped",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "How can I plan in case floodwater traps us?",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "flood",
+          "trapped"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-historical-trapped",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We were trapped by floodwater last year",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "flood",
+          "trapped"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-negation-other-threat",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We are not trapped, but my child is not breathing",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-category-cannot-hide-danger",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "My father is trapped and water is rising",
+        "entrypoint": "respond",
+        "category": "evacuation_support"
+      },
+      "expected": {
+        "incident_types": [
+          "trapped",
+          "flood"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-explicit-danger-empty",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "",
+        "entrypoint": "respond",
+        "immediate_danger": true
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-empty-help",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-unclear-help",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Something is wrong and I need help",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-unsupported-language",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Necesito ayuda",
+        "entrypoint": "respond",
+        "language": "es"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-current-flooding",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "Water is rising inside my home",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "flood"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-severe-medical",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "My mother is unconscious",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-trapped-current",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I am trapped and cannot get out",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "trapped"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-future-never-safe-override",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We plan evacuation transport next week, but water is rising in our home now",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "evacuation_support",
+          "flood"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-uncertain-danger-report",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "I don't know if we are in danger",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "unknown"
+        ],
+        "urgency": "uncertain",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-medical-planning",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "How can I prepare in case someone stops breathing?",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "medical"
+        ],
+        "urgency": "ordinary",
+        "route": "resources",
+        "interrupt_routine": false,
+        "persist_danger": false
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-negation-gas-other-clause",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "We are not trapped, but there is a gas leak",
+        "entrypoint": "respond"
+      },
+      "expected": {
+        "incident_types": [
+          "utility_hazard"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    },
+    {
+      "id": "golden-recovery-new-danger",
+      "classification": "SYNTHETIC_EVALUATION",
+      "input": {
+        "text": "The repairs can wait: my father is trapped and water is rising",
+        "entrypoint": "recovery"
+      },
+      "expected": {
+        "incident_types": [
+          "trapped",
+          "flood"
+        ],
+        "urgency": "immediate",
+        "route": "emergency",
+        "interrupt_routine": true,
+        "persist_danger": true
+      },
+      "forbidden_outcomes": [
+        "connection_confirmed",
+        "message_delivered",
+        "dispatch_confirmed",
+        "rescue_confirmed",
+        "transport_booked",
+        "eligibility_approved"
+      ],
+      "mandatory": true
+    }
+  ]
+}

@@ -1,0 +1,862 @@
+<!DOCTYPE HTML><html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Resources and Contact Information | Miami-Dade County</title>
+      <!--grid-layout--><!--ls:begin[stylesheet]-->
+      <style type="text/css">
+          
+          .iw_container
+          {
+            max-width:800px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+          .iw_stretch
+          {
+            min-width: 100% !important;
+          }
+        </style><script type="text/javascript">
+	// script to add keyup event and make escape functional to exit from preview
+	// only if it is a preview environment.
+	var frame = window.frameElement;
+	if (frame && frame.src.indexOf("/iw-preview") != -1) {
+		document.addEventListener("DOMContentLoaded", function () {
+			document.body.addEventListener("keyup", function (event) {
+				var key = event.keyCode;
+				if (key === 27) {
+					frame.parentElement.ownerDocument.dispatchEvent(new KeyboardEvent('keyup', {keyCode: key}));
+				}
+			});
+		});
+	}
+	</script><script type="text/javascript">
+    // A simplified version of AjaxRequest.class.js
+    // So component events doesn't require to add AjaxRequest.class.js as resources
+    // TODO: Keep it in the same files as embedded-layout.page.xml in POC, we can consider to move it to another file or not later
+    // TODO: Need to maintain a dependency to the extenal files it references
+    
+    AjaxCall.METHOD_POST = 'POST';
+    AjaxCall.METHOD_GET  = 'GET';
+    AjaxCall.ACTIVEX_MSXML2_XMLHTTP = 'Msxml2.XMLHTTP';
+    AjaxCall.ACTIVEX_LEGACY_XMLHTTP = 'Microsoft.XMLHTTP';
+    AjaxCall.CONTENT_TYPE_URL_ENCODED = 'application/x-www-form-urlencoded';
+    AjaxCall.CONTENT_TYPE = 'Content-Type';
+    AjaxCall.DELIM_QS = '?';
+    AjaxCall.DELIM_PARAM = '&';
+    AjaxCall.DELIM_KEY_VALUE = '=';
+    AjaxCall.READY_STATE_COMPLETE      = 4;
+    AjaxCall.STATUS_OK        = 200;
+    AjaxCall.STATUS_NOT_FOUND = 404;
+    AjaxCall.ERROR_CREATE_REQUEST = 'Unable to create ActiveX XMLHttpRequest.'
+    AjaxCall.ERROR_REQUEST_STATE = 'Error in XMLHttpRequest [$code/$text]';
+
+    /**
+     * Constructor creates an encapsulated XMLHttpRequest object. Both parameters
+     * to the constructor are optional, and may be configured later.
+     *
+     * @param url             the url to which the request is sent
+     * @param handlerFunction the function to invoke and pass the response
+     *                        xml dom and the response text
+     * @param errorHandlerFunction the function to invoke and pass as argument errorHandlerFunction(request) the entire HTTPXMLRequest instance to
+     *                        when the AJAX request failed, for most cases
+     * @param method          HTTP method: POST or GET
+     * @param isDebugMode     indicator for debug mode
+     */
+    function AjaxCall(url, handlerFunction, errorHandlerFunction, method, isDebugMode)
+    {
+      this.mUrl          = url;
+      this.mHandler      = handlerFunction;
+      this.mErrorHandler = errorHandlerFunction;
+      this.mMethod       = method;
+      this.mDebug        = isDebugMode;
+      
+      this.mMethod = (this.mMethod == null) ? this.mMethod = AjaxCall.METHOD_POST : this.mMethod;
+      this.mDebug = (this.mDebug == null) ? this.mDebug = false : this.mDebug;
+
+      this.mAsynchronous = true;
+
+      this.mContentType = null;
+      this.mRequestBody = null;
+
+      this.mParams = new Array();
+      this.mComponentId = null;
+    }
+
+   /**
+    * Sets a request parameter. The key and value are automatically url-encoded.
+    *
+    * @param key   the request parameter key
+    * @param value the request parameter value
+    * @return a self-reference for method chaining
+    */
+    AjaxCall.prototype.setParameter = function(key, value)
+    {
+      this.mParams[this.mParams.length] = encodeURIComponent(key)
+          + AjaxCall.DELIM_KEY_VALUE + encodeURIComponent(value);
+      return this;
+    }
+
+   /**
+    * Sets a request body
+    *
+    * @param value the request body value
+    * @return a self-reference for method chaining
+    */
+    AjaxCall.prototype.setBody = function(value)
+    {
+      this.mRequestBody = value;
+      return this;
+    }
+
+   /**
+    * Sets a component id
+    *
+    * @param componentId   the component id
+    * @return a self-reference for method chaining
+    */
+    AjaxCall.prototype.setComponentId = function(componentId)
+    {
+      this.mComponentId = componentId;
+      return this;
+    }
+
+    /**
+     * Submits the request to the url using the data configured in the object.
+     */
+    AjaxCall.prototype.submit = function()
+    {
+      var request = null;
+
+      // INSTANTIATE THE XMLHttpRequest
+      if (window.XMLHttpRequest)
+      {
+        request = new XMLHttpRequest();
+      }
+
+      // SET THE READY STATE CHANGE HANDLER
+
+      // cannot reference object member from the anonymous function
+      var handlerFunction  = this.mHandler;
+      var errorHandlerFunction = this.mErrorHandler;
+      var showResponseText = this.mDebug;
+      var componentId  = this.mComponentId;
+      
+      
+      /**
+       * Triggered when there is a handler for the response
+       */
+      var readyStateChangeFunction = function() {
+        if (AjaxCall.READY_STATE_COMPLETE == request.readyState)
+        {
+          if (AjaxCall.STATUS_OK == request.status)
+          {
+            if (showResponseText)
+            {
+              window.open().document.write('<xmp>' + request.responseText + '</xmp>');
+            }
+
+            if (handlerFunction) // only invoke if defined
+            {
+              handlerFunction(request.responseXML, request.responseText, request, componentId);
+            }
+          }
+          else
+          {
+            if(errorHandlerFunction)
+            {
+              errorHandlerFunction(request);
+            }
+            else
+            {
+              alert(AjaxCall.ERROR_REQUEST_STATE
+                .replace(/\$code/, request.status)
+                .replace(/\$text/, request.statusText));
+            }
+          }
+        }
+      }
+
+      // PREPARE THE REQUEST PROPERTIES AND ANY DEFAULTS
+      
+      var url    = this.mUrl;
+      var body   = this.mRequestBody;
+      var type   = this.mContentType;
+      var params = this.mParams.join(AjaxCall.DELIM_PARAM);
+
+      // if no parameters are set, then there is no need to dispatch them
+      if (params.length > 0)
+      {
+        var paramDelim = (0 > url.indexOf("?"))   // if a url already has a query
+                       ? AjaxCall.DELIM_QS     // string delimiter (?), use an
+                       : AjaxCall.DELIM_PARAM  // ampersand (&) instead
+
+        if (body != null)      // User-set request body, all params go in
+        {                      // the query string for both POST and GET.
+          url += paramDelim + params;
+        }
+        else                   // no request body
+        {
+          if (this.mMethod == AjaxCall.METHOD_GET)
+          {
+            url += paramDelim + params;
+          }
+          else
+          {
+            body = params;
+
+            if (type == null)  // assign default if no type is set
+            {
+              type = AjaxCall.CONTENT_TYPE_URL_ENCODED;
+            }
+          }
+        }
+      }
+
+      // SUBMIT THE REQUEST
+      if(this.mAsynchronous)
+      {
+        if(this.mHandler != null || ( this.mHandler == null && this.mDebug == true) ) // no need to fire a handler if it was null in the first place. FF issue.
+        {
+          request.onreadystatechange = readyStateChangeFunction;
+        }
+      }
+
+      request.open(this.mMethod, url, this.mAsynchronous);
+
+      if (type != null)
+      {
+        request.setRequestHeader(AjaxCall.CONTENT_TYPE, type);
+      }
+
+      request.send(body);
+
+      return request;
+    }
+    </script><script type="text/javascript">
+    // Scripts to handle the flow to update components based on the action
+    // TODO: Keep it in the same files as embedded-layout.page.xml in POC, we can consider to move it to another file or not later
+    // TODO: Need to maintain a dependency to the extenal files it references
+
+    const IW_PREVIEW_HOST_NAME = "iw-preview";
+    const INSTRUCTION_TYPE_UPDATE_PAGE_PARAMETER = "update_page_parameter";
+    const INSTRUCTION_TYPE_REFRESH_COMPONENT = "refresh_component";
+    const INSTRUCTION_TYPE_NAVIGATE_TO_PAGE = "navigate_to_page";
+    
+    var invokeActionURL = "/site/initiative/page/weather-ready/contact/component/$componentId/datum/$datumId/eventAction/$eventActionId/invokeAction.action";
+    var componentRenderURL = "/initiative/weather-ready/contact/$componentId.async.RENDER";
+    var variantId = "";
+    var siteApplicationType = "java";
+    var updatePageParameterMap = [];
+    var eventTriggerID = "";
+    var eventDataJson;
+    // An array of events that are already executed
+    var eventsExecuted = [];
+
+    //boolean to check if valid json string
+    function parseJSON(str) {
+      try 
+      {
+        var parsedJSON = JSON.parse(str.trim());
+        if (parsedJSON) {
+		      if (typeof parsedJSON === "object") {
+			      return parsedJSON;
+		      }
+        }
+      }
+      catch (e) 
+      {
+        return null;
+      }
+
+      return null;
+    }
+
+    // currently it only support in runtime server
+    // and it always return all componentId from the page
+    // this is called from component, and needs to pass in the 
+    // componentId(it can its id or other component id) and 
+    // datumId (the datum id of a ComponentEventAction datum)
+    function invokeAction(componentId, datumId, eventActionId, eventData) {
+
+      eventDataJson = eventData;
+      // ex: eventTriggerID: 1702053980345:INTERACTION:onClick
+      eventTriggerID = componentId+":"+datumId+":"+eventActionId;
+      //If the Site is .NET type, do not trigger invokeAction call
+      if(siteApplicationType != null && siteApplicationType == "dotnet")
+      {
+        return;
+      }
+      var url = invokeActionURL.replace(/\$componentId/, componentId).replace(/\$datumId/, datumId).replace(/\$eventActionId/, eventActionId);
+      var request = new AjaxCall(url, handleComponentList, handleAjaxError, AjaxCall.METHOD_POST, false);
+      var requestBody = {};
+
+      if(variantId)
+      {
+        request.setParameter("variantId", variantId);
+      }
+
+      if(!eventsExecuted.includes(eventTriggerID))
+      {
+        //flag to tell if we need to evaluate event trigger variants for ComponentEventTrigger datums
+        //We should not be evaluating event trigger variants when an event is invoked for first time
+        requestBody.evaluateEventTrigger = false;
+        eventsExecuted.push(eventTriggerID);
+      }
+
+      var pageParametersMapJson = {};
+      for (var key in updatePageParameterMap ) {
+        pageParametersMapJson[key] = updatePageParameterMap[key];
+      }
+
+      if (eventData) 
+      {
+        requestBody = parseJSON(eventData);
+        if (requestBody !== null) {
+          requestBody.PageParameters = pageParametersMapJson;
+          request.setBody(JSON.stringify(requestBody));
+          request.submit();
+        }
+        else {
+          console.error("Invalid JSON for EventData");
+        }
+      }
+      else {
+        requestBody.EventData = {};
+        requestBody.PageParameters = pageParametersMapJson;
+        request.setBody(JSON.stringify(requestBody));
+        request.submit();
+      }
+
+    }
+    
+    // Handler for the response returned from invokeAction.action Ajax call
+    // retrieve the information from the response and trigger another Ajax call to refresh the component
+    function handleComponentList(xmlDoc, text) {
+      var invokeActionResponse = JSON.parse(text);      
+      
+      if(invokeActionResponse.actionResults && Array.isArray(invokeActionResponse.actionResults)) {
+        var componentIdList = [];
+        
+        for (var actionResult of invokeActionResponse.actionResults ) {
+          if(actionResult.instructionType && actionResult.instructionType === INSTRUCTION_TYPE_UPDATE_PAGE_PARAMETER) {
+            updatePageParameterMap = [];
+            if(actionResult.objects) {
+              var keys = Object.keys(actionResult.objects);
+              if(keys && Array.isArray(keys)) {
+                for (var key of keys ) {
+                  updatePageParameterMap[key] = actionResult.objects[key];
+                }
+              }
+            }
+          } else if(actionResult.instructionType && actionResult.instructionType === INSTRUCTION_TYPE_REFRESH_COMPONENT) {
+            if(actionResult.objects && actionResult.objects.objectIds && Array.isArray(actionResult.objects.objectIds)) {
+              for (var componentId of actionResult.objects.objectIds ) {
+                componentIdList.push(componentId);
+              }
+            }
+          } else if(actionResult.instructionType && actionResult.instructionType === INSTRUCTION_TYPE_NAVIGATE_TO_PAGE) {
+            if(actionResult.objects.objectIds) {
+              // Navigate to the first page from the action results
+              window.location.href = actionResult.objects.objectIds[0];
+            }
+          }
+        }
+        
+        if(componentIdList.length > 0) {
+          for (var componentId of componentIdList ) {
+            var url = componentRenderURL.replace(/\$componentId/, componentId);
+            var request = new AjaxCall(url, handleComponentRefresh, handleAjaxError, AjaxCall.METHOD_GET, false);
+            request.setComponentId(componentId);
+            request.setParameter("eventTriggerID",eventTriggerID);
+            if(eventDataJson)
+            {
+            request.setParameter("eventData",eventDataJson);
+            }
+            if(url.includes(IW_PREVIEW_HOST_NAME)){
+              request.setParameter("variantId", variantId);
+            }
+            for (var key in updatePageParameterMap ) {
+              request.setParameter(key, updatePageParameterMap[key]);
+            }
+        
+            request.submit();
+          }
+        }
+      }
+    }
+    
+    // Handler for the response returned from component .async.render Ajax call
+    // retrieve the response and updated the div containing the componendid
+    function handleComponentRefresh(xmlDoc, text, request, componentId) {
+      var componentElem = document.getElementById("iw_comp" + componentId);      
+      componentElem.innerHTML = text;
+      // explicitly recreate script elements to ensure they are executed
+      const sources = componentElem.querySelectorAll("script");
+      sources.forEach(source => {
+        const target = document.createElement('script');
+        // add contents of element if it exists
+        if(source.innerHTML) target.innerHTML = source.innerHTML;
+        // copy all attributes
+        [...source.attributes].forEach(attr => { target.setAttribute(attr.nodeName ,attr.nodeValue) });
+        source.after(target);
+        // remove original element when done
+        source.remove();
+      });
+    }
+    
+    // Error handler for Ajax call
+    function handleAjaxError(request) {
+      var url = new URL(request.responseURL);
+      
+      // temporary show mssage as the service is not available in iw-preview yet
+      if(url.pathname.includes(IW_PREVIEW_HOST_NAME)){
+        alert("The service is not available in /iw-preview");
+      } else {
+        alert(AjaxCall.ERROR_REQUEST_STATE
+          .replace(/\$code/, request.status)
+          .replace(/\$text/, request.statusText));
+      }      
+    }
+    
+    </script><link rel="stylesheet" type="text/css" href="/iwov-resources/grid/materialize.min.css">
+      <link rel="stylesheet" type="text/css" href="/iwov-resources/ui-frameworks/material/css/materialize.min.css">
+      <!--ls:end[stylesheet]--><!--ls:begin[canonical]--><!--ls:end[canonical]--><!--ls:begin[script]--><!--ls:end[script]--><!--ls:begin[meta-keywords]-->
+      <meta name="keywords" content="Miami-Dade, County, miami, Weather, ready, flooding, extreme, heat, hurricanes, severe, king, tides, air, quality, storm, environment, emergency, management, emergencies, contact, phone, email, TTY, fire, rescue, MDFR, traffic, Sheriff, Sheriff's, Office, MDSO, NHC, NWS, Florida, Power, Light, FPL, FEMA, Red, Cross, schools, poison, water, sewer, gouging">
+      <!--ls:end[meta-keywords]--><!--ls:begin[meta-description]-->
+      <meta name="description" content="Find contact information and resources for the Miami-Dade Sheriff's Office, Miami-Dade Fire Rescue, FEMA, FPL, the National Hurricane Center and more.">
+      <!--ls:end[meta-description]--><!--ls:begin[custom-meta-data]-->
+      <meta name="og:type" content="website">
+      <meta name="Organization" content="org1516809332626765">
+      <meta name="Category" content="public-safety">
+      <meta name="ContentType" content="None">
+      <meta name="Audience" content="all-residents">
+      <meta name="Subcategory" content="public-safety/safety-tips">
+      <meta name="Subcategory" content="public-safety/hurricane">
+      <meta name="Subcategory" content="public-safety/emergency-management">
+      <meta name="og:title" content="Resources and Contact Information | Miami-Dade County">
+      <meta name="og:url" content="https://www.miamidade.gov/initiative/weather-ready/contact.page">
+      <meta name="og:description" content="Find contact information and resources for the Miami-Dade Sheriff's Office, Miami-Dade Fire Rescue, FEMA, FPL, the National Hurricane Center and more.">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!--ls:end[custom-meta-data]--><!--ls:begin[meta-vpath]-->
+      <meta name="vpath" content="">
+      <!--ls:end[meta-vpath]--><!--ls:begin[meta-page-locale-name]-->
+      <meta name="page-locale-name" content="">
+      <!--ls:end[meta-page-locale-name]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/global-styles.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/404-styles.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/accessible-slick-theme.min.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/slick.min.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/font-awesome.min.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/initiative/global-styles.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources/css/slider/hero-slider.css" type="text/css" data-ocde-desktop_or_tablet_or_phone="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[script]--><script src="/resources/js/1.8.2.jquery.min.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/global-scripts.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/slick.min.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/loadeffect.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources/js/initiative/global-scripts.js" type="text/javascript" data-ocde-desktop_or_tablet_or_phone="show"></script>
+      <!--ls:end[script]--><!--ls:begin[head-injection]--><!-- appendToHead -->
+<!-- MDC script injection -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MTLB43');</script>
+<!-- End Google Tag Manager -->
+
+<!-- BEGIN QUALTRICS SITE INTERCEPT -->
+<script type='text/javascript'>
+(function(){var g=function(e,h,f,g){
+this.get=function(a){for(var a=a+"=",c=document.cookie.split(";"),b=0,e=c.length;b<e;b++){for(var d=c[b];" "==d.charAt(0);)d=d.substring(1,d.length);if(0==d.indexOf(a))return d.substring(a.length,d.length)}return null};
+this.set=function(a,c){var b="",b=new Date;b.setTime(b.getTime()+6048E5);b="; expires="+b.toGMTString();document.cookie=a+"="+c+b+"; path=/; "};
+this.check=function(){var a=this.get(f);if(a)a=a.split(":");else if(100!=e)"v"==h&&(e=Math.random()>=e/100?0:100),a=[h,e,0],this.set(f,a.join(":"));else return!0;var c=a[1];if(100==c)return!0;switch(a[0]){case "v":return!1;case "r":return c=a[2]%Math.floor(100/c),a[2]++,this.set(f,a.join(":")),!c}return!0};
+this.go=function(){if(this.check()){var a=document.createElement("script");a.type="text/javascript";a.src=g+ "&t=" + (new Date()).getTime();document.body&&document.body.appendChild(a)}};
+this.start=function(){var a=this;window.addEventListener?window.addEventListener("load",function(){a.go()},!1):window.attachEvent&&window.attachEvent("onload",function(){a.go()})}};
+try{(new g(100,"r","QSI_S_ZN_a8zTa7cUf00EjMF","//zna8zta7cuf00ejmf-miamidadecounty.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_a8zTa7cUf00EjMF&Q_LOC="+encodeURIComponent(window.location.href))).start()}catch(i){}})();
+</script>
+<!-- END QUALTRICS SITE INTERCEPT -->
+
+<!-- End of injection -->
+<!--ls:end[head-injection]--><!--ls:begin[tracker-injection]--><!--ls:end[tracker-injection]--><!--ls:begin[script]--><!--ls:end[script]--><!--ls:begin[script]--><!--ls:end[script]--><script>NS_CSM_td=1952660521;NS_CSM_pd=275116665;NS_CSM_u="/clm10";NS_CSM_col="AAAAAAXeQE9j6jSybXSE9xBx+za5BHKhCZ0LGnxvSTvsB6307WEZqzVJrfhEZMFcwA7e7AB4KpEknqvBb2/WLnDGLaEQ";</script><script type="text/javascript">function sendTimingInfoInit(){setTimeout(sendTimingInfo,0)}function sendTimingInfo(){var wp=window.performance;if(wp){var c1,c2,t;c1=wp.timing;if(c1){var cm={};cm.ns=c1.navigationStart;if((t=c1.unloadEventStart)>0)cm.us=t;if((t=c1.unloadEventEnd)>0)cm.ue=t;if((t=c1.redirectStart)>0)cm.rs=t;if((t=c1.redirectEnd)>0)cm.re=t;cm.fs=c1.fetchStart;cm.dls=c1.domainLookupStart;cm.dle=c1.domainLookupEnd;cm.cs=c1.connectStart;cm.ce=c1.connectEnd;if((t=c1.secureConnectionStart)>0)cm.scs=t;cm.rqs=c1.requestStart;cm.rss=c1.responseStart;cm.rse=c1.responseEnd;cm.dl=c1.domLoading;cm.di=c1.domInteractive;cm.dcls=c1.domContentLoadedEventStart;cm.dcle=c1.domContentLoadedEventEnd;cm.dc=c1.domComplete;if((t=c1.loadEventStart)>0)cm.ls=t;if((t=c1.loadEventEnd)>0)cm.le=t;cm.tid=NS_CSM_td;cm.pid=NS_CSM_pd;cm.ac=NS_CSM_col;var xhttp=new XMLHttpRequest();if(xhttp){var JSON=JSON||{};JSON.stringify=JSON.stringify||function(ob){var t=typeof(ob);if(t!="object"||ob===null){if(t=="string")ob='"'+ob+'"';return String(ob);}else{var n,v,json=[],arr=(ob&&ob.constructor==Array);for(n in ob){v=ob[n];t=typeof(v);if(t=="string")v='"'+v+'"';else if(t=="object"&&v!==null)v=JSON.stringify(v);json.push((arr?"":'"'+n+'":')+String(v));}return(arr?"[":"{")+String(json)+(arr?"]":"}");}};xhttp.open("POST",NS_CSM_u,true);xhttp.send(JSON.stringify(cm));}}}}if(window.addEventListener)window.addEventListener("load",sendTimingInfoInit,false);else if(window.attachEvent)window.attachEvent("onload",sendTimingInfoInit);else window.onload=sendTimingInfoInit;</script></head>
+   <body><!--ls:begin[body]--><!-- MDC body injection -->
+
+<!-- BEGIN QUALTRICS SITE INTERCEPT -->
+<div id='ZN_a8zTa7cUf00EjMF'><!--DO NOT REMOVE-CONTENTS PLACED HERE--></div>
+<!-- END QUALTRICS SITE INTERCEPT -->
+
+
+<!-- End of injection -->
+
+      <div class="iw_viewport-wrapper"><div class="iw_component" id="iw_comp1618229526120">
+ <!--ls:begin[component-1618229526120]--><style>#iw_comp1618229526120{}</style><link rel="stylesheet" href="https://www.miamidade.gov/resources/js/components/countyTemplate/styles.css"><div id="loader-wrapper">
+   <div id="loader"></div>
+   <div class="loader-section section-left"></div>
+   <div class="loader-section section-right"></div>
+</div><div class="initiative-navigation">
+   <div class="container">
+      <div class="initiative-navigation__container">
+         <nav class="initiative-navigation__nav">
+            <ul class="initiative-navigation__nav-list site-nav-content">
+               <li class="initiative-navigation__main__item home-icon"><a href="/initiative/weather-ready/home.page">Home</a></li>
+               <li><a href="/initiative/weather-ready/hurricanes/home.page">Hurricanes</a></li>
+               <div class="initiative-navigation__logo-container"><a href="https://www.miamidade.gov/global/home.page" class="initiative-navigation__logo"><img src="/resources/global/images/md-logo-color.png" alt="Miami-Dade County Logo"></a></div>
+               <li><a href="/initiative/weather-ready/flooding/home.page">Flooding</a></li>
+               <li><a href="/initiative/weather-ready/extreme-heat/home.page">Extreme Heat</a></li>
+            </ul>
+         </nav>
+      </div>
+      <div class="initiative-navigation-mobile__container"><button class="menu-toggle" aria-expanded="false">
+            <div class="hamburger"></div>
+            <div class="menu-toggle-text"><span class="sr-only">Open </span>Menu</div></button><a href="https://www.miamidade.gov/global/home.page" class="initiative-navigation-mobile__logo"><img src="/resources/global/images/md-logo-color.png" alt="Miami-Dade County Logo"></a><nav class="initiative-navigation-mobile__nav" aria-hidden="true">
+            <div class="container">
+               <ul class="initiative-navigation-mobile__nav-list">
+                  <li class="initiative-navigation__main__item home-icon"><a href="/initiative/weather-ready/home.page">Home</a></li>
+                  <li><a href="/initiative/weather-ready/hurricanes/home.page">Hurricanes</a></li>
+                  <li><a href="/initiative/weather-ready/flooding/home.page">Flooding</a></li>
+                  <li><a href="/initiative/weather-ready/extreme-heat/home.page">Extreme Heat</a></li>
+               </ul>
+               <div class="initiative-navigation-mobile__social"><span class="initiative-navigation-mobile__social-title">Follow Us:</span><a class="social-media-circle social-media-circle--facebook" target="_blank" href="https://www.facebook.com/miami.dade.county">
+                     <div class="fa fa-facebook-square"></div><span class="sr-only">Miami-Dade County Facebook - Opens a warning dialog</span></a><a class="social-media-circle social-media-circle--twitter" target="_blank" href="https://twitter.com/MiamiDadeCounty">
+                     <div class="fa fa-twitter"></div><span class="sr-only">Miami-Dade County Twitter - Opens a warning dialog</span></a><a class="social-media-circle social-media-circle--instagram" href="https://www.instagram.com/miamidadecounty/">
+                     <div class="fa fa-instagram"></div><span class="sr-only">Miami-Dade County Instagram - Opens a warning dialog</span></a><a class="social-media-circle social-media-circle--youtube" target="_blank" href="https://www.youtube.com/user/MiamiDadeTV">
+                     <div aria-hidden="true" class="fa fa-youtube-play"></div><span class="sr-only">Miami-Dade County TV  - Opens a warning dialog</span></a></div>
+            </div>
+         </nav>
+      </div>
+   </div>
+</div><!--ls:end[component-1618229526120]-->
+</div>
+<main class="main-body-content-container">
+ <div class="iw_placeholder" id="iw_placeholder1775246368359">
+  <div class="iw_component" id="iw_comp1775246368729">
+   <style>#iw_comp1775246368543{}</style><section class="ad banner-full-width spacing mobile-position-Center" style="background-image: url(/resources/images/weather-ready/037-GM3_8433sunrise.jpg);" id=""><span class="section-overlay-mask"></span><div class="container">
+      <div clas="row">
+         <div class="col-md-12">
+            <div class="content"></div>
+         </div>
+      </div>
+   </div>
+   <div class="img-tint"></div>
+</section>
+  </div>
+ </div>
+ <div class="iw_component" id="iw_comp1623813703691">
+  <!--ls:begin[component-1623813703691]--><style>#iw_comp1623813703691{}</style><div class="iw-breadcrumb"><span class="iw-breadcrumb-node"><a href="/initiative/weather-ready/home.page">Weather Ready</a></span><span class="iw-breadcrumb-separator">&nbsp;>&nbsp;</span><span class="iw-breadcrumb-node">Resources and Contact Information</span></div><!--ls:end[component-1623813703691]-->
+ </div>
+ <div class="iw_placeholder" id="iw_placeholder1618229525047">
+  <div class="iw_component" id="iw_comp1775246361104">
+   <!--ls:begin[component-1775246361104]--><style>#iw_comp1775246361104{}</style><script>
+        $(document).ready(function(){
+
+
+
+
+            $("#twitterShare").off().on('click', function(e){
+              e.preventDefault();
+
+              window.open('https://twitter.com/intent/tweet?text=%20Check%20this%20out!%20' + encodeURIComponent(document.title) + ':%20 ' + encodeURIComponent(document.URL),'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+
+            });
+
+            $("#FBShare").off().on('click', function(e){
+              e.preventDefault();
+
+              window.open('https://www.facebook.com/sharer/sharer.php?u='+ encodeURIComponent(document.URL),'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+
+            });
+
+
+
+
+        })
+      </script><section class="   " id="ResourcesandContactInformation">
+   <div class="container">
+      <h1 class="general-page__title">Resources and Contact Information</h1>
+      <div class="social-media-container"><span>Share:</span><a id="FBShare" title="Share on Facebook" href="#"><img class="social-media-icons-share" src="/resources/images/social-icons/Social-Media-Facebook.png" data-test="" alt="Facebook Icon"></a><a id="twitterShare" title="Twitter" href="#"><img class="social-media-icons-share" src="/resources/images/social-icons/Social-Media-X.png" data-test="" alt="X icon"></a></div>
+   </div>
+</section><!--ls:end[component-1775246361104]-->
+  </div>
+  <div class="iw_component" id="iw_comp1775246365356">
+   <!--ls:begin[component-1775246365356]--><style>#iw_comp1775246365356{}</style><script>
+        $(document).ready(function(){
+
+
+
+
+            $("#twitterShare").off().on('click', function(e){
+              e.preventDefault();
+
+              window.open('https://twitter.com/intent/tweet?text=%20Check%20this%20out!%20' + encodeURIComponent(document.title) + ':%20 ' + encodeURIComponent(document.URL),'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+
+            });
+
+            $("#FBShare").off().on('click', function(e){
+              e.preventDefault();
+
+              window.open('https://www.facebook.com/sharer/sharer.php?u='+ encodeURIComponent(document.URL),'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+
+            });
+
+
+
+
+        })
+      </script><section class="   ">
+   <div class="container">
+      <div class="content__general__description"><div style="text-align: center;"><strong>For all emergencies, dial 911.</strong></div>
+<div style="text-align: center;"><strong>For non-emergencies, call 305-SHERIFF (305-743-7433).</strong></div></div>
+   </div>
+</section><!--ls:end[component-1775246365356]-->
+  </div>
+  <div class="iw_component" id="iw_comp1775246365357">
+   <!--ls:begin[component-1775246365357]--><style>#iw_comp1775246365357{}</style><script>
+        $(document).ready(function(){
+
+
+
+
+            $("#twitterShare").off().on('click', function(e){
+              e.preventDefault();
+
+              window.open('https://twitter.com/intent/tweet?text=%20Check%20this%20out!%20' + encodeURIComponent(document.title) + ':%20 ' + encodeURIComponent(document.URL),'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+
+            });
+
+            $("#FBShare").off().on('click', function(e){
+              e.preventDefault();
+
+              window.open('https://www.facebook.com/sharer/sharer.php?u='+ encodeURIComponent(document.URL),'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+
+            });
+
+
+
+
+        })
+      </script><section class="spacing   " id="MiamiDadeCounty">
+   <div class="container">
+      <h2 class="sub-titles">Miami-Dade County</h2>
+   </div>
+</section><!--ls:end[component-1775246365357]-->
+  </div>
+  <div class="iw_component" id="iw_comp1775246360606">
+   <!--ls:begin[component-1775246360606]--><style>#iw_comp1775246360606{}</style><section class="mdc-custom__multi-container MC-LightBorder">
+   <div class="container">
+      <div class="mdc-custom__multi">
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><strong><a href="https://www.miamidade.gov/global/311/home.page" target="_blank" rel="noopener">Miami-Dade County Contact Center</a></strong><br />311 or 305-468-5900<br />TTY/TDD: 711<br /><a href="/cdn-cgi/l/email-protection#bc8f8d8dfcd1d5ddd1d5d8ddd8d992dbd3ca"><span class="__cf_email__" data-cfemail="c1f2f0f081aca8a0aca8a5a0a5a4efa6aeb7">[email&#160;protected]</span></a>
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://twitter.com/MiamiDadeCounty" target="_blank" rel="noopener">@MiamiDadeCounty</a></div>
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://twitter.com/miamidade311" target="_blank" rel="noopener">@MiamiDade311</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><div><strong><a href="https://www.miamidade.gov/global/emergency/home.page" target="_blank" rel="noopener">Department of Emergency Management</a></strong><br />305-468-5400<br /><a href="/cdn-cgi/l/email-protection#41242e22012c28202c28252025246f262e37"><span class="__cf_email__" data-cfemail="50353f33103d39313d39343134357e373f26">[email&#160;protected]</span></a></div>
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://twitter.com/MiamiDadeEM" target="_blank" rel="noopener">@MiamiDadeEM</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><div><strong><a href="https://www.miamidade.gov/global/fire/home.page" target="_blank" rel="noopener">Fire Rescue</a></strong><br />786-331-5000<br /><a href="/cdn-cgi/l/email-protection#600d04061204200d09010d09040104054e070f16"><span class="__cf_email__" data-cfemail="f1bcb5b7a3b5b19c98909c9895909594df969e87">[email&#160;protected]</span></a>
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://twitter.com/MiamiDadeFire" target="_blank" rel="noopener">@MiamiDadeFire</a></div>
+</div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><div>
+<div><strong><a href="https://www.miamidade.gov/global/water/home.page" target="_blank" rel="noopener">Miami-Dade Water and Sewer Department</a></strong></div>
+<div>Emergency Communications Center</div>
+<div>305-274-9272<br /><a href="/cdn-cgi/l/email-protection#c5b2a4b6a19aa6b0b6b1b7a0a9a4b1acaaabb685a8aca4a8aca1a4a1a0eba2aab3"><span class="__cf_email__" data-cfemail="94e3f5e7f0cbf7e1e7e0e6f1f8f5e0fdfbfae7d4f9fdf5f9fdf0f5f0f1baf3fbe2">[email&#160;protected]</span></a></div>
+</div>
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://twitter.com/MiamiDadeWater" target="_blank" rel="noopener">@MiamiDadeWater</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><div><strong><a href="https://www.mdso.com" target="_blank" rel="noopener">Miami-Dade Sheriff's Office</a></strong></div>
+<div>Emergencies: 911<br />Non-Emergencies: 305-Sheriff (743-7433)</div>
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://x.com/MiamiDade_SO" target="_blank" rel="noopener">@MiamiDade_SO</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><div><strong><a href="https://www.dadeschools.net/home" target="_blank" rel="noopener">Miami-Dade County Public Schools</a></strong></div>
+<div>
+<div>305-995-1000</div>
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://twitter.com/MDCPS" target="_blank" rel="noopener">@MDCPS</a></div>
+</div></div>
+         </div>
+      </div>
+   </div>
+</section><!--ls:end[component-1775246360606]-->
+  </div>
+  <div class="iw_component" id="iw_comp1775246365416">
+   <!--ls:begin[component-1775246365416]--><style>#iw_comp1775246365416{}</style><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        $(document).ready(function(){
+
+
+
+
+            $("#twitterShare").off().on('click', function(e){
+              e.preventDefault();
+
+              window.open('https://twitter.com/intent/tweet?text=%20Check%20this%20out!%20' + encodeURIComponent(document.title) + ':%20 ' + encodeURIComponent(document.URL),'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+
+            });
+
+            $("#FBShare").off().on('click', function(e){
+              e.preventDefault();
+
+              window.open('https://www.facebook.com/sharer/sharer.php?u='+ encodeURIComponent(document.URL),'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');
+
+            });
+
+
+
+
+        })
+      </script><section class="spacing   " id="OutsideOrganizations">
+   <div class="container">
+      <h2 class="sub-titles">Outside Organizations</h2>
+   </div>
+</section><!--ls:end[component-1775246365416]-->
+  </div>
+  <div class="iw_component" id="iw_comp1775246365417">
+   <!--ls:begin[component-1775246365417]--><style>#iw_comp1775246365417{}</style><section class="mdc-custom__multi-container MC-LightBorder">
+   <div class="container">
+      <div class="mdc-custom__multi">
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><strong><a href="https://www.nhc.noaa.gov/" target="_blank" rel="noopener">National Hurricane Center</a></strong>
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://x.com/nwsnhc" target="_blank" rel="noopener">@NWSNHC</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><strong><a href="https://www.weather.gov/mfl/" target="_blank" rel="noopener">National Weather Service - Miami</a></strong>
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://x.com/NWSMiami" target="_blank" rel="noopener">@NWSMiami</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><strong><a href="https://www.fema.gov/" target="_blank" rel="noopener">Federal Emergency Management Agency (FEMA)</a></strong><br />1-800-621-FEMA (3362)<br />TTY: 1-800-462-7585
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://x.com/fema" target="_blank" rel="noopener">@FEMA</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><strong><a href="https://www.floridadisaster.org/" target="_blank" rel="noopener">Florida Division of Emergency Management</a></strong>
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://x.com/FLSERT" target="_blank" rel="noopener">@FLSERT</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><strong><a href="https://www.myfloridalegal.com/consumer-protection/price-gouging" target="_blank" rel="noopener">Florida Office of the Attorney General - Price Gouging Complaints</a></strong><br />1-866-966-7226</div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><strong><a href="https://www.fpl.com" target="_blank" rel="noopener">Florida Power and Light</a></strong><br />1-800-4-OUTAGE (468-8243)<br />TTY: 711
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://x.com/InsideFPL" target="_blank" rel="noopener">@InsideFPL</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><strong><a href="https://www.fl511.com/" target="_blank" rel="noopener">Traffic Information</a></strong><br />511
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://x.com/FL511_Southeast" target="_blank" rel="noopener">@FL511_Southeast</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><strong><a href="https://www.redcross.org/local/florida/south-florida.html" target="_blank" rel="noopener">American Red Cross - South Florida Region</a></strong><br />305-644-1200
+<div class="socialMediaLink"><img src="/resources/images/social-icons/Social-Media-X.png" alt="" width="25" height="25" /><a href="https://x.com/SFLRedCross" target="_blank" rel="noopener">@SFLRedCross</a></div></div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__description"><strong><a href="https://www.poison.org/" target="_blank" rel="noopener">Poison Control</a></strong><br />1-800-222-1222</div>
+         </div>
+      </div>
+   </div>
+</section><!--ls:end[component-1775246365417]-->
+  </div>
+  <div class="iw_component" id="iw_comp1775246360797">
+   <!--ls:begin[component-1775246360797]--><style>#iw_comp1775246360797{}</style><link rel="stylesheet" type="text/css" href="/resources/css/initiative/weather-ready.css"><script type="text/javascript">
+        (function () {
+          try {
+            var href = '/resources/css/initiative/weather-ready.css';
+            // Walk up to the top-most document we can touch (handles the
+            // editor wrapping the component in one or more iframes).
+            var doc = document;
+            try {
+              while (doc.defaultView &&
+                     doc.defaultView.parent &&
+                     doc.defaultView.parent !== doc.defaultView) {
+                doc = doc.defaultView.parent.document;
+              }
+            } catch (e) { /* cross-origin: stop where we are */ }
+
+            var head = doc.getElementsByTagName('head')[0] || doc.documentElement;
+            var existing = doc.getElementsByTagName('link');
+            for (var i = 0; i < existing.length; i++) {
+              if (existing[i].href &&
+                  existing[i].href.indexOf(href) !== -1) { return; }
+            }
+            var l = doc.createElement('link');
+            l.rel = 'stylesheet';
+            l.type = 'text/css';
+            l.href = href;
+            l.setAttribute('data-injected-by', 'css-link-component');
+            head.appendChild(l);
+          } catch (e) { /* swallow — never break the editor */ }
+        })();
+      </script><!--ls:end[component-1775246360797]-->
+  </div>
+ </div>
+</main>
+<div class="iw_component" id="iw_comp1619395105410">
+ <!--ls:begin[component-1619395105410]--><style>#iw_comp1619395105410{}</style><script>
+      
+        $(document).ready(function() {
+          document.getElementById("year").innerHTML = new Date().getFullYear();
+        });
+      
+    </script><footer class="initiative-footer">
+   <div class="initiative-footer__main">
+      <div class="container">
+         <div class="initiative-footer__flex">
+            <div class="initiative-footer__flex-items"><a href="https://www.miamidade.gov/global/home.page"><img src="/resources/images/md-logo.png" alt="Miami-Dade County Logo" class="initiative-footer__logo"></a></div>
+         </div>
+      </div>
+   </div>
+   <div class="initiative-footer__copywrite">
+      <div class="container"><span>© <span id="year"></span> Miami-Dade County. All rights reserved.</span></div>
+   </div>
+</footer><style type="text/css">
+
+      #pwBackgroundPopup{
+      display:none;position:fixed;_position:absolute; /* hack for internet explorer 6*/height:100%;width:100%;top:0;left:0;background:#666;border:1px solid #cecece;z-index:1000;}
+      #popupWarning{display:none;position: fixed;_position:absolute; /* hack for internet explorer 6*/height:250px;width:400px;z-index:1001;}
+      .contactArea a{text-decoration:none;color:#1e9bde;}
+      .contactArea a:hover{text-decoration:underline;}
+      div#alert{
+          margin: 0.5rem 0 1rem 0;
+          background-color: #fff;
+          transition: box-shadow .25s;
+          border-radius: 2px;
+          border: #717070 1px solid;
+          padding: 70px 0 24px 0;
+          background-image: url(https://www.miamidade.gov/resources/global/images/beta-miamidade-gov.png);
+          background-repeat: no-repeat;
+          background-position: 54px 26px;
+      }
+      input#pwAlertButton, input#cancelButton {
+          padding: 0 2rem;
+          line-height: 36px;
+      }
+      div#alert p{font-size: 14px;width: 360px;text-align:center;padding: 15px 0 15px 0;margin: 0 0 0 15px;}
+      #alert p#buttons{margin-top: 10px;padding: 0;}
+      .exit-md {margin: 0 10px 0 0;}
+      .buttons i.exit-md {
+          padding: 0;
+      }
+
+    </style><div id="popupWarning" aria-labelledby="dialogLeavingTitle" aria-describedby="dialogLeavingDesc" role="dialog" aria-label="Leaving the official website of Miami-Dade County warning">
+   <div id="alert" class="z-depth-2">
+      <h2 id="dialogLeavingTitle" class="sr-only">Leaving Miami-Dade County</h2>
+      <div id="dialogLeavingDesc">
+         <p class="contactArea">
+            You are now leaving the official website of Miami-Dade County government. Please be
+            aware that when you exit this site, you are no longer protected by our privacy or
+            security policies. Miami-Dade County is not responsible for the content provided on
+            linked sites. The provision of links to these external sites does not constitute an
+            endorsement. </p>
+         <p><strong>Please click 'OK' to be sent to the new site, or Click 'Cancel' to go back.</strong></p>
+      </div>
+      <p class="buttons"><button type="button" id="pwAlertButton" class="waves-effect wave-light btn blue exit-md">Ok</button><button type="button" id="cancelButton" class="waves-effect wave-light btn blue exit-md">Cancel</button></p>
+   </div>
+</div><div id="pwBackgroundPopup"></div><!--ls:end[component-1619395105410]-->
+</div></div><!--ls:end[body]--><!--ls:begin[page_track]--><!--ls:end[page_track]--></body>
+</html>

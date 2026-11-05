@@ -1,0 +1,40 @@
+{
+  "extracted_at": null,
+  "extraction_version": null,
+  "source": {
+    "source_id": "fcc-text-911",
+    "publisher": "Federal Communications Commission",
+    "title": "Text to 911: What You Need to Know",
+    "official_url": "https://www.fcc.gov/consumers/guides/what-you-need-know-about-text-911",
+    "source_type": "official_static_web_guidance",
+    "jurisdiction": "US",
+    "hazards": [
+      "flood",
+      "hurricane"
+    ],
+    "disaster_phases": [
+      "prepare",
+      "respond"
+    ],
+    "classification": "OFFICIAL_SOURCE",
+    "content_type": null,
+    "charset": null,
+    "original_content_hash": null,
+    "retrieved_at": null,
+    "reviewed_at": null,
+    "review_status": "UNAVAILABLE",
+    "reviewer": null,
+    "limitations": [
+      "Candidate source; human review required before publication.",
+      "Static guidance is not live availability or a current evacuation order.",
+      "HTML-only extraction may omit images, embedded documents, or dynamic content."
+    ],
+    "final_url": null,
+    "http_status": 403,
+    "byte_count": null,
+    "last_attempt_at": "2026-11-05T01:48:40.335873Z",
+    "failure_category": "HTTP_ERROR"
+  },
+  "chunks": [],
+  "review": null
+}

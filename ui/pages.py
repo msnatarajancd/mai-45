@@ -41,7 +41,7 @@ def home():
         with right:
             st.markdown('<div class="rr-journey-visual"><div class="rr-orbit rr-orbit-one"></div><div class="rr-orbit rr-orbit-two"></div><div class="rr-visual-heading"><span class="rr-live-dot"></span> BUILT AROUND YOUR HOUSEHOLD</div><div class="rr-shield-hero">'+icon('shield')+'</div><div class="rr-journey-title">Your next step,<br>made clearer.</div><div class="rr-journey-flow"><div><b>01</b><span>Protect</span><small>Prepare together</small></div><i>›</i><div><b>02</b><span>Respond</span><small>Find the right help</small></div><i>›</i><div><b>03</b><span>Recover</span><small>Move forward</small></div></div><div class="rr-visual-foot">Official sources. Thoughtful guidance. Your decisions.</div></div>',unsafe_allow_html=True)
     st.markdown('<div class="rr-section-head"><div><span class="rr-eyebrow">ONE STEP AT A TIME</span><h2>What do you need today?</h2></div><p>Choose where you are in your journey.</p></div>',unsafe_allow_html=True)
-    cards=[('01','shield','Protect','Feel more prepared.','Check official weather alerts and plan around your household.','Prepare my household'),('02','help','Respond','Find your connection.','Reach emergency options or explore official assistance.','Find help now'),('03','home','Recover','Make progress, together.','Review your plan and save each small step toward recovery.','Start my recovery')]
+    cards=[('01','shield','Protect','Feel more prepared.','Check official weather alerts and plan around your household.','Prepare my household'),('02','help','Respond','Find your connection.','Reach emergency options or explore official assistance.','I Need Help Now'),('03','home','Recover','Make progress, together.','Review your plan and save each small step toward recovery.','Start my recovery')]
     with st.container(key='home_actions'):
         for col,(number,symbol,page,title,copy,action) in zip(st.columns(3,gap='medium'),cards):
             with col,st.container(border=True,key='home_card_'+page):
@@ -187,50 +187,8 @@ def protect():
 
 
 def respond():
-    heading('02 / Respond', 'Help starts with the right connection.', 'Emergency calling options stay above every screen. This app does not contact or dispatch responders.')
-    left, right = st.columns([1.15, 1], gap='large')
-    with left, st.container(border=True,key='assistance_controls'):
-        st.subheader('What kind of help do you need?')
-        need = st.radio('Choose an assistance category', ['Transportation', 'Temporary housing', 'Supplies', 'Immediate danger / not sure'])
-        if st.button('Show assistance options', type='primary'):
-            try:
-                route = emergency.route_situation(need)
-                if route.route == 'emergency':
-                    st.session_state['rr_emergency'] = True
-                    st.rerun()
-                st.session_state['resource_need'] = need
-            except Exception:
-                st.warning('Situation guidance is unavailable. Emergency contact options remain above.')
-        if st.session_state.get('resource_need'):
-            try:
-                records = resources.find_resources(st.session_state['resource_need'])
-            except Exception:
-                records = []
-            if not records:
-                st.info('No verified resource match is connected yet. Use the official county links to check options and requirements. Availability is unknown.')
-            for record in records:
-                st.write(record.title)
-                st.caption(record.caveat)
-                st.caption('Last checked: ' + (record.last_checked or 'Not verified'))
-                st.link_button('View official resource', record.url)
-        st.divider()
-        st.write('**Try the fictional escalation**')
-        st.caption('The demo household reports: “Water is rising; we’re trapped.”')
-        if st.button('Simulate rising water / trapped'):
-            st.session_state['rr_emergency'] = True
-            st.rerun()
-    with right:
-        st.subheader('Official places to start')
-        for record in resources.OFFICIAL_LINKS[1:3]:
-            with st.container(border=True):
-                st.write('**' + record.title + '**')
-                st.caption(record.caveat)
-                st.link_button('Open official information', record.url, width='stretch')
-        st.caption('These are information links, not confirmed service matches. No live shelter capacity or pickup availability is shown.')
-    from ui.guidance import render as grounded_guidance
-    grounded_guidance('respond')
-    if st.button('Next · Review recovery needs', type='primary'):
-        go('Recover')
+    from ui.emergency_page import render_workspace
+    render_workspace()
 
 
 def evidence():
@@ -244,7 +202,7 @@ def evidence():
         {'Owner': 'M1', 'Capability': 'Application, searchable menu, tour and conversational actions', 'State': 'Implemented'},
         {'Owner': 'M2', 'Capability': 'NWS Guardian alert retrieval', 'State': 'Integrated · live checks are on demand'},
         {'Owner': 'M3', 'Capability': 'Reviewed CDC retrieval and M1 Qwen explanations', 'State': 'Integrated · limited recovery evidence; resource directory pending'},
-        {'Owner': 'M4', 'Capability': 'Reviewed emergency rules and safety evaluation', 'State': 'TODO · conservative access fallback'},
+        {'Owner': 'M4', 'Capability': 'Emergency routing and synthetic safety evaluation', 'State': 'Local rules and evaluation connected · source signoff pending'},
         {'Owner': 'M5', 'Capability': 'Intake, plan approval, saved tasks and reassessment', 'State': 'Integrated from PR #1'},
     ]
     for row in integrations:

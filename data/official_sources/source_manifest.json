@@ -101,6 +101,109 @@
       "byte_count": 129366,
       "last_attempt_at": "2026-11-03T03:05:29.547412Z",
       "failure_category": null
+    },
+    {
+      "source_id": "miami-dade-text-911",
+      "publisher": "Miami-Dade Sheriff's Office",
+      "title": "Text 911",
+      "official_url": "https://www.mdso.com/text-911",
+      "source_type": "official_static_web_guidance",
+      "jurisdiction": "US-FL-MIAMI-DADE",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "disaster_phases": [
+        "prepare",
+        "respond"
+      ],
+      "classification": "OFFICIAL_SOURCE",
+      "content_type": "text/html",
+      "charset": "utf-8",
+      "original_content_hash": "ef11e602d4f208a62445f4ff20c4d0b000a193066fd5e41f6692d66fd7692be8",
+      "retrieved_at": "2026-11-05T01:48:39.944738Z",
+      "reviewed_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "reviewer": null,
+      "limitations": [
+        "Candidate source; human review required before publication.",
+        "Static guidance is not live availability or a current evacuation order.",
+        "HTML-only extraction may omit images, embedded documents, or dynamic content."
+      ],
+      "final_url": "https://www.mdso.com/text-911",
+      "http_status": 200,
+      "byte_count": 29818,
+      "last_attempt_at": "2026-11-05T01:48:39.539106Z",
+      "failure_category": null
+    },
+    {
+      "source_id": "miami-dade-weather-contacts",
+      "publisher": "Miami-Dade County",
+      "title": "Resources and Contact Information",
+      "official_url": "https://www.miamidade.gov/initiative/weather-ready/contact.page",
+      "source_type": "official_static_web_guidance",
+      "jurisdiction": "US-FL-MIAMI-DADE",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "disaster_phases": [
+        "prepare",
+        "respond",
+        "recover"
+      ],
+      "classification": "OFFICIAL_SOURCE",
+      "content_type": "text/html",
+      "charset": "utf-8",
+      "original_content_hash": "9f300a0e02258db8dfd6e23ac56ff467af943958171f24384f18ee3ed4186f87",
+      "retrieved_at": "2026-11-05T01:48:40.329790Z",
+      "reviewed_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "reviewer": null,
+      "limitations": [
+        "Candidate source; human review required before publication.",
+        "Static guidance is not live availability or a current evacuation order.",
+        "HTML-only extraction may omit images, embedded documents, or dynamic content."
+      ],
+      "final_url": "https://www.miamidade.gov/initiative/weather-ready/contact.page",
+      "http_status": 200,
+      "byte_count": 48185,
+      "last_attempt_at": "2026-11-05T01:48:39.957414Z",
+      "failure_category": null
+    },
+    {
+      "source_id": "fcc-text-911",
+      "publisher": "Federal Communications Commission",
+      "title": "Text to 911: What You Need to Know",
+      "official_url": "https://www.fcc.gov/consumers/guides/what-you-need-know-about-text-911",
+      "source_type": "official_static_web_guidance",
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "disaster_phases": [
+        "prepare",
+        "respond"
+      ],
+      "classification": "OFFICIAL_SOURCE",
+      "content_type": null,
+      "charset": null,
+      "original_content_hash": null,
+      "retrieved_at": null,
+      "reviewed_at": null,
+      "review_status": "UNAVAILABLE",
+      "reviewer": null,
+      "limitations": [
+        "Candidate source; human review required before publication.",
+        "Static guidance is not live availability or a current evacuation order.",
+        "HTML-only extraction may omit images, embedded documents, or dynamic content."
+      ],
+      "final_url": null,
+      "http_status": 403,
+      "byte_count": null,
+      "last_attempt_at": "2026-11-05T01:48:40.335873Z",
+      "failure_category": "HTTP_ERROR"
     }
   ]
 }
