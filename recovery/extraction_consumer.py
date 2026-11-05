@@ -7,7 +7,7 @@ import hashlib
 import json
 import re
 from typing import Any
-from uuid import UUID, uuid4
+from uuid import UUID, uuid4, uuid5
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -205,7 +205,7 @@ def selected_changes(review, selected, corrections=None):
                 raise ValueError('a reported damaged item is required')
             key = ' '.join(value.casefold().split())
             if key not in seen:
-                records.damage_records.append(DamageRecord(case_id=case_id, item_description=value,
+                records.damage_records.append(DamageRecord(damage_id=uuid5(review.new_case_id, name), case_id=case_id, item_description=value,
                     damage_description=review.quotes[name]))
                 seen.add(key)
         else:
@@ -227,6 +227,9 @@ def selected_changes(review, selected, corrections=None):
                 if value != 'Miami-Dade':
                     raise ValueError('county is not supported; use structured input')
                 records.reported_county = value
+    from .demo_planner import accommodation_arranged
+    if 'temporary_accommodation' in selected and accommodation_arranged(intake):
+        intake.household_recovery_needs = [n for n in intake.household_recovery_needs if n.strip().casefold() != 'temporary housing']
     return intake, RecoveryRecords.model_validate_json(records.model_dump_json())
 
 
@@ -263,7 +266,7 @@ def accept_review(repo, review, selected, *, corrections=None, explicitly_confir
     case = validated.previous_case
     if case.intake.immediate_danger is not False:
         raise ValueError('persisted safety assessment blocks routine updates')
-    if intake != case.intake:
+    if intake != case.intake or (approved_revision is not None and records != validated.previous_records):
         if safety_answer is not False or approved_revision is None:
             raise ValueError('review and explicitly approve a reassessment first')
         if (approved_revision.previous_case != case or approved_revision.previous_plan != validated.previous_plan
@@ -279,8 +282,11 @@ def accept_review(repo, review, selected, *, corrections=None, explicitly_confir
 
 def revision_for_selection(review, selected, corrections=None):
     intake, _ = selected_changes(review, selected, corrections)
-    if review.previous_case is None or intake == review.previous_case.intake:
+    if review.previous_case is None or (intake == review.previous_case.intake and selected_changes(review, selected, corrections)[1].damage_records == review.previous_records.damage_records):
         return None
     if review.previous_plan is None:
+        if intake == review.previous_case.intake:
+            return None
         raise ValueError('approve the existing initial plan before changing its intake')
-    return preview_reassessment(review.previous_case, review.previous_plan, intake)
+    return preview_reassessment(review.previous_case, review.previous_plan, intake,
+        previous_records=review.previous_records, updated_records=selected_changes(review, selected, corrections)[1])

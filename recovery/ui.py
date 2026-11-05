@@ -287,7 +287,7 @@ def _render_dashboard(repository: SQLiteRecoveryRepository) -> None:
 
     st.write("Active recovery plan")
     st.code(str(plan.plan_id))
-    st.caption("Planner: AI-assisted (experimental)" if plan.planning_disclosure else "Planner: SIMULATED DEMO (deterministic templates)")
+    st.caption("Planner: deterministic / confirmed reports" if any(t.planning_key for t in plan.proposed_tasks) else "Planner: AI-assisted (experimental)" if plan.planning_disclosure else "Planner: SIMULATED DEMO (deterministic templates)")
     if plan.planning_disclosure:
         st.warning(plan.planning_disclosure)
     with st.expander("Previous approved plans (historical reference)"):
@@ -300,11 +300,17 @@ def _render_dashboard(repository: SQLiteRecoveryRepository) -> None:
     rendered_version_key = f"rendered_progress:{plan.plan_id}"
     rendered_version = st.session_state.get(rendered_version_key, plan.progress_version)
     for task in plan.proposed_tasks:
+        review = plan.task_reviews.get(str(task.task_id))
+        if review and not review.applicable:
+            with st.expander(f"No longer applicable: {task.title}"):
+                st.write(review.explanation)
+                st.caption(f"Historical saved status: {task.status.value}; not automatically completed.")
+            continue
         with st.expander(f"{task.title} - {task.status.value}"):
-            st.write(task.description)
-            st.write(f"**Priority:** {task.priority.value}")
-            st.write(f"**Reason:** {task.reason_for_recommendation}")
-            _render_task_evidence(task)
+            st.write(review.description if review else task.description)
+            st.write(f"**Priority:** {(review.priority if review and review.priority else task.priority).value}")
+            from ui.recovery_page import evidence
+            evidence(task, county=repository.get_recovery_records(case.case_id).reported_county, review=review)
             status_options = list(TaskStatus)
             current_index = status_options.index(task.status)
             form_key = f"task-status-form:{plan.plan_id}:{task.task_id}"

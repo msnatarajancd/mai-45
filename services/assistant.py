@@ -189,7 +189,7 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
         message=('SIMULATED: '+result.alerts[0].headline) if result.simulated and result.alerts else result.message or ('No active alerts returned; this does not establish safety.' if result.status=='none' else 'Alert result loaded.')
     elif kind=='show_plan':
         if not plan: message='No approved plan is open. Open or resume a recovery case first.'
-        else: message='Saved plan:\n'+'\n'.join(f'{i}. {t.title} — {t.status.value}' for i,t in enumerate(plan.proposed_tasks,1))
+        else: message='Saved plan:\n'+'\n'.join(f'{i}. {t.title} — {t.status.value}' + (' (historical / no longer applicable)' if str(t.task_id) in plan.task_reviews and not plan.task_reviews[str(t.task_id)].applicable else '') for i,t in enumerate(plan.proposed_tasks,1))
     elif kind=='resume_case':
         resumed=repo.get_case(a.case_id)
         if not resumed: raise ValueError('That fictional case was not found on this machine.')

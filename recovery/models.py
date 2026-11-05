@@ -113,6 +113,9 @@ class RecoveryTask(BaseModel):
     status: TaskStatus = TaskStatus.NOT_STARTED
     reason_for_recommendation: str = Field(min_length=1)
     source_reference: str | None = None
+    planning_key: str | None = None
+    dependencies: list[str] = Field(default_factory=list)
+    resource_categories: list[Literal["Housing", "Disaster assistance", "Electricity", "Water"]] = Field(default_factory=list)
 
     @field_validator("title", "reason_for_recommendation")
     @classmethod
@@ -122,7 +125,18 @@ class RecoveryTask(BaseModel):
         return value
 
 
+class TaskReview(BaseModel):
+    priority: TaskPriority | None = None
+    applicable: bool = True
+    description: str
+    explanation: str
+
+
 class RecoveryPlan(BaseModel):
+    planning_basis: RecoveryCase | None = None
+    records_version: int | None = None
+    task_reviews: dict[str, TaskReview] = Field(default_factory=dict)
+    confirmed_damage_ids: list[UUID] = Field(default_factory=list)
     planning_disclosure: str | None = None
     progress_version: int = Field(default=0, ge=0)
     plan_id: UUID = Field(default_factory=uuid4)

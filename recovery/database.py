@@ -59,6 +59,10 @@ class SQLiteRecoveryRepository:
                     records_json TEXT NOT NULL
                 )"""
             )
+            connection.execute("""CREATE TABLE IF NOT EXISTS recovery_task_events (
+                event_id INTEGER PRIMARY KEY, case_id TEXT NOT NULL REFERENCES recovery_cases(case_id),
+                plan_id TEXT NOT NULL REFERENCES recovery_plans(plan_id), task_id TEXT NOT NULL,
+                previous_status TEXT NOT NULL, new_status TEXT NOT NULL, changed_at TEXT NOT NULL)""")
             evidence_columns = {row[1] for row in connection.execute(
                 "PRAGMA table_info(recovery_reassessments)")}
             if "approval_action" not in evidence_columns:
@@ -197,9 +201,21 @@ class SQLiteRecoveryRepository:
             return None
         return RecoveryPlan.model_validate_json(row[0])
 
-    def approve_plan(self, plan_id: UUID) -> RecoveryPlan:
+    def approve_plan(self, plan_id: UUID, *, new_draft: RecoveryPlan | None = None, explicitly_approved: bool = False) -> RecoveryPlan:
         with self._connection() as connection:
             connection.execute("BEGIN IMMEDIATE")
+            if new_draft is not None:
+                if explicitly_approved is not True or new_draft.plan_id != plan_id or new_draft.approval_status is not PlanStatus.DRAFT:
+                    raise ValueError('matching draft and explicit approval are required')
+                ids = [t.task_id for t in new_draft.proposed_tasks]
+                titles = [' '.join(t.title.casefold().split()) for t in new_draft.proposed_tasks]
+                if len(set(ids)) != len(ids) or len(set(titles)) != len(titles):
+                    raise ValueError('duplicate tasks are not permitted')
+                existing_ids = {t.task_id for row in connection.execute('SELECT plan_json FROM recovery_plans') for t in RecoveryPlan.model_validate_json(row[0]).proposed_tasks}
+                if existing_ids.intersection(ids):
+                    raise ValueError('new initial tasks require unique IDs')
+                connection.execute('INSERT INTO recovery_plans (plan_id,case_id,plan_json) VALUES (?,?,?)',
+                    (str(plan_id),str(new_draft.case_id),new_draft.model_dump_json()))
             row = connection.execute(
                 """
                 SELECT p.plan_json, c.case_json
@@ -223,6 +239,13 @@ class SQLiteRecoveryRepository:
             if case.intake.immediate_danger is None:
                 raise ValueError("immediate danger must be explicitly assessed before approval")
 
+            if plan.planning_basis is not None and case != plan.planning_basis:
+                raise ValueError('stale draft: confirmed assessment changed; generate a fresh plan')
+            if plan.records_version is not None:
+                records_row = connection.execute('SELECT records_json FROM recovery_records WHERE case_id = ?', (str(case.case_id),)).fetchone()
+                version = RecoveryRecords.model_validate_json(records_row[0]).version if records_row else 0
+                if version != plan.records_version:
+                    raise ValueError('stale draft: confirmed records changed; generate a fresh plan')
             active = connection.execute(
                 "SELECT active_plan_id FROM recovery_cases WHERE case_id = ?",
                 (str(case.case_id),),
@@ -299,15 +322,20 @@ class SQLiteRecoveryRepository:
                 raise ValueError("task updates require an explicit no-immediate-danger assessment")
             if expected_progress_version is not None and plan.progress_version != expected_progress_version:
                 raise ValueError("stale task update: progress changed; review the current plan")
+            applicability = plan.task_reviews.get(str(task_id))
+            if applicability is not None and not applicability.applicable:
+                raise ValueError('this task is no longer applicable; preserve its historical status')
             try:
                 status = TaskStatus(new_status)
             except (TypeError, ValueError) as error:
                 raise ValueError(f"invalid task status: {new_status!r}") from error
 
+            previous_status = None
             updated_task = None
             updated_tasks = []
             for task in plan.proposed_tasks:
                 if task.task_id == task_id:
+                    previous_status = task.status
                     updated_task = task.model_copy(update={"status": status})
                     updated_tasks.append(updated_task)
                 else:
@@ -315,6 +343,9 @@ class SQLiteRecoveryRepository:
             if updated_task is None:
                 raise ValueError(f"task {task_id} does not belong to plan {plan_id}")
 
+            if previous_status != status:
+                connection.execute('INSERT INTO recovery_task_events (case_id,plan_id,task_id,previous_status,new_status,changed_at) VALUES (?,?,?,?,?,?)',
+                    (row[0],str(plan_id),str(task_id),previous_status.value,status.value,datetime.now(timezone.utc).isoformat()))
             updated_plan = plan.model_copy(update={"proposed_tasks": updated_tasks, "progress_version": plan.progress_version + 1})
             connection.execute(
                 "UPDATE recovery_plans SET plan_json = ? WHERE plan_id = ?",
@@ -322,6 +353,11 @@ class SQLiteRecoveryRepository:
             )
 
         return updated_task
+
+    def list_task_history(self, case_id: UUID) -> list[dict]:
+        with self._connection() as connection:
+            rows = connection.execute('SELECT task_id,plan_id,previous_status,new_status,changed_at FROM recovery_task_events WHERE case_id = ? ORDER BY event_id', (str(case_id),)).fetchall()
+        return [dict(zip(('task_id','plan_id','previous_status','new_status','changed_at'), row)) for row in rows]
 
     def list_approved_plans(self, case_id: UUID) -> list[RecoveryPlan]:
         """Return approved plans, including historical plans, in insertion order."""
@@ -388,7 +424,17 @@ class SQLiteRecoveryRepository:
             current = RecoveryPlan.model_validate_json(plan_row[0])
             if case != preview.previous_case or current != preview.previous_plan:
                 raise ValueError("stale reassessment: assessment or task progress changed; generate a new preview")
-            expected = preview_reassessment(case, current, preview.updated_intake)
+            if preview.previous_records is not None:
+                records_row = connection.execute('SELECT records_json FROM recovery_records WHERE case_id = ?', (str(case.case_id),)).fetchone()
+                records = RecoveryRecords.model_validate_json(records_row[0]) if records_row else RecoveryRecords(case_id=case.case_id)
+                if records != preview.previous_records:
+                    raise ValueError('stale reassessment: confirmed records changed')
+                if preview.updated_records != records and confirmed_records != preview.updated_records:
+                    raise ValueError('updated records require the matching explicit confirmation')
+                if confirmed_records is not None and confirmed_records != preview.updated_records:
+                    raise ValueError('confirmed records differ from the reviewed proposal')
+            expected = preview_reassessment(case, current, preview.updated_intake,
+                previous_records=preview.previous_records, updated_records=preview.updated_records)
             proposed = preview.proposed_revision
             if (proposed is None or proposed.case_id != case.case_id
                     or proposed.approval_status is not PlanStatus.DRAFT
