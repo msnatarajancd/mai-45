@@ -335,3 +335,26 @@ test('branded loading indicator follows processing state',async({page})=>{
  await page.getByTestId('stApp').evaluate(e=>e.setAttribute('data-test-script-state','notRunning'));
  await expect(indicator).toBeHidden();
 });
+
+
+test('chat leaves emergency actions unobstructed and keyboard focus visible',async({page},info)=>{
+ await ready(page);
+ await page.getByRole('button',{name:'Ask ReadyRelief',exact:true}).click();
+ const call=page.getByRole('link',{name:'Call 911',exact:true});
+ const cannot=page.getByRole('button',{name:"I Can't Call 911",exact:true});
+ if(info.project.name==='mobile'){
+  const panel=await page.locator('.st-key-chat_panel').boundingBox();
+  const bar=await page.locator('.st-key-emergency_bar').boundingBox();
+  expect(panel.y).toBeGreaterThanOrEqual(bar.y+bar.height+8);
+  await expect(page.locator('.st-key-chat_panel textarea')).toBeInViewport({ratio:1});
+ }
+ // Trial clicks check hit testing without placing a call or changing the route.
+ await call.click({trial:true});
+ await cannot.click({trial:true});
+ await call.focus();
+ await expect(call).toBeFocused();
+ await page.keyboard.press('Tab');
+ await expect(cannot).toBeFocused();
+ await expect(cannot).toHaveCSS('outline-style','solid');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize().width+2);
+});

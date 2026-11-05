@@ -346,3 +346,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
  .rr-topline {flex-wrap:wrap;overflow-wrap:anywhere;}
  .st-key-recovery_workspace h1 {font-size:1.9rem !important;}
 }
+
+/* Keep the mobile conversation below the persistent emergency action area. */
+@media(max-width:700px) {
+ .st-key-chat_panel {top:calc(var(--rr-header-height) + 300px);bottom:8px;max-height:none;}
+ .st-key-chat_panel [data-testid="stLayoutWrapper"]:has(> .st-key-chat_transcript),
+ .st-key-chat_panel .st-key-chat_transcript {height:clamp(80px,calc(100dvh - 710px),300px) !important;min-height:0 !important;max-height:clamp(80px,calc(100dvh - 710px),300px);}
+}
