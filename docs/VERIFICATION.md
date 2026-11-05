@@ -1,5 +1,29 @@
 # Verification record
 
+## PR #4 Windows visual CI correction — November 4, 2026
+
+Runs `41956656777` and `41956651511` each failed 14 experience tests at
+pixel comparisons against stale Windows screenshots. Their Python jobs and
+the 42 browser tests that reached completion passed. The baseline still showed
+the older toolbar/search and pre-CAP-04 emergency strip. A local Windows run
+reproduced the same first mismatch before refreshing the images.
+
+Reviewed and refreshed 25 Windows/Chromium screenshots for the current header,
+navigation search, emergency strip, Home, chat, and tours at desktop, tablet,
+and mobile sizes. The tour screenshot test supplies deterministic speech voices
+and synchronous speech-start events; separate narration behavior tests remain.
+No production files, screenshot tolerances, CI gates, or extraction contracts
+were changed. Automated browser audio remains muted.
+
+Python regression: **779 passed, 11 skipped, 10 subtests passed**. Golden
+evaluation: **24/24**; development evaluation: **48/48**, using the existing
+PROPOSED expectations (not a new human safety review). Both Node regression
+scripts, Python compilation, and whitespace checks passed. The initial local
+browser refresh had one initial-load timeout while Python tests ran concurrently.
+The subsequent full Windows browser run with normal screenshot comparisons
+enabled passed: **56 passed, 1 skipped** in 6.3 minutes, exit 0. The skip is the
+desktop sidebar animation test on mobile, which uses compact navigation.
+
 ## PR #4 conflict resolution — November 4, 2026
 
 Merged `main` at `1653ae6` into `feature/M4-EmergencyAssistance`. The conflict was

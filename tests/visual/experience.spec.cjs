@@ -86,6 +86,19 @@ test('search and chat route consistently without turning search into AI',async({
 });
 
 test('tour locates every control and cleans up',async({page})=>{
+ // Screenshot content must not depend on installed OS voices or asynchronous
+ // speech callbacks. Narration selection/autoplay/retry have separate tests.
+ await page.addInitScript(()=>{
+  window.SpeechSynthesisUtterance=class {constructor(text){this.text=text;}};
+  Object.defineProperty(window,'speechSynthesis',{value:{
+   getVoices:()=>[
+    {name:'Microsoft David - English (United States)',voiceURI:'david',lang:'en-US',localService:true},
+    {name:'Microsoft Zira - English (United States)',voiceURI:'zira',lang:'en-US',localService:true}
+   ],
+   cancel(){},addEventListener(){},removeEventListener(){},
+   speak(u){u.onstart?.();},speaking:true
+  }});
+ });
  await ready(page);
  await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();
  await expect(page.locator('.st-key-tour_welcome')).toBeInViewport();
