@@ -49,6 +49,20 @@ def test_danger_bypasses_provider(text):
     assert reply.action is None
 
 
+@pytest.mark.parametrize('text,expected', [
+    ("I'm in danger", True), ('We are in danger', True),
+    ('We are in immediate danger', True), ("I’m in danger", True),
+    ("We're in danger", True), ('I am in danger', True),
+    ("I'm not in danger", False), ("I'm not in immediate danger", False),
+    ("What should I do if I'm in danger?", False),
+    ("What should I do if I'm in immediate danger?", False),
+    ("What should I do? I'm in danger.", True),
+    ("If I'm in danger, I will call. We are in danger now.", True),
+])
+def test_explicit_current_danger_reports(text, expected):
+    assert is_danger(text) is expected
+
+
 def test_context_changes_invalidate_pending_action():
     s=state(); p=propose('change area',s,None,Client({'answer':'Ready', 'action':{'kind':'set_context','location_id':'homestead','mode':'SIMULATED DEMO'}}))
     s['location_id']='miami-beach'
