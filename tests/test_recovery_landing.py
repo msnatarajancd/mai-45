@@ -44,7 +44,7 @@ def test_new_household_can_start_without_intake_or_extraction(app, monkeypatch):
 
 
 @pytest.mark.parametrize('mode', ['missing_key', 'timeout', 'invalid_output'])
-def test_no_suitable_extraction_interface_keeps_structured_fallback(app, monkeypatch, mode):
+def test_opt_out_keeps_structured_input_without_model_calls(app, monkeypatch, mode):
     from recovery.llm_client import NebiusClient
     monkeypatch.delenv('NEBIUS_API_KEY', raising=False)
     calls = []
@@ -55,7 +55,7 @@ def test_no_suitable_extraction_interface_keeps_structured_fallback(app, monkeyp
         return '{"children": 99, "adults": 20}'
     monkeypatch.setattr(NebiusClient, 'complete', fake)
     describe(app, 'I need insurance help')
-    assert not calls  # No pretending this unsupported interface is integrated.
+    assert not calls  # The user has not opted into Qwen extraction.
     assert 'rr_case_id' not in app.session_state
     next(w for w in app.selectbox if w.label == 'Immediate danger assessment').select('No immediate danger reported')
     button(app, 'Create draft plan').click().run()
@@ -148,6 +148,6 @@ def test_help_now_presentation_keeps_no_write_and_emergency_boundaries(app, monk
     official = [w for w in app.get('link_button') if w.label.startswith('Open Official Resource:')]
     assert official
     assert all(w.proto.type == 'primary' for w in official)
-    assert any('AI recovery extraction is not connected yet' in w.value for w in app.caption)
+    assert any('Optional Qwen extraction proposes reported details' in w.value for w in app.caption)
     assert 'Call 911' in [w.label for w in app.get('link_button')]
     assert "I can't call 911" in [w.label for w in app.button]

@@ -1,7 +1,7 @@
-"""M5-only consumer of M1's 5a6391d wire contract. No model or network calls.
+"""M5 consumer of the shared M1 recovery extraction contract. No model or network calls.
 
 The wire boundary is checked without copying M1's generic DTO classes or importing
-its unmerged service. The original result/message live only in an ephemeral review.
+its extraction DTOs. The original result/message live only in an ephemeral review.
 """
 import hashlib
 import json
@@ -121,8 +121,7 @@ def prepare_review(result, message, *, case=None, records=None, plan=None):
             if value not in (None, 'Unknown') and context[name] is None:
                 review.unresolved.append('Saved ' + name + ' (preserved; outside M1 vocabulary)')
     from services.assistant import is_danger
-    if (context['danger_reported'] is True or is_danger(message)
-            or re.search(r"\b(?:i am|i'm|we are|we're) (?:in )?danger\b", message, re.I)):
+    if context['danger_reported'] is True or is_danger(message):
         review.result['status'] = 'DANGER_DETECTED'
         return review.model_copy(deep=True)
     if wire['status'] == 'ERROR' and wire['error_code'] == 'invalid_context':

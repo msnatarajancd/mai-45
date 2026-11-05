@@ -84,4 +84,3 @@ def test_create_damage_confirm_insurance_download_and_resume(app):
     assert 'Call 911' in [w.label for w in app.get('link_button')]
     assert "I can't call 911" in [w.label for w in app.button]
     assert not app.exception
-

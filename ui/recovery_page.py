@@ -14,7 +14,7 @@ from recovery.insurance import insurance_discussion_summary
 from recovery.reassessment import preview_reassessment, ReassessmentPreview
 from ui.components import heading
 from recovery.extraction_consumer import (ExtractionReview, CHOICES, prepare_review,
-    require_current, selected_changes, revision_for_selection, accept_review)
+    require_current, selected_changes, revision_for_selection, accept_review, confirmed_context)
 
 
 NEEDS = ['Temporary housing', 'Water and household supplies', 'Transportation', 'Damage documentation']
@@ -40,7 +40,7 @@ def guard_pending_danger():
     """
     if not (st.session_state.get('rr_pending_danger') or st.session_state.get('rr_emergency')):
         return
-    for key in ('rr_extraction_review', 'rr_extraction_ready', 'rr_revision', 'rr_notice'):
+    for key in ('rr_extraction_review', 'rr_extraction_ready', 'rr_extraction_message', 'rr_revision', 'rr_notice'):
         st.session_state.pop(key, None)
     st.session_state['rr_emergency'] = True
     st.rerun()
@@ -391,15 +391,16 @@ def recovery_records(repo, case):
 
 
 def recovery_landing():
-    """Local navigation only: text never becomes confirmed facts or a model prompt."""
+    """Explicit extraction or local navigation; descriptions are never saved automatically."""
     heading('03 / Recover', 'What do you need help with today?')
     st.subheader('Recovery Copilot')
     st.write('Start with a few words. Explore official assistance pathways, organize damage records, or continue your saved recovery.')
     st.caption('SIMULATED RECOVERY · Use fictional information only. Your description is not saved to your case.')
     with st.form('rr_start_description', border=True):
         description = st.text_area("Describe what's happening or what you need help with.", max_chars=2500)
+        use_qwen = st.checkbox('Use Qwen to propose details for my review', key='rr_use_qwen')
         submitted = st.form_submit_button('Help me get started', type='primary')
-    st.caption('AI recovery extraction is not connected yet. You can continue with structured input; emergency access never requires AI.')
+    st.caption('Optional Qwen extraction proposes reported details, not verified facts or safety. Nothing is saved without your confirmation. Leave it unchecked to choose a section without AI; structured input and emergency access remain available.')
     with st.container(border=True, key='recovery_help_now'):
         st.markdown('**Need housing or utility information?**')
         st.caption('Official pathways without intake, AI or an approved plan. Links do not establish availability or eligibility.')
@@ -408,14 +409,15 @@ def recovery_landing():
     st.caption('YOUR RECOVERY: 1. Understand your situation / 2. Find assistance / 3. Document damage / 4. Prepare for insurance / 5. Track recovery progress')
     if submitted:
         from services.assistant import is_danger
-        explicit_danger = re.search(r"\b(?:i am|i'm|we are|we're) (?:in )?danger\b", description, re.I)
-        if is_danger(description) or explicit_danger:
+        if is_danger(description):
             st.session_state['rr_emergency'] = True
             if st.session_state.get('rr_case_id'):
                 pending = set(st.session_state.get('rr_pending_danger', []))
                 pending.add(st.session_state['rr_case_id'])
                 st.session_state['rr_pending_danger'] = list(pending)
             st.rerun()
+        st.session_state.pop('rr_extraction_review', None)
+        st.session_state.pop('rr_extraction_ready', None)
         if not description.strip():
             st.info('Choose a quick action or tell us briefly what you need.')
         else:
@@ -429,7 +431,9 @@ def recovery_landing():
             else:
                 focus = 'Find assistance'
             st.session_state['rr_focus'] = focus
-            st.session_state['rr_description_received'] = True
+            st.session_state['rr_description_received'] = not use_qwen
+            if use_qwen:
+                st.session_state['rr_extraction_message'] = description
     for column, label in zip(st.columns(4), ['Find assistance', 'Document damage', 'Prepare for insurance', 'Continue my recovery']):
         if column.button(label, width='stretch'):
             st.session_state['rr_focus'] = label
@@ -470,9 +474,46 @@ def assistance(county=None):
     grounded_guidance('recover')
 
 
+def request_extraction(repo, message):
+    """One explicit request; retain original snapshots across the model call."""
+    from services.assistant import extract_recovery_needs, RecoveryConfirmedContext, is_danger
+    guard_pending_danger()
+    if is_danger(message):
+        st.session_state['rr_emergency'] = True
+        st.rerun()
+    case_id = st.session_state.get('rr_case_id')
+    case = repo.get_case(UUID(case_id)) if case_id else None
+    if case_id and case is None:
+        raise ValueError('The saved case is unavailable; reopen it before requesting extraction.')
+    if case and case.intake.immediate_danger is True:
+        st.session_state['rr_emergency'] = True
+        st.rerun()
+    if case and case.intake.immediate_danger is None:
+        raise ValueError('The saved safety assessment is incomplete. Use structured input before routine updates.')
+    records = repo.get_recovery_records(case.case_id) if case else None
+    plan = repo.get_active_plan(case.case_id) if case else None
+    context = RecoveryConfirmedContext.model_validate(confirmed_context(case, records))
+    guard_pending_danger()
+    try:
+        with st.spinner('Qwen is preparing details for your review. Nothing is being saved.'):
+            result = extract_recovery_needs(message, confirmed_context=context)
+    except Exception:
+        st.warning('Recovery extraction is unavailable. Nothing was saved. Use the structured input below.')
+        return
+    guard_pending_danger()
+    current = repo.get_case(case.case_id) if case else None
+    if result.status == 'DANGER_DETECTED' or (current and current.intake.immediate_danger is True):
+        st.session_state['rr_emergency'] = True
+        st.rerun()
+    if case and repo.get_active_plan(case.case_id) != plan:
+        raise ValueError('Task progress or the active plan changed during extraction. Request a fresh proposal.')
+    stage_extraction_result(st.session_state, repo, result, message,
+        case_snapshot=case, records_snapshot=records, plan_snapshot=plan)
+
+
 def stage_extraction_result(state, repo, result, message, *, case_snapshot=None,
                             records_snapshot=None, plan_snapshot=None):
-    """Future M1 delivery boundary. Never invokes extraction or writes recovery data."""
+    """Validated M1 delivery boundary. Never invokes extraction or writes recovery data."""
     if state.get('rr_pending_danger') or state.get('rr_emergency'):
         raise ValueError('recovery proposals are paused while danger is pending or reported')
     case_id = state.get('rr_case_id')
@@ -593,9 +634,12 @@ def render():
     notice = st.session_state.pop('rr_notice', None)
     if notice:
         st.success(notice)
+    message = st.session_state.pop('rr_extraction_message', None)
     try:
         repo = repository()
         guard_pending_danger()
+        if message is not None:
+            request_extraction(repo, message)
         extraction_confirmation(repo)
         case_id = st.session_state.get('rr_case_id')
         if not case_id:
