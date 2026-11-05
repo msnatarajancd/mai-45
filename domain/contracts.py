@@ -33,6 +33,7 @@ class Alert(BaseModel):
     severity: str
     description: str
     expires_at: str | None = None
+    ends_at: str | None = None
     sent_at: str | None = None
     effective_at: str | None = None
     instruction: str | None = None

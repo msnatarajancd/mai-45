@@ -92,3 +92,50 @@ def test_bad_inputs_do_not_request(monkeypatch):
     assert nws_alerts.get_alerts('unknown', AppMode.LIVE).status == 'unavailable'
     assert nws_alerts.get_alerts('miami', 'unknown').status == 'unavailable'
     assert not calls
+
+
+@pytest.mark.parametrize('ends,expires,elapsed,stale', [
+    (1, 3600, 2, True),  # Confirmed 12:00:00 -> 12:00:02 reproduction.
+    (3600, 1, 2, True),
+    (1, 3600, 1, True),
+    (1, 3600, 0.999, False),
+    (None, 3600, 2, False),
+    (3600, 3600, 300, False),
+    (3600, 3600, 300.001, True),
+])
+def test_adapter_preserves_deadlines_and_display_matches_m2(monkeypatch, ends, expires, elapsed, stale):
+    from datetime import timedelta
+    from m2_guardian.service import normalize
+    from ui import alert_freshness
+    payload = alert_payload()
+    p = payload['features'][0]['properties']
+    p['expires'] = (NOW+timedelta(seconds=expires)).isoformat()
+    if ends is not None:
+        p['ends'] = (NOW+timedelta(seconds=ends)).isoformat()
+    calls = install(monkeypatch, payload)
+    snapshot = nws_alerts.get_alerts('miami', AppMode.LIVE)
+    original = snapshot.model_dump_json()
+    assert snapshot.alerts[0].expires_at == p['expires']
+    assert snapshot.alerts[0].ends_at == p.get('ends')
+    later = NOW+timedelta(seconds=elapsed)
+    monkeypatch.setattr(alert_freshness, 'utc_now', lambda: later)
+    reason = alert_freshness.snapshot_staleness(snapshot)
+    assert bool(reason) is stale
+    # The UI also imposes the five-minute snapshot window; within it, deadline
+    # classification must agree with authoritative M2 normalization.
+    if elapsed <= 300:
+        assert bool(reason) == (not normalize(payload, later))
+    assert snapshot.model_dump_json() == original
+    assert len(calls) == 1
+
+
+def test_end_timestamp_offset_is_preserved_and_compared_instantaneously(monkeypatch):
+    from datetime import timedelta
+    from ui import alert_freshness
+    payload = alert_payload()
+    payload['features'][0]['properties']['ends'] = '2026-11-03T07:00:01-05:00'
+    install(monkeypatch, payload)
+    snapshot = nws_alerts.get_alerts('miami', AppMode.LIVE)
+    assert snapshot.alerts[0].ends_at == '2026-11-03T07:00:01-05:00'
+    monkeypatch.setattr(alert_freshness, 'utc_now', lambda: NOW+timedelta(seconds=1))
+    assert 'ended or expired' in alert_freshness.snapshot_staleness(snapshot)
