@@ -3,13 +3,14 @@ import os
 import re
 import sqlite3
 from pathlib import Path
-from uuid import UUID
+from uuid import UUID, uuid4
+from datetime import date, datetime, time, timezone
 import streamlit as st
 from recovery.assessment import start_recovery_case, RecoveryIntakeNotPermitted
 from recovery.database import SQLiteRecoveryRepository
 from recovery.demo_planner import create_demo_draft_plan
 from recovery.models import (RecoveryIntake, RecoveryPlan, TaskStatus, RecoveryRecords,
-                             HouseholdRecoveryDetails, DamageRecord)
+                             HouseholdRecoveryDetails, DamageRecord, RecoveryCase)
 from recovery.insurance import insurance_discussion_summary
 from recovery.reassessment import preview_reassessment, ReassessmentPreview
 from ui.components import heading
@@ -23,6 +24,12 @@ DANGER = ['Choose an assessment', 'No immediate danger reported', 'Immediate dan
 
 def repository():
     path = Path(os.environ.get('READYRELIEF_DB_PATH', Path(__file__).resolve().parents[1] / '.local/recovery.sqlite3')).expanduser().resolve()
+    if st.session_state.get('rr_demo_active'):
+        from recovery.demo_session import selection_for_case
+        selection = selection_for_case(st.session_state, st.session_state.get('rr_case_id'))
+        path = Path(st.session_state['rr_demo_database_path'])
+        as_of = date.fromisoformat(selection['as_of'])
+        return SQLiteRecoveryRepository(path, clock=lambda: datetime.combine(as_of, time(18), timezone.utc))
     path.parent.mkdir(parents=True, exist_ok=True)
     return SQLiteRecoveryRepository(path)
 
@@ -75,6 +82,7 @@ def intake_fields(prefix, defaults=None):
 
 
 def new_case(repo):
+    import json
     guard_pending_danger()
     seed = None
     ready = st.session_state.get('rr_extraction_ready')
@@ -83,6 +91,8 @@ def new_case(repo):
         if candidate.previous_case is None and ready['review_id'] == candidate.review_id:
             seed = candidate
     defaults = selected_changes(seed, ready['selected'], ready['corrections'])[0] if seed else None
+    seed_selection = json.dumps(dict(review_id=seed.review_id, selected=ready['selected'],
+        corrections=ready['corrections']), sort_keys=True) if seed else None
     a, b = st.columns([1.3, 1], gap='large')
     with a:
         st.subheader('Tell us what has changed.')
@@ -93,26 +103,66 @@ def new_case(repo):
             from ui.emergency_page import _report_danger
             _report_danger('recovery')
             st.rerun()
+        if danger != DANGER[1]:
+            st.session_state.pop('rr_initial_preview', None)
         with st.form('rr_intake'):
             fields = intake_fields('new_'+seed.review_id if seed else 'new_', defaults)
+            details = None
+            if not seed:
+                from recovery.assessment_ui import optional_details
+                details = optional_details(RecoveryRecords(case_id=uuid4()), prefix='rr_new_details:', offer_profile=True)
             seed_confirmed = False
             if seed:
                 st.caption('The intake is prefilled from your selected review. Household, county and damage changes shown in that review will also be saved only when you confirm and create the case.')
                 seed_confirmed = st.checkbox('I confirm the selected household and damage details with this intake')
             submitted = st.form_submit_button('Create draft plan', type='primary')
         if submitted:
+            guard_pending_danger()
+            screen_intake_narratives(fields)
             if danger != DANGER[1]:
                 st.error('Select an explicit danger assessment before creating a case. Nothing has been saved.')
                 return
+            if seed and not seed_confirmed:
+                st.error('Confirm the selected household and damage details before reviewing your situation.')
+                return
+            if details:
+                fields['household_recovery_needs'] = list(dict.fromkeys(fields['household_recovery_needs'] + details['profile_needs']))
+                for value in [details['housing_type'] or '', *details['accessibility_needs']]:
+                    interrupt_recovery_report(value)
             intake = RecoveryIntake(**fields, immediate_danger=False)
+            from recovery.assessment_ui import apply_optional_details
+            proposed_records = selected_changes(seed, ready['selected'], ready['corrections'])[1] if seed else apply_optional_details(RecoveryRecords(case_id=uuid4()), details)
+            st.session_state['rr_initial_preview'] = dict(intake=intake.model_dump(mode='json'), records=proposed_records.model_dump(mode='json'),
+                seed_id=seed.review_id if seed else None, seed_selection=seed_selection, seed_confirmed=seed_confirmed)
+        preview = st.session_state.get('rr_initial_preview')
+        if preview and (preview.get('seed_id') != (seed.review_id if seed else None)
+                        or preview.get('seed_selection') != seed_selection):
+            st.session_state.pop('rr_initial_preview', None)
+            preview = None
+            st.warning('Your selected details changed. Create a fresh situation summary before confirming.')
+        if preview:
+            st.subheader('Your situation to review')
+            from recovery.dashboard_ui import render_situation
+            intake = RecoveryIntake.model_validate(preview['intake'])
+            proposed_records = RecoveryRecords.model_validate(preview['records'])
+            render_situation(intake, proposed_records)
+            st.caption('Nothing is saved yet. To change this summary, edit the form and select Create draft plan again. Confirmation applies to this displayed summary.')
+        if preview and st.button('Confirm situation and create draft', type='primary'):
             guard_pending_danger()
+            if danger != DANGER[1]:
+                raise ValueError('Confirm a current no-immediate-danger assessment first.')
             if seed:
-                case = accept_review(repo, seed, ready['selected'], corrections=ready['corrections'],
-                    explicitly_confirmed=seed_confirmed, safety_answer=False, reviewed_intake=intake)
+                if preview['seed_id'] != seed.review_id:
+                    raise ValueError('This proposal changed. Review your situation again.')
+                confirmed_selection = json.loads(preview['seed_selection'])
+                case = accept_review(repo, seed, confirmed_selection['selected'], corrections=confirmed_selection['corrections'],
+                    explicitly_confirmed=preview['seed_confirmed'], safety_answer=False, reviewed_intake=intake)
                 st.session_state.pop('rr_extraction_review', None)
                 st.session_state.pop('rr_extraction_ready', None)
             else:
-                case = start_recovery_case(intake, repo)
+                case = RecoveryCase(case_id=proposed_records.case_id, intake=intake)
+                repo.create_case(case, confirmed_records=proposed_records, explicitly_confirmed=True)
+            st.session_state.pop('rr_initial_preview', None)
             clear_view()
             st.session_state['rr_case_id'] = str(case.case_id)
             st.session_state['rr_draft'] = create_demo_draft_plan(case, repo.get_recovery_records(case.case_id)).model_dump_json()
@@ -128,18 +178,22 @@ def new_case(repo):
             resume = st.form_submit_button('Resume saved case')
         if resume:
             try:
+                if st.session_state.get('rr_demo_active'):
+                    raise ValueError('Leave the fictional replay before opening another case.')
                 case = repo.get_case(UUID(case_id.strip()))
                 if not case:
                     raise ValueError('No saved case was found on this machine.')
                 guard_pending_danger()
                 clear_view()
+                from recovery.demo_session import reset_assessment_controls
+                reset_assessment_controls(st.session_state)
                 st.session_state['rr_case_id'] = str(case.case_id)
                 st.rerun()
             except ValueError:
                 st.error('Enter a valid saved case ID from this machine. No case was changed.')
 
 
-def evidence(task, county=None, review=None):
+def evidence(task, county=None, review=None, case=None, records=None):
     st.caption('Why this step: ' + (review.explanation if review else task.reason_for_recommendation))
     for dependency in task.dependencies:
         st.caption('Before this step: '+dependency)
@@ -153,6 +207,20 @@ def evidence(task, county=None, review=None):
         st.write('Source reference: ' + task.source_reference)
     else:
         st.caption('Evidence: demonstration template / reported needs. No verified official source is attached.')
+    if case is not None and records is not None:
+        from recovery.task_guidance import guidance_for_task
+        guidance = guidance_for_task(task, case, records)
+        if guidance.citations:
+            st.caption('Reviewed guidance relevant to this step. It does not verify your circumstances or every statement in the organization task.')
+            for citation in guidance.citations:
+                st.link_button('Reviewed guidance: '+citation.title, citation.official_url)
+                st.write(citation.passage)
+                for caveat in citation.safety_caveats:
+                    st.caption(caveat)
+            if guidance.insufficient_evidence:
+                st.caption('Only limited reviewed evidence is available for this topic.')
+        else:
+            st.caption('Reviewed guidance: '+guidance.answer)
 
 
 def planning(repo, case):
@@ -178,7 +246,8 @@ def planning(repo, case):
             st.caption(f'STEP {i:02d} · {task.priority.value} PRIORITY')
             st.subheader(task.title)
             st.write(task.description)
-            evidence(task, records.reported_county)
+            with st.expander('Why this step / evidence', key='draft_evidence_'+str(task.task_id)):
+                evidence(task, records.reported_county, case=case, records=records)
     if draft.planning_disclosure:
         st.warning(draft.planning_disclosure)
     approved = st.checkbox('I reviewed these tasks and want to accept this plan', key='rr_reviewed')
@@ -199,7 +268,7 @@ def planning(repo, case):
 
 def reassessment(repo, case, plan):
     guard_pending_danger()
-    with st.expander('Circumstances changed? Review an update'):
+    with st.expander('Circumstances changed? Review an update', expanded=st.session_state.get('rr_open_situation', False), key=f'rr_reassessment_section:{case.case_id}:{st.session_state.get("rr_open_situation", False)}'):
         st.caption('Your accepted plan stays active until you approve a revision. Existing tasks and completed progress are retained.')
         danger = st.selectbox('Updated immediate danger assessment', DANGER, key='rr_update_danger')
         if danger == DANGER[2]:
@@ -207,13 +276,12 @@ def reassessment(repo, case, plan):
             from ui.emergency_page import _report_danger
             _report_danger('recovery')
             st.rerun()
-        if danger != DANGER[1]:
-            st.session_state.pop('rr_revision', None)
         with st.form('rr_reassessment'):
             fields = intake_fields('updated_'+str(plan.plan_id), case.intake)
             submitted = st.form_submit_button('Preview proposed changes')
         if submitted:
             st.session_state.pop('rr_revision', None)
+            screen_intake_narratives(fields)
             if danger != DANGER[1]:
                 st.error('An explicit no-immediate-danger report is required before routine reassessment.')
             else:
@@ -242,8 +310,13 @@ def reassessment(repo, case, plan):
             for recommendation in preview.relevant_tasks:
                 st.caption('Continue/update: '+recommendation.task.title+' / '+recommendation.explanation)
             st.success(f'{len(preview.completed_tasks)} completed tasks preserved. No existing tasks will be removed.')
+            if danger != DANGER[1]:
+                st.info('Recheck current danger before approving this proposal.')
+                return
             if st.button('Approve this revision', type='primary'):
                 guard_pending_danger()
+                if danger != DANGER[1]:
+                    raise ValueError('Confirm a current no-immediate-danger assessment first.')
                 repo.approve_reassessment(preview, explicitly_approved=True)
                 st.session_state.pop('rr_revision', None)
                 st.session_state['rr_notice'] = 'Revision approved. Your earlier progress and plan history are preserved.'
@@ -252,11 +325,16 @@ def reassessment(repo, case, plan):
 
 def dashboard(repo, case, plan):
     guard_pending_danger()
-    county = repo.get_recovery_records(case.case_id).reported_county
+    from recovery.dashboard_ui import render_overview
+    from recovery.task_view import current_task_views
+    view = render_overview(repo, case, plan)
+    reassessment(repo, case, plan)
+    records = repo.get_recovery_records(case.case_id)
+    county = records.reported_county
     version_key = 'rr_displayed_version:' + str(plan.plan_id)
     rendered_version = st.session_state.get(version_key, plan.progress_version)
     current_tasks = [t for t in plan.proposed_tasks if str(t.task_id) not in plan.task_reviews or plan.task_reviews[str(t.task_id)].applicable]
-    completed = sum(t.status == TaskStatus.COMPLETED for t in plan.proposed_tasks)
+    completed = view.counts.completed
     blocked = sum(t.status == TaskStatus.BLOCKED for t in current_tasks)
     a, b, c = st.columns(3)
     a.metric('Steps completed', str(completed))
@@ -264,19 +342,23 @@ def dashboard(repo, case, plan):
     c.metric('Needs attention', str(blocked))
     st.caption('No-longer-applicable tasks retain their recorded status and history but are excluded from remaining/blocked counts.')
     st.progress(completed / max(1, len(current_tasks)), text='Progress through your accepted plan — not a measure of safety')
-    st.subheader('One step at a time.')
+    st.subheader('Your current tasks')
+    st.caption('Recorded by you · Completed steps remain in your history when circumstances change.')
     if plan.planning_disclosure:
         st.warning(plan.planning_disclosure)
     st.caption('Locally saved fictional recovery plan · Changes require your approval')
-    order = {'URGENT':0, 'HIGH':1, 'MEDIUM':2, 'LOW':3}
-    displayed_tasks = sorted(plan.proposed_tasks, key=lambda task: order[(plan.task_reviews[str(task.task_id)].priority if str(task.task_id) in plan.task_reviews and plan.task_reviews[str(task.task_id)].priority else task.priority).value])
-    for i, task in enumerate(displayed_tasks, 1):
-        review = plan.task_reviews.get(str(task.task_id))
+    task_filter = st.selectbox('Show tasks', ['All current tasks', 'Not started', 'In progress', 'Blocked', 'Completed'], key='rr_task_filter:'+str(case.case_id))
+    i = 0
+    for task_view in current_task_views(plan):
+        task, review = task_view.task, task_view.review
         if review and not review.applicable:
             with st.expander('No longer applicable: '+task.title):
                 st.write(review.explanation)
                 st.caption('Historical user-reported status retained: '+task.status.value)
             continue
+        if task_filter != 'All current tasks' and task.status.value.replace('_', ' ').casefold() != task_filter.casefold():
+            continue
+        i += 1
         with st.container(border=True):
             left, right = st.columns([2.2, 1])
             with left:
@@ -286,7 +368,7 @@ def dashboard(repo, case, plan):
                 if review:
                     st.caption(review.explanation)
                 with st.expander('Why this step / evidence', key='evidence_'+str(task.task_id)):
-                    evidence(task, county, review)
+                    evidence(task, county, review, case=case, records=records)
             with right, st.form('task_'+str(plan.plan_id)+'_'+str(task.task_id)):
                 options = list(TaskStatus)
                 status = st.selectbox('Status · ' + task.title, options, index=options.index(task.status), format_func=lambda s:s.value.replace('_', ' ').title(), key=f'rr_progress:{task.task_id}:{plan.progress_version}')
@@ -302,14 +384,17 @@ def dashboard(repo, case, plan):
         if not history:
             st.caption('No recorded status transitions. Earlier legacy updates are not reconstructed.')
     st.session_state[version_key] = plan.progress_version
-    reassessment(repo, case, plan)
     with st.expander('Plan history and take-away copy'):
         st.caption('The download contains fictional case information. Keep it to resume on this same machine.')
         text = 'READYRELIEF — FICTIONAL DEMO RECOVERY PLAN\nCase ID: ' + str(case.case_id) + '\nNot official guidance. Not a safety assessment.\n\n'
-        for i, task in enumerate(plan.proposed_tasks, 1):
-            review = plan.task_reviews.get(str(task.task_id))
+        for i, task_view in enumerate(current_task_views(plan), 1):
+            task, review = task_view.task, task_view.review
             label = ('NO LONGER APPLICABLE; historical status '+task.status.value) if review and not review.applicable else task.status.value
-            text += f'\n\n{i}. [{label}] {task.title}\n'+(review.description if review else task.description)+'\nReason: '+(review.explanation if review else task.reason_for_recommendation)+'\nSource: '+(task.source_reference or 'No verified guidance reference attached')
+            text += f'\n\n{i}. [{label}] {task.title}\nPriority: {task_view.priority.value}\n'+task_view.description+'\nReason: '+task_view.explanation+'\nPrerequisites: '+('; '.join(task.dependencies) or 'None specified')+'\nSource: '+(task.source_reference or 'No verified guidance reference attached')
+            if task.resource_categories:
+                from services.assistance_pathways import find_resources
+                for resource in find_resources(' '.join(task.resource_categories), county=county):
+                    text += '\nOfficial pathway: '+resource.title+' — '+resource.url+'\n'+resource.caveat
         st.download_button('Download my demo plan', text, file_name='readyrelief-demo-plan.txt', mime='text/plain')
         histories = repo.list_approved_plans(case.case_id)
         st.caption(f'{len(histories)} approved plan version(s). Historical versions remain in SQLite.')
@@ -366,9 +451,14 @@ def recovery_records(repo, case):
                                 index=options.index({None: 'Unknown', True: 'Yes', False: 'No'}[h.wants_insurance_help]))
         county = st.selectbox('Confirmed county (optional)', ['Unknown', 'Miami-Dade'],
                               index=1 if snapshot.reported_county else 0)
+        from recovery.assessment_ui import optional_details
+        additional = optional_details(snapshot, prefix=prefix+'additional:', include_county=False)
         confirmed = st.checkbox('I confirm these household details')
         save = st.form_submit_button('Save confirmed household details')
     if save:
+        interrupt_recovery_report(damage)
+        for value in [additional['housing_type'] or '', *additional['accessibility_needs']]:
+            interrupt_recovery_report(value)
         if not confirmed:
             st.error('Confirm the details first. Nothing was saved.')
         else:
@@ -379,9 +469,12 @@ def recovery_records(repo, case):
                     raise ValueError('Household counts must be whole nonnegative numbers or blank.')
                 return int(text.strip())
             proposal = snapshot.model_copy(deep=True)
-            proposal.household = HouseholdRecoveryDetails(children=count(children), adults=count(adults),
-                reported_property_damage=damage.strip() or None,
-                wants_insurance_help={'Unknown': None, 'Yes': True, 'No': False}[insurance])
+            proposal.household.children = count(children)
+            proposal.household.adults = count(adults)
+            proposal.household.reported_property_damage = damage.strip() or None
+            proposal.household.wants_insurance_help = {'Unknown': None, 'Yes': True, 'No': False}[insurance]
+            from recovery.assessment_ui import apply_optional_details
+            proposal = apply_optional_details(proposal, additional)
             proposal.reported_county = None if county == 'Unknown' else county
             guard_pending_danger()
             saved = repo.save_recovery_records(proposal, expected_version=snapshot.version, explicitly_confirmed=True)
@@ -412,6 +505,8 @@ def recovery_records(repo, case):
         confirmed = st.checkbox('I confirm this damage record')
         save = st.form_submit_button('Save confirmed damage record')
     if save:
+        for narrative in (description, reported, notes):
+            interrupt_recovery_report(narrative)
         if not confirmed:
             st.error('Confirm the damage record first. Nothing was saved.')
         else:
@@ -433,6 +528,13 @@ def recovery_records(repo, case):
 
 
 def recovery_landing():
+    if st.session_state.get('rr_case_id'):
+        with st.expander('Report a change', expanded=False):
+            return _recovery_actions()
+    return _recovery_actions()
+
+
+def _recovery_actions():
     """Explicit extraction or local navigation; descriptions are never saved automatically."""
     heading('03 / Recover', 'What do you need help with today?')
     st.subheader('Recovery Copilot')
@@ -507,6 +609,18 @@ def assistance(county=None):
     st.caption('Directory links are not M3-reviewed guidance and are not supplied to Qwen as verified evidence. Separately reviewed guidance remains available below.')
     from ui.guidance import render as grounded_guidance
     grounded_guidance('recover')
+
+
+def screen_intake_narratives(fields):
+    # Fixed assessment categories describe reported aftermath; e.g. "Flooded"
+    # is not a new free-text report that water is rising now. Legacy/custom
+    # values still receive the shared current-danger check.
+    known = set(CHOICES.get('housing_condition', [])) | set(CHOICES.get('temporary_accommodation', [])) | set(NEEDS)
+    known.update(['Unknown', 'Minor reported damage', 'Major reported damage', 'No damage reported',
+                  'Staying with others', 'Staying in temporary lodging', 'No lodging arranged'])
+    for value in [fields['housing_condition'], fields['temporary_accommodation_status'], *fields['household_recovery_needs']]:
+        if value not in known:
+            interrupt_recovery_report(value)
 
 
 def interrupt_recovery_report(message):
@@ -630,6 +744,12 @@ def extraction_confirmation(repo):
         st.caption('Unknown (not inferred): ' + (', '.join(unknown) or 'none'))
         preview = st.form_submit_button('Review selected changes')
     if preview:
+        for name, value in corrections.items():
+            if name in CHOICES:
+                continue
+            for text in value if isinstance(value, list) else [value]:
+                if isinstance(text, str):
+                    interrupt_recovery_report(text)
         st.session_state.pop('rr_extraction_ready', None)
         if not selected:
             st.error('Select at least one resolved change. Nothing was saved.')
@@ -667,6 +787,12 @@ def extraction_confirmation(repo):
         danger = False if answer == DANGER[1] else None
     confirmed = st.checkbox('I confirm the selected changes shown above', key='rr_extraction_confirm:'+review.review_id+str(ready['selected'])+str(ready['corrections']))
     if st.button('Confirm selected changes', type='primary'):
+        for name, value in ready['corrections'].items():
+            if name in CHOICES:
+                continue
+            for text in value if isinstance(value, list) else [value]:
+                if isinstance(text, str):
+                    interrupt_recovery_report(text)
         guard_pending_danger()
         case = accept_review(repo, review, ready['selected'], corrections=ready['corrections'],
             explicitly_confirmed=confirmed, safety_answer=danger, approved_revision=revision)
@@ -682,6 +808,8 @@ def extraction_confirmation(repo):
 
 def render():
     guard_pending_danger()
+    from recovery.dashboard_ui import scenario_picker
+    scenario_picker()
     focus = recovery_landing()
     notice = st.session_state.pop('rr_notice', None)
     if notice:
@@ -722,13 +850,9 @@ def render():
         if case is None:
             st.error('This case is not available on this machine. Resume a saved case or start a new fictional case.')
         else:
-            with st.expander('Saved case · Keep this ID to resume'):
-                st.code(str(case.case_id), language=None)
-                st.caption('No account or cross-device access. A case ID is not authentication. Only fictional data belongs here.')
             if case.intake.immediate_danger is not False:
                 st.warning('This case has a danger report or an incomplete assessment. Routine changes are paused. Emergency controls remain above; this UI cannot clear a saved danger report.')
             else:
-                st.caption('Using your saved confirmed case. Your description does not overwrite it.')
                 if focus == 'Find assistance':
                     assistance(repo.get_recovery_records(case.case_id).reported_county)
                 elif focus == 'Document damage':
@@ -741,8 +865,15 @@ def render():
                         dashboard(repo, case, plan)
                     else:
                         planning(repo, case)
+            with st.expander('Saved case · Keep this ID to resume'):
+                st.code(str(case.case_id), language=None)
+                st.caption('Use Resume fictional replay in the journey picker to return to this replay.' if st.session_state.get('rr_demo_active') else 'Use Resume saved case in the structured intake to return.')
+                st.caption('No account or cross-device access. A case ID is not authentication. Only fictional data belongs here.')
         if st.button('Open a different case'):
             guard_pending_danger()
+            from recovery.demo_session import leave_demo, reset_assessment_controls
+            leave_demo(st.session_state)
+            reset_assessment_controls(st.session_state)
             st.session_state.pop('rr_case_id', None)
             clear_view()
             st.rerun()

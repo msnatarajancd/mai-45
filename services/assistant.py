@@ -10,6 +10,7 @@ from domain.contracts import AppMode, Household
 from emergency.service import recovery_requires_emergency, screen_report
 from emergency.workflow import begin_emergency
 from recovery.models import RecoveryIntake, RecoveryPlan, TaskStatus
+from recovery.task_view import current_task_views
 from recovery.llm_client import NebiusClient, PlanningClientError, RecoveryLLMClient
 from ui.capabilities import GUIDE
 
@@ -79,15 +80,17 @@ def capture(state, repo):
     case_id = state.get('rr_case_id')
     case = repo.get_case(UUID(case_id)) if repo and case_id else None
     plan = repo.get_active_plan(case.case_id) if repo and case else None
+    records = repo.get_recovery_records(case.case_id) if repo and case else None
     return json.dumps(dict(location=state['location_id'],mode=state['mode'],household=state['household'].model_dump(),case_id=case_id,
         case=case.model_dump(mode='json') if case else None,plan=plan.model_dump(mode='json') if plan else None,
+        records=records.model_dump(mode='json') if records else None,
         draft=state.get('rr_draft'),emergency=state.get('rr_emergency',False),
         emergency_epoch=state.get('rr_emergency_epoch',0),pending=state.get('rr_pending_danger',[])),sort_keys=True)
 
 
 def app_context(state,repo):
     data=json.loads(capture(state,repo))
-    return dict(page=state['page'],location=data['location'],mode=data['mode'],household=data['household'],case=data['case'],plan=data['plan'],draft=data['draft'],storage_available=repo is not None)
+    return dict(page=state['page'],location=data['location'],mode=data['mode'],household=data['household'],case=data['case'],plan=data['plan'],records=data['records'],draft=data['draft'],storage_available=repo is not None)
 
 
 def propose(text,state,repo,client=None,history=()):
@@ -148,6 +151,14 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
     if not confirmed: raise ValueError('Confirm the proposed action first.')
     if proposal.proposal_id in state.get('assistant_consumed',[]): raise ValueError('This action has already been used.')
     if proposal.action is None: raise ValueError('There is no action to perform.')
+    if proposal.action.kind in {'draft_plan','reassess'}:
+        intake=proposal.action.intake
+        for narrative in (intake.housing_condition,intake.temporary_accommodation_status,
+                          *intake.household_recovery_needs,*intake.utility_availability):
+            if recovery_requires_emergency(narrative):
+                decision=screen_report(narrative,entrypoint='recovery')
+                begin_emergency(state,decision,entrypoint='recovery',event_id=str(uuid4()))
+                return _emergency_proposal().answer
     if capture(state,repo)!=proposal.snapshot: raise ValueError('Your context or saved plan changed. Ask again for a fresh proposal.')
     if state.get('rr_emergency'): raise ValueError('Routine actions are paused during an emergency interruption.')
     a=proposal.action
@@ -188,12 +199,16 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
         message=('SIMULATED: '+result.alerts[0].headline) if result.simulated and result.alerts else result.message or ('No active alerts returned; this does not establish safety.' if result.status=='none' else 'Alert result loaded.')
     elif kind=='show_plan':
         if not plan: message='No approved plan is open. Open or resume a recovery case first.'
-        else: message='Saved plan:\n'+'\n'.join(f'{i}. {t.title} — {t.status.value}' + (' (historical / no longer applicable)' if str(t.task_id) in plan.task_reviews and not plan.task_reviews[str(t.task_id)].applicable else '') for i,t in enumerate(plan.proposed_tasks,1))
+        else: message='Saved plan:\n'+'\n'.join(f'{i}. {view.task.title} — {view.task.status.value}' + (' (historical / no longer applicable)' if not view.applicable else '') for i,view in enumerate(current_task_views(plan),1))
     elif kind=='resume_case':
+        if state.get('rr_demo_active'):
+            raise ValueError('Leave the fictional recovery scenario before opening another saved case.')
         resumed=repo.get_case(a.case_id)
         if not resumed: raise ValueError('That fictional case was not found on this machine.')
         from ui.state import clear_recovery_view
         clear_recovery_view(state)
+        from recovery.demo_session import reset_assessment_controls
+        reset_assessment_controls(state)
         state['rr_case_id']=str(a.case_id)
         message='Case opened. Ask “show my plan” to see saved tasks.'
     elif kind in {'draft_plan','reassess'}:
@@ -205,14 +220,15 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
             from recovery.demo_planner import create_demo_draft_plan
             case=start_recovery_case(intake,repo)
             state['rr_case_id']=str(case.case_id)
-            state['rr_draft']=create_demo_draft_plan(case).model_dump_json()
+            state['rr_draft']=create_demo_draft_plan(case,repo.get_recovery_records(case.case_id)).model_dump_json()
             message='Fictional case saved and an unapproved template draft prepared. Review the draft below or in Recover before accepting it.'
         else:
             if not plan: raise ValueError('Approve an initial plan before reassessing.')
             # Do not silently remove utility keys omitted by the model.
             intake.utility_availability=case.intake.utility_availability | intake.utility_availability
             from recovery.reassessment import preview_reassessment
-            preview=preview_reassessment(case,plan,intake)
+            records=repo.get_recovery_records(case.case_id)
+            preview=preview_reassessment(case,plan,intake,previous_records=records,updated_records=records)
             state['rr_revision']=preview.model_dump_json()
             state['rr_update_danger']='No immediate danger reported'
             state['page']='Recover'
@@ -221,15 +237,19 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
         if not state.get('rr_draft'): raise ValueError('There is no draft to review.')
         draft=RecoveryPlan.model_validate_json(state['rr_draft'])
         if draft.case_id!=case.case_id: raise ValueError('Draft does not belong to this case.')
-        if not repo.get_plan(draft.plan_id): repo.save_draft_plan(draft)
-        repo.approve_plan(draft.plan_id)
+        if not repo.get_plan(draft.plan_id):
+            repo.approve_plan(draft.plan_id,new_draft=draft,explicitly_approved=True)
+        else:
+            repo.approve_plan(draft.plan_id)
         state.pop('rr_draft',None)
         state.pop('rr_reviewed',None)
         message='Reviewed recovery plan approved and saved locally.'
     elif kind=='update_task':
         if not plan or not any(t.task_id==a.task_id for t in plan.proposed_tasks): raise ValueError('That task is not in the current active plan.')
-        bound_plan=json.loads(proposal.snapshot)['plan']
-        task=repo.update_task_status(UUID(bound_plan['plan_id']),a.task_id,a.status,expected_progress_version=bound_plan['progress_version'])
+        bound=json.loads(proposal.snapshot)
+        bound_plan=bound['plan']
+        task=repo.update_task_status(UUID(bound_plan['plan_id']),a.task_id,a.status,
+            expected_progress_version=bound_plan['progress_version'],expected_records_version=bound['records']['version'])
         message=f'Saved “{task.title}” as {task.status.value.replace("_"," ").lower()}.'
     else: raise ValueError('Unsupported action.')
     state['assistant_consumed']=(state.get('assistant_consumed',[])+[proposal.proposal_id])[-100:]

@@ -1,0 +1,146 @@
+{
+  "classification": "SYNTHETIC_FICTIONAL",
+  "scenarios": [
+    {
+      "scenario_id": "rivera",
+      "label": "Synthetic fictional Rivera household · first week",
+      "description": "Synthetic fictional accommodation arranged while mobility-related transportation remains needed. Recorded progress never establishes household safety.",
+      "classification": "SYNTHETIC_FICTIONAL",
+      "incident_date": "2026-10-01",
+      "intake": {
+        "disaster_type": "Hurricane",
+        "housing_condition": "Synthetic fictional roof and window damage reported",
+        "utility_availability": {"electricity": false, "water": null},
+        "temporary_accommodation_status": "needed",
+        "immediate_danger": false,
+        "household_recovery_needs": ["temporary housing", "transportation", "damage documentation", "insurance preparation"]
+      },
+      "household": {"adults": 2, "children": 1, "housing_type": "Owner-occupied home", "accessibility_needs": ["Household reports limited mobility and needing accessible transportation"], "insurer_contact_status": "Not contacted", "wants_insurance_help": true},
+      "damage_records": [{"item_description": "Synthetic fictional living-room window", "damage_description": "Household reports broken glass based on information already known."}],
+      "next_check_in_date": "2026-10-08",
+      "checkpoints": [
+        {"day": 1, "summary": "Synthetic fictional first assessment and approved organization plan."},
+        {"day": 3, "summary": "Synthetic fictional household reports staying with others and electricity available; mobility-related transportation is still needed and water remains unknown.", "task_statuses": {"housing": "COMPLETED", "transport": "BLOCKED"}, "approved_intake": {"temporary_accommodation_status": "staying with others", "utility_availability": {"electricity": true, "water": null}}},
+        {"day": 7, "summary": "Synthetic fictional damage information organized and listed utilities reported available; accessible transportation remains needed, without a safety determination.", "task_statuses": {"damage": "COMPLETED"}, "approved_intake": {"utility_availability": {"electricity": true, "water": true}}, "confirmed_household": {"insurer_contact_status": "Contacted"}, "next_check_in_date": "2026-10-15"}
+      ]
+    },
+    {
+      "scenario_id": "bennett",
+      "label": "Synthetic fictional Bennett household · renter first week",
+      "description": "Synthetic fictional renter documentation with a pending proposal that has not been approved or saved.",
+      "classification": "SYNTHETIC_FICTIONAL",
+      "incident_date": "2026-10-01",
+      "intake": {
+        "disaster_type": "Flood",
+        "housing_condition": "Synthetic fictional rented apartment water damage reported",
+        "utility_availability": {"electricity": true, "water": true},
+        "temporary_accommodation_status": "staying with others",
+        "immediate_danger": false,
+        "household_recovery_needs": ["damage documentation"]
+      },
+      "household": {"adults": 1, "children": 0, "housing_type": "Rented apartment", "wants_insurance_help": true, "insurer_contact_status": "Not contacted"},
+      "damage_records": [{"item_description": "Synthetic fictional bookcase", "damage_description": "Household reports water staining; no inspection was requested."}],
+      "next_check_in_date": "2026-10-08",
+      "checkpoints": [
+        {"day": 1, "summary": "Synthetic fictional renter details recorded and organization plan approved."},
+        {"day": 3, "summary": "Synthetic fictional renter reports organizing the already known damage information.", "task_statuses": {"damage": "COMPLETED", "insurance": "IN_PROGRESS"}},
+        {"day": 7, "summary": "Synthetic fictional no additional confirmed changes; a transportation proposal awaits review.", "pending_intake": {"household_recovery_needs": ["damage documentation", "transportation"]}, "pending_change_description": "Synthetic fictional proposal: add a newly reported transportation need. This revision is pending review and approval; saved facts and tasks are unchanged."}
+      ]
+    },
+    {
+      "scenario_id": "patel",
+      "label": "Synthetic fictional Patel household · sparse first week",
+      "description": "Synthetic fictional sparse reports preserve unknown household facts and an unchanged checkpoint.",
+      "classification": "SYNTHETIC_FICTIONAL",
+      "incident_date": "2026-10-01",
+      "intake": {
+        "disaster_type": "Hurricane",
+        "housing_condition": "Synthetic fictional household has not yet reported housing details",
+        "utility_availability": {"electricity": null, "water": null},
+        "temporary_accommodation_status": "unknown",
+        "immediate_danger": false,
+        "household_recovery_needs": []
+      },
+      "household": {},
+      "checkpoints": [
+        {"day": 1, "summary": "Synthetic fictional limited assessment recorded; household counts and service details remain unknown."},
+        {"day": 3, "summary": "Synthetic fictional unchanged checkpoint: nothing new was recorded."},
+        {"day": 7, "summary": "Synthetic fictional household reports staying with others; other missing facts remain unknown.", "approved_intake": {"temporary_accommodation_status": "staying with others"}, "next_check_in_date": "2026-10-15"}
+      ]
+    },
+    {
+      "scenario_id": "chen",
+      "label": "Synthetic fictional Chen household · insurer follow-up month",
+      "description": "Synthetic fictional completed documentation remains visible as insurer follow-up and additional damage information arrive later.",
+      "classification": "SYNTHETIC_FICTIONAL",
+      "incident_date": "2026-10-01",
+      "intake": {
+        "disaster_type": "Flood",
+        "housing_condition": "Synthetic fictional ground-floor water damage reported",
+        "utility_availability": {"electricity": true, "water": true},
+        "temporary_accommodation_status": "staying with others",
+        "immediate_danger": false,
+        "household_recovery_needs": ["damage documentation", "insurance preparation"]
+      },
+      "household": {"adults": 1, "children": 1, "housing_type": "Owner-occupied home", "wants_insurance_help": true, "insurer_contact_status": "Not contacted"},
+      "damage_records": [{"item_description": "Synthetic fictional dining table", "damage_description": "Household reports water damage from information already known.", "notes": "Synthetic fictional policy information has not been located."}],
+      "next_check_in_date": "2026-10-08",
+      "checkpoints": [
+        {"day": 1, "summary": "Synthetic fictional insurer discussion preparation awaits household action."},
+        {"day": 3, "summary": "Synthetic fictional known documentation marked completed; insurance preparation blocked while policy details are missing.", "task_statuses": {"damage": "COMPLETED", "insurance": "BLOCKED"}},
+        {"day": 7, "summary": "Synthetic fictional insurer contact reported; the household has not changed its blocked task status.", "confirmed_household": {"insurer_contact_status": "Contacted"}, "next_check_in_date": "2026-10-15"},
+        {"day": 14, "summary": "Synthetic fictional additional washing-machine damage information reported and approved for a new follow-up; earlier documentation stays completed.", "approved_intake": {}, "confirmed_damage": [{"item_description": "Synthetic fictional washing machine", "damage_description": "Household newly reports flood damage from information already known; no inspection was requested."}], "next_check_in_date": "2026-10-31"},
+        {"day": 30, "summary": "Synthetic fictional insurer follow-up requested for additional information; no claim submission, coverage or service outcome is established.", "confirmed_household": {"insurer_contact_status": "Follow-up requested"}, "next_check_in_date": "2026-11-07"}
+      ]
+    },
+    {
+      "scenario_id": "johnson",
+      "label": "Synthetic fictional Johnson household · utilities and changing needs month",
+      "description": "Synthetic fictional month of restored utilities and changing unmet needs; historical tasks remain visible without a recovery-duration forecast.",
+      "classification": "SYNTHETIC_FICTIONAL",
+      "incident_date": "2026-10-01",
+      "intake": {
+        "disaster_type": "Hurricane",
+        "housing_condition": "Synthetic fictional roof damage reported",
+        "utility_availability": {"electricity": false, "water": false},
+        "temporary_accommodation_status": "needed",
+        "immediate_danger": false,
+        "household_recovery_needs": ["temporary housing", "transportation", "damage documentation"]
+      },
+      "household": {"adults": 2, "housing_type": "Owner-occupied home", "insurer_contact_status": "Unknown"},
+      "damage_records": [{"item_description": "Synthetic fictional roof covering", "damage_description": "Household reports missing roof covering from information already known."}],
+      "next_check_in_date": "2026-10-08",
+      "checkpoints": [
+        {"day": 1, "summary": "Synthetic fictional household reports unavailable utilities, accommodation and transportation needs."},
+        {"day": 3, "summary": "Synthetic fictional accommodation review started; transportation review is blocked and no placement is promised.", "task_statuses": {"housing": "IN_PROGRESS", "transport": "BLOCKED"}},
+        {"day": 7, "summary": "Synthetic fictional household reports temporary lodging arranged and electricity available; household supplies are a newly reported unmet need.", "task_statuses": {"housing": "COMPLETED"}, "approved_intake": {"temporary_accommodation_status": "staying in temporary lodging", "utility_availability": {"electricity": true, "water": false}, "household_recovery_needs": ["transportation", "damage documentation", "water and household supplies"]}, "next_check_in_date": "2026-10-15"},
+        {"day": 14, "summary": "Synthetic fictional household reports water available, known documentation organized and supplies no longer an unmet need.", "task_statuses": {"damage": "COMPLETED"}, "approved_intake": {"utility_availability": {"electricity": true, "water": true}, "household_recovery_needs": ["transportation", "damage documentation"]}, "next_check_in_date": "2026-10-31"},
+        {"day": 30, "summary": "Synthetic fictional transportation is no longer a reported unmet need; insurance preparation is newly requested, with no safety or service-outcome determination.", "approved_intake": {"household_recovery_needs": ["damage documentation", "insurance preparation"]}, "confirmed_household": {"wants_insurance_help": true}, "next_check_in_date": "2026-11-07"}
+      ]
+    },
+    {
+      "scenario_id": "lewis",
+      "label": "Synthetic fictional Lewis household · month with danger interruption",
+      "description": "Synthetic fictional month ends in a new immediate-danger report that interrupts routine recovery and remains saved.",
+      "classification": "SYNTHETIC_FICTIONAL",
+      "incident_date": "2026-10-01",
+      "intake": {
+        "disaster_type": "Hurricane",
+        "housing_condition": "Synthetic fictional apartment damage reported",
+        "utility_availability": {"electricity": false, "water": null},
+        "temporary_accommodation_status": "needed",
+        "immediate_danger": false,
+        "household_recovery_needs": ["temporary housing", "water and household supplies"]
+      },
+      "household": {"adults": 2, "children": 2, "housing_type": "Rented apartment", "insurer_contact_status": "Unknown"},
+      "next_check_in_date": "2026-10-08",
+      "checkpoints": [
+        {"day": 1, "summary": "Synthetic fictional household records accommodation and supplies needs."},
+        {"day": 3, "summary": "Synthetic fictional household reports staying with others; supplies checklist is in progress.", "task_statuses": {"housing": "COMPLETED", "supplies": "IN_PROGRESS"}, "approved_intake": {"temporary_accommodation_status": "staying with others"}},
+        {"day": 7, "summary": "Synthetic fictional household reports electricity available; water availability remains unknown.", "approved_intake": {"utility_availability": {"electricity": true, "water": null}}, "next_check_in_date": "2026-10-15"},
+        {"day": 14, "summary": "Synthetic fictional unchanged checkpoint: nothing new was recorded."},
+        {"day": 30, "summary": "Synthetic fictional current-danger report: rising water near the household requires the emergency route; routine recovery stops.", "immediate_danger": true}
+      ]
+    }
+  ]
+}

@@ -360,7 +360,12 @@ def test_reviewed_values_can_use_existing_structured_intake(tmp_path, monkeypatc
     button(app, 'Create draft plan').click().run()
     assert 'rr_case_id' not in app.session_state
     next(w for w in app.checkbox if w.label == 'I confirm the selected household and damage details with this intake').check()
+    before_preview = dump(tmp_path / 'ui.sqlite3')
     button(app, 'Create draft plan').click().run()
+    assert not app.exception
+    assert 'rr_case_id' not in app.session_state
+    assert dump(tmp_path / 'ui.sqlite3') == before_preview
+    button(app, 'Confirm situation and create draft').click().run()
     assert not app.exception
     repo = SQLiteRecoveryRepository(tmp_path / 'ui.sqlite3')
     case_id = UUID(app.session_state['rr_case_id'])

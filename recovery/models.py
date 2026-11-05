@@ -1,7 +1,7 @@
 from datetime import date, datetime, timezone
 from enum import StrEnum
 from uuid import UUID, uuid4
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -13,6 +13,9 @@ class HouseholdRecoveryDetails(BaseModel):
     adults: int | None = Field(default=None, ge=0, strict=True)
     reported_property_damage: str | None = Field(default=None, max_length=2000)
     wants_insurance_help: bool | None = Field(default=None, strict=True)
+    housing_type: str | None = Field(default=None, max_length=120)
+    accessibility_needs: list[Annotated[str, Field(min_length=1, max_length=120)]] = Field(default_factory=list, max_length=5)
+    insurer_contact_status: Literal['Unknown', 'Not contacted', 'Contacted', 'Follow-up requested'] = 'Unknown'
 
 
 class DamageRecord(BaseModel):
@@ -40,6 +43,8 @@ class RecoveryRecords(BaseModel):
     version: int = Field(default=0, ge=0, strict=True)
     household: HouseholdRecoveryDetails = Field(default_factory=HouseholdRecoveryDetails)
     damage_records: list[DamageRecord] = Field(default_factory=list, max_length=100)
+    incident_date: date | None = None
+    next_check_in_date: date | None = None
 
 
 class TaskPriority(StrEnum):

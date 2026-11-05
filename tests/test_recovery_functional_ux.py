@@ -41,7 +41,12 @@ def test_create_damage_confirm_insurance_download_and_resume(app):
     button(app, 'Document damage for insurance').click().run()
     button(app, 'Create Recovery Case').click().run()
     next(w for w in app.selectbox if w.label == 'Immediate danger assessment').select('No immediate danger reported')
+    before_preview = dump(path)
     button(app, 'Create draft plan').click().run()
+    assert not app.exception
+    assert 'rr_case_id' not in app.session_state
+    assert dump(path) == before_preview
+    button(app, 'Confirm situation and create draft').click().run()
     assert not app.exception
     case_id = UUID(app.session_state['rr_case_id'])
     original_case = repo.get_case(case_id)
@@ -53,7 +58,7 @@ def test_create_damage_confirm_insurance_download_and_resume(app):
     button(app, 'Document damage for insurance').click().run()
     button(app, 'Add Damaged Item').click().run()
     next(w for w in app.text_input if w.label == 'Item or area description').input('Refrigerator')
-    next(w for w in app.text_area if w.label == 'User-reported damage description').input('Reported flood damage')
+    next(w for w in app.text_area if w.label == 'User-reported damage description').input('Previously reported flood damage')
     before = dump(path)
     button(app, 'Save confirmed damage record').click().run()
     assert dump(path) == before

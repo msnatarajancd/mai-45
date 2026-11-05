@@ -57,6 +57,13 @@ def render_access_controls():
                        on_click=_report_danger, args=(entry,))
         st.caption(DESKTOP_FALLBACK)
 
+    if st.session_state.get('rr_demo_active'):
+        st.caption('FICTIONAL RECOVERY REPLAY · Leaving this story preserves its saved history, including any danger report.')
+        if st.button('Leave fictional recovery scenario', key='rr_leave_recovery_demo'):
+            from recovery.demo_session import leave_demo
+            leave_demo(st.session_state)
+            st.rerun()
+
     if st.session_state.get('rr_emergency'):
         # Compatibility with older callers/restored state. A naked legacy True
         # represented an explicit danger report; new entries carry a decision.

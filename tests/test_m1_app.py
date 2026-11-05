@@ -1,6 +1,8 @@
 from pathlib import Path
+import os
 import pytest
 from streamlit.testing.v1 import AppTest
+from test_recovery_records import dump
 
 APP = str(Path(__file__).resolve().parents[1] / 'app.py')
 
@@ -58,7 +60,12 @@ def test_full_recovery_approval_progress_and_resume(app):
     app.session_state['page'] = 'Recover'
     app.run()
     next(s for s in app.selectbox if s.label == 'Immediate danger assessment').select('No immediate danger reported')
+    before_preview = dump(os.environ['READYRELIEF_DB_PATH'])
     button(app, 'Create draft plan').click().run()
+    assert not app.exception
+    assert 'rr_case_id' not in app.session_state
+    assert dump(os.environ['READYRELIEF_DB_PATH']) == before_preview
+    button(app, 'Confirm situation and create draft').click().run()
     assert not app.exception
     assert app.session_state['rr_draft']
     case_id = app.session_state['rr_case_id']
@@ -103,7 +110,11 @@ def test_stale_progress_cannot_overwrite_external_update(app):
     app.session_state['page'] = 'Recover'
     app.run()
     next(s for s in app.selectbox if s.label == 'Immediate danger assessment').select(DANGER_SAFE)
+    before_preview = dump(os.environ['READYRELIEF_DB_PATH'])
     button(app, 'Create draft plan').click().run()
+    assert 'rr_case_id' not in app.session_state
+    assert dump(os.environ['READYRELIEF_DB_PATH']) == before_preview
+    button(app, 'Confirm situation and create draft').click().run()
     next(c for c in app.checkbox if c.label == 'I reviewed these tasks and want to accept this plan').check()
     button(app, 'Approve my recovery plan').click().run()
     repo = repository()

@@ -1,0 +1,19 @@
+.rj-kicker{font-size:.72rem;font-weight:750;letter-spacing:.12em;color:var(--rr-link);margin-bottom:.6rem}
+.rj-hero{display:grid;grid-template-columns:1.45fr 1fr;gap:2rem;padding:2rem 2.2rem;border:1px solid var(--rr-border);border-radius:24px;background:linear-gradient(110deg,var(--rr-selected),var(--rr-surface));margin:1rem 0 1.8rem;color:var(--rr-ink)}
+.rj-day{font-size:4.4rem;line-height:1;font-weight:750;letter-spacing:-.06em;display:block}
+.rj-day-label{display:block;font-size:.95rem;font-weight:600;margin-top:.55rem}
+.rj-hero p{color:var(--rr-muted);font-size:.9rem;margin:1rem 0 0}
+.rj-target{border-left:1px solid var(--rr-border);padding-left:2rem;display:flex;flex-direction:column;justify-content:center;gap:.45rem}
+.rj-target strong{font-size:1.65rem;letter-spacing:-.035em}.rj-target span,.rj-target small{color:var(--rr-muted)}
+.rj-target small{font-size:.75rem;line-height:1.5}
+.rj-changes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin:.8rem 0}
+.rj-change{border:1px solid var(--rr-border);border-radius:16px;padding:1.2rem;background:var(--rr-surface);border-top:3px solid var(--rr-accent);overflow-wrap:anywhere}
+.rj-event-date{display:block;color:var(--rr-link);font-size:.75rem;font-weight:650;margin-bottom:.7rem}
+.rj-change strong{font-size:1rem;color:var(--rr-ink)}.rj-change p{font-size:.85rem;line-height:1.6;color:var(--rr-muted);margin:.6rem 0 0;max-height:8.2rem;overflow:auto}
+.rj-timeline{list-style:none;padding:0 0 0 1.3rem;margin:1rem 0;border-left:2px solid var(--rr-border)}
+.rj-timeline li{position:relative;padding:0 0 1.6rem .6rem;overflow-wrap:anywhere}
+.rj-timeline li:last-child{padding-bottom:.3rem}.rj-timeline time{display:block;color:var(--rr-link);font-size:.75rem;font-weight:650;margin-bottom:.4rem}
+.rj-timeline strong{font-size:.96rem;color:var(--rr-ink)}.rj-timeline p{margin:.45rem 0 0;color:var(--rr-muted);font-size:.85rem;line-height:1.6}
+.rj-timeline-dot{position:absolute;left:-1.72rem;top:.2rem;width:.7rem;height:.7rem;background:var(--rr-accent);border:3px solid var(--rr-bg);border-radius:100%;box-sizing:content-box}
+@media(max-width:700px){.rj-hero{grid-template-columns:1fr;padding:1.4rem;gap:1.3rem}.rj-day{font-size:3.3rem}.rj-target{border-left:0;border-top:1px solid var(--rr-border);padding:1rem 0 0}.rj-changes{grid-template-columns:1fr}.rj-change p{max-height:none}.rj-change{padding:1rem}.rj-timeline li{padding-bottom:1.35rem}}
+@media(prefers-reduced-motion:reduce){.rj-hero,.rj-change,.rj-timeline{animation:none;transition:none}}

@@ -25,6 +25,7 @@ On Windows PowerShell, use `py -3.12 -m venv .venv` and `.venv\Scripts\Activate.
 - Optional current incident county and communication needs, stable cannot-call information, desktop dialing fallback, and explicit connectivity limits. Saved or monitored location never establishes current incident location.
 - Reviewed directory lookup with source, passage, listing, scope, expiry, and integrity gates. Pending entries stay hidden; official entry links are labeled separately from verified matches.
 - M5 intake, deterministic draft, explicit approval, SQLite task updates, resume by case ID, reviewable reassessment, preserved history, and plan download.
+- CAP-06–09 Recovery journey dashboard: reviewed optional assessment details, changes since the last review, dated milestones, elapsed days, a user-chosen check-in target, effective task filters, and six fictional journeys across 24 checkpoints. See the [Recovery journey guide](docs/RECOVERY_JOURNEYS.md).
 - Retrieval-first Qwen explanations with approved citations, partial-evidence limits, provider-failure fallback, and revocation checks. Generation never supplies the emergency routing decision or automatically changes a recovery task.
 - Six synthetic emergency demos, three fictional profiles, nine failure-state descriptions, 48 development cases, and 24 independently authored golden cases. Expectations are **PROPOSED**, not human-approved safety evidence.
 
@@ -36,13 +37,15 @@ On Windows PowerShell, use `py -3.12 -m venv .venv` and `.venv\Scripts\Activate.
 | M3 guidance | Five approved CDC recovery passages; other phases and sources remain limited by their actual review state |
 | CAP-04 routing | Local policy, shared interruptions, UI, and synthetic evaluation implemented; synthetic success is not real-world safety certification |
 | CAP-04 directory | Eight PENDING listings: seven have acquired-source passages; FCC acquisition failed and has no publishable capture. No new source, passage, or listing approval was fabricated |
-| M5 recovery | Local persistence and reassessment integrated; source-grounded task planning, durable household context, and an explicit danger-clearance workflow remain future work |
+| M5 / CAP-06–09 recovery | Local assessment, planning, task progress, continuity and journey dashboard integrated. Task-specific excerpts use existing reviewed retrieval; the organization plan itself is deterministic. Authenticated long-term storage, comprehensive reviewed guidance and an explicit danger-clearance workflow remain future work |
 
 See [integration contracts](docs/INTEGRATION.md), [CAP-04 implementation](docs/CAP04_IMPLEMENTATION.md), and the [directory review packet](docs/CAP04_SOURCE_REVIEW.md). Returning from an emergency view does not clear a saved danger report or establish safety.
 
 ## Storage and configuration
 
 The app defaults to `.local/recovery.sqlite3` (ignored by Git). Override with an absolute `READYRELIEF_DB_PATH`. Save the fictional case ID to resume after a browser/server restart on the same machine. Household preferences and chat are session-only; changing preferences does not rewrite existing recovery cases.
+
+In **Recover → Explore six fictional recovery journeys**, loading a checkpoint creates a fresh replay in a separate `*-journey-demo.sqlite3` database. Save that replay's case ID and use **Resume fictional replay** to retain edits after a browser refresh. The demo clock and household label remain bound to that replay. Leaving a replay restores the original case without clearing any saved danger report.
 
 `.env.example` documents optional AI configuration; the app does **not** automatically load `.env` files. Set `NEBIUS_API_KEY` in the server environment only when using AI. `NEBIUS_CHAT_MODEL` selects the chat/tour model; `NEBIUS_MODEL` is also supported by the M5 client. Never commit keys. Missing or bad provider configuration produces an explicit unavailable/no-generation notice. Emergency access, local routing, and the deterministic demo make no provider calls.
 
@@ -58,6 +61,8 @@ node tests/search_suggestions.mjs
 ```
 
 For browser checks, install the Node dependencies and Chromium with `npm ci` and `npx playwright install chromium`, then run `npm run test:visual`. The emergency suite is `npm run test:visual -- tests/visual/emergency.spec.cjs`; it inspects the telephone target without dialing.
+
+Recovery journeys are exercised with `npm run test:visual -- tests/visual/recovery.spec.cjs`. The suite saves review screenshots under ignored `artifacts/recovery-review/screenshots/` and attaches them to the Playwright report; these are separate from the existing Windows pixel-comparison baselines.
 
 The evaluator records type, urgency, routing, safety, critical misses, bounded forbidden-claim checks, and measured provider/network attempts with policy and dataset versions. Its guarded Python/provider boundaries are documented in [evaluation notes](emergency/evaluation/README.md); this is not an operating-system sandbox. [Verification notes](docs/VERIFICATION.md) hold the coordinated results and remaining limitations. On Windows, a short dedicated `--basetemp` path may be needed for M3 fixtures; pytest owns and clears that directory.
 

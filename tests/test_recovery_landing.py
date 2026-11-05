@@ -58,7 +58,13 @@ def test_opt_out_keeps_structured_input_without_model_calls(app, monkeypatch, mo
     assert not calls  # The user has not opted into Qwen extraction.
     assert 'rr_case_id' not in app.session_state
     next(w for w in app.selectbox if w.label == 'Immediate danger assessment').select('No immediate danger reported')
+    path = __import__('os').environ['READYRELIEF_DB_PATH']
+    before_preview = dump(path)
     button(app, 'Create draft plan').click().run()
+    assert not app.exception
+    assert 'rr_case_id' not in app.session_state
+    assert dump(path) == before_preview
+    button(app, 'Confirm situation and create draft').click().run()
     assert not app.exception
     repo = SQLiteRecoveryRepository(__import__('os').environ['READYRELIEF_DB_PATH'])
     from uuid import UUID
