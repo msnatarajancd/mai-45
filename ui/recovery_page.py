@@ -282,7 +282,13 @@ def insurance_preview(repo, case):
     st.subheader('Prepare for an insurance discussion')
     st.caption('Only confirmed saved information is included. Coverage has not been determined and no claim has been submitted.')
     saved_case = repo.get_case(case.case_id)
-    summary = insurance_discussion_summary(saved_case, repo.get_recovery_records(case.case_id))
+    records = repo.get_recovery_records(case.case_id)
+    if not records.damage_records:
+        st.info('No confirmed damaged items have been recorded. Document damage to include item details in your insurance discussion draft.')
+        if st.button('Document damage for insurance'):
+            st.session_state['rr_focus'] = 'Document damage'
+            st.rerun()
+    summary = insurance_discussion_summary(saved_case, records)
     st.text(summary)
     st.download_button('Download insurance discussion draft', summary,
                        file_name='readyrelief-insurance-discussion.txt', mime='text/plain')
@@ -308,7 +314,7 @@ def recovery_records(repo, case):
         st.rerun()
     prefix = f'rr_records:{case.case_id}:{snapshot.version}:{st.session_state.get(snapshot_key + ":reload", 0)}:'
     h = snapshot.household
-    with st.form(prefix + 'household'):
+    with st.expander('Optional household details'), st.form(prefix + 'household'):
         st.caption('Leave a count blank if unknown. Do not infer adults or total household size.')
         children = st.text_input('Number of children (if known)', '' if h.children is None else str(h.children))
         adults = st.text_input('Number of adults (if known)', '' if h.adults is None else str(h.adults))
@@ -340,6 +346,9 @@ def recovery_records(repo, case):
             st.session_state[snapshot_key] = saved.model_dump_json()
             st.session_state['rr_notice'] = 'Confirmed household details saved.'
             st.rerun()
+    st.markdown('#### Confirmed saved damage')
+    if not current.damage_records:
+        st.info('No confirmed damaged items yet. Add an item below, review it, and confirm before saving.')
     for item in current.damage_records:
         with st.container(border=True):
             st.text(item.item_description + '\n' + item.damage_description)
@@ -348,6 +357,8 @@ def recovery_records(repo, case):
                 st.text(item.notes)
     options = ['New damage record'] + [str(item.damage_id) for item in snapshot.damage_records]
     labels = {str(item.damage_id): item.item_description for item in snapshot.damage_records}
+    if st.button('Add Damaged Item'):
+        st.session_state[prefix+'selection'] = 'New damage record'
     selected = st.selectbox('Add or edit a damage record', options,
                             format_func=lambda value: labels.get(value, value), key=prefix+'selection')
     item = next((item for item in snapshot.damage_records if str(item.damage_id) == selected), None)
@@ -382,11 +393,19 @@ def recovery_records(repo, case):
 def recovery_landing():
     """Local navigation only: text never becomes confirmed facts or a model prompt."""
     heading('03 / Recover', 'What do you need help with today?')
+    st.subheader('Recovery Copilot')
+    st.write('Start with a few words. Explore official assistance pathways, organize damage records, or continue your saved recovery.')
     st.caption('SIMULATED RECOVERY · Use fictional information only. Your description is not saved to your case.')
-    with st.form('rr_start_description'):
+    with st.form('rr_start_description', border=True):
         description = st.text_area("Describe what's happening or what you need help with.", max_chars=2500)
         submitted = st.form_submit_button('Help me get started', type='primary')
     st.caption('AI recovery extraction is not connected yet. You can continue with structured input; emergency access never requires AI.')
+    with st.container(border=True, key='recovery_help_now'):
+        st.markdown('**Need housing or utility information?**')
+        st.caption('Official pathways without intake, AI or an approved plan. Links do not establish availability or eligibility.')
+        if st.button('Find Help Now', width='stretch'):
+            st.session_state['rr_focus'] = 'Find assistance'
+    st.caption('YOUR RECOVERY: 1. Understand your situation / 2. Find assistance / 3. Document damage / 4. Prepare for insurance / 5. Track recovery progress')
     if submitted:
         from services.assistant import is_danger
         explicit_danger = re.search(r"\b(?:i am|i'm|we are|we're) (?:in )?danger\b", description, re.I)
@@ -425,6 +444,7 @@ def assistance(county=None):
     st.info('Verified official links, not live availability. ReadyRelief cannot confirm shelter openings, placement, eligibility, restoration times or application outcomes. No application is submitted here.')
     st.caption('Using confirmed Miami-Dade county.' if county == 'Miami-Dade' else
                'County is unknown. Showing general US and Florida pathways; no county or utility provider is assumed.')
+    st.caption('Directory category filters only: all categories are shown initially for browsing. These selections are not reported household needs or utility status and are never saved to your case.')
     needs = st.multiselect('What assistance would you like to find?',
         ['Housing', 'Disaster assistance', 'Electricity', 'Water'],
         default=['Housing', 'Disaster assistance', 'Electricity', 'Water'])
@@ -438,10 +458,11 @@ def assistance(county=None):
         st.info('No matching official pathways in this small directory. Try another category. This does not mean assistance is unavailable.')
     for resource in resources:
         with st.container(border=True):
+            st.caption('OFFICIAL INFORMATION PATHWAY / Not a live availability check')
             st.subheader(resource.title)
             st.caption(resource.organization + ' · ' + resource.geography + ' · ' + resource.category)
             st.write(resource.purpose)
-            st.link_button('Open official page: ' + resource.title, resource.url)
+            st.link_button('Open Official Resource: ' + resource.title, resource.url, type='primary', width='stretch')
             st.caption('Official URL and purpose checked: ' + resource.last_checked + '. Not checked live on this visit.')
             st.write(resource.caveat)
     st.caption('Directory links are not M3-reviewed guidance and are not supplied to Qwen as verified evidence. Separately reviewed guidance remains available below.')
@@ -581,8 +602,23 @@ def render():
             if focus == 'Find assistance':
                 assistance()
             else:
-                st.info('Open a saved case to reuse confirmed information, or review the optional intake to create one. Nothing has been saved from your description.')
-            with st.expander('Use structured intake or resume a saved case', expanded=focus == 'Continue my recovery'):
+                st.subheader('Document damage' if focus == 'Document damage' else
+                             'Prepare for an insurance discussion' if focus == 'Prepare for insurance' else
+                             'Continue your recovery')
+                if focus == 'Prepare for insurance':
+                    st.info('No confirmed damage records are loaded. An insurance draft uses only confirmed saved information; no coverage or submission is implied.')
+                    if st.button('Document damage for insurance'):
+                        st.session_state['rr_focus'] = 'Document damage'
+                        st.rerun()
+                st.info('Saving damage records and preparing a saved insurance discussion require a recovery case. Create a case or resume an existing one. Nothing has been saved from your description.')
+                create, resume = st.columns(2)
+                if create.button('Create Recovery Case', width='stretch'):
+                    st.session_state['rr_case_entry'] = True
+                if resume.button('Resume Existing Case', width='stretch'):
+                    st.session_state['rr_case_entry'] = True
+            st.markdown('#### Returning household or prefer a form?')
+            st.caption('Resume with your saved case ID, or open the optional structured intake. Review and confirmation are required before saving.')
+            with st.expander('Use structured intake or resume a saved case', expanded=focus == 'Continue my recovery' or st.session_state.get('rr_case_entry', False)):
                 new_case(repo)
             return
         guard_pending_danger()

@@ -131,3 +131,23 @@ def test_assistance_is_honest_and_emergency_survives_storage_failure(app, monkey
     assert any('storage is unavailable' in w.value for w in app.error)
     assert 'Call 911' in [w.label for w in app.get('link_button')]
     assert "I can't call 911" in [w.label for w in app.button]
+
+
+def test_help_now_presentation_keeps_no_write_and_emergency_boundaries(app, monkeypatch):
+    from recovery.llm_client import NebiusClient
+    monkeypatch.setattr(NebiusClient, 'complete', lambda *a, **k: pytest.fail('no model call'))
+    path = __import__('os').environ['READYRELIEF_DB_PATH']
+    before = dump(path)
+    button(app, 'Find Help Now').click().run()
+    assert not app.exception
+    assert app.session_state['rr_focus'] == 'Find assistance'
+    assert 'rr_case_id' not in app.session_state
+    assert dump(path) == before
+    assert any(w.value == 'Recovery Copilot' for w in app.subheader)
+    assert any('Returning household' in w.value for w in app.markdown)
+    official = [w for w in app.get('link_button') if w.label.startswith('Open Official Resource:')]
+    assert official
+    assert all(w.proto.type == 'primary' for w in official)
+    assert any('AI recovery extraction is not connected yet' in w.value for w in app.caption)
+    assert 'Call 911' in [w.label for w in app.get('link_button')]
+    assert "I can't call 911" in [w.label for w in app.button]

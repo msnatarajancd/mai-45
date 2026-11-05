@@ -38,8 +38,8 @@ def test_finder_no_plan_model_or_persistence_needed(app, monkeypatch):
     button(app, 'Find assistance').click().run()
     assert not app.exception
     assert 'rr_case_id' not in app.session_state
-    assert 'Open official page: Housing and shelter after a disaster' in links(app)
-    assert 'Open official page: Water and Sewer service contacts' not in links(app)
+    assert 'Open Official Resource: Housing and shelter after a disaster' in links(app)
+    assert 'Open Official Resource: Water and Sewer service contacts' not in links(app)
     assert any('County is unknown' in w.value for w in app.caption)
     assert any('not M3-reviewed guidance' in w.value for w in app.caption)
     assert 'Call 911' in links(app)
@@ -57,10 +57,10 @@ def test_confirmed_county_is_used_and_progress_unchanged(saved, monkeypatch):
     button(app, 'Find assistance').click().run()
     assert not app.exception
     assert any('Using confirmed Miami-Dade' in w.value for w in app.caption)
-    assert 'Open official page: Water and Sewer service contacts' in links(app)
+    assert 'Open Official Resource: Water and Sewer service contacts' in links(app)
     next(w for w in app.multiselect if w.label == 'What assistance would you like to find?').set_value(['Electricity']).run()
-    assert 'Open official page: Find your utility service territories' in links(app)
-    assert 'Open official page: Housing and shelter after a disaster' not in links(app)
+    assert 'Open Official Resource: Find your utility service territories' in links(app)
+    assert 'Open Official Resource: Housing and shelter after a disaster' not in links(app)
     assert dump(path) == before
 
 
@@ -91,7 +91,7 @@ def test_danger_blocks_finder_without_changing_recovery(saved, monkeypatch, pend
     records, plan = repo.get_recovery_records(case.case_id), repo.get_active_plan(case.case_id)
     app.run()
     assert not app.exception
-    assert 'Open official page: Housing and shelter after a disaster' not in links(app)
+    assert 'Open Official Resource: Housing and shelter after a disaster' not in links(app)
     assert 'Call 911' in links(app)
     assert "I can't call 911" in [w.label for w in app.button]
     assert repo.get_case(case.case_id).intake.immediate_danger is True
