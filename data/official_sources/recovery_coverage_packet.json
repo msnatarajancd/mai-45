@@ -1,0 +1,419 @@
+{
+  "prepared_at": "2026-11-04T18:39:09.719362Z",
+  "candidates": [
+    {
+      "chunk_id": "fe4096112e28365974239d4f78f6b6039dd07c8953cc272c0477fcf6caefb916",
+      "source_id": "nfip-document-flood-damage",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.floodsmart.gov/recover/document-damage",
+      "original_content_hash": "fc9693d31c3fbbb1353a9365ff328e770de53e91800978b1dbfdb3145a0f2f9f",
+      "parent_chunk_id": "36f62ce1160c79cd5d42fcf37bc80bee44aec9e80629959fa7f42a0fb1dad3a6",
+      "section_heading": "How to document flood damage > Document everything before you start cleanup",
+      "passage_start": 0,
+      "passage_end": 247,
+      "original_passage": "Take clear pictures and videos of damaged items before cleaning, fixing or throwing them out. Capture wide shots and close-ups of walls, floors and furniture. Remember to record serial numbers from electronics and appliances to support your claim.",
+      "proposed_chunk": "Take clear pictures and videos of damaged items before cleaning, fixing or throwing them out. Capture wide shots and close-ups of walls, floors and furniture. Remember to record serial numbers from electronics and appliances to support your claim.",
+      "surrounding_context": [
+        {
+          "chunk_id": "36f62ce1160c79cd5d42fcf37bc80bee44aec9e80629959fa7f42a0fb1dad3a6",
+          "source_id": "nfip-document-flood-damage",
+          "section_heading": "How to document flood damage > Document everything before you start cleanup",
+          "guidance_text": "Take clear pictures and videos of damaged items before cleaning, fixing or throwing them out. Capture wide shots and close-ups of walls, floors and furniture. Remember to record serial numbers from electronics and appliances to support your claim.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "2aab798d4f6894db8be6dfadb5eba6475664833fcf562c5b428d384a9400d62d",
+          "source_id": "nfip-document-flood-damage",
+          "section_heading": "How to document flood damage",
+          "guidance_text": "Recovery begins once floodwaters recede. If you have flood insurance, you don’t have to go through it alone.\nWhen it’s safe to return home, act quickly to document flood damage. Early action can support your flood insurance claim and gets you on the road to recovery.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "5004880fe006404b5bc5298e8d9256da9d6452a587bf29b092ae8cafe345b1ce",
+          "source_id": "nfip-document-flood-damage",
+          "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+          "guidance_text": "Photos and videos are key for your flood insurance claim. Be sure to capture:\nWater levels on walls, furniture and appliances.\nStructural damage to floors, ceilings and foundations.\nSerial numbers on damaged electronics and appliances.\nAfter taking photos, immediately throw away anything that could be a health risk, like spoiled food or moldy clothing, cushions and pillows.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "REVIEW_REQUIRED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "The source conditions documentation on safe return. This passage is not permission to enter or handle hazards; preserve existing reentry and electrical warnings.",
+        "NFIP documentation information only; no insurance coverage, reimbursement or claim outcome is established.",
+        "The source separately instructs disposal of health-risk items after photographs; do not retain hazardous items to document them."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "a84e865690a511e23ecb8fe1eeba0b083ae674a039090f8c478f732700dde983",
+      "source_id": "nfip-document-flood-damage",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.floodsmart.gov/recover/document-damage",
+      "original_content_hash": "fc9693d31c3fbbb1353a9365ff328e770de53e91800978b1dbfdb3145a0f2f9f",
+      "parent_chunk_id": "5004880fe006404b5bc5298e8d9256da9d6452a587bf29b092ae8cafe345b1ce",
+      "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+      "passage_start": 0,
+      "passage_end": 376,
+      "original_passage": "Photos and videos are key for your flood insurance claim. Be sure to capture:\nWater levels on walls, furniture and appliances.\nStructural damage to floors, ceilings and foundations.\nSerial numbers on damaged electronics and appliances.\nAfter taking photos, immediately throw away anything that could be a health risk, like spoiled food or moldy clothing, cushions and pillows.",
+      "proposed_chunk": "Photos and videos are key for your flood insurance claim. Be sure to capture:\nWater levels on walls, furniture and appliances.\nStructural damage to floors, ceilings and foundations.\nSerial numbers on damaged electronics and appliances.\nAfter taking photos, immediately throw away anything that could be a health risk, like spoiled food or moldy clothing, cushions and pillows.",
+      "surrounding_context": [
+        {
+          "chunk_id": "5004880fe006404b5bc5298e8d9256da9d6452a587bf29b092ae8cafe345b1ce",
+          "source_id": "nfip-document-flood-damage",
+          "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+          "guidance_text": "Photos and videos are key for your flood insurance claim. Be sure to capture:\nWater levels on walls, furniture and appliances.\nStructural damage to floors, ceilings and foundations.\nSerial numbers on damaged electronics and appliances.\nAfter taking photos, immediately throw away anything that could be a health risk, like spoiled food or moldy clothing, cushions and pillows.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "2aab798d4f6894db8be6dfadb5eba6475664833fcf562c5b428d384a9400d62d",
+          "source_id": "nfip-document-flood-damage",
+          "section_heading": "How to document flood damage",
+          "guidance_text": "Recovery begins once floodwaters recede. If you have flood insurance, you don’t have to go through it alone.\nWhen it’s safe to return home, act quickly to document flood damage. Early action can support your flood insurance claim and gets you on the road to recovery.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "REVIEW_REQUIRED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "The source conditions documentation on safe return. This passage is not permission to enter or handle hazards; preserve existing reentry and electrical warnings.",
+        "NFIP documentation information only; no insurance coverage, reimbursement or claim outcome is established."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "fc072448ce3bcea4ad83400947fae856e01af8c604f986fd866bcc026bb5605f",
+      "source_id": "nfip-document-flood-damage",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.floodsmart.gov/recover/document-damage",
+      "original_content_hash": "fc9693d31c3fbbb1353a9365ff328e770de53e91800978b1dbfdb3145a0f2f9f",
+      "parent_chunk_id": "b27b8679965b7426166595fb344c35e2daf467a81c659aa7586bb1e859ac0457",
+      "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+      "passage_start": 0,
+      "passage_end": 253,
+      "original_passage": "Keeping samples and receipts helps prove flood damage and supports your claim. Save things like:\nSmall pieces of damaged carpet, drywall or insulation.\nReceipts for repairs and replacement items.\nWarranty or manufacturer details for replaced appliances.",
+      "proposed_chunk": "Keeping samples and receipts helps prove flood damage and supports your claim. Save things like:\nSmall pieces of damaged carpet, drywall or insulation.\nReceipts for repairs and replacement items.\nWarranty or manufacturer details for replaced appliances.",
+      "surrounding_context": [
+        {
+          "chunk_id": "b27b8679965b7426166595fb344c35e2daf467a81c659aa7586bb1e859ac0457",
+          "source_id": "nfip-document-flood-damage",
+          "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+          "guidance_text": "Keeping samples and receipts helps prove flood damage and supports your claim. Save things like:\nSmall pieces of damaged carpet, drywall or insulation.\nReceipts for repairs and replacement items.\nWarranty or manufacturer details for replaced appliances.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "2aab798d4f6894db8be6dfadb5eba6475664833fcf562c5b428d384a9400d62d",
+          "source_id": "nfip-document-flood-damage",
+          "section_heading": "How to document flood damage",
+          "guidance_text": "Recovery begins once floodwaters recede. If you have flood insurance, you don’t have to go through it alone.\nWhen it’s safe to return home, act quickly to document flood damage. Early action can support your flood insurance claim and gets you on the road to recovery.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "REVIEW_REQUIRED"
+        },
+        {
+          "chunk_id": "5004880fe006404b5bc5298e8d9256da9d6452a587bf29b092ae8cafe345b1ce",
+          "source_id": "nfip-document-flood-damage",
+          "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+          "guidance_text": "Photos and videos are key for your flood insurance claim. Be sure to capture:\nWater levels on walls, furniture and appliances.\nStructural damage to floors, ceilings and foundations.\nSerial numbers on damaged electronics and appliances.\nAfter taking photos, immediately throw away anything that could be a health risk, like spoiled food or moldy clothing, cushions and pillows.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "REVIEW_REQUIRED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "The source conditions documentation on safe return. This passage is not permission to enter or handle hazards; preserve existing reentry and electrical warnings.",
+        "NFIP documentation information only; no insurance coverage, reimbursement or claim outcome is established.",
+        "Keep only small material samples when safe; this is not an instruction to retain contaminated or health-risk items."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "bb5d9e9af1c354b8e87f39b4ee6bd48aaa069f41ef83917b9245d344675af199",
+      "source_id": "usagov-disaster-housing",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.usa.gov/disaster-housing-shelter",
+      "original_content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+      "parent_chunk_id": "41425b779ac21c95d361155dfaec59ed299314b800993f182272dd03c2ae541e",
+      "section_heading": "How to find housing after a disaster",
+      "passage_start": 0,
+      "passage_end": 66,
+      "original_passage": "Learn where to search for temporary housing or a shelter near you.",
+      "proposed_chunk": "Learn where to search for temporary housing or a shelter near you.",
+      "surrounding_context": [
+        {
+          "chunk_id": "41425b779ac21c95d361155dfaec59ed299314b800993f182272dd03c2ae541e",
+          "source_id": "usagov-disaster-housing",
+          "section_heading": "How to find housing after a disaster",
+          "guidance_text": "Learn where to search for temporary housing or a shelter near you. Find out if you qualify for financial help to pay for housing after a disaster.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "86aed4193867b4912bf96474c9e9c24f494465bec49093c38eebcdf1bf427728",
+          "source_id": "usagov-disaster-housing",
+          "section_heading": "How to find housing after a disaster > Find a shelter",
+          "guidance_text": "If you live in a presidentially declared disaster area, there are programs and organizations that can help you find shelter.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "f16fe9aef5adb826d7f27e44ccf457ce570facfdc1fd42344d7e18454199b562",
+          "source_id": "usagov-disaster-housing",
+          "section_heading": "How to find housing after a disaster > Find a shelter > Find transitional shelter in a hotel",
+          "guidance_text": "After you register for disaster assistance with FEMA, you will find out if you qualify for transitional housing. The Transitional Sheltering Assistance (TSA) program will pay for your hotel stay while you are displaced. \nEnter your FEMA registration number to find a hotel that participates in the TSA program and contact them to reserve a room.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Static information pathway only: no current housing, shelter opening, room, placement, transportation, funding or personal eligibility is established.",
+        "Program registration, geographic declaration and individual requirements must be confirmed with the official program; no application is submitted here."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "8630330fbd12aabc3c31bff38cd811d234bc3e214e05021a322d6f082d9f2b48",
+      "source_id": "usagov-disaster-housing",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.usa.gov/disaster-housing-shelter",
+      "original_content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+      "parent_chunk_id": "f16fe9aef5adb826d7f27e44ccf457ce570facfdc1fd42344d7e18454199b562",
+      "section_heading": "How to find housing after a disaster > Find a shelter > Find transitional shelter in a hotel",
+      "passage_start": 0,
+      "passage_end": 112,
+      "original_passage": "After you register for disaster assistance with FEMA, you will find out if you qualify for transitional housing.",
+      "proposed_chunk": "After you register for disaster assistance with FEMA, you will find out if you qualify for transitional housing.",
+      "surrounding_context": [
+        {
+          "chunk_id": "f16fe9aef5adb826d7f27e44ccf457ce570facfdc1fd42344d7e18454199b562",
+          "source_id": "usagov-disaster-housing",
+          "section_heading": "How to find housing after a disaster > Find a shelter > Find transitional shelter in a hotel",
+          "guidance_text": "After you register for disaster assistance with FEMA, you will find out if you qualify for transitional housing. The Transitional Sheltering Assistance (TSA) program will pay for your hotel stay while you are displaced. \nEnter your FEMA registration number to find a hotel that participates in the TSA program and contact them to reserve a room.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "86aed4193867b4912bf96474c9e9c24f494465bec49093c38eebcdf1bf427728",
+          "source_id": "usagov-disaster-housing",
+          "section_heading": "How to find housing after a disaster > Find a shelter",
+          "guidance_text": "If you live in a presidentially declared disaster area, there are programs and organizations that can help you find shelter.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Static information pathway only: no current housing, shelter opening, room, placement, transportation, funding or personal eligibility is established.",
+        "Program registration, geographic declaration and individual requirements must be confirmed with the official program; no application is submitted here.",
+        "Registration does not establish qualification, an approved hotel payment or a room reservation. The remaining hotel-program description stays administrative context only."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    },
+    {
+      "chunk_id": "4cc704dacf6262548e1c5818b316aab6f0aec53578bc0630cede57afc72a3b48",
+      "source_id": "usagov-disaster-housing",
+      "classification": "OFFICIAL_SOURCE",
+      "official_url": "https://www.usa.gov/disaster-housing-shelter",
+      "original_content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+      "parent_chunk_id": "1c32796ebf8758580ee46eeee4ca39845fb7e3913596338ac6e000ae90ec8913",
+      "section_heading": "How to find housing after a disaster > Get help paying for housing",
+      "passage_start": 0,
+      "passage_end": 287,
+      "original_passage": "Some Low Income Home Energy Assistance Programs (LIHEAPs) set aside money to help people get shelter after a natural disaster. Each office sets its own criteria for who can receive funds. Contact the LIHEAP office that serves your state. Or contact the LIHEAP office in your tribal area.",
+      "proposed_chunk": "Some Low Income Home Energy Assistance Programs (LIHEAPs) set aside money to help people get shelter after a natural disaster. Each office sets its own criteria for who can receive funds. Contact the LIHEAP office that serves your state. Or contact the LIHEAP office in your tribal area.",
+      "surrounding_context": [
+        {
+          "chunk_id": "1c32796ebf8758580ee46eeee4ca39845fb7e3913596338ac6e000ae90ec8913",
+          "source_id": "usagov-disaster-housing",
+          "section_heading": "How to find housing after a disaster > Get help paying for housing",
+          "guidance_text": "Some Low Income Home Energy Assistance Programs (LIHEAPs) set aside money to help people get shelter after a natural disaster. Each office sets its own criteria for who can receive funds. Contact the LIHEAP office that serves your state. Or contact the LIHEAP office in your tribal area.\nImage\nFind more programs and services to help with life after a disaster.\nLAST UPDATED: \n November 3, 2026\n SHARE THIS PAGE:",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        },
+        {
+          "chunk_id": "41425b779ac21c95d361155dfaec59ed299314b800993f182272dd03c2ae541e",
+          "source_id": "usagov-disaster-housing",
+          "section_heading": "How to find housing after a disaster",
+          "guidance_text": "Learn where to search for temporary housing or a shelter near you. Find out if you qualify for financial help to pay for housing after a disaster.",
+          "applicable_hazards": [
+            "flood",
+            "hurricane"
+          ],
+          "applicable_phases": [
+            "recover"
+          ],
+          "geographic_scope": "US",
+          "review_status": "DOWNLOADED_UNREVIEWED"
+        }
+      ],
+      "jurisdiction": "US",
+      "hazards": [
+        "flood"
+      ],
+      "phases": [
+        "recover"
+      ],
+      "safety_caveats": [
+        "PENDING human review; not operational guidance or household safety verification.",
+        "Static information pathway only: no current housing, shelter opening, room, placement, transportation, funding or personal eligibility is established.",
+        "Program registration, geographic declaration and individual requirements must be confirmed with the official program; no application is submitted here.",
+        "Each office sets its own funding criteria; no local office, contact details or funds are verified by this candidate."
+      ],
+      "review_status": "PENDING",
+      "review": null,
+      "rejection": null
+    }
+  ],
+  "coverage_gaps": [
+    "All six candidates and both parent sources still require formal human review.",
+    "Exact lexical retrieval has no synonyms or stemming; these passages may not satisfy the full natural-language demo questions.",
+    "No insurance coverage, claim outcome, FEMA eligibility or live housing availability is established."
+  ]
+}

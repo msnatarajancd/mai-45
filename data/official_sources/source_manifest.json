@@ -101,6 +101,72 @@
       "byte_count": 129366,
       "last_attempt_at": "2026-11-03T03:05:29.547412Z",
       "failure_category": null
+    },
+    {
+      "source_id": "nfip-document-flood-damage",
+      "publisher": "FEMA National Flood Insurance Program (FloodSmart)",
+      "title": "How to document flood damage",
+      "official_url": "https://www.floodsmart.gov/recover/document-damage",
+      "source_type": "official_static_web_guidance",
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "disaster_phases": [
+        "recover"
+      ],
+      "classification": "OFFICIAL_SOURCE",
+      "content_type": "text/html",
+      "charset": "utf-8",
+      "original_content_hash": "fc9693d31c3fbbb1353a9365ff328e770de53e91800978b1dbfdb3145a0f2f9f",
+      "retrieved_at": "2026-11-04T18:37:55.105232Z",
+      "reviewed_at": null,
+      "review_status": "REVIEW_REQUIRED",
+      "reviewer": null,
+      "limitations": [
+        "Candidate source; human review required before publication.",
+        "Static guidance is not live availability or a current evacuation order.",
+        "HTML-only extraction may omit images, embedded documents, or dynamic content."
+      ],
+      "final_url": "https://www.floodsmart.gov/recover/document-damage",
+      "http_status": 200,
+      "byte_count": 84025,
+      "last_attempt_at": "2026-11-04T18:37:54.807277Z",
+      "failure_category": null
+    },
+    {
+      "source_id": "usagov-disaster-housing",
+      "publisher": "USAGov / U.S. General Services Administration",
+      "title": "How to find housing after a disaster",
+      "official_url": "https://www.usa.gov/disaster-housing-shelter",
+      "source_type": "official_static_web_guidance",
+      "jurisdiction": "US",
+      "hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "disaster_phases": [
+        "recover"
+      ],
+      "classification": "OFFICIAL_SOURCE",
+      "content_type": "text/html",
+      "charset": "utf-8",
+      "original_content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+      "retrieved_at": "2026-11-04T18:37:15.431013Z",
+      "reviewed_at": "2026-11-04T20:36:21.935830Z",
+      "review_status": "REVIEWED",
+      "reviewer": "<YOUR_OWN_REVIEWER_IDENTITY>",
+      "limitations": [
+        "Candidate source; human review required before publication.",
+        "Static guidance is not live availability or a current evacuation order.",
+        "HTML-only extraction may omit images, embedded documents, or dynamic content."
+      ],
+      "final_url": "https://www.usa.gov/disaster-housing-shelter",
+      "http_status": 200,
+      "byte_count": 40906,
+      "last_attempt_at": "2026-11-04T18:37:15.012805Z",
+      "failure_category": null
     }
   ]
 }

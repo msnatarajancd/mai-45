@@ -34,6 +34,14 @@ CURATED_SOURCES = (
           'Emergency & Evacuation Assistance Program (EEAP)',
           'https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672',
           'US-FL-MIAMI-DADE', [DisasterPhase.PREPARE, DisasterPhase.RESPOND], ('evacuation assistance',)),
+    _spec('nfip-document-flood-damage', 'FEMA National Flood Insurance Program (FloodSmart)',
+          'How to document flood damage',
+          'https://www.floodsmart.gov/recover/document-damage',
+          'US', [DisasterPhase.RECOVER], ('document flood damage',)),
+    _spec('usagov-disaster-housing', 'USAGov / U.S. General Services Administration',
+          'How to find housing after a disaster',
+          'https://www.usa.gov/disaster-housing-shelter',
+          'US', [DisasterPhase.RECOVER], ('housing after a disaster',)),
 )
 
 

@@ -1,0 +1,61 @@
+{
+  "chunk_id": "4cc704dacf6262548e1c5818b316aab6f0aec53578bc0630cede57afc72a3b48",
+  "source_id": "usagov-disaster-housing",
+  "classification": "OFFICIAL_SOURCE",
+  "official_url": "https://www.usa.gov/disaster-housing-shelter",
+  "original_content_hash": "44e8213b5d20875cc9b4c8773150f60f38f9af9efa8683853f1a2adcc9d1c6f2",
+  "parent_chunk_id": "1c32796ebf8758580ee46eeee4ca39845fb7e3913596338ac6e000ae90ec8913",
+  "section_heading": "How to find housing after a disaster > Get help paying for housing",
+  "passage_start": 0,
+  "passage_end": 287,
+  "original_passage": "Some Low Income Home Energy Assistance Programs (LIHEAPs) set aside money to help people get shelter after a natural disaster. Each office sets its own criteria for who can receive funds. Contact the LIHEAP office that serves your state. Or contact the LIHEAP office in your tribal area.",
+  "proposed_chunk": "Some Low Income Home Energy Assistance Programs (LIHEAPs) set aside money to help people get shelter after a natural disaster. Each office sets its own criteria for who can receive funds. Contact the LIHEAP office that serves your state. Or contact the LIHEAP office in your tribal area.",
+  "surrounding_context": [
+    {
+      "chunk_id": "1c32796ebf8758580ee46eeee4ca39845fb7e3913596338ac6e000ae90ec8913",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster > Get help paying for housing",
+      "guidance_text": "Some Low Income Home Energy Assistance Programs (LIHEAPs) set aside money to help people get shelter after a natural disaster. Each office sets its own criteria for who can receive funds. Contact the LIHEAP office that serves your state. Or contact the LIHEAP office in your tribal area.\nImage\nFind more programs and services to help with life after a disaster.\nLAST UPDATED: \n November 3, 2026\n SHARE THIS PAGE:",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    },
+    {
+      "chunk_id": "41425b779ac21c95d361155dfaec59ed299314b800993f182272dd03c2ae541e",
+      "source_id": "usagov-disaster-housing",
+      "section_heading": "How to find housing after a disaster",
+      "guidance_text": "Learn where to search for temporary housing or a shelter near you. Find out if you qualify for financial help to pay for housing after a disaster.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "DOWNLOADED_UNREVIEWED"
+    }
+  ],
+  "jurisdiction": "US",
+  "hazards": [
+    "flood"
+  ],
+  "phases": [
+    "recover"
+  ],
+  "safety_caveats": [
+    "PENDING human review; not operational guidance or household safety verification.",
+    "Static information pathway only: no current housing, shelter opening, room, placement, transportation, funding or personal eligibility is established.",
+    "Program registration, geographic declaration and individual requirements must be confirmed with the official program; no application is submitted here.",
+    "Each office sets its own funding criteria; no local office, contact details or funds are verified by this candidate."
+  ],
+  "review_status": "PENDING",
+  "review": null,
+  "rejection": null
+}

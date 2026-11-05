@@ -1,0 +1,205 @@
+{
+  "extracted_at": null,
+  "extraction_version": null,
+  "source": {
+    "source_id": "nfip-document-flood-damage",
+    "publisher": "FEMA National Flood Insurance Program (FloodSmart)",
+    "title": "How to document flood damage",
+    "official_url": "https://www.floodsmart.gov/recover/document-damage",
+    "source_type": "official_static_web_guidance",
+    "jurisdiction": "US",
+    "hazards": [
+      "flood",
+      "hurricane"
+    ],
+    "disaster_phases": [
+      "recover"
+    ],
+    "classification": "OFFICIAL_SOURCE",
+    "content_type": "text/html",
+    "charset": "utf-8",
+    "original_content_hash": "fc9693d31c3fbbb1353a9365ff328e770de53e91800978b1dbfdb3145a0f2f9f",
+    "retrieved_at": "2026-11-04T18:37:55.105232Z",
+    "reviewed_at": null,
+    "review_status": "REVIEW_REQUIRED",
+    "reviewer": null,
+    "limitations": [
+      "Candidate source; human review required before publication.",
+      "Static guidance is not live availability or a current evacuation order.",
+      "HTML-only extraction may omit images, embedded documents, or dynamic content."
+    ],
+    "final_url": "https://www.floodsmart.gov/recover/document-damage",
+    "http_status": 200,
+    "byte_count": 84025,
+    "last_attempt_at": "2026-11-04T18:37:54.807277Z",
+    "failure_category": null
+  },
+  "chunks": [
+    {
+      "chunk_id": "2aab798d4f6894db8be6dfadb5eba6475664833fcf562c5b428d384a9400d62d",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage",
+      "guidance_text": "Recovery begins once floodwaters recede. If you have flood insurance, you don’t have to go through it alone.\nWhen it’s safe to return home, act quickly to document flood damage. Early action can support your flood insurance claim and gets you on the road to recovery.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "36f62ce1160c79cd5d42fcf37bc80bee44aec9e80629959fa7f42a0fb1dad3a6",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > Document everything before you start cleanup",
+      "guidance_text": "Take clear pictures and videos of damaged items before cleaning, fixing or throwing them out. Capture wide shots and close-ups of walls, floors and furniture. Remember to record serial numbers from electronics and appliances to support your claim.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "c0ca9a1124a9e0ed421ca3db65984a561451c12f3fe8b2c53f720c72d10c42f0",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > Hold onto damaged materials and repair receipts",
+      "guidance_text": "Keep small samples of damaged materials for the insurance agent, they will help prove your losses. If you start repairs before you receive your claim, save all of your receipts for repair costs and newly purchased items.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "fb254c1fe50db0ddc6dc301f6ebd16ca8eb2d8dabaea02cfa2a5f08251bcffd0",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > Choose qualified repair services",
+      "guidance_text": "Select a reputable repair service to ensure your home is fixed safely. Avoid scams by checking the service provider’s qualifications and references.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "8134b799def68a55938d63015859fe5e1aed161fd5a2d5916559c18b2fedec6b",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > Stop mold before it spreads",
+      "guidance_text": "Mold can start forming within 24-48 hours of flooding. Acting early is key to preventing permanent damage and serious health risks. Keep in mind: mold damage is not covered under standard NFIP flood insurance policies.\n How to prevent mold growth",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "72637cb3522e5c04dbbb006e1fbbf03bba826053424106dc61ccc00c163e6c71",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+      "guidance_text": "You may be unable to enter your home right after a flood, which can delay mold cleanup. Your NFIP flood insurance policy may cover mold damage if:\nOfficials have restricted access due to hazards like fallen trees, power lines or damaged roads.\nFloodwater is still inside or around your home, making it unsafe to inspect or clean.\nContact your insurance provider as soon as possible after a flood to check your coverage and next steps.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "5004880fe006404b5bc5298e8d9256da9d6452a587bf29b092ae8cafe345b1ce",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+      "guidance_text": "Photos and videos are key for your flood insurance claim. Be sure to capture:\nWater levels on walls, furniture and appliances.\nStructural damage to floors, ceilings and foundations.\nSerial numbers on damaged electronics and appliances.\nAfter taking photos, immediately throw away anything that could be a health risk, like spoiled food or moldy clothing, cushions and pillows.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "b27b8679965b7426166595fb344c35e2daf467a81c659aa7586bb1e859ac0457",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+      "guidance_text": "Keeping samples and receipts helps prove flood damage and supports your claim. Save things like:\nSmall pieces of damaged carpet, drywall or insulation.\nReceipts for repairs and replacement items.\nWarranty or manufacturer details for replaced appliances.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "fdc5ebe7a00f2aa2b660a1409953fe7361da3f1c5d9d651ce5702b56b89f83ea",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+      "guidance_text": "Choosing a reliable repair service ensures your home is restored safely. Before hiring:\nGet multiple estimates in writing.\nCheck for proper company licensing and insurance.\nTalk to your insurance provider before signing a contract or submitting payment.\nIf a service demands full payment before starting, it may be a scam. Consider other options.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "cbb0b5789a797ee9155644ec40ab771c7da5c1bebc7e362a1603858736436c3a",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > FAQs about documenting flood damage and mold",
+      "guidance_text": "Flood cleanup can expose you to mold, debris and other hazards. Stay safe by:\nTurning off electricity and gas before going inside to avoid fire or injury.\nHaving a qualified expert inspect your home before turning power back on.\nWearing protective gear like gloves, goggles and an N-95 mask.\nPlacing portable generators outside and away from the home to prevent carbon monoxide poisoning and fire risks.\nEnsuring mold cleanup is fully completed before moving back in.\nFollowing these steps will help keep you and your family safe during recovery.",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    },
+    {
+      "chunk_id": "3f4a0ef55c19f7221d4b0dd472fe91d0d56fecf31215a6baa5f6b665cd5a9028",
+      "source_id": "nfip-document-flood-damage",
+      "section_heading": "How to document flood damage > Helpful resources for preparing for and recovering from a flood",
+      "guidance_text": "Image\nStay safe by protecting valuables and storing important documents before a flood is imminent.\n Steps to prepare for flooding\nImage\nLearn what flood insurance covers and find out how flood insurance claims work.\n How to start a claim\nImage\nUnderstand your rights and how to challenge a flood insurance claim decision.\n How to appeal\nGet flood insurance to protect what matters most.\nPurchase Coverage",
+      "applicable_hazards": [
+        "flood",
+        "hurricane"
+      ],
+      "applicable_phases": [
+        "recover"
+      ],
+      "geographic_scope": "US",
+      "review_status": "REVIEW_REQUIRED"
+    }
+  ],
+  "review": null
+}
