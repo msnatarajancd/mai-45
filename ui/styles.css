@@ -353,3 +353,69 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
  .st-key-chat_panel [data-testid="stLayoutWrapper"]:has(> .st-key-chat_transcript),
  .st-key-chat_panel .st-key-chat_transcript {height:clamp(80px,calc(100dvh - 710px),300px) !important;min-height:0 !important;max-height:clamp(80px,calc(100dvh - 710px),300px);}
 }
+
+/* Recovery stages: native containers, stable names, and a compact reading rhythm. */
+.st-key-insurance_workspace {width:100%;}
+@media(max-width:700px) {
+ .st-key-recovery_workspace .st-key-insurance_navigation [data-testid="stColumn"] {flex:1 1 40% !important;}
+}
+.st-key-recovery_workspace {max-width:1280px;width:100%;}
+.st-key-recovery_workspace [data-testid="stVerticalBlock"] {gap:.7rem;}
+.st-key-recovery_stages {padding:10px 14px;background:var(--rr-surface);border:1px solid var(--rr-border);border-radius:12px;}
+.st-key-recovery_stages p {font-size:.85rem;margin:0;}
+.st-key-recovery_stages strong {color:var(--rr-link);}
+.st-key-recovery_describe {background:var(--rr-surface);border:1px solid var(--rr-border);border-radius:18px;padding:20px;}
+.st-key-recovery_describe [data-testid="stForm"] {padding:0;border:0;}
+.st-key-recovery_describe textarea {min-height:100px;}
+.st-key-recovery_actions [data-testid="stHorizontalBlock"] {gap:10px;}
+.st-key-recovery_workspace [class*="st-key-recovery_task_"] {background:var(--rr-surface);padding:18px;border-radius:16px;}
+.st-key-recovery_workspace [class*="st-key-recovery_task_"] h3 {padding-top:0;}
+.st-key-recovery_workspace [class*="st-key-recovery_task_"] .stLinkButton a {background:var(--rr-selected);font-weight:650;}
+.st-key-recovery_clarification {background:var(--rr-info);padding:16px;border-radius:16px;}
+/* The sticky strip is opaque across its complete layout wrapper. Native scroll
+   targeting must reserve both the toolbar and emergency strip, not just toolbar. */
+:root {--rr-emergency-height:100px;}
+[data-testid="stLayoutWrapper"]:has(> .st-key-emergency_bar) {background:var(--rr-bg);box-shadow:0 5px 0 var(--rr-bg);z-index:1004;}
+.st-key-top_toolbar {z-index:1005;}
+[data-testid="stMain"] {scroll-padding-top:calc(var(--rr-header-height) + var(--rr-emergency-height) + 18px);}
+.st-key-recovery_workspace button,.st-key-recovery_workspace input,.st-key-recovery_workspace textarea,.st-key-recovery_workspace [role="combobox"] {scroll-margin-top:12px;}
+@media(max-width:700px) {
+ :root {--rr-emergency-height:156px;}
+ .st-key-recovery_describe {padding:14px;}
+ .st-key-recovery_workspace .st-key-recovery_stages [data-testid="stColumn"] {flex:1 1 40% !important;}
+ .st-key-recovery_workspace .st-key-recovery_actions [data-testid="stColumn"] {flex:1 1 40% !important;}
+ .st-key-recovery_stages {padding:8px 10px;}
+ .st-key-recovery_stages p {font-size:.8rem;}
+}
+
+.st-key-recovery_workspace .stFormSubmitButton button[kind="secondary"] {background:var(--rr-surface);border-color:var(--rr-border);box-shadow:none;}
+.st-key-recovery_workspace .stFormSubmitButton button[kind="secondary"] * {color:var(--rr-ink) !important;}
+
+@media(max-width:700px) {
+ .stApp:has(.st-key-recovery_workspace) .block-container {padding-top:calc(var(--rr-header-height) + 12px) !important;}
+ .stApp:has(.st-key-recovery_workspace) .rr-topline {justify-content:flex-end;}
+ .stApp:has(.st-key-recovery_workspace) .rr-topline > span:first-child {display:none;}
+ .stApp:has(.st-key-recovery_workspace) .rr-badge {max-width:none;white-space:nowrap;padding:4px 8px;}
+ .st-key-recovery_workspace .rr-eyebrow {display:none;}
+ .st-key-recovery_workspace h1 {font-size:1.65rem !important;margin-bottom:0;}
+ .st-key-recovery_workspace [data-testid="stVerticalBlock"] {gap:.5rem;}
+ .st-key-recovery_workspace .st-key-recovery_stages [data-testid="stColumn"] {flex:1 1 20% !important;}
+ .st-key-recovery_stages p {font-size:.75rem;line-height:1.3;}
+ .st-key-recovery_describe textarea {min-height:80px;}
+}
+
+/* Welcome and conversation overlays must occupy the area below emergency access. */
+@media(min-width:701px) {
+ .st-key-tour_welcome {top:calc(var(--rr-header-height) + 200px);transform:translateX(-50%);max-height:calc(100dvh - var(--rr-header-height) - 220px);}
+ .st-key-chat_panel {max-height:calc(100dvh - var(--rr-header-height) - 230px);}
+}
+@media(max-width:700px) {
+ .st-key-tour_welcome {top:calc(var(--rr-header-height) + 300px);max-height:calc(100dvh - var(--rr-header-height) - 316px);}
+}
+
+@media(max-width:700px) {
+ .st-key-tour_welcome {padding:14px;gap:.5rem;}
+ .st-key-tour_welcome h1 {font-size:1.65rem !important;}
+ .st-key-tour_welcome p {font-size:.875rem;line-height:1.4;}
+ .st-key-tour_welcome [data-testid="stHorizontalBlock"] {gap:8px;}
+}

@@ -50,6 +50,8 @@ def review_ready(saved, monkeypatch):
     button(app, 'Review selected changes').click().run()
     next(w for w in app.selectbox if w.label == 'Safety assessment for selected changes').select('No immediate danger reported')
     next(w for w in app.checkbox if w.label == 'I confirm the selected changes shown above').check()
+    if any(w.label == 'I approve the proposed plan revision' for w in app.checkbox):
+        next(w for w in app.checkbox if w.label == 'I approve the proposed plan revision').check()
     return app, review
 
 
@@ -57,7 +59,7 @@ def assert_emergency(app):
     assert not app.exception
     assert 'Call 911' in [w.label for w in app.get('link_button')]
     assert "I Can't Call 911" in [w.label for w in app.button]
-    assert 'Confirm selected changes' not in [w.label for w in app.button]
+    assert 'Confirm Details & Continue' not in [w.label for w in app.button]
     assert 'Save progress' not in [w.label for w in app.button]
     assert any('not contacted or dispatched' in w.value for w in app.error)
     assert not app.success
@@ -78,7 +80,7 @@ def test_pending_danger_precedes_valid_confirmation_and_preserves_all_progress(s
     from ui import recovery_page
     monkeypatch.setattr(recovery_page, 'accept_review', forbidden)
     app.session_state['rr_pending_danger'] = [str(case.case_id)]
-    button(app, 'Confirm selected changes').click().run()
+    button(app, 'Confirm Details & Continue').click().run()
     assert_emergency(app)
     assert calls == ['danger']
     assert ordinary_state(path, repo, case) == before
@@ -98,7 +100,7 @@ def test_failed_danger_persistence_blocks_reruns_and_retry_stale_confirmation(sa
         raise sqlite3.OperationalError('synthetic unavailable storage')
     monkeypatch.setattr(SQLiteRecoveryRepository, 'report_immediate_danger', unavailable)
     app.session_state['rr_pending_danger'] = [str(case.case_id)]
-    button(app, 'Confirm selected changes').click().run()
+    button(app, 'Confirm Details & Continue').click().run()
     assert_emergency(app)
     assert app.session_state['rr_pending_danger'] == [str(case.case_id)]
     assert ordinary_state(path, repo, case) == before
@@ -129,7 +131,7 @@ def test_failed_danger_persistence_blocks_reruns_and_retry_stale_confirmation(sa
     app.session_state['rr_extraction_ready'] = stale_ready
     app.run()
     assert not app.exception
-    assert 'Confirm selected changes' not in [w.label for w in app.button]
+    assert 'Confirm Details & Continue' not in [w.label for w in app.button]
     assert 'Save progress' not in [w.label for w in app.button]
     assert ordinary_state(path, repo, case) == before
 
@@ -139,7 +141,7 @@ def test_last_moment_pending_danger_blocks_each_write_handler(saved, monkeypatch
     path, repo, case = saved
     if action == 'extraction':
         app, _ = review_ready(saved, monkeypatch)
-        label = 'Confirm selected changes'
+        label = 'Confirm Details & Continue'
     else:
         if action == 'initial_plan':
             from uuid import uuid4

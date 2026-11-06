@@ -11,8 +11,16 @@ async function openHelp(page) {
 }
 
 async function county(page) {
-  await page.getByRole('combobox', {name:'Where is help needed?'}).click();
-  await page.getByRole('option', {name:'Miami-Dade County, Florida', exact:true}).click();
+  await expect(page.getByTestId('stApp')).not.toHaveAttribute('data-test-script-state', 'running');
+  const input = page.getByRole('combobox', {name:'Where is help needed?'});
+  // Rerenders can close a focused dropdown. Retry field selection only; never submit.
+  await expect(async () => {
+    if (await input.getAttribute('aria-expanded') !== 'true') {
+      await input.locator('..').getByRole('button', {name:'Open', exact:true}).click({timeout:1500});
+    }
+    await page.getByRole('option', {name:'Miami-Dade County, Florida', exact:true}).click({timeout:1500});
+    await expect(input).toHaveValue('Miami-Dade County, Florida', {timeout:1500});
+  }).toPass({timeout:10000, intervals:[100,250,500]});
 }
 
 test('contact actions are ordered, usable, and do not initiate a call automatically', async ({page}, info) => {
@@ -89,4 +97,30 @@ test('emergency actions remain reachable while scrolling and at enlarged text', 
   await expect(call).toBeVisible();
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2);
   expect(overflow).toBeFalsy();
+});
+
+
+test('Recovery primary action and emergency access remain clear through overlays', async ({page}) => {
+  await page.getByRole('button', {name:'Start my recovery',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Continue to Review',exact:true})).toBeVisible();
+  await page.getByTestId('stMain').evaluate(e=>e.scrollTop=0);
+  await expect(page.getByRole('button',{name:'Continue to Review',exact:true})).toBeInViewport();
+  await expect(page.getByRole('button',{name:'Find Help Now',exact:true})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Resume My Recovery',exact:true})).toBeVisible();
+  const check = async () => {
+    for (const control of [page.getByRole('link',{name:'Call 911',exact:true}),page.getByRole('button',{name:"I Can't Call 911",exact:true})]) {
+      await expect(control).toBeInViewport();
+      expect(await control.evaluate(el=>{const r=el.getBoundingClientRect();return el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})).toBeTruthy();
+    }
+  };
+  await page.getByTestId('stMain').evaluate(e=>e.scrollTop=e.scrollHeight);
+  await check();
+  await page.getByRole('button',{name:'Ask ReadyRelief',exact:true}).click();
+  await check();
+  await page.getByRole('button',{name:'Close chat',exact:true}).click();
+  await page.getByRole('button',{name:'Start walkthrough',exact:true}).click();
+  await check();
+  const welcome=await page.locator('.st-key-tour_welcome').boundingBox();
+  const bar=await page.locator('.st-key-emergency_bar').boundingBox();
+  expect(welcome.y).toBeGreaterThanOrEqual(bar.y+bar.height);
 });

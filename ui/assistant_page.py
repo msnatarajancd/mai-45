@@ -4,6 +4,7 @@ import streamlit as st
 from services.assistant import Proposal,propose,local_proposal,execute,capture,is_danger
 from ui.capabilities import chat_routes, PAGES
 from recovery.models import RecoveryPlan
+from recovery.task_view import current_task_views
 from ui.components import heading
 
 
@@ -58,14 +59,14 @@ def preview_action(proposal):
 def show_draft(draft_json):
     plan=RecoveryPlan.model_validate_json(draft_json)
     from ui.recovery_page import evidence
-    for i,t in enumerate(plan.proposed_tasks,1):
-        review=plan.task_reviews.get(str(t.task_id))
-        if review and not review.applicable:
+    for i,view in enumerate(current_task_views(plan),1):
+        t,review=view.task,view.review
+        if not view.applicable:
             st.caption(f'Historical / no longer applicable: {t.title} / saved status {t.status.value}')
-            st.caption(review.explanation)
+            st.caption(view.explanation)
             continue
-        st.write(f'**{i}. {t.title}** / {(review.priority if review and review.priority else t.priority).value}')
-        st.write(review.description if review else t.description)
+        st.write(f'**{i}. {t.title}** / {view.priority.value}')
+        st.write(view.description)
         evidence(t,review=review)
     if plan.planning_disclosure: st.warning(plan.planning_disclosure)
 

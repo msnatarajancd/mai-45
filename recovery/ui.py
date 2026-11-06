@@ -9,6 +9,7 @@ from .assessment import RecoveryIntakeNotPermitted, start_recovery_case
 from .database import SQLiteRecoveryRepository
 from .demo_planner import create_demo_draft_plan
 from .models import PlanStatus, RecoveryIntake, RecoveryPlan, TaskStatus
+from .task_view import current_task_views
 
 
 def get_recovery_database_path(
@@ -232,11 +233,16 @@ def _render_planning(repository: SQLiteRecoveryRepository) -> None:
 
     if plan.planning_disclosure:
         st.warning(plan.planning_disclosure)
-    for task in plan.proposed_tasks:
-        with st.expander(f"{task.title} - {task.priority.value}"):
-            st.write(task.description)
-            st.write(f"**Priority:** {task.priority.value}")
-            st.write(f"**Reason:** {task.reason_for_recommendation}")
+    for view in current_task_views(plan):
+        task = view.task
+        if not view.applicable:
+            st.caption(f"Historical / no longer applicable: {task.title} / saved status {task.status.value}")
+            st.caption(view.explanation)
+            continue
+        with st.expander(f"{task.title} - {view.priority.value}"):
+            st.write(view.description)
+            st.write(f"**Priority:** {view.priority.value}")
+            st.write(f"**Reason:** {view.explanation}")
             _render_task_evidence(task)
 
     saved_plan_id = str(plan.plan_id) if repository.get_plan(plan.plan_id) else None
@@ -294,21 +300,24 @@ def _render_dashboard(repository: SQLiteRecoveryRepository) -> None:
         for historical in repository.list_approved_plans(case.case_id):
             if historical.plan_id != plan.plan_id:
                 st.write(f"Previous approved plan: {historical.plan_id}")
-                for task in historical.proposed_tasks:
-                    st.write(f"{task.title} - {task.status.value}")
+                for view in current_task_views(historical):
+                    st.write(f"{view.task.title} - {view.task.status.value}")
     _render_reassessment(repository, case, plan)
     rendered_version_key = f"rendered_progress:{plan.plan_id}"
     rendered_version = st.session_state.get(rendered_version_key, plan.progress_version)
-    for task in plan.proposed_tasks:
-        review = plan.task_reviews.get(str(task.task_id))
-        if review and not review.applicable:
+    records_version = repository.get_recovery_records(case.case_id).version
+    records_version_key = rendered_version_key + ':records'
+    rendered_records_version = st.session_state.get(records_version_key, records_version)
+    for view in current_task_views(plan):
+        task, review = view.task, view.review
+        if not view.applicable:
             with st.expander(f"No longer applicable: {task.title}"):
-                st.write(review.explanation)
+                st.write(view.explanation)
                 st.caption(f"Historical saved status: {task.status.value}; not automatically completed.")
             continue
         with st.expander(f"{task.title} - {task.status.value}"):
-            st.write(review.description if review else task.description)
-            st.write(f"**Priority:** {(review.priority if review and review.priority else task.priority).value}")
+            st.write(view.description)
+            st.write(f"**Priority:** {view.priority.value}")
             from ui.recovery_page import evidence
             evidence(task, county=repository.get_recovery_records(case.case_id).reported_county, review=review)
             status_options = list(TaskStatus)
@@ -328,6 +337,7 @@ def _render_dashboard(repository: SQLiteRecoveryRepository) -> None:
                     repository.update_task_status(
                         plan.plan_id, task.task_id, new_status,
                         expected_progress_version=rendered_version,
+                        expected_records_version=rendered_records_version,
                     )
                     st.session_state["task_update_notice"] = (
                         f"Saved {task.title} as {new_status.value}."
@@ -337,6 +347,7 @@ def _render_dashboard(repository: SQLiteRecoveryRepository) -> None:
                     st.error(f"Task status could not be saved: {error}")
 
     st.session_state[rendered_version_key] = plan.progress_version
+    st.session_state[records_version_key] = records_version
     notice = st.session_state.pop("task_update_notice", None)
     if notice:
         st.success(notice)

@@ -10,6 +10,7 @@ from domain.contracts import AppMode, Household
 from emergency.service import recovery_requires_emergency, screen_report
 from emergency.workflow import begin_emergency
 from recovery.models import RecoveryIntake, RecoveryPlan, TaskStatus
+from recovery.task_view import current_task_views
 from recovery.llm_client import NebiusClient, PlanningClientError, RecoveryLLMClient
 from ui.capabilities import GUIDE
 
@@ -79,8 +80,10 @@ def capture(state, repo):
     case_id = state.get('rr_case_id')
     case = repo.get_case(UUID(case_id)) if repo and case_id else None
     plan = repo.get_active_plan(case.case_id) if repo and case else None
+    records = repo.get_recovery_records(case.case_id) if repo and case else None
     return json.dumps(dict(location=state['location_id'],mode=state['mode'],household=state['household'].model_dump(),case_id=case_id,
         case=case.model_dump(mode='json') if case else None,plan=plan.model_dump(mode='json') if plan else None,
+        records=records.model_dump(mode='json') if records else None,
         draft=state.get('rr_draft'),emergency=state.get('rr_emergency',False),
         emergency_epoch=state.get('rr_emergency_epoch',0),pending=state.get('rr_pending_danger',[])),sort_keys=True)
 
@@ -188,7 +191,7 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
         message=('SIMULATED: '+result.alerts[0].headline) if result.simulated and result.alerts else result.message or ('No active alerts returned; this does not establish safety.' if result.status=='none' else 'Alert result loaded.')
     elif kind=='show_plan':
         if not plan: message='No approved plan is open. Open or resume a recovery case first.'
-        else: message='Saved plan:\n'+'\n'.join(f'{i}. {t.title} — {t.status.value}' + (' (historical / no longer applicable)' if str(t.task_id) in plan.task_reviews and not plan.task_reviews[str(t.task_id)].applicable else '') for i,t in enumerate(plan.proposed_tasks,1))
+        else: message='Saved plan:\n'+'\n'.join(f'{i}. {v.task.title} - {v.task.status.value}' + (' (historical / no longer applicable)' if not v.applicable else '') for i,v in enumerate(current_task_views(plan),1))
     elif kind=='resume_case':
         resumed=repo.get_case(a.case_id)
         if not resumed: raise ValueError('That fictional case was not found on this machine.')
@@ -228,8 +231,10 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
         message='Reviewed recovery plan approved and saved locally.'
     elif kind=='update_task':
         if not plan or not any(t.task_id==a.task_id for t in plan.proposed_tasks): raise ValueError('That task is not in the current active plan.')
-        bound_plan=json.loads(proposal.snapshot)['plan']
-        task=repo.update_task_status(UUID(bound_plan['plan_id']),a.task_id,a.status,expected_progress_version=bound_plan['progress_version'])
+        bound=json.loads(proposal.snapshot)
+        bound_plan=bound['plan']
+        task=repo.update_task_status(UUID(bound_plan['plan_id']),a.task_id,a.status,
+            expected_progress_version=bound_plan['progress_version'],expected_records_version=bound['records']['version'])
         message=f'Saved “{task.title}” as {task.status.value.replace("_"," ").lower()}.'
     else: raise ValueError('Unsupported action.')
     state['assistant_consumed']=(state.get('assistant_consumed',[])+[proposal.proposal_id])[-100:]

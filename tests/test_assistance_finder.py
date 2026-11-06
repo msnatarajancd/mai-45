@@ -35,7 +35,7 @@ def test_finder_no_plan_model_or_persistence_needed(app, monkeypatch):
     monkeypatch.setattr(NebiusClient, 'complete', lambda *a, **k: pytest.fail('no model needed'))
     path = __import__('os').environ['READYRELIEF_DB_PATH']
     before = dump(path)
-    button(app, 'Find assistance').click().run()
+    button(app, 'Find Help Now').click().run()
     assert not app.exception
     assert 'rr_case_id' not in app.session_state
     assert 'Open Official Resource: Housing and shelter after a disaster' in links(app)
@@ -54,7 +54,7 @@ def test_confirmed_county_is_used_and_progress_unchanged(saved, monkeypatch):
     repo.save_recovery_records(records, expected_version=0, explicitly_confirmed=True)
     before = dump(path)
     app = app_for(path, case, monkeypatch).run()
-    button(app, 'Find assistance').click().run()
+    button(app, 'Find Help Now').click().run()
     assert not app.exception
     assert any('Using confirmed Miami-Dade' in w.value for w in app.caption)
     assert 'Open Official Resource: Water and Sewer service contacts' in links(app)
@@ -71,7 +71,7 @@ def test_missing_directory_is_honest_and_emergency_accessible(app, monkeypatch, 
             raise OSError('synthetic directory unavailable')
         return []
     monkeypatch.setattr(resources, 'find_resources', missing)
-    button(app, 'Find assistance').click().run()
+    button(app, 'Find Help Now').click().run()
     assert not app.exception
     assert any('does not mean assistance is unavailable' in w.value for w in app.info)
     assert 'Call 911' in links(app)

@@ -1,7 +1,7 @@
 import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
     from .reassessment import ReassessmentPreview
@@ -13,9 +13,30 @@ from .models import PlanStatus, RecoveryCase, RecoveryPlan, RecoveryTask, TaskSt
 
 
 class SQLiteRecoveryRepository:
-    def __init__(self, database_path: str | Path) -> None:
+    def __init__(self, database_path: str | Path, *, clock: Callable[[], datetime] | None = None) -> None:
+        self._clock = clock or (lambda: datetime.now(timezone.utc))
+        self._injected_clock = clock is not None
         self._database_path = str(database_path)
         self._initialize_database()
+
+    def _now(self) -> datetime:
+        value = self._clock()
+        if value.tzinfo is None or value.utcoffset() is None:
+            raise ValueError('repository clock must return a timezone-aware datetime')
+        return value.astimezone(timezone.utc)
+
+    def _append_journey_event(self, connection, case_id, kind, title, detail, *, occurred_at=None):
+        connection.execute(
+            'INSERT INTO recovery_journey_events (case_id,kind,title,detail,occurred_at) VALUES (?,?,?,?,?)',
+            (str(case_id), kind, title, detail, (occurred_at or self._now()).isoformat()))
+
+    def list_journey_events(self, case_id: UUID) -> list[dict]:
+        """Recorded accepted changes only; legacy history is never backfilled."""
+        with self._connection() as connection:
+            rows = connection.execute(
+                'SELECT event_id,kind,title,detail,occurred_at FROM recovery_journey_events '
+                'WHERE case_id = ? ORDER BY event_id', (str(case_id),)).fetchall()
+        return [dict(zip(('event_id', 'kind', 'title', 'detail', 'occurred_at'), row)) for row in rows]
 
     @contextmanager
     def _connection(self) -> Iterator[sqlite3.Connection]:
@@ -29,6 +50,11 @@ class SQLiteRecoveryRepository:
 
     def _initialize_database(self) -> None:
         with self._connection() as connection:
+            connection.execute('''CREATE TABLE IF NOT EXISTS recovery_insurance_workspaces (
+                case_id TEXT PRIMARY KEY REFERENCES recovery_cases(case_id), workspace_json TEXT NOT NULL)''')
+            connection.execute('''CREATE TABLE IF NOT EXISTS recovery_insurance_attachments (
+                attachment_id TEXT PRIMARY KEY, case_id TEXT NOT NULL REFERENCES recovery_cases(case_id),
+                metadata_json TEXT NOT NULL, content BLOB NOT NULL)''')
             connection.execute(
                 """
                 CREATE TABLE IF NOT EXISTS recovery_cases (
@@ -63,6 +89,11 @@ class SQLiteRecoveryRepository:
                 event_id INTEGER PRIMARY KEY, case_id TEXT NOT NULL REFERENCES recovery_cases(case_id),
                 plan_id TEXT NOT NULL REFERENCES recovery_plans(plan_id), task_id TEXT NOT NULL,
                 previous_status TEXT NOT NULL, new_status TEXT NOT NULL, changed_at TEXT NOT NULL)""")
+            connection.execute("""CREATE TABLE IF NOT EXISTS recovery_journey_events (
+                event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                case_id TEXT NOT NULL REFERENCES recovery_cases(case_id),
+                kind TEXT NOT NULL, title TEXT NOT NULL, detail TEXT NOT NULL,
+                occurred_at TEXT NOT NULL)""")
             evidence_columns = {row[1] for row in connection.execute(
                 "PRAGMA table_info(recovery_reassessments)")}
             if "approval_action" not in evidence_columns:
@@ -134,22 +165,34 @@ class SQLiteRecoveryRepository:
         }
         if set(ids) & foreign_ids:
             raise ValueError('damage IDs cannot cross recovery cases')
+        unchanged = records == current
         saved = records.model_copy(deep=True, update={'version': current.version + 1})
         connection.execute('INSERT INTO recovery_records (case_id, records_json) VALUES (?, ?) '
                                'ON CONFLICT(case_id) DO UPDATE SET records_json = excluded.records_json',
                                (str(records.case_id), saved.model_dump_json()))
+        from .timeline import describe_records_changes, records_change_title
+        if not unchanged:
+            self._append_journey_event(connection, records.case_id, 'records_confirmed',
+                records_change_title(current, saved), describe_records_changes(current, saved))
         return saved
 
     def create_case(self, case: RecoveryCase, *, confirmed_records: RecoveryRecords | None = None,
                     explicitly_confirmed: bool = False) -> None:
         if confirmed_records is not None and explicitly_confirmed is not True:
             raise ValueError('explicit confirmation is required for initial recovery records')
+        # Preserve existing caller timestamps unless the replay clock was requested.
+        if self._injected_clock:
+            now = self._now()
+            case.created_at = now
+            case.updated_at = now
         with self._connection() as connection:
             connection.execute('BEGIN IMMEDIATE')
             connection.execute(
                 "INSERT INTO recovery_cases (case_id, case_json) VALUES (?, ?)",
                 (str(case.case_id), case.model_dump_json()),
             )
+            self._append_journey_event(connection, case.case_id, 'case_created',
+                'Recovery situation saved', 'User-reported situation recorded.', occurred_at=case.created_at)
             if confirmed_records is not None:
                 if confirmed_records.case_id != case.case_id:
                     raise ValueError('records do not belong to this case')
@@ -264,6 +307,9 @@ class SQLiteRecoveryRepository:
                 (str(plan_id), str(plan.case_id)),
             )
 
+            self._append_journey_event(connection, plan.case_id, 'plan_approved',
+                'Recovery plan approved', f'{len(plan.proposed_tasks)} tasks approved for tracking.')
+
         return approved_plan
 
     def get_active_plan(self, case_id: UUID) -> RecoveryPlan | None:
@@ -289,11 +335,13 @@ class SQLiteRecoveryRepository:
         task_id: UUID,
         new_status: TaskStatus,
         *, expected_progress_version: int | None = None,
+        expected_records_version: int | None = None,
     ) -> RecoveryTask:
         """Update one task atomically.
 
-        Interactive callers must pass the version displayed to the user. Omitting
-        it retains the legacy unconditional-write API for trusted serial callers.
+        Interactive callers must pass the progress version displayed to the user.
+        Record-bound proposals also pass their confirmed-record version. Omitting
+        either guard retains the legacy API for trusted serial callers.
         """
         with self._connection() as connection:
             connection.execute("BEGIN IMMEDIATE")
@@ -322,6 +370,13 @@ class SQLiteRecoveryRepository:
                 raise ValueError("task updates require an explicit no-immediate-danger assessment")
             if expected_progress_version is not None and plan.progress_version != expected_progress_version:
                 raise ValueError("stale task update: progress changed; review the current plan")
+            if expected_records_version is not None:
+                records_row = connection.execute(
+                    'SELECT records_json FROM recovery_records WHERE case_id = ?', (row[0],)
+                ).fetchone()
+                records_version = RecoveryRecords.model_validate_json(records_row[0]).version if records_row else 0
+                if records_version != expected_records_version:
+                    raise ValueError('stale task update: confirmed records changed; review the current plan')
             applicability = plan.task_reviews.get(str(task_id))
             if applicability is not None and not applicability.applicable:
                 raise ValueError('this task is no longer applicable; preserve its historical status')
@@ -343,9 +398,14 @@ class SQLiteRecoveryRepository:
             if updated_task is None:
                 raise ValueError(f"task {task_id} does not belong to plan {plan_id}")
 
+            if previous_status == status:
+                return updated_task
+            changed_at = self._now()
             if previous_status != status:
                 connection.execute('INSERT INTO recovery_task_events (case_id,plan_id,task_id,previous_status,new_status,changed_at) VALUES (?,?,?,?,?,?)',
-                    (row[0],str(plan_id),str(task_id),previous_status.value,status.value,datetime.now(timezone.utc).isoformat()))
+                    (row[0],str(plan_id),str(task_id),previous_status.value,status.value,changed_at.isoformat()))
+            self._append_journey_event(connection, row[0], 'task_status_changed',
+                updated_task.title, f'{previous_status.value.replace("_", " ").title()} → {status.value.replace("_", " ").title()}. User-reported task progress.', occurred_at=changed_at)
             updated_plan = plan.model_copy(update={"proposed_tasks": updated_tasks, "progress_version": plan.progress_version + 1})
             connection.execute(
                 "UPDATE recovery_plans SET plan_json = ? WHERE plan_id = ?",
@@ -474,7 +534,7 @@ class SQLiteRecoveryRepository:
             approved = proposed.model_copy(deep=True, update={'approval_status': PlanStatus.APPROVED})
             accepted_case = case.model_copy(deep=True, update={
                 'intake': preview.updated_intake.model_copy(deep=True),
-                'updated_at': datetime.now(timezone.utc),
+                'updated_at': self._now(),
             })
             connection.execute(
                 "INSERT INTO recovery_plans (plan_id, case_id, plan_json) VALUES (?, ?, ?)",
@@ -488,6 +548,10 @@ class SQLiteRecoveryRepository:
                 "UPDATE recovery_cases SET case_json = ?, active_plan_id = ? WHERE case_id = ?",
                 (accepted_case.model_dump_json(), str(approved.plan_id), str(case.case_id)),
             )
+            from .timeline import describe_intake_changes, intake_change_title
+            self._append_journey_event(connection, case.case_id, 'revision_approved',
+                intake_change_title(case.intake, accepted_case.intake), describe_intake_changes(case.intake, accepted_case.intake),
+                occurred_at=accepted_case.updated_at)
         return approved
 
     def report_immediate_danger(self, case_id: UUID) -> None:
@@ -502,6 +566,125 @@ class SQLiteRecoveryRepository:
             if case.intake.immediate_danger is True:
                 return
             case.intake.immediate_danger = True
-            case.updated_at = datetime.now(timezone.utc)
+            case.updated_at = self._now()
             connection.execute("UPDATE recovery_cases SET case_json = ? WHERE case_id = ?",
                                (case.model_dump_json(), str(case_id)))
+            self._append_journey_event(connection, case_id, 'danger_reported',
+                'Immediate danger reported', 'Routine recovery work paused for emergency support.',
+                occurred_at=case.updated_at)
+
+    def _insurance_snapshot(self, connection, case_id):
+        from .insurance_models import InsuranceWorkspace, InsuranceSnapshot, SavedPhoto, InsuranceAttachment
+        row = connection.execute('SELECT case_json FROM recovery_cases WHERE case_id=?', (str(case_id),)).fetchone()
+        if row is None:
+            raise ValueError('Recovery case does not exist.')
+        case = RecoveryCase.model_validate_json(row[0])
+        if case.intake.immediate_danger is not False:
+            raise ValueError('Insurance preparation is paused until the required safety assessment permits routine work.')
+        row = connection.execute('SELECT records_json FROM recovery_records WHERE case_id=?', (str(case_id),)).fetchone()
+        records = RecoveryRecords.model_validate_json(row[0]) if row else RecoveryRecords(case_id=case_id)
+        row = connection.execute('SELECT workspace_json FROM recovery_insurance_workspaces WHERE case_id=?', (str(case_id),)).fetchone()
+        workspace = InsuranceWorkspace.model_validate_json(row[0]) if row else InsuranceWorkspace(case_id=case_id)
+        photos = [SavedPhoto(metadata=InsuranceAttachment.model_validate_json(meta), content=bytes(content))
+                  for meta, content in connection.execute('SELECT metadata_json,content FROM recovery_insurance_attachments WHERE case_id=? ORDER BY rowid', (str(case_id),))]
+        snapshot = InsuranceSnapshot(case=case, records=records, workspace=workspace, attachments=photos)
+        self._validate_insurance_snapshot(snapshot)
+        return snapshot
+
+    @staticmethod
+    def _validate_insurance_snapshot(snapshot):
+        from .insurance_models import EvidenceStatus
+        from .attachments import verify_saved_photo, MAX_ATTACHMENTS, MAX_CASE_BYTES
+        case_id = snapshot.case.case_id
+        workspace, records = snapshot.workspace, snapshot.records
+        if workspace.case_id != case_id or records.case_id != case_id:
+            raise ValueError('Insurance records do not belong to this case.')
+        damage_ids = {item.damage_id for item in records.damage_records}
+        photos = {photo.metadata.attachment_id: photo for photo in snapshot.attachments}
+        if len(photos) != len(snapshot.attachments) or len(photos) > MAX_ATTACHMENTS:
+            raise ValueError('Duplicate attachments or the 20-attachment limit was exceeded.')
+        if sum(len(photo.content) for photo in photos.values()) > MAX_CASE_BYTES:
+            raise ValueError('Attachments exceed the 50 MiB case limit.')
+        for photo in photos.values():
+            meta = photo.metadata
+            if meta.case_id != case_id or (meta.damage_id is not None and meta.damage_id not in damage_ids):
+                raise ValueError('Attachment does not belong to this case and damaged item.')
+            verify_saved_photo(photo)
+        if len({p.metadata.sha256 for p in photos.values()}) != len(photos):
+            raise ValueError('This photograph is already saved in the case.')
+        for collection, attribute in ((workspace.items, 'damage_id'), (workspace.evidence, 'evidence_id'),
+                                       (workspace.communications, 'communication_id')):
+            ids = [getattr(entry, attribute) for entry in collection]
+            if len(ids) != len(set(ids)):
+                raise ValueError('Duplicate insurance record IDs.')
+        if any(item.damage_id not in damage_ids for item in workspace.items):
+            raise ValueError('Item preparation details reference an unknown damaged item.')
+        referenced = []
+        for evidence in workspace.evidence:
+            if evidence.case_id != case_id or (evidence.damage_id is not None and evidence.damage_id not in damage_ids):
+                raise ValueError('Evidence does not belong to this case and damaged item.')
+            if evidence.status is EvidenceStatus.FILE_SAVED:
+                photo = photos.get(evidence.attachment_id)
+                if photo is None or photo.metadata.damage_id != evidence.damage_id or photo.metadata.evidence_type != evidence.evidence_type:
+                    raise ValueError('File saved requires a matching actual saved attachment.')
+                referenced.append(evidence.attachment_id)
+            elif evidence.attachment_id is not None:
+                raise ValueError('Only File saved evidence can reference an attachment.')
+        if len(referenced) != len(set(referenced)) or set(referenced) != set(photos):
+            raise ValueError('Every saved attachment requires exactly one matching evidence record.')
+
+    def get_insurance_snapshot(self, case_id: UUID):
+        """One consistent saved read, including actual verified original bytes. No insertion."""
+        with self._connection() as connection:
+            connection.execute('BEGIN')
+            return self._insurance_snapshot(connection, case_id)
+
+    def save_insurance_workspace(self, workspace, *, expected_case, expected_records_version,
+                                 expected_workspace_version, explicitly_confirmed=False,
+                                 additions=(), removals=()):
+        """One atomic case/records/workspace CAS; never modifies intake, tasks or damage."""
+        from .insurance_models import InsuranceWorkspace, SavedPhoto, EvidenceRecord, EvidenceStatus
+        if explicitly_confirmed is not True:
+            raise ValueError('Explicit confirmation is required before saving Insurance changes.')
+        workspace = InsuranceWorkspace.model_validate_json(workspace.model_dump_json())
+        additions = [SavedPhoto.model_validate(photo.model_dump()) for photo in additions]
+        removals = list(removals)
+        with self._connection() as connection:
+            connection.execute('BEGIN IMMEDIATE')
+            current = self._insurance_snapshot(connection, workspace.case_id)
+            if (current.case != expected_case or current.records.version != expected_records_version
+                    or current.workspace.version != expected_workspace_version
+                    or workspace.version != expected_workspace_version):
+                raise ValueError('Stale Insurance workspace. Reload saved information before editing.')
+            if len(removals) != len(set(removals)) or not set(removals).issubset({p.metadata.attachment_id for p in current.attachments}):
+                raise ValueError('Removal references an attachment outside this case.')
+            # Historical communications cannot silently disappear or be rewritten.
+            for entry in current.workspace.communications:
+                if entry not in workspace.communications:
+                    raise ValueError('Preserve historical communication entries; append a correction instead.')
+            if not {e.evidence_id for e in current.workspace.evidence}.issubset({e.evidence_id for e in workspace.evidence}):
+                raise ValueError('Existing evidence records must be preserved.')
+            for evidence in workspace.evidence:
+                if evidence.attachment_id in removals:
+                    evidence.attachment_id = None
+                    evidence.status = EvidenceStatus.NOT_COLLECTED
+            for photo in additions:
+                meta = photo.metadata
+                if connection.execute('SELECT 1 FROM recovery_insurance_attachments WHERE attachment_id=?', (str(meta.attachment_id),)).fetchone():
+                    raise ValueError('Attachment ID already exists; it cannot be overwritten or moved across cases.')
+                workspace.evidence.append(EvidenceRecord(case_id=workspace.case_id, damage_id=meta.damage_id,
+                    evidence_type=meta.evidence_type, status=EvidenceStatus.FILE_SAVED,
+                    attachment_id=meta.attachment_id, description=meta.description))
+            proposed = current.model_copy(deep=True, update={'workspace': workspace,
+                'attachments': [p for p in current.attachments if p.metadata.attachment_id not in removals] + additions})
+            self._validate_insurance_snapshot(proposed)
+            for attachment_id in removals:
+                connection.execute('DELETE FROM recovery_insurance_attachments WHERE case_id=? AND attachment_id=?',
+                                   (str(workspace.case_id), str(attachment_id)))
+            for photo in additions:
+                connection.execute('INSERT INTO recovery_insurance_attachments VALUES (?,?,?,?)',
+                    (str(photo.metadata.attachment_id), str(workspace.case_id), photo.metadata.model_dump_json(), photo.content))
+            workspace.version += 1
+            connection.execute('INSERT INTO recovery_insurance_workspaces VALUES (?,?) ON CONFLICT(case_id) DO UPDATE SET workspace_json=excluded.workspace_json',
+                               (str(workspace.case_id), workspace.model_dump_json()))
+            return workspace.model_copy(deep=True)

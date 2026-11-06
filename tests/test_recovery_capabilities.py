@@ -123,7 +123,9 @@ def test_full_personalized_plan_progress_and_confirmed_reassessment(app,monkeypa
     assert dump(path)==before
     next(w for w in app.selectbox if w.label=='Safety assessment for selected changes').select('No immediate danger reported')
     next(w for w in app.checkbox if w.label=='I confirm the selected changes shown above').check()
-    button(app,'Confirm selected changes').click().run();assert not app.exception
+    if any(w.label == 'I approve the proposed plan revision' for w in app.checkbox):
+        next(w for w in app.checkbox if w.label == 'I approve the proposed plan revision').check()
+    button(app,'Confirm Details & Continue').click().run();assert not app.exception
     current=repo.get_active_plan(case_id);records=repo.get_recovery_records(case_id)
     assert [t.status for t in current.proposed_tasks[:len(old_plan.proposed_tasks)]]==[t.status for t in old_plan.proposed_tasks]
     assert old_plan in repo.list_approved_plans(case_id)
@@ -137,6 +139,8 @@ def test_full_personalized_plan_progress_and_confirmed_reassessment(app,monkeypa
     assert any(w.label.startswith('No longer applicable:') for w in app.expander)
     assert next(w for w in app.metric if w.label=='Needs attention').value=='0'
     button(app,'Prepare for insurance').click().run()
+    if any(w.label == 'Insurance workspace stage' for w in app.radio):
+        next(w for w in app.radio if w.label == 'Insurance workspace stage').set_value('Review & Download').run()
     assert any('furniture' in w.value.lower() and 'refrigerator' in w.value.lower() for w in app.text)
     assert SQLiteRecoveryRepository(path).get_active_plan(case_id)==current
     assert 'Call 911' in [w.label for w in app.get('link_button')]

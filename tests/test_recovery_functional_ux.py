@@ -37,6 +37,8 @@ def test_create_damage_confirm_insurance_download_and_resume(app):
     path = __import__('os').environ['READYRELIEF_DB_PATH']
     repo = SQLiteRecoveryRepository(path)
     button(app, 'Prepare for insurance').click().run()
+    if any(w.label == 'Insurance workspace stage' for w in app.radio):
+        next(w for w in app.radio if w.label == 'Insurance workspace stage').set_value('Review & Download').run()
     assert any('No confirmed damage records are loaded' in w.value for w in app.info)
     button(app, 'Document damage for insurance').click().run()
     button(app, 'Create Recovery Case').click().run()
@@ -49,6 +51,8 @@ def test_create_damage_confirm_insurance_download_and_resume(app):
     assert original_case.intake.household_recovery_needs == []
     assert any(w.label == 'Item or area description' for w in app.text_input)
     button(app, 'Prepare for insurance').click().run()
+    if any(w.label == 'Insurance workspace stage' for w in app.radio):
+        next(w for w in app.radio if w.label == 'Insurance workspace stage').set_value('Review & Download').run()
     assert any('No confirmed damaged items have been recorded' in w.value for w in app.info)
     button(app, 'Document damage for insurance').click().run()
     button(app, 'Add Damaged Item').click().run()
@@ -63,8 +67,11 @@ def test_create_damage_confirm_insurance_download_and_resume(app):
     assert not app.exception
     assert len(repo.get_recovery_records(case_id).damage_records) == 1
     button(app, 'Prepare for insurance').click().run()
-    assert any('Item / area: Refrigerator' in w.value and 'No insurance claim has been submitted' in w.value for w in app.text)
-    download = next(w for w in app.get('download_button') if w.label == 'Download insurance discussion draft')
+    if any(w.label == 'Insurance workspace stage' for w in app.radio):
+        next(w for w in app.radio if w.label == 'Insurance workspace stage').set_value('Review & Download').run()
+    assert any('Item / area: Refrigerator' in w.value for w in app.text)
+    assert any('NOT A SUBMITTED CLAIM' in w.value for w in app.markdown)
+    download = next(w for w in app.get('download_button') if w.label == 'Download Preparation PDF')
     assert download.proto.url
     saved = dump(path)
     app.session_state['page'] = 'Home'
@@ -78,6 +85,8 @@ def test_create_damage_confirm_insurance_download_and_resume(app):
     button(app, 'Document damage').click().run()
     assert any('Refrigerator' in w.value for w in app.text)
     button(app, 'Prepare for insurance').click().run()
+    if any(w.label == 'Insurance workspace stage' for w in app.radio):
+        next(w for w in app.radio if w.label == 'Insurance workspace stage').set_value('Review & Download').run()
     assert any('Item / area: Refrigerator' in w.value for w in app.text)
     assert repo.get_case(case_id) == original_case
     assert dump(path) == saved

@@ -113,21 +113,28 @@ def preview_reassessment(
             explanation="Reported household needs changed; review added needs and confirm whether omitted needs are resolved.",
         ))
 
-    def add(title: str, explanation: str, description: str) -> None:
+    def add(title: str, explanation: str, description: str, *, planning_key=None,
+            categories=(), dependencies=()) -> None:
         # Reuse outstanding equivalents; a genuinely recurring report gets a new
         # follow-up instead of silently reopening previously completed work.
         base = _normal(title)
         equivalents = [t for t in current_plan.proposed_tasks if _normal(t.title) == base or _normal(t.title).startswith(base+' (new report ')]
         if any(t.status is not TaskStatus.COMPLETED for t in equivalents):
             return
-        planning_key = ('utility:'+base.removeprefix('review ').removesuffix(' availability gap')) if base.endswith(' availability gap') else (
-            'transport' if 'transportation' in base else 'need:'+base.removeprefix('review household need: ') if base.startswith('review household need: ') else None)
+        if planning_key is None:
+            if base.endswith(' availability gap'):
+                planning_key = 'utility:'+base.removeprefix('review ').removesuffix(' availability gap')
+            elif 'transportation' in base:
+                planning_key = 'transport'
+            elif base.startswith('review household need: '):
+                planning_key = 'need:'+base.removeprefix('review household need: ')
         if equivalents:
             title += ' (new report '+str(len(equivalents)+1)+')'
         if any(_normal(r.task.title) == _normal(title) for r in result.new_tasks):
             return
         task = RecoveryTask(title=title, description=description, planning_key=planning_key,
                             priority=TaskPriority.HIGH,
+                            resource_categories=list(categories), dependencies=list(dependencies),
                             reason_for_recommendation=explanation)
         result.new_tasks.append(TaskRecommendation(task=task, explanation=explanation))
 
@@ -135,12 +142,16 @@ def preview_reassessment(
     if changed_fields & {"housing_condition", "temporary_accommodation_status"}:
         add("Review changed housing arrangements",
             f"Housing is now reported as '{updated_intake.housing_condition}' and accommodation as '{updated_intake.temporary_accommodation_status}'. Confirm whether current arrangements meet household needs.",
-            "Review accommodation needs and reported damage without entering damaged or unsafe buildings.")
+            "Review accommodation needs and reported damage without entering damaged or unsafe buildings.",
+            planning_key='housing_review', categories=('Housing',),
+            dependencies=('Review arrangements from a safe location; this task does not authorize building entry.',))
     for change in result.changed_circumstances:
         if change.field.startswith("utility_availability.") and change.updated is not True:
             name = change.field.split(".", 1)[1]
             add(f"Review {name} availability gap", change.explanation,
-                "Record the reported gap or uncertainty and review available household support options. Do not attempt utility repairs.")
+                "Record the reported gap or uncertainty and review available household support options. Do not attempt utility repairs.",
+                categories=(name.capitalize(),) if name in {'electricity', 'water'} else (),
+                dependencies=('Confirm the household provider before contacting it; no provider is assumed.',))
     for key in sorted(new_needs.keys() - old_needs.keys()):
         need = new_needs[key]
         # The demo planner already supplies a transportation task.
@@ -148,7 +159,9 @@ def preview_reassessment(
             term in key for term in ("transport", "vehicle", "transit"))
             else f"Review household need: {key}")
         add(title, f"The household newly reports '{need}'; review options to address this need.",
-            "Record the reported need and options for household review; no external request is submitted.")
+            "Record the reported need and options for household review; no external request is submitted.",
+            categories=('Housing',) if key == 'temporary housing' else (),
+            dependencies=('Review and confirm damaged-item records before including them in the discussion summary.',) if key == 'insurance preparation' else ())
 
     all_available = bool(updated_intake.utility_availability) and all(
         v is True for v in updated_intake.utility_availability.values())
@@ -213,9 +226,9 @@ def preview_reassessment(
         elif any(r.task.task_id == task.task_id for r in result.potentially_irrelevant_tasks):
             applicable = False
             explanation = next(r.explanation for r in result.potentially_irrelevant_tasks if r.task.task_id == task.task_id)
+        reviews[str(task.task_id)] = TaskReview(applicable=applicable, description=description, explanation=explanation,
+            priority=(TaskPriority.HIGH if any(v is False for v in updated_intake.utility_availability.values()) else TaskPriority.MEDIUM) if key == 'utilities' else task.priority)
         if task.status is not TaskStatus.COMPLETED:
-            reviews[str(task.task_id)] = TaskReview(applicable=applicable, description=description, explanation=explanation,
-                priority=(TaskPriority.HIGH if any(v is False for v in updated_intake.utility_availability.values()) else TaskPriority.MEDIUM) if key == 'utilities' else task.priority)
             # Category lists describe the actual persisted revision, including arranged housing.
             for category in (result.relevant_tasks, result.potentially_irrelevant_tasks):
                 category[:] = [r for r in category if r.task.task_id != task.task_id]
@@ -232,7 +245,9 @@ def preview_reassessment(
             if item.damage_id not in old_ids:
                 add('Document newly reported damage: '+item.item_description,
                     'The proposed update reports additional damage to '+item.item_description+'. Earlier completed documentation stays completed.',
-                    'Once confirmed, review the reported item and insurance discussion records from a safe location. Do not enter or handle hazards to inspect this item.')
+                    'Once confirmed, review the reported item and insurance discussion records from a safe location. Do not enter or handle hazards to inspect this item.',
+                    planning_key='damage:'+str(item.damage_id),
+                    dependencies=('Document only when safe; do not enter or handle hazards to collect information.',))
     result.proposed_revision = RecoveryPlan(
         case_id=case.case_id,
         task_reviews=reviews,

@@ -339,11 +339,13 @@ def test_ui_new_review_edit_confirmation_and_cancellation(tmp_path, monkeypatch)
     assert 'rr_case_id' not in app.session_state
     assert next(w for w in app.selectbox if w.label == 'Disaster type').value == 'Flood'
     assert next(w for w in app.selectbox if w.label == 'Electricity availability').value == 'Unavailable'
-    button(app, 'Confirm selected changes').click().run()
+    button(app, 'Confirm Details & Continue').click().run()
     assert 'rr_case_id' not in app.session_state
     next(w for w in app.selectbox if w.label == 'Safety assessment for selected changes').select('No immediate danger reported')
     next(w for w in app.checkbox if w.label == 'I confirm the selected changes shown above').check()
-    button(app, 'Confirm selected changes').click().run()
+    if any(w.label == 'I approve the proposed plan revision' for w in app.checkbox):
+        next(w for w in app.checkbox if w.label == 'I approve the proposed plan revision').check()
+    button(app, 'Confirm Details & Continue').click().run()
     assert not app.exception
     repo = SQLiteRecoveryRepository(tmp_path / 'ui.sqlite3')
     records = repo.get_recovery_records(UUID(app.session_state['rr_case_id']))
@@ -408,7 +410,9 @@ def test_ui_returning_review_approves_existing_reassessment_path(saved, monkeypa
     assert not app.exception and dump(path) == before
     next(w for w in app.selectbox if w.label == 'Safety assessment for selected changes').select('No immediate danger reported')
     next(w for w in app.checkbox if w.label == 'I confirm the selected changes shown above').check()
-    button(app, 'Confirm selected changes').click().run()
+    if any(w.label == 'I approve the proposed plan revision' for w in app.checkbox):
+        next(w for w in app.checkbox if w.label == 'I approve the proposed plan revision').check()
+    button(app, 'Confirm Details & Continue').click().run()
     assert not app.exception
     assert repo.get_case(case.case_id).intake.utility_availability['electricity'] is True
     assert [d.item_description for d in repo.get_recovery_records(case.case_id).damage_records] == ['Furniture', 'refrigerator']
