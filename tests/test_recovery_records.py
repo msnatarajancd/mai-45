@@ -191,6 +191,8 @@ def test_integrated_records_confirmation_edit_cancel_and_reopen(saved, monkeypat
     assert any('Wet upholstery' in t.value for t in app.text)
     assert any('Confirmed synthetic note' in t.value for t in app.text)
     button(app, 'Prepare for insurance').click().run()
+    if any(w.label == 'Insurance workspace stage' for w in app.radio):
+        next(w for w in app.radio if w.label == 'Insurance workspace stage').set_value('Review & Download').run()
     assert any('Children: 2' in t.value and 'Adults: Unknown' in t.value for t in app.text)
     assert 'Call 911' in [w.label for w in app.get('link_button')]
     assert "I Can't Call 911" in [w.label for w in app.button]

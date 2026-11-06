@@ -29,6 +29,11 @@ class SQLiteRecoveryRepository:
 
     def _initialize_database(self) -> None:
         with self._connection() as connection:
+            connection.execute('''CREATE TABLE IF NOT EXISTS recovery_insurance_workspaces (
+                case_id TEXT PRIMARY KEY REFERENCES recovery_cases(case_id), workspace_json TEXT NOT NULL)''')
+            connection.execute('''CREATE TABLE IF NOT EXISTS recovery_insurance_attachments (
+                attachment_id TEXT PRIMARY KEY, case_id TEXT NOT NULL REFERENCES recovery_cases(case_id),
+                metadata_json TEXT NOT NULL, content BLOB NOT NULL)''')
             connection.execute(
                 """
                 CREATE TABLE IF NOT EXISTS recovery_cases (
@@ -505,3 +510,119 @@ class SQLiteRecoveryRepository:
             case.updated_at = datetime.now(timezone.utc)
             connection.execute("UPDATE recovery_cases SET case_json = ? WHERE case_id = ?",
                                (case.model_dump_json(), str(case_id)))
+
+    def _insurance_snapshot(self, connection, case_id):
+        from .insurance_models import InsuranceWorkspace, InsuranceSnapshot, SavedPhoto, InsuranceAttachment
+        row = connection.execute('SELECT case_json FROM recovery_cases WHERE case_id=?', (str(case_id),)).fetchone()
+        if row is None:
+            raise ValueError('Recovery case does not exist.')
+        case = RecoveryCase.model_validate_json(row[0])
+        if case.intake.immediate_danger is not False:
+            raise ValueError('Insurance preparation is paused until the required safety assessment permits routine work.')
+        row = connection.execute('SELECT records_json FROM recovery_records WHERE case_id=?', (str(case_id),)).fetchone()
+        records = RecoveryRecords.model_validate_json(row[0]) if row else RecoveryRecords(case_id=case_id)
+        row = connection.execute('SELECT workspace_json FROM recovery_insurance_workspaces WHERE case_id=?', (str(case_id),)).fetchone()
+        workspace = InsuranceWorkspace.model_validate_json(row[0]) if row else InsuranceWorkspace(case_id=case_id)
+        photos = [SavedPhoto(metadata=InsuranceAttachment.model_validate_json(meta), content=bytes(content))
+                  for meta, content in connection.execute('SELECT metadata_json,content FROM recovery_insurance_attachments WHERE case_id=? ORDER BY rowid', (str(case_id),))]
+        snapshot = InsuranceSnapshot(case=case, records=records, workspace=workspace, attachments=photos)
+        self._validate_insurance_snapshot(snapshot)
+        return snapshot
+
+    @staticmethod
+    def _validate_insurance_snapshot(snapshot):
+        from .insurance_models import EvidenceStatus
+        from .attachments import verify_saved_photo, MAX_ATTACHMENTS, MAX_CASE_BYTES
+        case_id = snapshot.case.case_id
+        workspace, records = snapshot.workspace, snapshot.records
+        if workspace.case_id != case_id or records.case_id != case_id:
+            raise ValueError('Insurance records do not belong to this case.')
+        damage_ids = {item.damage_id for item in records.damage_records}
+        photos = {photo.metadata.attachment_id: photo for photo in snapshot.attachments}
+        if len(photos) != len(snapshot.attachments) or len(photos) > MAX_ATTACHMENTS:
+            raise ValueError('Duplicate attachments or the 20-attachment limit was exceeded.')
+        if sum(len(photo.content) for photo in photos.values()) > MAX_CASE_BYTES:
+            raise ValueError('Attachments exceed the 50 MiB case limit.')
+        for photo in photos.values():
+            meta = photo.metadata
+            if meta.case_id != case_id or (meta.damage_id is not None and meta.damage_id not in damage_ids):
+                raise ValueError('Attachment does not belong to this case and damaged item.')
+            verify_saved_photo(photo)
+        if len({p.metadata.sha256 for p in photos.values()}) != len(photos):
+            raise ValueError('This photograph is already saved in the case.')
+        for collection, attribute in ((workspace.items, 'damage_id'), (workspace.evidence, 'evidence_id'),
+                                       (workspace.communications, 'communication_id')):
+            ids = [getattr(entry, attribute) for entry in collection]
+            if len(ids) != len(set(ids)):
+                raise ValueError('Duplicate insurance record IDs.')
+        if any(item.damage_id not in damage_ids for item in workspace.items):
+            raise ValueError('Item preparation details reference an unknown damaged item.')
+        referenced = []
+        for evidence in workspace.evidence:
+            if evidence.case_id != case_id or (evidence.damage_id is not None and evidence.damage_id not in damage_ids):
+                raise ValueError('Evidence does not belong to this case and damaged item.')
+            if evidence.status is EvidenceStatus.FILE_SAVED:
+                photo = photos.get(evidence.attachment_id)
+                if photo is None or photo.metadata.damage_id != evidence.damage_id or photo.metadata.evidence_type != evidence.evidence_type:
+                    raise ValueError('File saved requires a matching actual saved attachment.')
+                referenced.append(evidence.attachment_id)
+            elif evidence.attachment_id is not None:
+                raise ValueError('Only File saved evidence can reference an attachment.')
+        if len(referenced) != len(set(referenced)) or set(referenced) != set(photos):
+            raise ValueError('Every saved attachment requires exactly one matching evidence record.')
+
+    def get_insurance_snapshot(self, case_id: UUID):
+        """One consistent saved read, including actual verified original bytes. No insertion."""
+        with self._connection() as connection:
+            connection.execute('BEGIN')
+            return self._insurance_snapshot(connection, case_id)
+
+    def save_insurance_workspace(self, workspace, *, expected_case, expected_records_version,
+                                 expected_workspace_version, explicitly_confirmed=False,
+                                 additions=(), removals=()):
+        """One atomic case/records/workspace CAS; never modifies intake, tasks or damage."""
+        from .insurance_models import InsuranceWorkspace, SavedPhoto, EvidenceRecord, EvidenceStatus
+        if explicitly_confirmed is not True:
+            raise ValueError('Explicit confirmation is required before saving Insurance changes.')
+        workspace = InsuranceWorkspace.model_validate_json(workspace.model_dump_json())
+        additions = [SavedPhoto.model_validate(photo.model_dump()) for photo in additions]
+        removals = list(removals)
+        with self._connection() as connection:
+            connection.execute('BEGIN IMMEDIATE')
+            current = self._insurance_snapshot(connection, workspace.case_id)
+            if (current.case != expected_case or current.records.version != expected_records_version
+                    or current.workspace.version != expected_workspace_version
+                    or workspace.version != expected_workspace_version):
+                raise ValueError('Stale Insurance workspace. Reload saved information before editing.')
+            if len(removals) != len(set(removals)) or not set(removals).issubset({p.metadata.attachment_id for p in current.attachments}):
+                raise ValueError('Removal references an attachment outside this case.')
+            # Historical communications cannot silently disappear or be rewritten.
+            for entry in current.workspace.communications:
+                if entry not in workspace.communications:
+                    raise ValueError('Preserve historical communication entries; append a correction instead.')
+            if not {e.evidence_id for e in current.workspace.evidence}.issubset({e.evidence_id for e in workspace.evidence}):
+                raise ValueError('Existing evidence records must be preserved.')
+            for evidence in workspace.evidence:
+                if evidence.attachment_id in removals:
+                    evidence.attachment_id = None
+                    evidence.status = EvidenceStatus.NOT_COLLECTED
+            for photo in additions:
+                meta = photo.metadata
+                if connection.execute('SELECT 1 FROM recovery_insurance_attachments WHERE attachment_id=?', (str(meta.attachment_id),)).fetchone():
+                    raise ValueError('Attachment ID already exists; it cannot be overwritten or moved across cases.')
+                workspace.evidence.append(EvidenceRecord(case_id=workspace.case_id, damage_id=meta.damage_id,
+                    evidence_type=meta.evidence_type, status=EvidenceStatus.FILE_SAVED,
+                    attachment_id=meta.attachment_id, description=meta.description))
+            proposed = current.model_copy(deep=True, update={'workspace': workspace,
+                'attachments': [p for p in current.attachments if p.metadata.attachment_id not in removals] + additions})
+            self._validate_insurance_snapshot(proposed)
+            for attachment_id in removals:
+                connection.execute('DELETE FROM recovery_insurance_attachments WHERE case_id=? AND attachment_id=?',
+                                   (str(workspace.case_id), str(attachment_id)))
+            for photo in additions:
+                connection.execute('INSERT INTO recovery_insurance_attachments VALUES (?,?,?,?)',
+                    (str(photo.metadata.attachment_id), str(workspace.case_id), photo.metadata.model_dump_json(), photo.content))
+            workspace.version += 1
+            connection.execute('INSERT INTO recovery_insurance_workspaces VALUES (?,?) ON CONFLICT(case_id) DO UPDATE SET workspace_json=excluded.workspace_json',
+                               (str(workspace.case_id), workspace.model_dump_json()))
+            return workspace.model_copy(deep=True)

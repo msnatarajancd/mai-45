@@ -42,6 +42,8 @@ def install(monkeypatch, reply, *, error=None, callback=None):
 
 def submit(app, message):
     if not any(w.label == "Describe what's happening or what you need help with." for w in app.text_area):
+        if not any(w.label == 'Update My Situation' for w in app.button):
+            button(app, 'Continue my recovery').click().run()
         button(app, 'Update My Situation').click().run()
     next(w for w in app.text_area if w.label == "Describe what's happening or what you need help with.").input(message)
     button(app, 'Continue to Review').click().run()
@@ -110,6 +112,8 @@ def test_returning_atomic_revision_preserves_damage_progress_and_insurance(saved
     assert repo.get_active_plan(case.case_id).proposed_tasks[:len(original.proposed_tasks)] == original.proposed_tasks
     assert original in repo.list_approved_plans(case.case_id)
     button(app, 'Prepare for insurance').click().run()
+    if any(w.label == 'Insurance workspace stage' for w in app.radio):
+        next(w for w in app.radio if w.label == 'Insurance workspace stage').set_value('Review & Download').run()
     assert any('Item / area: refrigerator' in w.value for w in app.text)
     # Reporting the same item again must not duplicate the approved inventory.
     submit(app, RETURNING)

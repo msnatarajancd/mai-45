@@ -139,6 +139,8 @@ def test_full_personalized_plan_progress_and_confirmed_reassessment(app,monkeypa
     assert any(w.label.startswith('No longer applicable:') for w in app.expander)
     assert next(w for w in app.metric if w.label=='Needs attention').value=='0'
     button(app,'Prepare for insurance').click().run()
+    if any(w.label == 'Insurance workspace stage' for w in app.radio):
+        next(w for w in app.radio if w.label == 'Insurance workspace stage').set_value('Review & Download').run()
     assert any('furniture' in w.value.lower() and 'refrigerator' in w.value.lower() for w in app.text)
     assert SQLiteRecoveryRepository(path).get_active_plan(case_id)==current
     assert 'Call 911' in [w.label for w in app.get('link_button')]

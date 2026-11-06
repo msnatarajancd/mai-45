@@ -355,6 +355,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
 }
 
 /* Recovery stages: native containers, stable names, and a compact reading rhythm. */
+.st-key-insurance_workspace {width:100%;}
+@media(max-width:700px) {
+ .st-key-recovery_workspace .st-key-insurance_navigation [data-testid="stColumn"] {flex:1 1 40% !important;}
+}
 .st-key-recovery_workspace {max-width:1280px;width:100%;}
 .st-key-recovery_workspace [data-testid="stVerticalBlock"] {gap:.7rem;}
 .st-key-recovery_stages {padding:10px 14px;background:var(--rr-surface);border:1px solid var(--rr-border);border-radius:12px;}

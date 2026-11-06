@@ -349,22 +349,8 @@ def dashboard(repo, case, plan):
 
 def insurance_preview(repo, case):
     guard_pending_danger()
-    st.subheader('Prepare for an insurance discussion')
-    st.caption('Only confirmed saved information is included. Coverage has not been determined and no claim has been submitted.')
-    saved_case = repo.get_case(case.case_id)
-    records = repo.get_recovery_records(case.case_id)
-    if not records.damage_records:
-        st.info('No confirmed damaged items have been recorded. Document damage to include item details in your insurance discussion draft.')
-        if st.button('Document damage for insurance'):
-            st.session_state['rr_focus'] = 'Document damage'
-            st.rerun()
-    summary = insurance_discussion_summary(saved_case, records)
-    st.text(summary)
-    st.download_button('Download insurance discussion draft', summary,
-                       file_name='readyrelief-insurance-discussion.txt', mime='text/plain')
-    if st.button('Add or update household and damage details'):
-        st.session_state['rr_focus'] = 'Document damage'
-        st.rerun()
+    from ui.insurance_workspace import render
+    render(repo, case)
 
 
 def recovery_records(repo, case):
@@ -470,10 +456,22 @@ def journey_stage(current):
 
 
 def recovery_landing():
-    heading('03 / Recover', 'Recovery Copilot')
     saved = bool(st.session_state.get('rr_case_id'))
     review = bool(st.session_state.get('rr_extraction_review'))
     focus = st.session_state.get('rr_focus', 'Continue my recovery' if saved else 'Start recovery')
+    if saved and not review and focus == 'Prepare for insurance':
+        heading('03 / Recover', 'Insurance Preparation Workspace')
+        st.caption('Saved Recovery Case / Fictional information only. No claim submission or insurer contact.')
+        with st.container(key='insurance_navigation'):
+            left, right = st.columns(2)
+        if left.button('Continue my recovery', width='stretch'):
+            st.session_state['rr_focus'] = 'Continue my recovery'
+            st.rerun()
+        if right.button('Find Help Now', width='stretch'):
+            st.session_state['rr_focus'] = 'Find assistance'
+            st.rerun()
+        return focus
+    heading('03 / Recover', 'Recovery Copilot')
     if not saved and not review:
         journey_stage(0)
         st.write('Tell us what happened. Review your details, then choose the next steps to save.')
@@ -518,6 +516,8 @@ def recovery_landing():
                 if column.button(label, width='stretch'):
                     st.session_state['rr_focus'] = label
                     focus = label
+                    if label == 'Prepare for insurance':
+                        st.rerun()
         if not saved and not review:
             st.caption('Official assistance links work without AI or an approved plan. They do not establish availability or eligibility.')
     if saved and not review and focus != 'Continue my recovery':
@@ -835,14 +835,16 @@ def render():
         if case is None:
             st.error('This case is not available on this machine. Resume a saved case or start a new fictional case.')
         else:
-            st.caption('Saved Recovery Case / Confirmed information loaded')
-            with st.expander('Saved case · Keep this ID to resume'):
-                st.code(str(case.case_id), language=None)
-                st.caption('No account or cross-device access. A case ID is not authentication. Only fictional data belongs here.')
+            if focus != 'Prepare for insurance':
+                st.caption('Saved Recovery Case / Confirmed information loaded')
+                with st.expander('Saved case · Keep this ID to resume'):
+                    st.code(str(case.case_id), language=None)
+                    st.caption('No account or cross-device access. A case ID is not authentication. Only fictional data belongs here.')
             if case.intake.immediate_danger is not False:
                 st.warning('This case has a danger report or an incomplete assessment. Routine changes are paused. Emergency controls remain above; this UI cannot clear a saved danger report.')
             else:
-                st.caption('Using your saved confirmed case. Your description does not overwrite it.')
+                if focus != 'Prepare for insurance':
+                    st.caption('Using your saved confirmed case. Your description does not overwrite it.')
                 if focus == 'Find assistance':
                     assistance(repo.get_recovery_records(case.case_id).reported_county)
                 elif focus == 'Document damage':

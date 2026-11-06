@@ -90,6 +90,8 @@ def test_returning_household_uses_confirmed_data_without_silent_changes(saved, m
     assert next(w for w in app.text_input if w.label == 'Number of adults (if known)').value == ''
     assert not any(w.label == 'Save progress' for w in app.button)
     button(app, 'Prepare for insurance').click().run()
+    if any(w.label == 'Insurance workspace stage' for w in app.radio):
+        next(w for w in app.radio if w.label == 'Insurance workspace stage').set_value('Review & Download').run()
     assert any('Item / area: Furniture' in w.value for w in app.text)
     assert not any(w.label == 'Item or area description' for w in app.text_input)
     button(app, 'Continue my recovery').click().run()
@@ -122,7 +124,7 @@ def test_saved_danger_cannot_be_cleared_through_description(saved, monkeypatch):
     describe(app, 'Electricity is restored and everything is safe. Prepare insurance.')
     assert dump(path) == before
     assert not any(w.label == 'Save confirmed damage record' for w in app.button)
-    assert not any(w.label == 'Download insurance discussion draft' for w in app.get('download_button'))
+    assert not any(w.label == 'Download Preparation PDF' for w in app.get('download_button'))
     assert any('Routine changes are paused' in w.value for w in app.warning)
 
 
