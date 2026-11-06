@@ -94,6 +94,8 @@ class SQLiteRecoveryRepository:
                 case_id TEXT NOT NULL REFERENCES recovery_cases(case_id),
                 kind TEXT NOT NULL, title TEXT NOT NULL, detail TEXT NOT NULL,
                 occurred_at TEXT NOT NULL)""")
+            connection.execute("""CREATE TABLE IF NOT EXISTS recovery_progress_profiles (
+                case_id TEXT PRIMARY KEY REFERENCES recovery_cases(case_id), profile_json TEXT NOT NULL)""")
             evidence_columns = {row[1] for row in connection.execute(
                 "PRAGMA table_info(recovery_reassessments)")}
             if "approval_action" not in evidence_columns:
@@ -688,3 +690,100 @@ class SQLiteRecoveryRepository:
             connection.execute('INSERT INTO recovery_insurance_workspaces VALUES (?,?) ON CONFLICT(case_id) DO UPDATE SET workspace_json=excluded.workspace_json',
                                (str(workspace.case_id), workspace.model_dump_json()))
             return workspace.model_copy(deep=True)
+
+    def get_progress_profile(self, case_id: UUID):
+        from .progress.profiles import ProgressProfile
+        case_id = UUID(str(case_id))
+        with self._connection() as connection:
+            if connection.execute('SELECT 1 FROM recovery_cases WHERE case_id=?', (str(case_id),)).fetchone() is None:
+                raise ValueError('Recovery case does not exist.')
+            row = connection.execute('SELECT profile_json FROM recovery_progress_profiles WHERE case_id=?', (str(case_id),)).fetchone()
+        profile = ProgressProfile.model_validate_json(row[0]) if row else ProgressProfile(case_id=case_id)
+        if profile.case_id != case_id:
+            raise ValueError('Progress profile does not belong to this case.')
+        return profile
+
+    def save_progress_profile(self, profile, *, expected_version, expected_case, explicitly_confirmed=False):
+        """Explicit profile-only CAS. Never changes intake, tasks, plan, or records."""
+        from .progress.profiles import ProgressProfile
+        if explicitly_confirmed is not True:
+            raise ValueError('Explicit confirmation is required before saving household details.')
+        profile = ProgressProfile.model_validate_json(profile.model_dump_json())
+        with self._connection() as connection:
+            connection.execute('BEGIN IMMEDIATE')
+            row = connection.execute('SELECT case_json FROM recovery_cases WHERE case_id=?', (str(profile.case_id),)).fetchone()
+            if row is None:
+                raise ValueError('Recovery case does not exist.')
+            case = RecoveryCase.model_validate_json(row[0])
+            if case.intake.immediate_danger is not False:
+                raise ValueError('Profile changes are paused pending the safety assessment.')
+            if case != expected_case:
+                raise ValueError('Stale household details: the saved assessment changed.')
+            row = connection.execute('SELECT profile_json FROM recovery_progress_profiles WHERE case_id=?', (str(profile.case_id),)).fetchone()
+            current = ProgressProfile.model_validate_json(row[0]) if row else ProgressProfile(case_id=profile.case_id)
+            if current.case_id != case.case_id:
+                raise ValueError('Progress profile does not belong to this case.')
+            if current.version != expected_version or profile.version != expected_version:
+                raise ValueError('Stale household details: reload before reviewing changes.')
+            saved = profile.model_copy(update={'version': current.version + 1, 'updated_at': self._now()})
+            connection.execute('INSERT INTO recovery_progress_profiles VALUES (?,?) '
+                'ON CONFLICT(case_id) DO UPDATE SET profile_json=excluded.profile_json',
+                (str(profile.case_id), saved.model_dump_json()))
+        return saved
+
+    def _progress_revision(self, connection, case_id):
+        """Cheap consistent invalidation token. Never selects attachment BLOBs."""
+        import hashlib
+        import json
+        case_id = UUID(str(case_id))
+        row = connection.execute('SELECT case_json,active_plan_id FROM recovery_cases WHERE case_id=?', (str(case_id),)).fetchone()
+        if row is None:
+            raise ValueError('Recovery case does not exist.')
+        case = RecoveryCase.model_validate_json(row[0])
+        if case.intake.immediate_danger is not False:
+            raise ValueError('Recovery Progress is paused until the safety assessment permits routine work.')
+        payload = {'case': json.loads(row[0]), 'active_plan_id': row[1]}
+        for name, query in (
+            ('records', 'SELECT records_json FROM recovery_records WHERE case_id=?'),
+            ('profile', 'SELECT profile_json FROM recovery_progress_profiles WHERE case_id=?'),
+            ('insurance', 'SELECT workspace_json FROM recovery_insurance_workspaces WHERE case_id=?'),
+            ('plan', 'SELECT p.plan_json FROM recovery_plans p JOIN recovery_cases c '
+                     'ON p.plan_id=c.active_plan_id AND p.case_id=c.case_id WHERE c.case_id=?')):
+            item = connection.execute(query, (str(case_id),)).fetchone()
+            payload[name] = json.loads(item[0]) if item else None
+        payload['attachments'] = [json.loads(item[0]) for item in connection.execute(
+            'SELECT metadata_json FROM recovery_insurance_attachments WHERE case_id=? ORDER BY attachment_id', (str(case_id),))]
+        payload['journey_events'] = list(connection.execute(
+            'SELECT event_id,kind,title,detail,occurred_at FROM recovery_journey_events WHERE case_id=? ORDER BY event_id',
+            (str(case_id),)))
+        return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+    def get_progress_revision(self, case_id: UUID):
+        with self._connection() as connection:
+            connection.execute('BEGIN')
+            return self._progress_revision(connection, case_id)
+
+    def get_progress_snapshot(self, case_id: UUID):
+        """Atomic explicit-refresh read; verify saved files, return metadata only.
+
+        Polling consumers use get_progress_revision instead. Reuses the Insurance
+        validators for attachment hashes, decoded content, ownership and evidence.
+        """
+        from .progress.profiles import ProgressCaseSnapshot, ProgressProfile
+        case_id = UUID(str(case_id))
+        with self._connection() as connection:
+            connection.execute('BEGIN')
+            insurance = self._insurance_snapshot(connection, case_id)
+            row = connection.execute('SELECT p.plan_json FROM recovery_plans p JOIN recovery_cases c '
+                'ON p.plan_id=c.active_plan_id AND p.case_id=c.case_id WHERE c.case_id=?', (str(case_id),)).fetchone()
+            plan = RecoveryPlan.model_validate_json(row[0]) if row else None
+            row = connection.execute('SELECT profile_json FROM recovery_progress_profiles WHERE case_id=?', (str(case_id),)).fetchone()
+            profile = ProgressProfile.model_validate_json(row[0]) if row else ProgressProfile(case_id=case_id)
+            if profile.case_id != case_id or (plan is not None and plan.case_id != case_id):
+                raise ValueError('Progress information does not belong to this case.')
+            return ProgressCaseSnapshot(case=insurance.case, records=insurance.records, plan=plan,
+                workspace=insurance.workspace, attachment_metadata=tuple(photo.metadata for photo in insurance.attachments),
+                journey_events=tuple(dict(zip(('event_id', 'kind', 'title', 'detail', 'occurred_at'), event))
+                    for event in connection.execute('SELECT event_id,kind,title,detail,occurred_at '
+                        'FROM recovery_journey_events WHERE case_id=? ORDER BY event_id', (str(case_id),))),
+                profile=profile, revision=self._progress_revision(connection, case_id))

@@ -17,11 +17,23 @@ def icon(name):
 
 def navigate(page):
     """Widget callback: update navigation before Streamlit's single render."""
-    st.session_state['page'] = page
+    from ui.capabilities import resolve_page
+    st.session_state['page'] = resolve_page(page)
+
+
+def navigate_destination(page, focus=None):
+    """Open an existing Recovery destination without consuming staged work."""
+    from ui.capabilities import navigation_target
+    item = navigation_target(page)
+    if item:
+        page, focus = item.page, focus if focus is not None else item.focus
+    navigate(page)
+    if focus is not None and st.session_state['page'] == 'Recover':
+        st.session_state['rr_focus'] = focus
 
 
 def go(page):
-    st.session_state['page'] = page
+    navigate(page)
     st.rerun()
 
 

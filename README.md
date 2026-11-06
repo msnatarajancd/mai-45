@@ -1,5 +1,7 @@
 # ReadyRelief — Protect. Respond. Recover.
 
+**Recovery Progress preview:** a separate dashboard under Recover with LangGraph orchestration, a local read-only MCP server, 24 synthetic household stories across 72 checkpoints and confirmed saved-case projections. See [setup, MCP tools and limitations](docs/RECOVERY_PROGRESS.md) and the [demo walkthrough](docs/RECOVERY_PROGRESS_DEMO_GUIDE.md).
+
 A Miami-Dade hurricane/flood course prototype. The Streamlit app integrates M2 Guardian county alerts, M3 reviewed CDC retrieval, CAP-04 local emergency routing, optional constrained Qwen explanations, and M5 recovery planning and SQLite persistence. Emergency routing requires no AI. The directory publication machinery is implemented; all eight prepared directory listings still await review.
 
 ## Run locally

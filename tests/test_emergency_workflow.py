@@ -56,3 +56,18 @@ def test_emergency_clears_recovery_proposals_without_inventing_persisted_danger(
     assert state['rr_emergency'] is True
     assert not any(k.startswith('rr_extraction') for k in state)
     assert not state.get('rr_pending_danger')
+
+
+def test_emergency_cancels_background_progress_without_importing_its_runtime():
+    from concurrent.futures import Future
+    from threading import Event
+    from types import SimpleNamespace
+    cancellation = Event()
+    future = Future()
+    state = {'rp_run': SimpleNamespace(cancel=cancellation, future=future),
+             'rr_draft': 'preserved', 'rp_saved_result': 'historical'}
+    decision = evaluate_situation(SituationInput(immediate_danger=True))
+    begin_emergency(state, decision, entrypoint='recovery', event_id='during-progress')
+    assert cancellation.is_set() and future.cancelled()
+    assert 'rp_run' not in state
+    assert state['rp_saved_result'] == 'historical' and state['rr_draft'] == 'preserved'

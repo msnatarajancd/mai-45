@@ -19,6 +19,16 @@ def begin_emergency(state: MutableMapping[str, object], decision: RouteResult,
     state['rr_emergency'] = True
     state['rr_emergency_decision'] = decision.model_dump(mode='json')
     state['rr_emergency_entrypoint'] = entrypoint
+    # Cancel optional background work without importing its framework. The
+    # emergency epoch also prevents a late worker result from being published.
+    progress_run = state.pop('rp_run', None)
+    if progress_run is not None:
+        try:
+            progress_run.cancel.set()
+            if progress_run.future is not None:
+                progress_run.future.cancel()
+        except (AttributeError, RuntimeError):
+            pass
     for key in list(state):
         if (key.startswith('tour_') or key.endswith('_generated_guidance')
                 or key.startswith(('rr_revision', 'rr_reviewed', 'rr_extraction'))
