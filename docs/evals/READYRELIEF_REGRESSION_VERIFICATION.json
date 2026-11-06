@@ -1,0 +1,35 @@
+{
+  "record_created_at": "2026-11-06T17:15:52.707692+00:00",
+  "main_commit": "be0b99adbe2bb9ffe6e97716f59649db86fcce85",
+  "runs": [
+    {
+      "command": "python -B -m pytest -q -p no:cacheprovider tests/test_final_evaluation_runner.py tests/test_recovery_extraction.py tests/test_knowledge_retrieval.py tests/test_m3_m1_integration.py tests/test_publication_context.py tests/test_pending_danger.py tests/test_recovery_selected_timeline.py tests/test_insurance_workspace.py tests/test_recovery_capabilities.py tests/test_reassessment.py",
+      "passed": 288,
+      "failed": 0,
+      "seconds": 39.6,
+      "note": "Combined relevant regressions, including the then-eight evaluation-runner checks."
+    },
+    {
+      "command": "python -B -m pytest -q -p no:cacheprovider tests/test_final_evaluation_runner.py",
+      "passed": 11,
+      "failed": 0,
+      "seconds": 3.17,
+      "note": "Final runner-only verification after report formatting update; includes three additional accounting/integrity/report tests and overlaps the first run."
+    }
+  ],
+  "full_suite_executed_in_this_task": false,
+  "integration_verification": {
+    "command": "python -B -m pytest -q -p no:cacheprovider tests/test_final_evaluation_runner.py tests/test_recovery_extraction.py tests/test_knowledge_retrieval.py tests/test_m3_m1_integration.py tests/test_publication_context.py tests/test_pending_danger.py tests/test_recovery_selected_timeline.py tests/test_insurance_workspace.py tests/test_recovery_capabilities.py tests/test_reassessment.py",
+    "passed": 291,
+    "failed": 0,
+    "seconds": 40.46,
+    "evaluation_scenarios": 40,
+    "evaluation_passed": 39,
+    "evaluation_failed": [
+      "R04"
+    ],
+    "evaluation_exit_code": 1,
+    "paid_calls": 0,
+    "note": "Documentation/evaluation integration worktree; original recorded runs above remain preserved."
+  }
+}

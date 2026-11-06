@@ -1,0 +1,32 @@
+{
+  "desktop": {
+    "case_id": "2d8897b2-27f9-43d5-9e51-ced75c3a31e8",
+    "pdf_pages": 2,
+    "inventory_items": 2,
+    "saved_attachments": 1,
+    "original_byte_match": true,
+    "original_sha256": "3622e06b98419355d8ee61244711f0eec7e2cd93205885c09aa3c9580960e1b2",
+    "receipt_file_included": false,
+    "zip_entries": [
+      "insurance-preparation.pdf",
+      "damage-inventory.csv",
+      "evidence-manifest.json",
+      "attachments/b47650f0-f778-4a4a-b9c7-f42995d5d4fa.png"
+    ]
+  },
+  "mobile": {
+    "case_id": "bada4e0c-6c96-43e5-88ec-e909c706ff35",
+    "pdf_pages": 2,
+    "inventory_items": 2,
+    "saved_attachments": 1,
+    "original_byte_match": true,
+    "original_sha256": "3622e06b98419355d8ee61244711f0eec7e2cd93205885c09aa3c9580960e1b2",
+    "receipt_file_included": false,
+    "zip_entries": [
+      "insurance-preparation.pdf",
+      "damage-inventory.csv",
+      "evidence-manifest.json",
+      "attachments/4daccf64-d165-4ec3-939f-6a4ba80f20f4.png"
+    ]
+  }
+}
