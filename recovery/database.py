@@ -1,7 +1,7 @@
 import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
     from .reassessment import ReassessmentPreview
@@ -13,9 +13,30 @@ from .models import PlanStatus, RecoveryCase, RecoveryPlan, RecoveryTask, TaskSt
 
 
 class SQLiteRecoveryRepository:
-    def __init__(self, database_path: str | Path) -> None:
+    def __init__(self, database_path: str | Path, *, clock: Callable[[], datetime] | None = None) -> None:
+        self._clock = clock or (lambda: datetime.now(timezone.utc))
+        self._injected_clock = clock is not None
         self._database_path = str(database_path)
         self._initialize_database()
+
+    def _now(self) -> datetime:
+        value = self._clock()
+        if value.tzinfo is None or value.utcoffset() is None:
+            raise ValueError('repository clock must return a timezone-aware datetime')
+        return value.astimezone(timezone.utc)
+
+    def _append_journey_event(self, connection, case_id, kind, title, detail, *, occurred_at=None):
+        connection.execute(
+            'INSERT INTO recovery_journey_events (case_id,kind,title,detail,occurred_at) VALUES (?,?,?,?,?)',
+            (str(case_id), kind, title, detail, (occurred_at or self._now()).isoformat()))
+
+    def list_journey_events(self, case_id: UUID) -> list[dict]:
+        """Recorded accepted changes only; legacy history is never backfilled."""
+        with self._connection() as connection:
+            rows = connection.execute(
+                'SELECT event_id,kind,title,detail,occurred_at FROM recovery_journey_events '
+                'WHERE case_id = ? ORDER BY event_id', (str(case_id),)).fetchall()
+        return [dict(zip(('event_id', 'kind', 'title', 'detail', 'occurred_at'), row)) for row in rows]
 
     @contextmanager
     def _connection(self) -> Iterator[sqlite3.Connection]:
@@ -68,6 +89,11 @@ class SQLiteRecoveryRepository:
                 event_id INTEGER PRIMARY KEY, case_id TEXT NOT NULL REFERENCES recovery_cases(case_id),
                 plan_id TEXT NOT NULL REFERENCES recovery_plans(plan_id), task_id TEXT NOT NULL,
                 previous_status TEXT NOT NULL, new_status TEXT NOT NULL, changed_at TEXT NOT NULL)""")
+            connection.execute("""CREATE TABLE IF NOT EXISTS recovery_journey_events (
+                event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                case_id TEXT NOT NULL REFERENCES recovery_cases(case_id),
+                kind TEXT NOT NULL, title TEXT NOT NULL, detail TEXT NOT NULL,
+                occurred_at TEXT NOT NULL)""")
             evidence_columns = {row[1] for row in connection.execute(
                 "PRAGMA table_info(recovery_reassessments)")}
             if "approval_action" not in evidence_columns:
@@ -139,22 +165,34 @@ class SQLiteRecoveryRepository:
         }
         if set(ids) & foreign_ids:
             raise ValueError('damage IDs cannot cross recovery cases')
+        unchanged = records == current
         saved = records.model_copy(deep=True, update={'version': current.version + 1})
         connection.execute('INSERT INTO recovery_records (case_id, records_json) VALUES (?, ?) '
                                'ON CONFLICT(case_id) DO UPDATE SET records_json = excluded.records_json',
                                (str(records.case_id), saved.model_dump_json()))
+        from .timeline import describe_records_changes, records_change_title
+        if not unchanged:
+            self._append_journey_event(connection, records.case_id, 'records_confirmed',
+                records_change_title(current, saved), describe_records_changes(current, saved))
         return saved
 
     def create_case(self, case: RecoveryCase, *, confirmed_records: RecoveryRecords | None = None,
                     explicitly_confirmed: bool = False) -> None:
         if confirmed_records is not None and explicitly_confirmed is not True:
             raise ValueError('explicit confirmation is required for initial recovery records')
+        # Preserve existing caller timestamps unless the replay clock was requested.
+        if self._injected_clock:
+            now = self._now()
+            case.created_at = now
+            case.updated_at = now
         with self._connection() as connection:
             connection.execute('BEGIN IMMEDIATE')
             connection.execute(
                 "INSERT INTO recovery_cases (case_id, case_json) VALUES (?, ?)",
                 (str(case.case_id), case.model_dump_json()),
             )
+            self._append_journey_event(connection, case.case_id, 'case_created',
+                'Recovery situation saved', 'User-reported situation recorded.', occurred_at=case.created_at)
             if confirmed_records is not None:
                 if confirmed_records.case_id != case.case_id:
                     raise ValueError('records do not belong to this case')
@@ -269,6 +307,9 @@ class SQLiteRecoveryRepository:
                 (str(plan_id), str(plan.case_id)),
             )
 
+            self._append_journey_event(connection, plan.case_id, 'plan_approved',
+                'Recovery plan approved', f'{len(plan.proposed_tasks)} tasks approved for tracking.')
+
         return approved_plan
 
     def get_active_plan(self, case_id: UUID) -> RecoveryPlan | None:
@@ -294,11 +335,13 @@ class SQLiteRecoveryRepository:
         task_id: UUID,
         new_status: TaskStatus,
         *, expected_progress_version: int | None = None,
+        expected_records_version: int | None = None,
     ) -> RecoveryTask:
         """Update one task atomically.
 
-        Interactive callers must pass the version displayed to the user. Omitting
-        it retains the legacy unconditional-write API for trusted serial callers.
+        Interactive callers must pass the progress version displayed to the user.
+        Record-bound proposals also pass their confirmed-record version. Omitting
+        either guard retains the legacy API for trusted serial callers.
         """
         with self._connection() as connection:
             connection.execute("BEGIN IMMEDIATE")
@@ -327,6 +370,13 @@ class SQLiteRecoveryRepository:
                 raise ValueError("task updates require an explicit no-immediate-danger assessment")
             if expected_progress_version is not None and plan.progress_version != expected_progress_version:
                 raise ValueError("stale task update: progress changed; review the current plan")
+            if expected_records_version is not None:
+                records_row = connection.execute(
+                    'SELECT records_json FROM recovery_records WHERE case_id = ?', (row[0],)
+                ).fetchone()
+                records_version = RecoveryRecords.model_validate_json(records_row[0]).version if records_row else 0
+                if records_version != expected_records_version:
+                    raise ValueError('stale task update: confirmed records changed; review the current plan')
             applicability = plan.task_reviews.get(str(task_id))
             if applicability is not None and not applicability.applicable:
                 raise ValueError('this task is no longer applicable; preserve its historical status')
@@ -348,9 +398,14 @@ class SQLiteRecoveryRepository:
             if updated_task is None:
                 raise ValueError(f"task {task_id} does not belong to plan {plan_id}")
 
+            if previous_status == status:
+                return updated_task
+            changed_at = self._now()
             if previous_status != status:
                 connection.execute('INSERT INTO recovery_task_events (case_id,plan_id,task_id,previous_status,new_status,changed_at) VALUES (?,?,?,?,?,?)',
-                    (row[0],str(plan_id),str(task_id),previous_status.value,status.value,datetime.now(timezone.utc).isoformat()))
+                    (row[0],str(plan_id),str(task_id),previous_status.value,status.value,changed_at.isoformat()))
+            self._append_journey_event(connection, row[0], 'task_status_changed',
+                updated_task.title, f'{previous_status.value.replace("_", " ").title()} → {status.value.replace("_", " ").title()}. User-reported task progress.', occurred_at=changed_at)
             updated_plan = plan.model_copy(update={"proposed_tasks": updated_tasks, "progress_version": plan.progress_version + 1})
             connection.execute(
                 "UPDATE recovery_plans SET plan_json = ? WHERE plan_id = ?",
@@ -479,7 +534,7 @@ class SQLiteRecoveryRepository:
             approved = proposed.model_copy(deep=True, update={'approval_status': PlanStatus.APPROVED})
             accepted_case = case.model_copy(deep=True, update={
                 'intake': preview.updated_intake.model_copy(deep=True),
-                'updated_at': datetime.now(timezone.utc),
+                'updated_at': self._now(),
             })
             connection.execute(
                 "INSERT INTO recovery_plans (plan_id, case_id, plan_json) VALUES (?, ?, ?)",
@@ -493,6 +548,10 @@ class SQLiteRecoveryRepository:
                 "UPDATE recovery_cases SET case_json = ?, active_plan_id = ? WHERE case_id = ?",
                 (accepted_case.model_dump_json(), str(approved.plan_id), str(case.case_id)),
             )
+            from .timeline import describe_intake_changes, intake_change_title
+            self._append_journey_event(connection, case.case_id, 'revision_approved',
+                intake_change_title(case.intake, accepted_case.intake), describe_intake_changes(case.intake, accepted_case.intake),
+                occurred_at=accepted_case.updated_at)
         return approved
 
     def report_immediate_danger(self, case_id: UUID) -> None:
@@ -507,9 +566,12 @@ class SQLiteRecoveryRepository:
             if case.intake.immediate_danger is True:
                 return
             case.intake.immediate_danger = True
-            case.updated_at = datetime.now(timezone.utc)
+            case.updated_at = self._now()
             connection.execute("UPDATE recovery_cases SET case_json = ? WHERE case_id = ?",
                                (case.model_dump_json(), str(case_id)))
+            self._append_journey_event(connection, case_id, 'danger_reported',
+                'Immediate danger reported', 'Routine recovery work paused for emergency support.',
+                occurred_at=case.updated_at)
 
     def _insurance_snapshot(self, connection, case_id):
         from .insurance_models import InsuranceWorkspace, InsuranceSnapshot, SavedPhoto, InsuranceAttachment

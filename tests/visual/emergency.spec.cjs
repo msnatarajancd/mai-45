@@ -11,8 +11,16 @@ async function openHelp(page) {
 }
 
 async function county(page) {
-  await page.getByRole('combobox', {name:'Where is help needed?'}).click();
-  await page.getByRole('option', {name:'Miami-Dade County, Florida', exact:true}).click();
+  await expect(page.getByTestId('stApp')).not.toHaveAttribute('data-test-script-state', 'running');
+  const input = page.getByRole('combobox', {name:'Where is help needed?'});
+  // Rerenders can close a focused dropdown. Retry field selection only; never submit.
+  await expect(async () => {
+    if (await input.getAttribute('aria-expanded') !== 'true') {
+      await input.locator('..').getByRole('button', {name:'Open', exact:true}).click({timeout:1500});
+    }
+    await page.getByRole('option', {name:'Miami-Dade County, Florida', exact:true}).click({timeout:1500});
+    await expect(input).toHaveValue('Miami-Dade County, Florida', {timeout:1500});
+  }).toPass({timeout:10000, intervals:[100,250,500]});
 }
 
 test('contact actions are ordered, usable, and do not initiate a call automatically', async ({page}, info) => {

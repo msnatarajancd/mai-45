@@ -8,6 +8,7 @@ import streamlit as st
 from recovery.assessment import start_recovery_case, RecoveryIntakeNotPermitted
 from recovery.database import SQLiteRecoveryRepository
 from recovery.demo_planner import create_demo_draft_plan
+from recovery.task_view import current_task_views
 from recovery.models import (RecoveryIntake, RecoveryPlan, TaskStatus, RecoveryRecords,
                              HouseholdRecoveryDetails, DamageRecord)
 from recovery.insurance import insurance_discussion_summary
@@ -274,11 +275,15 @@ def reassessment(repo, case, plan):
 
 def dashboard(repo, case, plan):
     guard_pending_danger()
-    county = repo.get_recovery_records(case.case_id).reported_county
+    records = repo.get_recovery_records(case.case_id)
+    county = records.reported_county
+    views = current_task_views(plan)
     version_key = 'rr_displayed_version:' + str(plan.plan_id)
     rendered_version = st.session_state.get(version_key, plan.progress_version)
-    current_tasks = [t for t in plan.proposed_tasks if str(t.task_id) not in plan.task_reviews or plan.task_reviews[str(t.task_id)].applicable]
-    completed = sum(t.status == TaskStatus.COMPLETED for t in plan.proposed_tasks)
+    records_version_key = version_key + ':records'
+    rendered_records_version = st.session_state.get(records_version_key, records.version)
+    current_tasks = [view.task for view in views if view.applicable]
+    completed = sum(t.status == TaskStatus.COMPLETED for t in current_tasks)
     blocked = sum(t.status == TaskStatus.BLOCKED for t in current_tasks)
     a, b, c = st.columns(3)
     a.metric('Steps completed', str(completed))
@@ -291,12 +296,8 @@ def dashboard(repo, case, plan):
     if plan.planning_disclosure:
         st.warning(plan.planning_disclosure)
     st.caption('Locally saved fictional recovery plan · Changes require your approval')
-    order = {'URGENT':0, 'HIGH':1, 'MEDIUM':2, 'LOW':3}
-    displayed_tasks = sorted(plan.proposed_tasks, key=lambda task: order[(plan.task_reviews[str(task.task_id)].priority if str(task.task_id) in plan.task_reviews and plan.task_reviews[str(task.task_id)].priority else task.priority).value])
-    for i, task in enumerate(displayed_tasks, 1):
-        review = plan.task_reviews.get(str(task.task_id))
-        if review and not review.applicable:
-            continue
+    for i, view in enumerate((v for v in views if v.applicable), 1):
+        task, review = view.task, view.review
         with st.container(border=True, key='recovery_task_'+str(task.task_id)):
             left, right = st.columns([2.2, 1])
             with left:
@@ -311,10 +312,10 @@ def dashboard(repo, case, plan):
                 status = st.selectbox('Status · ' + task.title, options, index=options.index(task.status), format_func=lambda s:s.value.replace('_', ' ').title(), key=f'rr_progress:{task.task_id}:{plan.progress_version}')
                 if st.form_submit_button('Save progress', width='stretch'):
                     guard_pending_danger()
-                    repo.update_task_status(plan.plan_id, task.task_id, status, expected_progress_version=rendered_version)
+                    repo.update_task_status(plan.plan_id, task.task_id, status, expected_progress_version=rendered_version, expected_records_version=rendered_records_version)
                     st.session_state['rr_notice'] = 'Progress saved locally.'
                     st.rerun()
-    historical_tasks = [task for task in displayed_tasks if str(task.task_id) in plan.task_reviews and not plan.task_reviews[str(task.task_id)].applicable]
+    historical_tasks = [view.task for view in views if not view.applicable]
     if historical_tasks:
         st.subheader('Historical / no longer applicable')
         st.caption('These tasks are no longer current needs. Their saved status and history are preserved.')
@@ -330,12 +331,14 @@ def dashboard(repo, case, plan):
         if not history:
             st.caption('No recorded status transitions. Earlier legacy updates are not reconstructed.')
     st.session_state[version_key] = plan.progress_version
+    st.session_state[records_version_key] = records.version
+    render_timeline(repo, case.case_id)
     reassessment(repo, case, plan)
     with st.expander('Plan history and take-away copy'):
         st.caption('The download contains fictional case information. Keep it to resume on this same machine.')
         text = 'READYRELIEF — FICTIONAL DEMO RECOVERY PLAN\nCase ID: ' + str(case.case_id) + '\nNot official guidance. Not a safety assessment.\n\n'
-        for i, task in enumerate(plan.proposed_tasks, 1):
-            review = plan.task_reviews.get(str(task.task_id))
+        for i, view in enumerate(views, 1):
+            task, review = view.task, view.review
             label = ('NO LONGER APPLICABLE; historical status '+task.status.value) if review and not review.applicable else task.status.value
             text += f'\n\n{i}. [{label}] {task.title}\n'+(review.description if review else task.description)+'\nReason: '+(review.explanation if review else task.reason_for_recommendation)+'\nSource: '+(task.source_reference or 'No verified guidance reference attached')
         st.download_button('Download my demo plan', text, file_name='readyrelief-demo-plan.txt', mime='text/plain')
@@ -345,6 +348,17 @@ def dashboard(repo, case, plan):
             st.write(f'Previous version · {historical.plan_id}')
             for task in historical.proposed_tasks:
                 st.caption(task.title + ' · ' + task.status.value)
+
+
+def render_timeline(repo, case_id):
+    from recovery.timeline import build_timeline
+    with st.expander('Recovery timeline'):
+        st.caption('Accepted, user-reported Recovery actions. These records do not verify household safety, service delivery or claim submission.')
+        events = build_timeline(repo.list_journey_events(case_id))
+        if not events:
+            st.info('No dated Recovery milestones were recorded for this case. Earlier history is not reconstructed; saved plans and progress remain available.')
+        for event in reversed(events):
+            st.text(event.occurred_at + ' / ' + event.title + '\n' + event.detail)
 
 
 def insurance_preview(repo, case):
