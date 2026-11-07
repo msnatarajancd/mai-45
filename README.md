@@ -91,3 +91,8 @@ The app is online only. Local deterministic routing means independence from AI, 
 In Recover, expand **Ask Qwen about reviewed guidance**, select **flood**, and request **electrical hazards**. Approved CDC evidence may support only a partial answer; keep that limitation visible. Unsupported eligibility questions produce no generated answer. Protect and Respond use their own phase and cannot silently reuse recovery evidence.
 
 Historical real-provider evidence is recorded in [Qwen evidence](docs/evidence/m1-qwen-live-2026-11-03.json). `python scripts/verify_grounded_generation.py --live` explicitly makes paid calls using the server key; normal tests use labeled doubles. See the [M1 handoff](docs/M1_COMPLETION_HANDOFF.md) and [assistant guide](docs/ASSISTANT.md).
+
+
+## Replit demo preparation
+
+See [Replit deployment setup and verification](docs/REPLIT_DEPLOYMENT.md). The prepared configuration starts the existing app as one Streamlit process. Replit deployment has not yet been verified. Use fictional data only; local SQLite storage is not a durable cloud database and the app has no private multi-user isolation.

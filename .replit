@@ -1,0 +1,10 @@
+entrypoint = "app.py"
+run = ["python3", "scripts/start_replit.py"]
+
+[deployment]
+build = ["python3", "-m", "pip", "install", "-r", "requirements.txt"]
+run = ["python3", "scripts/start_replit.py"]
+
+[[ports]]
+localPort = 8501
+externalPort = 80
