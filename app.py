@@ -4,9 +4,11 @@ from ui.state import initialize
 from ui.components import frame, footer, apply_style
 from ui.shell import toolbar, render_dock, full_chat
 from ui import pages
+from ui.capabilities import resolve_page
 
 st.set_page_config(page_title='ReadyRelief · Your next step', page_icon='🌿', layout='wide', initial_sidebar_state='auto')
 initialize(st.session_state)
+st.session_state['page'] = resolve_page(st.session_state['page'])
 toolbar()
 apply_style()
 pages.sidebar()
@@ -20,6 +22,9 @@ if notice:
 page = st.session_state['page']
 if page == 'Assistant':
     full_chat()
+elif page == 'Recovery Progress':
+    from ui.recovery_progress_page import render
+    render()
 elif page == 'Recover':
     from ui.recovery_page import render
     with st.container(key='recovery_workspace'):

@@ -70,14 +70,20 @@ def test_demo_restart_preserves_recovery_and_emergency_state():
 
 
 @pytest.mark.parametrize('mode', ['Local guide · no AI', 'Nebius AI'])
-def test_chat_navigation_is_immediate(app, monkeypatch, mode):
+@pytest.mark.parametrize('destination', ['Recover', 'Recovery Progress'])
+def test_chat_navigation_is_immediate(app, monkeypatch, mode, destination):
     import ui.assistant_page as screen
+    if destination == 'Recovery Progress':
+        import sys
+        from types import SimpleNamespace
+        import streamlit as st
+        monkeypatch.setitem(sys.modules, 'ui.recovery_progress_page', SimpleNamespace(render=lambda: st.title('Recovery Progress route')))
     monkeypatch.setattr(screen, 'local_proposal', lambda *args, **kwargs: pytest.fail('Navigation must not call the planner'))
     monkeypatch.setattr(screen, 'propose', lambda *args, **kwargs: pytest.fail('Navigation must not call the model'))
     app.session_state['page']='Assistant'; app.run()
     next(r for r in app.radio if r.label=='Assistant mode').set_value(mode).run()
-    app.chat_input[0].set_value('open Recover').run()
-    assert app.session_state['page']=='Recover'
+    app.chat_input[0].set_value('open ' + destination).run()
+    assert app.session_state['page']==destination
     assert 'assistant_pending' not in app.session_state
     assert not app.exception
 
@@ -117,6 +123,20 @@ def test_chat_danger_still_interrupts_before_navigation(app):
     next(r for r in app.radio if r.label == 'Assistant mode').set_value('Local guide · no AI').run()
     app.chat_input[0].set_value('Open Recover, we are trapped').run()
     assert app.session_state['rr_emergency'] is True
+
+
+@pytest.mark.parametrize('destination,focus', [('Insurance & Documents', 'Prepare for insurance'), ('My Recovery Plan', 'Continue my recovery')])
+def test_chat_opens_explicit_recovery_focus(app, monkeypatch, destination, focus):
+    import ui.assistant_page as screen
+    monkeypatch.setattr(screen, 'propose', lambda *a, **kw: pytest.fail('No model needed for navigation'))
+    monkeypatch.setattr(screen, 'local_proposal', lambda *a, **kw: pytest.fail('No planner needed for navigation'))
+    app.session_state['rr_focus'] = 'Document damage'
+    app.session_state['page'] = 'Assistant'
+    app.run()
+    app.chat_input[0].set_value('open ' + destination).run()
+    assert app.session_state['page'] == 'Recover'
+    assert app.session_state['rr_focus'] == focus
+    assert not app.exception
 
 
 def test_ai_profile_action_preview_then_confirm(app,monkeypatch):

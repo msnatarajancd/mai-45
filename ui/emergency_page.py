@@ -51,7 +51,7 @@ def render_access_controls():
         cols[0].markdown('<div class="rr-emergency-label">Need urgent help?</div>', unsafe_allow_html=True)
         cols[1].link_button('Call 911', 'tel:911', width='stretch')
         cols[2].button("I Can't Call 911", key='rr_cannot_call', width='stretch', on_click=_open_alternatives)
-        entry = {'Protect': 'guardian', 'Recover': 'recovery', 'Assistant': 'assistant'}.get(
+        entry = {'Protect': 'guardian', 'Recover': 'recovery', 'Recovery Progress': 'recovery', 'Assistant': 'assistant'}.get(
             st.session_state.get('page'), 'respond')
         cols[3].button('Immediate danger', key='rr_report_danger', width='stretch',
                        on_click=_report_danger, args=(entry,))

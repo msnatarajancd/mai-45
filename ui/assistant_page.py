@@ -2,10 +2,10 @@
 import os
 import streamlit as st
 from services.assistant import Proposal,propose,local_proposal,execute,capture,is_danger
-from ui.capabilities import chat_routes, PAGES
+from ui.capabilities import chat_routes, navigation_target
 from recovery.models import RecoveryPlan
 from recovery.task_view import current_task_views
-from ui.components import heading
+from ui.components import heading, navigate_destination
 
 
 def get_repo():
@@ -20,9 +20,10 @@ def append_message(role,text,provider=''):
 
 
 def open_chat_route(page):
-    if page not in PAGES or st.session_state.get('rr_emergency'):
+    target = navigation_target(page)
+    if target is None or st.session_state.get('rr_emergency'):
         return
-    st.session_state['page'] = page
+    navigate_destination(target.page, target.focus)
     st.session_state['chat_open'] = False
     st.session_state.pop('assistant_routes', None)
     message = 'Opened ' + page + '.'

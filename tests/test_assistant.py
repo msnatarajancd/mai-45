@@ -26,6 +26,36 @@ def test_unknown_action_rejected():
         Reply.model_validate({'answer':'ok', 'action':{'kind':'run_sql','sql':'DELETE'}})
 
 
+def test_progress_navigation_schema_local_proposal_and_disabled_fallback(monkeypatch):
+    from services.assistant import local_proposal
+    monkeypatch.setenv('READYRELIEF_PROGRESS_PREVIEW', '1')
+    s = state()
+    reply = Reply.model_validate({'answer': 'Open progress.', 'action': {'kind': 'navigate', 'page': 'Recovery Progress'}})
+    assert reply.action.page == 'Recovery Progress'
+    proposal = local_proposal('open recovery progress', s, None)
+    assert proposal.action.page == 'Recovery Progress'
+    execute(proposal, s, None, confirmed=True)
+    assert s['page'] == 'Recovery Progress'
+    s = state()
+    proposal = local_proposal('open recovery progress', s, None)
+    monkeypatch.setenv('READYRELIEF_PROGRESS_PREVIEW', 'off')
+    execute(proposal, s, None, confirmed=True)
+    assert s['page'] == 'Recover'
+
+
+@pytest.mark.parametrize('destination,focus', [('Insurance & Documents', 'Prepare for insurance'), ('My Recovery Plan', 'Continue my recovery')])
+def test_local_proposal_retains_explicit_recovery_focus(destination, focus):
+    from services.assistant import local_proposal
+    s = state()
+    s['rr_focus'] = 'Document damage'
+    proposal = local_proposal('open ' + destination, s, None)
+    assert proposal.action.page == 'Recover'
+    assert proposal.action.focus == focus
+    execute(proposal, s, None, confirmed=True)
+    assert s['page'] == 'Recover'
+    assert s['rr_focus'] == focus
+
+
 def test_proposal_does_not_mutate_state():
     s=state(); client=Client({'answer':'Open recovery.', 'action':{'kind':'navigate','page':'Recover'}})
     p=propose('open recovery',s,None,client)

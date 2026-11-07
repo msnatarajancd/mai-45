@@ -1,7 +1,7 @@
 """Compact top toolbar and a shared floating/full-screen assistant."""
 import streamlit as st
-from ui.capabilities import search_pages, PAGES
-from ui.components import navigate, icon
+from ui.capabilities import search_destinations, navigation_items, progress_preview_enabled
+from ui.components import navigate, navigate_destination, icon
 from ui.tour import start_tour
 
 
@@ -28,12 +28,15 @@ def toolbar():
         title, search, theme, help_control = st.columns([.65,3,.28,.28],vertical_alignment='center',gap='small')
         with title.container(key='desktop_navigation'):
             from ui.navigation_component import render_toggle
-            render_toggle('toolbar_toggle', st.session_state['page'])
+            page_title = 'Progress' if st.session_state['page'] == 'Recovery Progress' else st.session_state['page']
+            render_toggle('toolbar_toggle', page_title)
         with title.container(key='mobile_nav'):
             with st.popover('Navigate',icon=':material/menu:',help='Open navigation',width='stretch'):
                 st.caption('YOUR WORKSPACE')
-                for page in PAGES:
-                    st.button(page,key='mobile_nav_'+page,width='stretch',on_click=navigate,args=(page,))
+                for item in navigation_items(progress_enabled=progress_preview_enabled()):
+                    key = item.page if item.focus is None else item.label
+                    with st.container(key='mobile_navigation_child_'+key if item.group else 'mobile_navigation_main_'+key):
+                        st.button(item.label,key='mobile_nav_'+key,width='stretch',on_click=navigate_destination,args=(item.page,item.focus))
 
         search.text_input('Search menu',placeholder='Find a screen…',help='Navigation only. Try weather, tasks, or open household. Use chat for questions.',key='nav_search',label_visibility='collapsed',icon=':material/search:')
         with search:
@@ -44,14 +47,15 @@ def toolbar():
         help_control.button('Start walkthrough',icon=':material/help_outline:',key='quick_tour',help='Take a guided tour',width='stretch',on_click=start_tour)
     query=st.session_state.get('nav_search','')
     if query:
-        matches=search_pages(query)
+        matches=search_destinations(query)
         if matches:
             with st.container(key='search_results'):
                 st.caption('MATCHING SCREENS')
                 cols=st.columns(min(4,len(matches)))
-                for i,page in enumerate(matches):
-                    if cols[i%len(cols)].button('Open '+page,key='search_result_'+page,width='stretch'):
-                        st.session_state['page']=page
+                for i,item in enumerate(matches):
+                    destination = item.label if item.focus else item.page
+                    if cols[i%len(cols)].button('Open '+destination,key='search_result_'+destination,width='stretch'):
+                        navigate_destination(item.page,item.focus)
                         st.rerun()
         else:
             st.caption('No matching screens. For questions, use Ask ReadyRelief.')

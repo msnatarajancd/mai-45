@@ -1,0 +1,1442 @@
+[
+  {
+    "id": "rivera",
+    "theme": "Housing before recovery administration",
+    "presenter_goal": "Start with displacement, pets and transport constraints, then move through service and funding needs.",
+    "key_lesson": "Possible housing matches do not establish an arrangement; saved preparation is separate from exact stage funding.",
+    "recommended_tool": "find_temporary_housing",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "Accommodation and two services are unresolved. Housing leads the next actions.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "red",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Accommodation is reported arranged, while electricity is partial and water is reported not potable.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "yellow",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "utilities:electricity",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "Named utilities and preparation evidence are complete in the fictional record; exact allocation remains unknown.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "unknown",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "needs_information",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "chen",
+    "theme": "Repairs complete while reimbursement is pending",
+    "presenter_goal": "Show paid repair costs, remaining preparation, and a reimbursement follow-up after reported completion.",
+    "key_lesson": "Repair completion, evidence readiness and payment receipt are separate facts.",
+    "recommended_tool": "assess_insurance_readiness",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "The household reports being home and exact funding covers the stage; missing evidence leads.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "insurance:prepare-evidence",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Water confirmation is now unresolved and takes priority over preparation.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "yellow",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "utilities:water",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "Repairs and preparation are reported complete, but no received payment is recorded; reimbursement follow-up remains.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "yellow",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "insurance:follow-payment",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "alvarez",
+    "theme": "Expected payment is not current allocation",
+    "presenter_goal": "Compare a large expected payment with a small explicit allocation and then a later allocation.",
+    "key_lesson": "Expected or approved payment cannot be added to funds currently allocated to a stage.",
+    "recommended_tool": "assess_funding_gap",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "Accommodation and named utilities are met; the explicit stage funding gap leads.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Stale utility observations interrupt the funding story and require fresh address reports.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "unknown",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "utilities:electricity",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "needs_information",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "The fictional record now has received and allocated funds. The expanded catalog still offers uncommitted contractor and roofer candidates; deterministic ordering puts contractor-12 first, while roof arrangements remain incomplete.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:contractor-12",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "baptiste",
+    "theme": "Accessible housing with continuing utilities",
+    "presenter_goal": "Show that accommodation can be arranged while water and gas needs remain.",
+    "key_lesson": "Accessibility fit is one constraint, and reported repair completion does not confirm payment receipt.",
+    "recommended_tool": "find_temporary_housing",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "Accessible accommodation is needed, with water and gas interruptions reported.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "red",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Accommodation is arranged but water drinking confirmation remains unresolved.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "yellow",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "utilities:water",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "Repairs are reported complete, while payment remains pending and exact stage funding is unknown.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "unknown",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "insurance:follow-payment",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "needs_information",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "morgan",
+    "theme": "Uninsured does not mean no funding question",
+    "presenter_goal": "Follow an uninsured household from displacement to reported completion without inventing insurance activity.",
+    "key_lesson": "Insurance preparation and payments may be not applicable while household funding remains unknown.",
+    "recommended_tool": "assess_funding_gap",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "Housing and essential services lead; insurance preparation and payment are not applicable.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "red",
+          "insurance": "unknown",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "needs_information",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Accommodation is arranged; water confirmation and exact repair allocation remain unresolved.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "yellow",
+          "insurance": "unknown",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "utilities:water",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "needs_information",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "Home return and repairs are reported complete. The historical funding gap is still unknown, and no new routine action is generated.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "unknown",
+          "rebuild": "green"
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "needs_information",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "williams",
+    "theme": "Unconfirmed intake pauses routine checks",
+    "presenter_goal": "Show that missing danger assessment prevents routine tool execution.",
+    "key_lesson": "Unknown safety is not a successful recovery check; do not run the ordinary specialists at any checkpoint.",
+    "recommended_tool": "find_temporary_housing",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "Immediate danger has not been assessed. The routine preview remains paused; confirm safety before checking.",
+        "expected_signals": {
+          "housing": null,
+          "utilities": null,
+          "insurance": null,
+          "rebuild": null
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "paused",
+          "utilities": "paused",
+          "insurance": "paused",
+          "rebuild": "paused"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Safety is still unassessed. The authored rebuild-failure flag is not exercised because the safety gate comes first.",
+        "expected_signals": {
+          "housing": null,
+          "utilities": null,
+          "insurance": null,
+          "rebuild": null
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "paused",
+          "utilities": "paused",
+          "insurance": "paused",
+          "rebuild": "paused"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "No new household or safety facts are supplied. Routine checks remain paused, without fresh signals or actions.",
+        "expected_signals": {
+          "housing": null,
+          "utilities": null,
+          "insurance": null,
+          "rebuild": null
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "paused",
+          "utilities": "paused",
+          "insurance": "paused",
+          "rebuild": "paused"
+        }
+      }
+    ]
+  },
+  {
+    "id": "santos",
+    "theme": "Eight people staying together",
+    "presenter_goal": "Compare two hotel rooms with eight person-spaces and a household-together requirement.",
+    "key_lesson": "Capacity is counted in the site's units, and a suitable candidate does not reserve accommodation.",
+    "recommended_tool": "find_temporary_housing",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "One family room or seven person-spaces cannot fit eight people; a site that splits the household is excluded.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Two rooms at four people each or enough person-spaces now fit. Accommodation is still explicitly needed.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "A separate fictional report says accommodation is arranged. The remaining stage funding gap becomes the next action.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "patel",
+    "theme": "Pets, transport and a budget",
+    "presenter_goal": "Show why separate pet, transport and cost filters must all be satisfied.",
+    "key_lesson": "A cheap option can still fail transport or pet requirements, and a fit does not imply a booking.",
+    "recommended_tool": "find_temporary_housing",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "The pet-excluding hotel, no-transport hotel and two-room cost above USD 60 are all excluded.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "The selected hotel and community hall support pets and transport within the declared nightly budget, but no arrangement is reported.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "Accommodation is reported arranged; the household still needs to close a stage funding gap.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "okafor",
+    "theme": "Accessibility across accommodation and repairs",
+    "presenter_goal": "Distinguish explicitly inaccessible options from unknown accessibility and supported alternatives.",
+    "key_lesson": "Unknown accessibility needs confirmation; provider accessibility is assessed independently of housing.",
+    "recommended_tool": "find_temporary_housing",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "The inaccessible hotel and contractor are excluded. Remaining candidates have unknown capacity or accessibility.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "unknown"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "needs_information"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Current accessible accommodation candidates and an accessible provider are supplied, but accommodation is still needed.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "Accommodation is reported arranged. Review the accessible fictional contractor; listed availability is not a work commitment.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:contractor-7",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rodriguez",
+    "theme": "Full capacity, available space, arranged stay",
+    "presenter_goal": "Show three distinct accommodation facts rather than treating vacancy as a reservation.",
+    "key_lesson": "A capacity update can create an option while the housing signal remains red until arrangement is reported.",
+    "recommended_tool": "find_temporary_housing",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "All three selected sites have zero available spaces, so there are no matches.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "One fictional shelter now reports six spaces for a four-person household; housing remains needed.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "The household separately reports an arrangement. The authored checks generate no further routine action; this is not a home-safety clearance.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "thompson",
+    "theme": "Area electricity versus address evidence",
+    "presenter_goal": "Move from area news to a partial address report and then reported availability.",
+    "key_lesson": "Area information cannot establish household service restoration.",
+    "recommended_tool": "check_utility_health",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "A fresh area report says electricity is available, but the household address is unconfirmed.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "unknown",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "utilities:electricity",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "needs_information",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "A fresh fictional address report establishes only partial electricity service.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "yellow",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "utilities:electricity",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "The fictional address report now says available. It makes no claim about overall home safety.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "garcia",
+    "theme": "Water supply versus drinking confirmation",
+    "presenter_goal": "Explain why running water can remain yellow until explicit potability is reported.",
+    "key_lesson": "Water supply, potability and home safety are different facts.",
+    "recommended_tool": "check_utility_health",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "Water supply is interrupted; the water action leads.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "red",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "utilities:water",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Water is available, but potability is not confirmed, so the service remains yellow.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "yellow",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "utilities:water",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "The new fictional address report explicitly says potable. This is a synthetic report, not drinking-water advice or verification.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "lopez",
+    "theme": "Explicit gas applicability",
+    "presenter_goal": "Show that an area gas outage cannot establish whether this household uses gas.",
+    "key_lesson": "Gas becomes not applicable only after an explicit household report; no observation is not the same as no gas.",
+    "recommended_tool": "check_utility_health",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "Gas use and service are unknown, so an address-level confirmation action remains.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "unknown",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "utilities:gas",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "needs_information",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "The area outage report does not establish household gas use or address service. The gas item stays unknown.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "unknown",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "utilities:gas",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "needs_information",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "The household explicitly reports no gas use. Gas is not applicable, while electricity and water remain green.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "nguyen",
+    "theme": "Conflicting utility observations",
+    "presenter_goal": "Resolve electricity conflict first while preserving the separate water-potability conflict.",
+    "key_lesson": "Conflicting current reports stay unknown until the contradictory observation is resolved in a new checkpoint.",
+    "recommended_tool": "check_utility_health",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "Fresh address reports conflict on electricity status and water potability; electricity sorts first among unresolved utilities.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "unknown",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "utilities:electricity",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "needs_information",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Electricity reports now agree, but water potability still conflicts, so water becomes the lead action.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "unknown",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "utilities:water",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "needs_information",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "The new checkpoint supplies consistent current address observations for each service.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "johnson",
+    "theme": "Observation age and refresh",
+    "presenter_goal": "Compare stale housing and provider observations with a fresh authored update.",
+    "key_lesson": "Stale candidate observations are not fresh availability, and refreshed availability still does not reserve a stay or work.",
+    "recommended_tool": "search_repair_providers",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "The selected catalogs are 72 hours old with 24-hour validity. Housing candidates and provider observations are unknown.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "unknown"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "needs_information"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Both catalogs are refreshed. Accommodation is still needed and one fictional roofer is waiting.",
+        "expected_signals": {
+          "housing": "red",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "housing:confirm-accommodation",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "Accommodation is reported arranged; a contractor quote and a roofer awaiting reply remain distinct from work commitments.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:contractor-6",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "martinez",
+    "theme": "Uninsured household funding",
+    "presenter_goal": "Track a concrete stage gap without an insurance preparation or payment track.",
+    "key_lesson": "No insurance does not remove the need for an explicit current allocation.",
+    "recommended_tool": "assess_funding_gap",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "The USD 3,500 stage has USD 500 explicitly allocated: a USD 3,000 gap. Insurance preparation and payment are not applicable.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "The allocation rises to USD 1,500, leaving a USD 2,000 gap even though a quote is received.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "The explicit allocation covers USD 3,500. The accepted fictional quote still needs a work commitment.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:plumber-6",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "singh",
+    "theme": "Approved, received, allocated",
+    "presenter_goal": "Display payment receipt independently from available repair-stage allocation.",
+    "key_lesson": "A received payment is not added to stage funds until explicitly allocated.",
+    "recommended_tool": "assess_funding_gap",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "A fictional USD 4,000 payment is approved but not received. Only USD 1,000 is allocated to a USD 5,000 stage.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "The payment is recorded received, yet the allocation remains USD 1,000 and the USD 4,000 gap remains.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "USD 5,000 is now explicitly allocated. The received payment is not counted again; the quote still needs follow-up.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:electrician-6",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "robinson",
+    "theme": "Consistent currency for exact funding",
+    "presenter_goal": "Demonstrate that mismatched currency in allocation or spend prevents an exact USD answer.",
+    "key_lesson": "The demo does not infer exchange rates or silently convert currency.",
+    "recommended_tool": "assess_funding_gap",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "The stage cost is USD 3,000, but the allocation is EUR 3,000. Exact stage funding is unknown.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "unknown",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "needs_information",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Cost and allocation are USD, but the spend record remains EUR 500, so the answer is still unknown.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "unknown",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "needs_information",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "All three records now use USD. After USD 500 spend, USD 2,500 cost and allocation remain, with no exact gap.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:plumber-7",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "lewis",
+    "theme": "Correct stage and spend once",
+    "presenter_goal": "Show an allocation to the wrong stage, then correct it and record partial spending.",
+    "key_lesson": "Stage IDs must match, and spending reduces both remaining cost and allocation once.",
+    "recommended_tool": "assess_funding_gap",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "The USD 3,000 allocation belongs to roof-stabilization, while the current stage is essential-repairs, so funding is unknown.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "unknown",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "needs_information",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "The explicit allocation is corrected to the current stage; the fictional quote is still awaiting commitment.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:roofer-7",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "USD 1,200 spending leaves USD 1,800 cost and USD 1,800 allocation. Work is committed in the simulation, not marked complete.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "brown",
+    "theme": "A larger estimate is a real setback",
+    "presenter_goal": "Keep completed cleanup visible while a roof-stage cost increase creates a renewed funding gap.",
+    "key_lesson": "New information can worsen a signal without reopening completed historical work.",
+    "recommended_tool": "assess_funding_gap",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "USD 2,000 allocation covers the original roof-stage estimate. Completed cleanup remains recorded.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:roofer-9",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "The estimate rises to USD 5,500 while allocation stays USD 2,000. The USD 3,500 gap takes priority.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "An allocation of USD 2,500 and spend of USD 1,000 still leave a USD 3,000 gap. The story intentionally ends unresolved.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "funding:confirm-next-stage",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "wilson",
+    "theme": "Explicit evidence links",
+    "presenter_goal": "Follow a saved but unlinked photo, a linked reported-available record, and finally linked saved evidence.",
+    "key_lesson": "A saved file alone is not checklist evidence; requirement links and evidence status both matter.",
+    "recommended_tool": "assess_insurance_readiness",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "The photo record is saved but has no requirement link. The selected fictional photo requirement remains red.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "red",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "insurance:prepare-evidence",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "The photo requirement is linked to reported-available evidence, which is yellow rather than saved.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "yellow",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "insurance:prepare-evidence",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "The linked photo evidence is now saved. Preparation is green without asserting insurer acceptance or coverage.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "davis",
+    "theme": "Declined quote to new commitments",
+    "presenter_goal": "Retain a declined provider while comparing new quotes for two needed trades.",
+    "key_lesson": "Declined providers, received quotes and work commitments are separate states; none proves completed work.",
+    "recommended_tool": "search_repair_providers",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "The old contractor is declined and excluded from actions. New contractor and roofer responses are still awaited.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:contractor-9",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "Both new providers supply fictional quotes. Neither quote is accepted or committed merely by appearing.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:contractor-9",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "Both needed trades have fictional work commitments. Repairs remain explicitly incomplete.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "fernandez",
+    "theme": "New danger pauses completed-work story",
+    "presenter_goal": "Demonstrate the safety gate after a previously successful checkpoint, then resume only at a newly assessed checkpoint.",
+    "key_lesson": "Completed repair history survives new danger; a later false danger flag is an authored assessment, not a safety clearance.",
+    "recommended_tool": "check_utility_health",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "Original repairs and home return are reported complete in the fictional record; no new routine action is generated.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "New immediate danger is true. Do not run ordinary tools or show fresh specialist results; routine actions are absent.",
+        "expected_signals": {
+          "housing": null,
+          "utilities": null,
+          "insurance": null,
+          "rebuild": null
+        },
+        "expected_primary_action": null,
+        "expected_execution": {
+          "housing": "paused",
+          "utilities": "paused",
+          "insurance": "paused",
+          "rebuild": "paused"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "A new fictional checkpoint explicitly assesses immediate danger as false. Accommodation is arranged, electricity remains partial, and the completed original repair history stays complete.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "yellow",
+          "insurance": "green",
+          "rebuild": "green"
+        },
+        "expected_primary_action": "utilities:electricity",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  },
+  {
+    "id": "campbell",
+    "theme": "Partial tool failure and recovery",
+    "presenter_goal": "Contrast a successful check, a failed utility tool and a fresh retry while provider work remains pending.",
+    "key_lesson": "Failed tools yield unknown current signals and no stale actions; remaining recommendations disclose partial information.",
+    "recommended_tool": "check_utility_health",
+    "checkpoints": [
+      {
+        "id": "initial",
+        "talk_track": "Water potability is unconfirmed and leads; the pool-specialist quote remains pending.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "yellow",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "utilities:water",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "update",
+        "talk_track": "The utility tool is deliberately unavailable. Its current signal is unknown and execution failed; the provider action must disclose the partial check.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "unknown",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:pool-specialist-6",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "failed",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      },
+      {
+        "id": "later",
+        "talk_track": "The utility tool succeeds with a fresh fictional potable-water report. The unresolved provider quote remains the next action.",
+        "expected_signals": {
+          "housing": "green",
+          "utilities": "green",
+          "insurance": "green",
+          "rebuild": "yellow"
+        },
+        "expected_primary_action": "rebuild:pool-specialist-6",
+        "expected_execution": {
+          "housing": "complete",
+          "utilities": "complete",
+          "insurance": "complete",
+          "rebuild": "complete"
+        }
+      }
+    ]
+  }
+]

@@ -12,9 +12,9 @@ from emergency.workflow import begin_emergency
 from recovery.models import RecoveryIntake, RecoveryPlan, TaskStatus
 from recovery.task_view import current_task_views
 from recovery.llm_client import NebiusClient, PlanningClientError, RecoveryLLMClient
-from ui.capabilities import GUIDE
+from ui.capabilities import GUIDE, resolve_page, chat_routes, navigation_target
 
-Page = Literal['Home','Protect','Respond','Recover','Household','Evidence','Assistant']
+Page = Literal['Home','Protect','Respond','Recover','Recovery Progress','Household','Evidence','Assistant']
 
 class Strict(BaseModel):
     model_config = ConfigDict(extra='forbid')
@@ -22,6 +22,7 @@ class Strict(BaseModel):
 class Navigate(Strict):
     kind: Literal['navigate']
     page: Page
+    focus: Literal['Continue my recovery', 'Prepare for insurance'] | None = None
 
 class Simple(Strict):
     kind: Literal['start_tour','start_demo','check_alerts','show_plan','approve_plan']
@@ -142,8 +143,13 @@ def local_proposal(text,state,repo):
     elif normalized in {'check alerts','show alerts'}: action={'kind':'check_alerts'}
     elif normalized in {'show my plan','show plan'}: action={'kind':'show_plan'}
     else:
-        for page in ('Home','Protect','Respond','Recover','Household','Evidence','Assistant'):
+        for page in ('Home','Protect','Respond','Recover','Recovery Progress','Household','Evidence','Assistant'):
             if normalized in {page.casefold(),'open '+page.casefold(),'go to '+page.casefold()}: action={'kind':'navigate','page':page}
+        if action is None:
+            routes = chat_routes(text)
+            target = navigation_target(routes[0]) if len(routes) == 1 else None
+            if target is not None:
+                action = {'kind':'navigate', 'page':target.page, 'focus':target.focus}
     return Proposal(answer='Review the proposed action below.' if action else 'Local guide mode supports “start tour”, “start demo”, “check alerts”, “show my plan”, and “open Recover” (or another page). Choose Nebius AI for natural-language help and more operations.',action=action,snapshot=capture(state,repo),provider='Local guide · not AI')
 
 
@@ -165,7 +171,10 @@ def execute(proposal,state,repo,*,confirmed=False,danger_confirmed=False):
     if kind in {'approve_plan','update_task','reassess'} and (not case or case.intake.immediate_danger is not False):
         raise ValueError('An assessed recovery case with no immediate danger reported is required.')
     message='Action completed.'
-    if kind=='navigate': state['page']=a.page
+    if kind=='navigate':
+        state['page']=resolve_page(a.page)
+        if state['page']=='Recover' and a.focus is not None:
+            state['rr_focus']=a.focus
     elif kind=='start_tour':
         from ui.state import start_walkthrough
         start_walkthrough(state)

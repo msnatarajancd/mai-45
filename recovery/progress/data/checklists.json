@@ -1,0 +1,162 @@
+[
+  {
+    "id": "sample-a",
+    "label": "Sample A",
+    "description": "Basic preparation",
+    "requirements": [
+      {
+        "id": "damage_summary",
+        "title": "Damage summary"
+      },
+      {
+        "id": "photos",
+        "title": "Linked damage photographs"
+      }
+    ]
+  },
+  {
+    "id": "sample-b",
+    "label": "Sample B",
+    "description": "Itemized evidence",
+    "requirements": [
+      {
+        "id": "inventory",
+        "title": "Itemized inventory"
+      },
+      {
+        "id": "photos",
+        "title": "Linked damage photographs"
+      },
+      {
+        "id": "ownership",
+        "title": "Ownership information"
+      }
+    ]
+  },
+  {
+    "id": "sample-c",
+    "label": "Sample C",
+    "description": "Incurred-cost preparation",
+    "requirements": [
+      {
+        "id": "receipts",
+        "title": "Repair receipts"
+      },
+      {
+        "id": "payment_record",
+        "title": "Record of payment"
+      },
+      {
+        "id": "photos",
+        "title": "Linked damage photographs"
+      }
+    ]
+  },
+  {
+    "id": "sample-d",
+    "label": "Sample D",
+    "description": "Proposed-work preparation",
+    "requirements": [
+      {
+        "id": "scope",
+        "title": "Written repair scope"
+      },
+      {
+        "id": "quote",
+        "title": "Itemized proposed-work quote"
+      },
+      {
+        "id": "photos",
+        "title": "Linked damage photographs"
+      }
+    ]
+  },
+  {
+    "id": "sample-e",
+    "label": "Sample E",
+    "description": "Fictional temporary-stay document preparation; a neutral demo example, not an insurer requirement.",
+    "requirements": [
+      {
+        "id": "displacement_record",
+        "title": "Temporary displacement record"
+      },
+      {
+        "id": "temporary_stay_receipts",
+        "title": "Temporary-stay receipts"
+      },
+      {
+        "id": "photos",
+        "title": "Linked damage photographs"
+      }
+    ]
+  },
+  {
+    "id": "sample-f",
+    "label": "Sample F",
+    "description": "Fictional inspection and proposed-work document preparation; a neutral demo example, not an insurer requirement.",
+    "requirements": [
+      {
+        "id": "inspection_summary",
+        "title": "Recorded inspection summary"
+      },
+      {
+        "id": "scope",
+        "title": "Written repair scope"
+      },
+      {
+        "id": "quote",
+        "title": "Itemized proposed-work quote"
+      },
+      {
+        "id": "photos",
+        "title": "Linked damage photographs"
+      }
+    ]
+  },
+  {
+    "id": "sample-g",
+    "label": "Sample G",
+    "description": "Fictional belongings and repair-progress document preparation; a neutral demo example, not an insurer requirement.",
+    "requirements": [
+      {
+        "id": "inventory",
+        "title": "Itemized inventory"
+      },
+      {
+        "id": "ownership",
+        "title": "Ownership information"
+      },
+      {
+        "id": "repair_progress",
+        "title": "Dated repair-progress record"
+      },
+      {
+        "id": "photos",
+        "title": "Linked damage photographs"
+      }
+    ]
+  },
+  {
+    "id": "sample-h",
+    "label": "Sample H",
+    "description": "Fictional combined scope and incurred-cost document preparation; a neutral demo example, not an insurer requirement.",
+    "requirements": [
+      {
+        "id": "damage_summary",
+        "title": "Damage summary"
+      },
+      {
+        "id": "scope",
+        "title": "Written repair scope"
+      },
+      {
+        "id": "receipts",
+        "title": "Repair receipts"
+      },
+      {
+        "id": "payment_record",
+        "title": "Record of payment"
+      }
+    ]
+  }
+]
