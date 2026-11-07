@@ -1,0 +1,153 @@
+{
+  "sources": [
+    {
+      "source_id": "cdc-flood-reentry",
+      "url": "https://www.cdc.gov/floods/safety/reentering-your-flooded-home-safety.html",
+      "review_status": "REVIEWED",
+      "hash_match": true,
+      "candidate_states": {
+        "APPROVED": 5,
+        "PENDING": 1
+      }
+    },
+    {
+      "source_id": "cdc-floodwater",
+      "url": "https://www.cdc.gov/floods/safety/floodwater-after-a-disaster-or-emergency-safety.html",
+      "review_status": "DOWNLOADED_UNREVIEWED",
+      "hash_match": true,
+      "candidate_states": {
+        "PENDING": 6
+      }
+    },
+    {
+      "source_id": "fcc-text-911",
+      "url": "https://www.fcc.gov/consumers/guides/what-you-need-know-about-text-911",
+      "review_status": "UNAVAILABLE",
+      "hash_match": null,
+      "candidate_states": {}
+    },
+    {
+      "source_id": "miami-dade-eeap",
+      "url": "https://www.miamidade.gov/global/service.page?Mduid_service=ser1470238193996672",
+      "review_status": "REVIEW_REQUIRED",
+      "hash_match": true,
+      "candidate_states": {
+        "PENDING": 5
+      }
+    },
+    {
+      "source_id": "miami-dade-text-911",
+      "url": "https://www.mdso.com/text-911",
+      "review_status": "REVIEW_REQUIRED",
+      "hash_match": true,
+      "candidate_states": {
+        "PENDING": 1
+      }
+    },
+    {
+      "source_id": "miami-dade-weather-contacts",
+      "url": "https://www.miamidade.gov/initiative/weather-ready/contact.page",
+      "review_status": "REVIEW_REQUIRED",
+      "hash_match": true,
+      "candidate_states": {
+        "PENDING": 4
+      }
+    },
+    {
+      "source_id": "nfip-document-flood-damage",
+      "url": "https://www.floodsmart.gov/recover/document-damage",
+      "review_status": "REVIEW_REQUIRED",
+      "hash_match": true,
+      "candidate_states": {
+        "PENDING": 4
+      }
+    },
+    {
+      "source_id": "usagov-disaster-housing",
+      "url": "https://www.usa.gov/disaster-housing-shelter",
+      "review_status": "REVIEWED",
+      "hash_match": true,
+      "candidate_states": {
+        "PENDING": 2,
+        "APPROVED": 1
+      }
+    }
+  ],
+  "published_count": 6,
+  "published": [
+    {
+      "source_id": "cdc-flood-reentry",
+      "citation_id": "0a803dca33e55c0c5dea445f1db7f8bde62474553fc53314f8b933bf229b2ce8",
+      "passage": "If your home has damage, do not reenter until it has been examined by a building inspector for safety."
+    },
+    {
+      "source_id": "cdc-flood-reentry",
+      "citation_id": "988c9fcd1da54e741fcd265c007f7388a9cfa52efc4b6c74d99796e1cb5a3fb1",
+      "passage": "NEVER turn power on or off yourself or use an electric tool or appliance while standing in water."
+    },
+    {
+      "source_id": "cdc-flood-reentry",
+      "citation_id": "a60f54160bbb2ce43a813d4ad0a83e72e8212aec8492956a7dd56b4e89c532c7",
+      "passage": "Tap water may not be safe to drink. Listen to local warnings."
+    },
+    {
+      "source_id": "cdc-flood-reentry",
+      "citation_id": "ab2bd10259fd31091cacb80da02f5e8e042eeef7fb9d88b6f37ff01d23622498",
+      "passage": "When returning to a flooded home after a natural disaster, be aware that your house may be contaminated with mold or sewage, which can make you sick.\nTake steps to protect your health and safety when returning to your flooded home."
+    },
+    {
+      "source_id": "cdc-flood-reentry",
+      "citation_id": "ffa4fe9ae4c8f85d1030c5907c403b265370c503fefd6ab9f87e097ccf620465",
+      "passage": "Have an electrician check the house's electrical system before turning the power on again."
+    },
+    {
+      "source_id": "usagov-disaster-housing",
+      "citation_id": "8630330fbd12aabc3c31bff38cd811d234bc3e214e05021a322d6f082d9f2b48",
+      "passage": "After you register for disaster assistance with FEMA, you will find out if you qualify for transitional housing."
+    }
+  ],
+  "queries": {
+    "What does official guidance say about qualifying for transitional housing?": {
+      "status": "NO_RELEVANT_EVIDENCE",
+      "citations": [],
+      "answer": "No relevant reviewed evidence is available for this topic and context."
+    },
+    "Where can I find temporary housing after flooding?": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "citations": [
+        "8630330fbd12aabc3c31bff38cd811d234bc3e214e05021a322d6f082d9f2b48"
+      ],
+      "answer": "Insufficient evidence: fewer reviewed excerpts are available than requested."
+    },
+    "electrician electrical hazards": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "citations": [
+        "ffa4fe9ae4c8f85d1030c5907c403b265370c503fefd6ab9f87e097ccf620465"
+      ],
+      "answer": "Insufficient evidence: fewer reviewed excerpts are available than requested."
+    },
+    "building inspector flooded home": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "citations": [
+        "0a803dca33e55c0c5dea445f1db7f8bde62474553fc53314f8b933bf229b2ce8",
+        "ab2bd10259fd31091cacb80da02f5e8e042eeef7fb9d88b6f37ff01d23622498"
+      ],
+      "answer": "Insufficient evidence: fewer reviewed excerpts are available than requested."
+    },
+    "Which shelters have rooms available tonight?": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "citations": [],
+      "answer": "Insufficient reviewed evidence for this request."
+    },
+    "Is my home safe to enter now?": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "citations": [],
+      "answer": "Insufficient reviewed evidence for this request."
+    },
+    "Are there evacuation orders right now?": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "citations": [],
+      "answer": "Insufficient reviewed evidence for this request."
+    }
+  }
+}

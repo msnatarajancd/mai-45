@@ -1,0 +1,62 @@
+{
+  "extraction": {
+    "passed": 14,
+    "failed": 0,
+    "not_executed": 0,
+    "modes": {
+      "OFFLINE MODEL FIXTURE": 13,
+      "DETERMINISTIC APPLICATION CHECK": 1
+    },
+    "metrics": {
+      "fields_correct": 7,
+      "fields_total": 7,
+      "unknowns_correct": 133,
+      "unknowns_total": 133,
+      "unsupported_values": 0,
+      "extracted_values": 8,
+      "quotes_correct": 8,
+      "quotes_total": 8,
+      "schema_valid": 12,
+      "responses": 13
+    }
+  },
+  "rag": {
+    "passed": 13,
+    "failed": 1,
+    "not_executed": 0,
+    "modes": {
+      "DETERMINISTIC APPLICATION CHECK": 12,
+      "OFFLINE MODEL FIXTURE": 2
+    },
+    "metrics": {
+      "retrieval_cases": 14,
+      "relevant_results": 13,
+      "abstention_cases": 8,
+      "correct_abstentions": 8,
+      "positive_retrieval_cases": 6,
+      "correct_positive_retrievals": 5,
+      "source_checks": 6,
+      "approved_sources": 6,
+      "citation_checks": 6,
+      "correct_citations": 6,
+      "claims_checked": 1,
+      "supported_claims": 1,
+      "unsafe_claim_rejection_cases": 1,
+      "unsafe_claim_rejections": 1
+    }
+  },
+  "workflow": {
+    "passed": 12,
+    "failed": 0,
+    "not_executed": 0,
+    "modes": {
+      "DETERMINISTIC APPLICATION CHECK": 11,
+      "OFFLINE MODEL FIXTURE": 1
+    },
+    "metrics": {
+      "workflow_scenarios": 12,
+      "workflow_passed": 12,
+      "regression_assertion_tests": 16
+    }
+  }
+}

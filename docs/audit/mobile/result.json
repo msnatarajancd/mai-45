@@ -1,0 +1,316 @@
+{
+  "status": "PASS",
+  "width": 390,
+  "case_id": "bada4e0c-6c96-43e5-88ec-e909c706ff35",
+  "description": "Fictional demonstration household: three adults. One adult is 72 years old and uses a walker. We are staying with friends away from the affected property. No one has an immediate injury or current emergency. Earlier flooding on November 1, 2026 damaged our refrigerator and sofa. We need recovery guidance and insurance preparation.",
+  "steps": [
+    "Home and navigation",
+    "Simulated Protect, not live weather",
+    "Respond and independent emergency controls",
+    "Description and real structured fallback",
+    "Confirm three adults and actual damaged items",
+    "Regenerate, review and explicitly approve personalized plan",
+    "Task completion survives refresh and resume",
+    "Supported reassessment preserves completed work",
+    "Official Assistance Finder links and limitations",
+    "Save insurer details through confirmation",
+    "Item-specific estimates use confirmed damage records",
+    "Actual synthetic photograph upload, confirmation and persistence",
+    "Receipt not uploaded and user-reported communication",
+    "Download real PDF CSV and evidence ZIP",
+    "Insurance preserves approved tasks and progress"
+  ],
+  "state": {
+    "cases": 5,
+    "case": {
+      "case_id": "bada4e0c-6c96-43e5-88ec-e909c706ff35",
+      "intake": {
+        "disaster_type": "Flood",
+        "housing_condition": "Minor reported damage",
+        "utility_availability": {
+          "electricity": true,
+          "water": null
+        },
+        "temporary_accommodation_status": "Staying with others",
+        "immediate_danger": false,
+        "household_recovery_needs": [
+          "Damage documentation"
+        ]
+      },
+      "created_at": "2026-11-06T16:28:52.778631Z",
+      "updated_at": "2026-11-06T16:29:12.415038Z"
+    },
+    "active_plan": "6b948ab8-01b3-4c82-a584-ae1a93978a27",
+    "plan": {
+      "planning_basis": null,
+      "records_version": null,
+      "task_reviews": {
+        "7c73848d-72ad-4b28-a942-c1dc1e6da5c2": {
+          "priority": "HIGH",
+          "applicable": true,
+          "description": "Keep emergency controls accessible. Review reported hazards and official reentry information before any in-person activity. This plan does not authorize entry or utility work.",
+          "explanation": "Continue this task; no related confirmed circumstance has resolved its purpose."
+        },
+        "fe47fed7-91fd-41f7-a341-fe18b4ad41c3": {
+          "priority": "MEDIUM",
+          "applicable": true,
+          "description": "Reported unavailable: none; unknown: water. Follow up only on those gaps or questions; do not attempt repairs.",
+          "explanation": "Reported unavailable: none; unknown: water. Follow up only on those gaps or questions; do not attempt repairs. Restored utilities do not establish household safety or drinking-water safety."
+        },
+        "413187e7-eb0d-4202-bcbe-0ed3ce79a712": {
+          "priority": "MEDIUM",
+          "applicable": true,
+          "description": "Record confirmed item details for Refrigerator, Sofa and information already known from a safe location. Do not enter a damaged building to inspect it or handle hazardous items.",
+          "explanation": "Continue this task; no related confirmed circumstance has resolved its purpose."
+        },
+        "13e06524-944d-47e0-8635-dc78d315379e": {
+          "priority": "LOW",
+          "applicable": true,
+          "description": "Review the existing summary of confirmed damage and missing policy information before speaking with an insurer. No coverage, claim submission or outcome is established.",
+          "explanation": "Continue this task; no related confirmed circumstance has resolved its purpose."
+        },
+        "7035d522-8075-4710-9cc3-ba349fb0434b": {
+          "priority": "LOW",
+          "applicable": true,
+          "description": "Keep the case ID, review saved information and decide which follow-ups to undertake. Official disaster-assistance information is a pathway only, not an eligibility decision.",
+          "explanation": "Continue this task; no related confirmed circumstance has resolved its purpose."
+        }
+      },
+      "confirmed_damage_ids": [
+        "f3ef1e53-fce9-4f24-93f3-ec29fc457e00",
+        "8df3fe25-be9d-4315-8f78-f22227db9a6b"
+      ],
+      "planning_disclosure": "Deterministic organization plan from confirmed household reports. Official directory pathways are not M3-reviewed guidance or checks of live availability, eligibility, coverage or household safety. No external submission is made.",
+      "progress_version": 0,
+      "plan_id": "6b948ab8-01b3-4c82-a584-ae1a93978a27",
+      "case_id": "bada4e0c-6c96-43e5-88ec-e909c706ff35",
+      "proposed_tasks": [
+        {
+          "task_id": "7c73848d-72ad-4b28-a942-c1dc1e6da5c2",
+          "title": "Review safe recovery boundaries",
+          "description": "Keep emergency controls accessible. Review reported hazards and official reentry information before any in-person activity. This plan does not authorize entry or utility work.",
+          "priority": "HIGH",
+          "status": "COMPLETED",
+          "reason_for_recommendation": "Incident reported: Flood; housing: Minor reported damage",
+          "source_reference": null,
+          "planning_key": "safety",
+          "dependencies": [
+            "Any new immediate danger interrupts recovery; use emergency assistance."
+          ],
+          "resource_categories": []
+        },
+        {
+          "task_id": "fe47fed7-91fd-41f7-a341-fe18b4ad41c3",
+          "title": "Record utility availability and gaps",
+          "description": "Identify the correct provider using a bill or official lookup. Record follow-ups for unknown utilities. Do not attempt repairs. Availability does not establish household safety or water potability.",
+          "priority": "MEDIUM",
+          "status": "NOT_STARTED",
+          "reason_for_recommendation": "Reported unavailable: none; unknown: electricity, water",
+          "source_reference": null,
+          "planning_key": "utilities",
+          "dependencies": [
+            "Confirm the household provider before contacting it; no provider is assumed."
+          ],
+          "resource_categories": [
+            "Electricity",
+            "Water"
+          ]
+        },
+        {
+          "task_id": "413187e7-eb0d-4202-bcbe-0ed3ce79a712",
+          "title": "Organize known damage information",
+          "description": "Record confirmed item details for Refrigerator, Sofa and information already known from a safe location. Do not enter a damaged building to inspect it or handle hazardous items.",
+          "priority": "MEDIUM",
+          "status": "NOT_STARTED",
+          "reason_for_recommendation": "Confirmed damaged items: Refrigerator, Sofa; housing: Minor reported damage",
+          "source_reference": null,
+          "planning_key": "damage",
+          "dependencies": [
+            "Document only when safe; do not enter or handle hazards to collect information."
+          ],
+          "resource_categories": []
+        },
+        {
+          "task_id": "13e06524-944d-47e0-8635-dc78d315379e",
+          "title": "Prepare an insurance discussion draft",
+          "description": "Review the existing summary of confirmed damage and missing policy information before speaking with an insurer. No coverage, claim submission or outcome is established.",
+          "priority": "LOW",
+          "status": "NOT_STARTED",
+          "reason_for_recommendation": "Confirmed damage or an explicit insurance-preparation request is on record.",
+          "source_reference": null,
+          "planning_key": "insurance",
+          "dependencies": [
+            "Review and confirm damaged-item records before including them in the discussion summary."
+          ],
+          "resource_categories": []
+        },
+        {
+          "task_id": "7035d522-8075-4710-9cc3-ba349fb0434b",
+          "title": "Review saved recovery records and follow-ups",
+          "description": "Keep the case ID, review saved information and decide which follow-ups to undertake. Official disaster-assistance information is a pathway only, not an eligibility decision.",
+          "priority": "LOW",
+          "status": "NOT_STARTED",
+          "reason_for_recommendation": "Saved recovery information is available for household review.",
+          "source_reference": null,
+          "planning_key": "followup",
+          "dependencies": [],
+          "resource_categories": [
+            "Disaster assistance"
+          ]
+        }
+      ],
+      "approval_status": "APPROVED"
+    },
+    "records": {
+      "case_id": "bada4e0c-6c96-43e5-88ec-e909c706ff35",
+      "reported_county": null,
+      "version": 3,
+      "household": {
+        "children": null,
+        "adults": 3,
+        "reported_property_damage": "Refrigerator and sofa damaged in earlier flooding. Three adults are staying with friends; one adult is 72 and uses a walker. No current emergency reported.",
+        "wants_insurance_help": true
+      },
+      "damage_records": [
+        {
+          "damage_id": "f3ef1e53-fce9-4f24-93f3-ec29fc457e00",
+          "case_id": "bada4e0c-6c96-43e5-88ec-e909c706ff35",
+          "item_description": "Refrigerator",
+          "damage_description": "Water damage after earlier flooding.",
+          "incident_date": "2026-11-01",
+          "notes": null
+        },
+        {
+          "damage_id": "8df3fe25-be9d-4315-8f78-f22227db9a6b",
+          "case_id": "bada4e0c-6c96-43e5-88ec-e909c706ff35",
+          "item_description": "Sofa",
+          "damage_description": "Water damage to upholstery.",
+          "incident_date": "2026-11-01",
+          "notes": null
+        }
+      ]
+    },
+    "events": [
+      {
+        "kind": "case_created",
+        "title": "Recovery situation saved",
+        "detail": "User-reported situation recorded."
+      },
+      {
+        "kind": "records_confirmed",
+        "title": "Household details confirmed",
+        "detail": "Adults: 3; Reported property damage: Refrigerator and sofa damaged in earlier flooding. Three adults are staying with friends; one adult is 72 and uses a walker. No current emergency reported.; Wants insurance help: Yes"
+      },
+      {
+        "kind": "records_confirmed",
+        "title": "Damage information confirmed",
+        "detail": "Damage record confirmed: Refrigerator — Water damage after earlier flooding."
+      },
+      {
+        "kind": "records_confirmed",
+        "title": "Damage information confirmed",
+        "detail": "Damage record confirmed: Sofa — Water damage to upholstery."
+      },
+      {
+        "kind": "plan_approved",
+        "title": "Recovery plan approved",
+        "detail": "5 tasks approved for tracking."
+      },
+      {
+        "kind": "task_status_changed",
+        "title": "Review safe recovery boundaries",
+        "detail": "Not Started → Completed. User-reported task progress."
+      },
+      {
+        "kind": "revision_approved",
+        "title": "Reported utility update approved",
+        "detail": "Utility availability: electricity: Yes, water: Unknown. Reported availability does not establish household safety or water potability."
+      }
+    ],
+    "insurance": {
+      "case_id": "bada4e0c-6c96-43e5-88ec-e909c706ff35",
+      "version": 6,
+      "profile": {
+        "insurer_name": "Demo Mutual Insurance",
+        "insurance_type": null,
+        "policy_reference": "DEMO-POL-001",
+        "claim_reference": null,
+        "incident_date": "2026-11-01",
+        "property_description": null,
+        "insurer_contacted": null,
+        "notes": "Fictional preparation only. Three adults; one is 72 and uses a walker. Staying with friends away from the affected property. No current injury or emergency reported."
+      },
+      "items": [
+        {
+          "damage_id": "f3ef1e53-fce9-4f24-93f3-ec29fc457e00",
+          "category": null,
+          "location": "Kitchen",
+          "quantity": null,
+          "brand": null,
+          "model": null,
+          "serial_reference": null,
+          "purchase_date": null,
+          "purchase_price": null,
+          "estimated_cost": "450.00",
+          "currency": "USD",
+          "additional_damage": null,
+          "notes": null
+        },
+        {
+          "damage_id": "8df3fe25-be9d-4315-8f78-f22227db9a6b",
+          "category": null,
+          "location": "Living room",
+          "quantity": null,
+          "brand": null,
+          "model": null,
+          "serial_reference": null,
+          "purchase_date": null,
+          "purchase_price": null,
+          "estimated_cost": "200.00",
+          "currency": "USD",
+          "additional_damage": null,
+          "notes": null
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "98ddae7c-b3db-47e1-b0fd-6238cf93da1e",
+          "case_id": "bada4e0c-6c96-43e5-88ec-e909c706ff35",
+          "damage_id": "f3ef1e53-fce9-4f24-93f3-ec29fc457e00",
+          "evidence_type": "Photograph",
+          "status": "File saved",
+          "attachment_id": "4daccf64-d165-4ec3-939f-6a4ba80f20f4",
+          "description": "Clearly synthetic test image; not a real property photograph.",
+          "relevant_date": null
+        },
+        {
+          "evidence_id": "00f7390d-9c00-493a-99fd-bdaf480b19f1",
+          "case_id": "bada4e0c-6c96-43e5-88ec-e909c706ff35",
+          "damage_id": null,
+          "evidence_type": "Receipt",
+          "status": "Reported available, not uploaded",
+          "attachment_id": null,
+          "description": "Fictional receipt reported available; no receipt file uploaded.",
+          "relevant_date": null
+        }
+      ],
+      "communications": [
+        {
+          "communication_id": "4f246fc7-39aa-4bd8-a41b-4de07ac556a4",
+          "contact_date": null,
+          "method": "Phone",
+          "representative": null,
+          "reference": "DEMO-COMM-001",
+          "summary": "Fictional user-reported telephone discussion asking which documents the insurer requires. No submission or coverage decision occurred.",
+          "next_follow_up": null
+        }
+      ]
+    },
+    "attachments": [
+      {
+        "metadata": "{\"attachment_id\":\"4daccf64-d165-4ec3-939f-6a4ba80f20f4\",\"case_id\":\"bada4e0c-6c96-43e5-88ec-e909c706ff35\",\"damage_id\":\"f3ef1e53-fce9-4f24-93f3-ec29fc457e00\",\"evidence_type\":\"Photograph\",\"original_name\":\"synthetic-flood-damage.png\",\"media_type\":\"image/png\",\"sha256\":\"3622e06b98419355d8ee61244711f0eec7e2cd93205885c09aa3c9580960e1b2\",\"byte_count\":3176,\"width\":480,\"height\":300,\"description\":\"Clearly synthetic test image; not a real property photograph.\",\"created_at\":\"2026-11-06T16:29:22.082833Z\"}",
+        "bytes": 3176
+      }
+    ]
+  }
+}
