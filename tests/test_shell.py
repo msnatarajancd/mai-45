@@ -53,6 +53,23 @@ def test_search_is_in_main_toolbar(app):
     assert not app.exception
 
 
+def test_desktop_and_mobile_share_recovery_group(app):
+    for key_prefix in ('nav_', 'mobile_nav_'):
+        assert any(button.key == key_prefix + 'Recovery Progress' and button.label == 'Recovery Progress · Preview' for button in app.button)
+        assert any(button.key == key_prefix + 'My Recovery Plan' for button in app.button)
+        assert any(button.key == key_prefix + 'Insurance & Documents' for button in app.button)
+
+
+@pytest.mark.parametrize('destination,focus', [('Insurance & Documents', 'Prepare for insurance'), ('My Recovery Plan', 'Continue my recovery')])
+def test_search_opens_requested_recovery_focus(app, destination, focus):
+    app.session_state['rr_focus'] = 'Document damage'
+    next(field for field in app.text_input if field.label == 'Search menu').input('open ' + destination).run()
+    button(app, 'Open ' + destination).click().run()
+    assert app.session_state['page'] == 'Recover'
+    assert app.session_state['rr_focus'] == focus
+    assert not app.exception
+
+
 def test_top_walkthrough_and_mobile_menu_keep_navigation_available(app):
     button(app,'Start walkthrough').click().run()
     assert app.session_state['tour_step']==0

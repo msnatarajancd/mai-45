@@ -859,6 +859,10 @@ def render():
             else:
                 if focus != 'Prepare for insurance':
                     st.caption('Using your saved confirmed case. Your description does not overwrite it.')
+                if focus != 'Prepare for insurance':
+                    with st.expander('Household details for Recovery Progress', key='progress_profile_expander:'+str(case.case_id)):
+                        from ui.recovery_progress_profile import render_progress_profile
+                        render_progress_profile(repo, case)
                 if focus == 'Find assistance':
                     assistance(repo.get_recovery_records(case.case_id).reported_county)
                 elif focus == 'Document damage':

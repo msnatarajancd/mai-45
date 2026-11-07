@@ -1,0 +1,812 @@
+[
+  {
+    "id": "electrician-1",
+    "name": "Demo Bay Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area"
+    ],
+    "rating": 4.7,
+    "review_count": 18,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "electrician-2",
+    "name": "Demo Palmetto Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area"
+    ],
+    "rating": 4.2,
+    "review_count": 7,
+    "availability": "waiting",
+    "accessible_service": null
+  },
+  {
+    "id": "electrician-3",
+    "name": "Demo Coral Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "unknown",
+    "accessible_service": false
+  },
+  {
+    "id": "contractor-1",
+    "name": "Demo Bay Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area"
+    ],
+    "rating": 4.7,
+    "review_count": 18,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "contractor-2",
+    "name": "Demo Palmetto Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area"
+    ],
+    "rating": 4.2,
+    "review_count": 7,
+    "availability": "waiting",
+    "accessible_service": null
+  },
+  {
+    "id": "contractor-3",
+    "name": "Demo Coral Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "unknown",
+    "accessible_service": false
+  },
+  {
+    "id": "plumber-1",
+    "name": "Demo Bay Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area"
+    ],
+    "rating": 4.7,
+    "review_count": 18,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "plumber-2",
+    "name": "Demo Palmetto Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area"
+    ],
+    "rating": 4.2,
+    "review_count": 7,
+    "availability": "waiting",
+    "accessible_service": null
+  },
+  {
+    "id": "plumber-3",
+    "name": "Demo Coral Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "unknown",
+    "accessible_service": false
+  },
+  {
+    "id": "roofer-1",
+    "name": "Demo Bay Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area"
+    ],
+    "rating": 4.7,
+    "review_count": 18,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "roofer-2",
+    "name": "Demo Palmetto Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area"
+    ],
+    "rating": 4.2,
+    "review_count": 7,
+    "availability": "waiting",
+    "accessible_service": null
+  },
+  {
+    "id": "roofer-3",
+    "name": "Demo Coral Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "unknown",
+    "accessible_service": false
+  },
+  {
+    "id": "pool-specialist-1",
+    "name": "Demo Bay Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area"
+    ],
+    "rating": 4.7,
+    "review_count": 18,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "pool-specialist-2",
+    "name": "Demo Palmetto Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area"
+    ],
+    "rating": 4.2,
+    "review_count": 7,
+    "availability": "waiting",
+    "accessible_service": null
+  },
+  {
+    "id": "pool-specialist-3",
+    "name": "Demo Coral Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "unknown",
+    "accessible_service": false
+  },
+  {
+    "id": "electrician-4",
+    "name": "Demo Bay Lantern Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area"
+    ],
+    "rating": 4.5,
+    "review_count": 11,
+    "availability": "unavailable",
+    "accessible_service": true
+  },
+  {
+    "id": "electrician-5",
+    "name": "Demo Bay Palmetto Bridge Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area"
+    ],
+    "rating": 4.4,
+    "review_count": 9,
+    "availability": "waiting",
+    "accessible_service": true
+  },
+  {
+    "id": "electrician-6",
+    "name": "Demo Palmetto Family Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area"
+    ],
+    "rating": 4.8,
+    "review_count": 23,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "electrician-7",
+    "name": "Demo Bay Coral Newcomer Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "electrician-8",
+    "name": "Demo Coral Mosaic Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "unknown",
+    "accessible_service": null
+  },
+  {
+    "id": "electrician-9",
+    "name": "Demo Three Area Courtyard Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area",
+      "Coral demo area"
+    ],
+    "rating": 4.6,
+    "review_count": 16,
+    "availability": "available",
+    "accessible_service": false
+  },
+  {
+    "id": "electrician-10",
+    "name": "Demo Palmetto Coral Ridge Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area",
+      "Coral demo area"
+    ],
+    "rating": 3.8,
+    "review_count": 5,
+    "availability": "unavailable",
+    "accessible_service": true
+  },
+  {
+    "id": "electrician-11",
+    "name": "Demo Coral Garden Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": 4.1,
+    "review_count": 6,
+    "availability": "waiting",
+    "accessible_service": null
+  },
+  {
+    "id": "electrician-12",
+    "name": "Demo Bay Palmetto Terrace Electrician",
+    "trade": "Electrician",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area"
+    ],
+    "rating": 4.9,
+    "review_count": 32,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "contractor-4",
+    "name": "Demo Bay Lantern Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area"
+    ],
+    "rating": 4.5,
+    "review_count": 11,
+    "availability": "unavailable",
+    "accessible_service": true
+  },
+  {
+    "id": "contractor-5",
+    "name": "Demo Bay Palmetto Bridge Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area"
+    ],
+    "rating": 4.4,
+    "review_count": 9,
+    "availability": "waiting",
+    "accessible_service": true
+  },
+  {
+    "id": "contractor-6",
+    "name": "Demo Palmetto Family Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area"
+    ],
+    "rating": 4.8,
+    "review_count": 23,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "contractor-7",
+    "name": "Demo Bay Coral Newcomer Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "contractor-8",
+    "name": "Demo Coral Mosaic Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "unknown",
+    "accessible_service": null
+  },
+  {
+    "id": "contractor-9",
+    "name": "Demo Three Area Courtyard Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area",
+      "Coral demo area"
+    ],
+    "rating": 4.6,
+    "review_count": 16,
+    "availability": "available",
+    "accessible_service": false
+  },
+  {
+    "id": "contractor-10",
+    "name": "Demo Palmetto Coral Ridge Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area",
+      "Coral demo area"
+    ],
+    "rating": 3.8,
+    "review_count": 5,
+    "availability": "unavailable",
+    "accessible_service": true
+  },
+  {
+    "id": "contractor-11",
+    "name": "Demo Coral Garden Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": 4.1,
+    "review_count": 6,
+    "availability": "waiting",
+    "accessible_service": null
+  },
+  {
+    "id": "contractor-12",
+    "name": "Demo Bay Palmetto Terrace Contractor",
+    "trade": "Contractor",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area"
+    ],
+    "rating": 4.9,
+    "review_count": 32,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "plumber-4",
+    "name": "Demo Bay Lantern Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area"
+    ],
+    "rating": 4.5,
+    "review_count": 11,
+    "availability": "unavailable",
+    "accessible_service": true
+  },
+  {
+    "id": "plumber-5",
+    "name": "Demo Bay Palmetto Bridge Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area"
+    ],
+    "rating": 4.4,
+    "review_count": 9,
+    "availability": "waiting",
+    "accessible_service": true
+  },
+  {
+    "id": "plumber-6",
+    "name": "Demo Palmetto Family Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area"
+    ],
+    "rating": 4.8,
+    "review_count": 23,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "plumber-7",
+    "name": "Demo Bay Coral Newcomer Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "plumber-8",
+    "name": "Demo Coral Mosaic Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "unknown",
+    "accessible_service": null
+  },
+  {
+    "id": "plumber-9",
+    "name": "Demo Three Area Courtyard Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area",
+      "Coral demo area"
+    ],
+    "rating": 4.6,
+    "review_count": 16,
+    "availability": "available",
+    "accessible_service": false
+  },
+  {
+    "id": "plumber-10",
+    "name": "Demo Palmetto Coral Ridge Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area",
+      "Coral demo area"
+    ],
+    "rating": 3.8,
+    "review_count": 5,
+    "availability": "unavailable",
+    "accessible_service": true
+  },
+  {
+    "id": "plumber-11",
+    "name": "Demo Coral Garden Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": 4.1,
+    "review_count": 6,
+    "availability": "waiting",
+    "accessible_service": null
+  },
+  {
+    "id": "plumber-12",
+    "name": "Demo Bay Palmetto Terrace Plumber",
+    "trade": "Plumber",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area"
+    ],
+    "rating": 4.9,
+    "review_count": 32,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "roofer-4",
+    "name": "Demo Bay Lantern Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area"
+    ],
+    "rating": 4.5,
+    "review_count": 11,
+    "availability": "unavailable",
+    "accessible_service": true
+  },
+  {
+    "id": "roofer-5",
+    "name": "Demo Bay Palmetto Bridge Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area"
+    ],
+    "rating": 4.4,
+    "review_count": 9,
+    "availability": "waiting",
+    "accessible_service": true
+  },
+  {
+    "id": "roofer-6",
+    "name": "Demo Palmetto Family Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area"
+    ],
+    "rating": 4.8,
+    "review_count": 23,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "roofer-7",
+    "name": "Demo Bay Coral Newcomer Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "roofer-8",
+    "name": "Demo Coral Mosaic Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "unknown",
+    "accessible_service": null
+  },
+  {
+    "id": "roofer-9",
+    "name": "Demo Three Area Courtyard Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area",
+      "Coral demo area"
+    ],
+    "rating": 4.6,
+    "review_count": 16,
+    "availability": "available",
+    "accessible_service": false
+  },
+  {
+    "id": "roofer-10",
+    "name": "Demo Palmetto Coral Ridge Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area",
+      "Coral demo area"
+    ],
+    "rating": 3.8,
+    "review_count": 5,
+    "availability": "unavailable",
+    "accessible_service": true
+  },
+  {
+    "id": "roofer-11",
+    "name": "Demo Coral Garden Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": 4.1,
+    "review_count": 6,
+    "availability": "waiting",
+    "accessible_service": null
+  },
+  {
+    "id": "roofer-12",
+    "name": "Demo Bay Palmetto Terrace Roofer",
+    "trade": "Roofer",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area"
+    ],
+    "rating": 4.9,
+    "review_count": 32,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "pool-specialist-4",
+    "name": "Demo Bay Lantern Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area"
+    ],
+    "rating": 4.5,
+    "review_count": 11,
+    "availability": "unavailable",
+    "accessible_service": true
+  },
+  {
+    "id": "pool-specialist-5",
+    "name": "Demo Bay Palmetto Bridge Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area"
+    ],
+    "rating": 4.4,
+    "review_count": 9,
+    "availability": "waiting",
+    "accessible_service": true
+  },
+  {
+    "id": "pool-specialist-6",
+    "name": "Demo Palmetto Family Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area"
+    ],
+    "rating": 4.8,
+    "review_count": 23,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "pool-specialist-7",
+    "name": "Demo Bay Coral Newcomer Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "available",
+    "accessible_service": true
+  },
+  {
+    "id": "pool-specialist-8",
+    "name": "Demo Coral Mosaic Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": null,
+    "review_count": null,
+    "availability": "unknown",
+    "accessible_service": null
+  },
+  {
+    "id": "pool-specialist-9",
+    "name": "Demo Three Area Courtyard Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area",
+      "Coral demo area"
+    ],
+    "rating": 4.6,
+    "review_count": 16,
+    "availability": "available",
+    "accessible_service": false
+  },
+  {
+    "id": "pool-specialist-10",
+    "name": "Demo Palmetto Coral Ridge Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Palmetto demo area",
+      "Coral demo area"
+    ],
+    "rating": 3.8,
+    "review_count": 5,
+    "availability": "unavailable",
+    "accessible_service": true
+  },
+  {
+    "id": "pool-specialist-11",
+    "name": "Demo Coral Garden Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Coral demo area"
+    ],
+    "rating": 4.1,
+    "review_count": 6,
+    "availability": "waiting",
+    "accessible_service": null
+  },
+  {
+    "id": "pool-specialist-12",
+    "name": "Demo Bay Palmetto Terrace Pool specialist",
+    "trade": "Pool specialist",
+    "county": "Miami-Dade",
+    "areas": [
+      "Bay demo area",
+      "Palmetto demo area"
+    ],
+    "rating": 4.9,
+    "review_count": 32,
+    "availability": "available",
+    "accessible_service": true
+  }
+]

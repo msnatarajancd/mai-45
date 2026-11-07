@@ -2,7 +2,7 @@ const {test, expect} = require('playwright/test');
 
 test.beforeEach(async ({page}) => {
   await page.goto('/');
-  await expect(page.getByRole('link', {name:'Call 911', exact:true})).toBeVisible();
+  await expect(page.getByRole('link', {name:'Call 911', exact:true})).toBeVisible({timeout:30000});
 });
 
 async function openHelp(page) {

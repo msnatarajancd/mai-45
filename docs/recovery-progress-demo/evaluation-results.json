@@ -1,0 +1,271 @@
+{
+  "label": "Synthetic data; zero live model/provider calls",
+  "passed": 11,
+  "total": 11,
+  "cases": [
+    {
+      "id": "DEMO-01",
+      "synthetic_input": "Fictional Williams catalog with explicit assessed-no-danger test input",
+      "expected": "Four fictional housing categories, no booking or guaranteed capacity",
+      "actual": {
+        "categories": [
+          "church",
+          "hotel",
+          "official shelter",
+          "school"
+        ],
+        "summary": "46 possible accommodation examples; no booking or guaranteed capacity.",
+        "source_mode": "synthetic"
+      },
+      "result": "PASS",
+      "execution_mode": "SIMULATED DEMO",
+      "source": "recovery/progress/housing.py; authored housing.json",
+      "error_details": ""
+    },
+    {
+      "id": "DEMO-02",
+      "synthetic_input": "Chen housing observation deliberately expired",
+      "expected": "Unknown suitability, never fresh availability",
+      "actual": {
+        "states": [
+          "unknown"
+        ]
+      },
+      "result": "PASS",
+      "execution_mode": "SIMULATED DEMO",
+      "source": "recovery/progress/housing.py",
+      "error_details": ""
+    },
+    {
+      "id": "DEMO-03",
+      "synthetic_input": "Area electricity observation; water available without potability confirmation",
+      "expected": "Electricity unknown; water yellow; no home-safety certification",
+      "actual": {
+        "states": {
+          "electricity": "unknown",
+          "water": "yellow",
+          "gas": "green"
+        },
+        "summary": "Electricity, water and gas are assessed separately. Service availability does not establish home safety."
+      },
+      "result": "PASS",
+      "execution_mode": "SIMULATED DEMO",
+      "source": "recovery/progress/utilities.py",
+      "error_details": ""
+    },
+    {
+      "id": "DEMO-04",
+      "synthetic_input": "All linked fictional preparation evidence is reported available, not uploaded",
+      "expected": "Preparation yellow, not saved/approved",
+      "actual": {
+        "state": "yellow",
+        "summary": "Some applicable preparation evidence is missing or unconfirmed"
+      },
+      "result": "PASS",
+      "execution_mode": "SIMULATED DEMO",
+      "source": "recovery/progress/insurance.py",
+      "error_details": ""
+    },
+    {
+      "id": "DEMO-05",
+      "synthetic_input": "Saved-mode projection cannot inherit a fictional insurer checklist",
+      "expected": "Checklist suitability unknown",
+      "actual": {
+        "state": "unknown",
+        "summary": "Selected checklist suitability is unknown"
+      },
+      "result": "PASS",
+      "execution_mode": "DETERMINISTIC APPLICATION CHECK",
+      "source": "recovery/progress/insurance.py",
+      "error_details": ""
+    },
+    {
+      "id": "DEMO-06",
+      "synthetic_input": "Fictional contractor quote received, no accepted work or external outreach",
+      "expected": "Quote received is yellow and remains distinct from commitment",
+      "actual": {
+        "state": "yellow",
+        "interaction": "quote_received",
+        "summary": "Quote received; not accepted or scheduled"
+      },
+      "result": "PASS",
+      "execution_mode": "SIMULATED DEMO",
+      "source": "recovery/progress/rebuild.py",
+      "error_details": ""
+    },
+    {
+      "id": "DEMO-07",
+      "synthetic_input": "Rivera assessed synthetic story through actual local MCP and LangGraph",
+      "expected": "Four specialists, housing first, next_action last, housing prioritized, input unchanged",
+      "actual": {
+        "checking_order": [
+          "housing",
+          "insurance",
+          "rebuild",
+          "utilities",
+          "next_action"
+        ],
+        "primary_action": "housing:confirm-accommodation",
+        "events": [
+          {
+            "specialist": "housing",
+            "state": "queued",
+            "message": "Waiting for this run",
+            "time": "2026-11-07T02:40:48.678893+00:00"
+          },
+          {
+            "specialist": "utilities",
+            "state": "queued",
+            "message": "Waiting for this run",
+            "time": "2026-11-07T02:40:48.678930+00:00"
+          },
+          {
+            "specialist": "insurance",
+            "state": "queued",
+            "message": "Waiting for this run",
+            "time": "2026-11-07T02:40:48.678935+00:00"
+          },
+          {
+            "specialist": "rebuild",
+            "state": "queued",
+            "message": "Waiting for this run",
+            "time": "2026-11-07T02:40:48.678938+00:00"
+          },
+          {
+            "specialist": "next_action",
+            "state": "queued",
+            "message": "Waiting for this run",
+            "time": "2026-11-07T02:40:48.678942+00:00"
+          },
+          {
+            "specialist": "housing",
+            "state": "checking",
+            "message": "Calling housing through local MCP",
+            "time": "2026-11-07T02:40:50.291274+00:00"
+          },
+          {
+            "specialist": "housing",
+            "state": "complete",
+            "message": "Accommodation still needed",
+            "time": "2026-11-07T02:40:50.392078+00:00"
+          },
+          {
+            "specialist": "insurance",
+            "state": "checking",
+            "message": "Calling insurance through local MCP",
+            "time": "2026-11-07T02:40:50.394182+00:00"
+          },
+          {
+            "specialist": "rebuild",
+            "state": "checking",
+            "message": "Calling rebuild through local MCP",
+            "time": "2026-11-07T02:40:50.395942+00:00"
+          },
+          {
+            "specialist": "utilities",
+            "state": "checking",
+            "message": "Calling utilities through local MCP",
+            "time": "2026-11-07T02:40:50.397546+00:00"
+          },
+          {
+            "specialist": "insurance",
+            "state": "complete",
+            "message": "Preparation and funding need separate checks",
+            "time": "2026-11-07T02:40:50.426171+00:00"
+          },
+          {
+            "specialist": "rebuild",
+            "state": "complete",
+            "message": "Repair arrangements are in progress",
+            "time": "2026-11-07T02:40:50.430861+00:00"
+          },
+          {
+            "specialist": "utilities",
+            "state": "complete",
+            "message": "Essential service interruption reported",
+            "time": "2026-11-07T02:40:50.434043+00:00"
+          },
+          {
+            "specialist": "next_action",
+            "state": "checking",
+            "message": "Comparing needs, dependencies and available information",
+            "time": "2026-11-07T02:40:50.434855+00:00"
+          },
+          {
+            "specialist": "next_action",
+            "state": "complete",
+            "message": "Priorities explained; no commitments made",
+            "time": "2026-11-07T02:40:50.438844+00:00"
+          }
+        ],
+        "states": {
+          "housing": "red",
+          "utilities": "red",
+          "insurance": "red",
+          "rebuild": "yellow"
+        }
+      },
+      "result": "PASS",
+      "execution_mode": "DETERMINISTIC APPLICATION CHECK",
+      "source": "recovery/progress/orchestrator.py; mcp_client.py; mcp_server.py",
+      "error_details": ""
+    },
+    {
+      "id": "DEMO-08",
+      "synthetic_input": "Synthetic utility tool failure through actual local MCP",
+      "expected": "Unknown failed utility result, no fresh observation, partial disclosure",
+      "actual": {
+        "state": "unknown",
+        "execution": "failed",
+        "observed_at": null,
+        "partial": true
+      },
+      "result": "PASS",
+      "execution_mode": "DETERMINISTIC APPLICATION CHECK",
+      "source": "recovery/progress/orchestrator.py::_failed_result",
+      "error_details": ""
+    },
+    {
+      "id": "DEMO-09",
+      "synthetic_input": {
+        "immediate_danger": true
+      },
+      "expected": "Reject routine graph before entering MCP",
+      "actual": {
+        "denied": true
+      },
+      "result": "PASS",
+      "execution_mode": "DETERMINISTIC APPLICATION CHECK",
+      "source": "recovery/progress/orchestrator.py::_run_graph",
+      "error_details": ""
+    },
+    {
+      "id": "DEMO-10",
+      "synthetic_input": {
+        "immediate_danger": null
+      },
+      "expected": "Reject routine graph before entering MCP",
+      "actual": {
+        "denied": true
+      },
+      "result": "PASS",
+      "execution_mode": "DETERMINISTIC APPLICATION CHECK",
+      "source": "recovery/progress/orchestrator.py::_run_graph",
+      "error_details": ""
+    },
+    {
+      "id": "DEMO-11",
+      "synthetic_input": "Saved-mode unknown start and unsupported duration predictions",
+      "expected": "No elapsed date or supported numerical prediction invented",
+      "actual": {
+        "elapsed_days": null,
+        "insurance_range": "Not enough information",
+        "recovery_range": "Not enough information"
+      },
+      "result": "PASS",
+      "execution_mode": "DETERMINISTIC APPLICATION CHECK",
+      "source": "recovery/progress/milestones.py",
+      "error_details": ""
+    }
+  ]
+}

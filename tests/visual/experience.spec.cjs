@@ -188,6 +188,7 @@ for(const theme of ['bright','dark'])test(`all screens remain readable in ${them
   await expect(page.locator('.rr-footer')).toBeInViewport();
  }
  if(info.project.name!=='mobile'){
+  await expect(page.getByTestId('stApp')).not.toHaveAttribute('data-test-script-state','running');
   const guide=page.getByRole('button',{name:'Show me around',exact:true});
   await guide.hover();
   const caption=await page.locator('.st-key-sidebar_guide [data-testid=stCaptionContainer]').boundingBox(),button=await guide.boundingBox();

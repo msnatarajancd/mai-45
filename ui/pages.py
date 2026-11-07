@@ -2,20 +2,22 @@ from html import escape
 import streamlit as st
 from domain.contracts import AppMode, Household, LOCATIONS
 from services import nws_alerts, knowledge, emergency, resources
-from ui.components import ROOT, go, navigate, heading, icon
+from ui.components import ROOT, go, navigate, navigate_destination, heading, icon
 from ui.state import change_context, load_demo
 from ui.alert_freshness import snapshot_staleness
-from ui.capabilities import PAGES, search_pages
+from ui.capabilities import PAGES, search_pages, navigation_items, progress_preview_enabled
 
 
 def sidebar():
     with st.sidebar:
         st.caption('WORKSPACE')
-        matches=PAGES  # Search suggestions must never remove primary navigation.
-        for name in matches:
-            if name=='Household': st.caption('YOUR TOOLS')
-            st.button(name,icon=':material/'+PAGES[name][0]+':',key='nav_'+name,
-                type='primary' if st.session_state['page']==name else 'secondary',width='stretch',on_click=navigate,args=(name,))
+        for item in navigation_items(progress_enabled=progress_preview_enabled()):
+            if item.page=='Household': st.caption('YOUR TOOLS')
+            key = item.page if item.focus is None else item.label
+            with st.container(key='navigation_child_'+key if item.group else 'navigation_main_'+key):
+                st.button(item.label,icon=':material/'+item.icon+':',key='nav_'+key,
+                    type='primary' if st.session_state['page']==item.page and (item.focus is None or st.session_state.get('rr_focus')==item.focus) else 'secondary',
+                    width='stretch',on_click=navigate_destination,args=(item.page,item.focus))
         with st.container(key='sidebar_guide'):
             st.caption('GUIDED TOUR')
             from ui.tour import start_tour

@@ -419,3 +419,119 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible 
  .st-key-tour_welcome p {font-size:.875rem;line-height:1.4;}
  .st-key-tour_welcome [data-testid="stHorizontalBlock"] {gap:8px;}
 }
+
+/* Recovery Progress: all presentation stays inside this optional preview. */
+.st-key-recovery_progress_workspace {--rp-blue:#2457df;--rp-pale:#eaf0ff;--rp-red:#b52e40;--rp-yellow:#8a5a00;--rp-green:#137344;--rp-gray:#64748b;}
+.st-key-recovery_progress_workspace .rp-overline {color:var(--rr-link);font-size:.75rem;font-weight:750;letter-spacing:.13em;line-height:1.5;}
+.st-key-recovery_progress_workspace h1 {font-size:clamp(2rem,3.1vw,3rem) !important;font-weight:750;letter-spacing:-.045em;margin:.1rem 0 0;}
+.st-key-recovery_progress_workspace .rp-lede {font-size:1rem;color:var(--rr-muted);margin:.4rem 0 1rem;}
+.st-key-recovery_progress_workspace .rp-context {display:flex;align-items:center;flex-wrap:wrap;gap:10px 16px;font-size:.85rem;color:var(--rr-muted);}
+.st-key-recovery_progress_workspace .rp-context strong {font-size:1rem;color:var(--rr-ink);}
+.st-key-recovery_progress_workspace .rp-source-badge {display:inline-flex;align-items:center;color:var(--rr-link);background:var(--rr-selected);border:1px solid var(--rr-border);border-radius:7px;padding:6px 9px;font-size:.75rem;font-weight:750;letter-spacing:.035em;}
+.st-key-recovery_progress_workspace .rp-journey {display:grid;grid-template-columns:.85fr 1.35fr 1.35fr;border:1px solid var(--rr-border);border-radius:24px;background:var(--rr-surface);overflow:hidden;margin:12px 0 0;box-shadow:0 5px 20px var(--rr-shadow);}
+.st-key-recovery_progress_workspace .rp-elapsed {padding:28px;background:linear-gradient(145deg,var(--rr-selected),var(--rr-surface));}
+.st-key-recovery_progress_workspace .rp-day-count {font-size:4.5rem;font-weight:750;letter-spacing:-.07em;line-height:1.1;color:var(--rr-link);margin:18px 0 10px;}
+.st-key-recovery_progress_workspace .rp-day-count span {font-size:1rem;letter-spacing:0;margin-left:9px;font-weight:600;color:var(--rr-ink);}
+.st-key-recovery_progress_workspace .rp-elapsed p {font-weight:650;font-size:.92rem;margin:0 0 20px;color:var(--rr-ink);}
+.st-key-recovery_progress_workspace .rp-small {font-size:.79rem;color:var(--rr-muted);line-height:1.6;display:block;}
+.st-key-recovery_progress_workspace .rp-track {padding:25px 25px 20px;border-left:1px solid var(--rr-border);}
+.st-key-recovery_progress_workspace .rp-track h3 {margin:0 0 20px;font-size:1rem !important;letter-spacing:-.02em;}
+.st-key-recovery_progress_workspace .rp-track ol {list-style:none;padding:0;margin:0;display:grid;gap:17px;}
+.st-key-recovery_progress_workspace .rp-milestone {position:relative;display:flex;gap:11px;line-height:1.3;}
+.st-key-recovery_progress_workspace .rp-milestone:not(:last-child):before {content:"";position:absolute;left:6px;top:16px;bottom:-18px;border-left:2px solid var(--rr-border);}
+.st-key-recovery_progress_workspace .rp-milestone-dot {flex:none;width:14px;height:14px;background:var(--rp-signal-color,var(--rp-gray));border:3px solid var(--rr-surface);box-shadow:0 0 0 1px var(--rp-signal-color,var(--rp-gray));border-radius:50%;margin-top:2px;z-index:1;}
+.st-key-recovery_progress_workspace .rp-milestone strong {font-size:.85rem;font-weight:650;display:block;color:var(--rr-ink);}
+.st-key-recovery_progress_workspace .rp-milestone small {display:block;color:var(--rr-muted);font-size:.76rem;line-height:1.5;margin-top:4px;}
+.st-key-recovery_progress_workspace .rp-milestone-state {display:block;font-size:.75rem;color:var(--rr-muted);margin-top:4px;font-weight:650;}
+.st-key-recovery_progress_workspace .rp-state-red {--rp-signal-color:var(--rp-red);--rp-signal-bg:#fff0f1;}
+.st-key-recovery_progress_workspace .rp-state-yellow {--rp-signal-color:var(--rp-yellow);--rp-signal-bg:#fff6dc;}
+.st-key-recovery_progress_workspace .rp-state-green {--rp-signal-color:var(--rp-green);--rp-signal-bg:#e7f6ed;}
+.st-key-recovery_progress_workspace .rp-state-unknown,.st-key-recovery_progress_workspace .rp-state-not_applicable {--rp-signal-color:var(--rp-gray);--rp-signal-bg:var(--rr-soft);}
+.st-key-recovery_progress_workspace .rp-changes {display:flex;gap:12px;flex-wrap:wrap;margin-bottom:7px;}
+.st-key-recovery_progress_workspace .rp-changes>div {flex:1 1 220px;display:flex;gap:12px;padding:15px 18px;border-radius:13px;background:var(--rr-surface);border:1px solid var(--rr-border);font-size:.85rem;color:var(--rr-ink);}
+.st-key-recovery_progress_workspace .rp-changes>div>span {color:var(--rr-link);font-size:1.1rem;font-weight:700;}
+.st-key-recovery_progress_workspace .rp-next-action {position:relative;overflow:hidden;background:linear-gradient(115deg,#173c9a,#2457df);border-radius:22px;padding:28px 32px 25px;margin-top:15px;box-shadow:0 10px 24px #2457df17;}
+.st-key-recovery_progress_workspace .rp-next-action:after {content:"↗";font-size:8rem;font-weight:500;color:#ffffff15;position:absolute;right:24px;top:-20px;pointer-events:none;}
+.st-key-recovery_progress_workspace .rp-next-action .rp-overline {color:#cdddff;}
+.st-key-recovery_progress_workspace .rp-next-action h2 {color:#fff !important;font-size:1.6rem !important;font-weight:700;max-width:85%;margin:10px 0;}
+.st-key-recovery_progress_workspace .rp-next-action p {color:#eff4ff;max-width:80%;margin-bottom:0;font-size:.95rem;}
+.st-key-recovery_progress_workspace .rp-dependency {color:#e3edff;font-size:.83rem;border-top:1px solid #ffffff30;margin-top:16px;padding-top:12px;}
+.st-key-recovery_progress_workspace .rp-section-title {margin:24px 0 8px;}
+.st-key-recovery_progress_workspace .rp-section-title h2 {margin:4px 0;font-size:1.45rem !important;}
+.st-key-recovery_progress_workspace .rp-card {background:var(--rr-surface);border:1px solid var(--rr-border);border-top:4px solid var(--rp-signal-color,var(--rp-gray));border-radius:18px;padding:20px 19px 16px;min-height:315px;box-shadow:0 4px 16px var(--rr-shadow);height:100%;}
+.st-key-recovery_progress_workspace .rp-card-top {display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.st-key-recovery_progress_workspace .rp-card-icon {color:var(--rr-link);background:var(--rr-selected);border-radius:12px;width:36px;height:36px;display:grid;place-items:center;font-size:1.6rem;line-height:1;}
+.st-key-recovery_progress_workspace .rp-signal {display:flex;gap:5px;align-items:center;font-size:.75rem;font-weight:700;line-height:1.4;background:var(--rp-signal-bg);color:var(--rp-signal-color);border-radius:20px;padding:5px 8px;}
+.st-key-recovery_progress_workspace .rp-signal i {display:block;width:7px;height:7px;border-radius:50%;background:currentColor;flex:none;}
+.st-key-recovery_progress_workspace .rp-card h3 {font-size:1.02rem !important;letter-spacing:-.025em;font-weight:700;margin:0 0 4px;padding:0;}
+.st-key-recovery_progress_workspace .rp-card-strap {font-size:.75rem;color:var(--rr-muted);margin-bottom:19px;}
+.st-key-recovery_progress_workspace .rp-card h4 {font-size:.91rem;letter-spacing:-.02em;color:var(--rr-ink);font-weight:650;margin:0 0 9px;line-height:1.5;}
+.st-key-recovery_progress_workspace .rp-card p {font-size:.82rem;color:var(--rr-muted);line-height:1.65;margin:0;overflow-wrap:anywhere;}
+.st-key-recovery_progress_workspace [data-testid="stExpander"] {background:var(--rr-surface);}
+.st-key-recovery_progress_workspace [data-testid="stExpander"] summary p {font-size:.78rem;}
+.st-key-recovery_progress_workspace .rp-legend {display:flex;align-items:center;flex-wrap:wrap;gap:12px 20px;padding:15px 0;font-size:.75rem;color:var(--rr-muted);border-bottom:1px solid var(--rr-border);margin-top:20px;}
+.st-key-recovery_progress_workspace .rp-legend>span {display:flex;gap:6px;align-items:center;}
+.st-key-recovery_progress_workspace .rp-dot {width:8px;height:8px;border-radius:50%;display:inline-block;}
+.st-key-recovery_progress_workspace .rp-dot.red {background:var(--rp-red);}
+.st-key-recovery_progress_workspace .rp-dot.yellow {background:var(--rp-yellow);}
+.st-key-recovery_progress_workspace .rp-dot.green {background:var(--rp-green);}
+.st-key-recovery_progress_workspace .rp-dot.gray {background:var(--rp-gray);}
+.st-key-recovery_progress_workspace .rp-run-strip {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:16px;background:var(--rr-soft);border:1px solid var(--rr-border);border-radius:16px;margin:4px 0;}
+.st-key-recovery_progress_workspace .rp-run-node {display:grid;grid-template-columns:auto 1fr;gap:3px 7px;padding:8px;font-size:.76rem;color:var(--rr-muted);}
+.st-key-recovery_progress_workspace .rp-run-node span {grid-row:span 2;font-size:1.3rem;color:var(--rr-muted);line-height:1;}
+.st-key-recovery_progress_workspace .rp-run-node strong {font-size:.75rem;color:var(--rr-ink);}
+.st-key-recovery_progress_workspace .rp-run-node small {font-size:.75rem;}
+.st-key-recovery_progress_workspace .rp-exec-checking span {color:var(--rr-link);animation:rp-pulse 1s ease-in-out infinite;}
+.st-key-recovery_progress_workspace .rp-exec-complete span {color:var(--rp-green);}
+.st-key-recovery_progress_workspace .rp-exec-failed span {color:var(--rp-red);}
+.st-key-recovery_progress_workspace .rp-empty-intro {background:linear-gradient(120deg,var(--rr-selected),var(--rr-surface));border:1px solid var(--rr-border);border-radius:22px;padding:34px;margin:14px 0;}
+.st-key-recovery_progress_workspace .rp-empty-intro h2 {margin:12px 0;color:var(--rr-ink);}
+.st-key-recovery_progress_workspace .rp-empty-intro p {color:var(--rr-muted);max-width:680px;margin:0;}
+@keyframes rp-pulse {50%{opacity:.4;}}
+@media (prefers-reduced-motion:reduce) {.st-key-recovery_progress_workspace .rp-exec-checking span {animation:none;}}
+@media (max-width:1100px) {.st-key-recovery_progress_workspace .rp-journey {grid-template-columns:.75fr 1fr 1fr;}.st-key-recovery_progress_workspace .rp-elapsed,.st-key-recovery_progress_workspace .rp-track {padding:20px 16px;}.st-key-recovery_progress_workspace .rp-card {padding:17px 14px;min-height:360px;}.st-key-recovery_progress_workspace .rp-signal {font-size:.75rem;}}
+@media (max-width:700px) {.st-key-recovery_progress_workspace .rp-journey {grid-template-columns:1fr;}.st-key-recovery_progress_workspace .rp-elapsed {padding:24px;}.st-key-recovery_progress_workspace .rp-day-count {margin:10px 0;font-size:3.6rem;}.st-key-recovery_progress_workspace .rp-track {padding:24px;border-left:0;border-top:1px solid var(--rr-border);}.st-key-recovery_progress_workspace .rp-track ol {gap:20px;}.st-key-recovery_progress_workspace .rp-next-action {padding:24px;}.st-key-recovery_progress_workspace .rp-next-action h2,.st-key-recovery_progress_workspace .rp-next-action p {max-width:100%;}.st-key-recovery_progress_workspace .rp-card {min-height:0;padding:22px;}.st-key-recovery_progress_workspace .rp-card-top {margin-bottom:15px;}.st-key-recovery_progress_workspace .rp-run-strip {grid-template-columns:1fr 1fr;}.st-key-recovery_progress_workspace .rp-context {gap:8px;}.st-key-recovery_progress_workspace .rp-empty-intro {padding:25px;}}
+.st-key-recovery_progress_workspace .rp-time-strip {display:flex;align-items:center;justify-content:space-between;gap:24px;background:var(--rr-surface);border:1px solid var(--rr-border);border-radius:15px;padding:17px 23px;margin:10px 0;}
+.st-key-recovery_progress_workspace .rp-time-strip>div {display:flex;align-items:center;gap:14px;color:var(--rr-muted);font-size:.82rem;}
+.st-key-recovery_progress_workspace .rp-time-strip>div+div {display:grid;gap:4px;text-align:right;}
+.st-key-recovery_progress_workspace .rp-time-strip strong {font-size:2.35rem;font-weight:750;line-height:1;color:var(--rr-link);letter-spacing:-.05em;}
+.st-key-recovery_progress_workspace .rp-time-strip small {font-size:.75rem;letter-spacing:.075em;font-weight:700;color:var(--rr-link);}
+.st-key-recovery_progress_workspace .rp-journey-tracks {grid-template-columns:1fr 1fr;}
+.st-key-recovery_progress_workspace .rp-journey-tracks .rp-track:first-child {border-left:0;}
+.st-key-recovery_progress_workspace .rp-card {min-height:305px;padding:23px;}
+.st-key-recovery_progress_workspace .rp-card-top {margin-bottom:14px;}
+.st-key-recovery_progress_workspace .rp-card h3 {font-size:1.15rem !important;}
+.st-key-recovery_progress_workspace .rp-card-strap {margin-bottom:15px;}
+.st-key-recovery_progress_workspace .rp-card h4 {font-size:.96rem;}
+.st-key-recovery_progress_workspace .rp-card p {font-size:.85rem;}
+.st-key-recovery_progress_workspace .rp-service-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:20px;}
+.st-key-recovery_progress_workspace .rp-service-tile {border:1px solid var(--rr-border);background:var(--rp-signal-bg);border-radius:12px;padding:12px 10px;}
+.st-key-recovery_progress_workspace .rp-service-tile>strong {font-size:.85rem;color:#172b4d;display:block;}
+.st-key-recovery_progress_workspace .rp-service-tile>span {display:flex;align-items:center;gap:5px;font-weight:700;font-size:.75rem;color:var(--rp-signal-color);margin:6px 0;}
+.st-key-recovery_progress_workspace .rp-service-tile i {width:6px;height:6px;flex:none;border-radius:50%;background:currentColor;}
+.st-key-recovery_progress_workspace .rp-service-tile small {font-size:.75rem;color:#42516a;line-height:1.5;display:block;}
+.st-key-recovery_progress_workspace .rp-service-tile.rp-state-unknown,.st-key-recovery_progress_workspace .rp-service-tile.rp-state-not_applicable {background:var(--rr-soft);}
+.st-key-recovery_progress_workspace .rp-service-tile.rp-state-unknown strong,.st-key-recovery_progress_workspace .rp-service-tile.rp-state-not_applicable strong {color:var(--rr-ink);}
+.st-key-recovery_progress_workspace .rp-service-tile.rp-state-unknown small,.st-key-recovery_progress_workspace .rp-service-tile.rp-state-not_applicable small {color:var(--rr-muted);}
+.st-key-recovery_progress_workspace .rp-facts {display:grid;gap:10px;border-top:1px solid var(--rr-border);padding-top:16px;margin-top:18px;}
+.st-key-recovery_progress_workspace .rp-fact-row {display:flex;align-items:flex-start;gap:10px;}
+.st-key-recovery_progress_workspace .rp-fact-dot {background:var(--rp-signal-color);width:8px;height:8px;border-radius:50%;flex:none;margin-top:7px;}
+.st-key-recovery_progress_workspace .rp-fact-row strong {font-size:.84rem;font-weight:650;color:var(--rr-ink);display:block;}
+.st-key-recovery_progress_workspace .rp-fact-row small {font-size:.78rem;color:var(--rr-muted);line-height:1.6;display:block;margin-top:3px;}
+.st-key-recovery_progress_workspace .rp-housing-row {display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.78rem;color:var(--rr-muted);}
+.st-key-recovery_progress_workspace .rp-housing-row strong {color:var(--rr-ink);font-weight:650;}
+.st-key-recovery_progress_workspace .rp-trades {display:flex;gap:7px;flex-wrap:wrap;margin-top:20px;}
+.st-key-recovery_progress_workspace .rp-trades span {color:var(--rr-link);background:var(--rr-selected);padding:6px 11px;font-size:.78rem;border-radius:7px;}
+@media (max-width:700px) {.st-key-recovery_progress_workspace .rp-time-strip {align-items:flex-start;flex-direction:column;gap:15px;padding:20px;}.st-key-recovery_progress_workspace .rp-time-strip>div+div {text-align:left;}.st-key-recovery_progress_workspace .rp-journey-tracks {grid-template-columns:1fr;}.st-key-recovery_progress_workspace .rp-service-grid {gap:6px;}.st-key-recovery_progress_workspace .rp-service-tile {padding:10px 7px;}.st-key-recovery_progress_workspace .rp-card {min-height:0;padding:20px;}.st-key-recovery_progress_workspace .rp-housing-row {align-items:flex-start;flex-direction:column;gap:2px;}}
+.st-key-recovery_progress_workspace [data-testid="stVerticalBlock"] {gap:.5rem;}
+.st-key-recovery_progress_workspace .rp-lede {margin:.15rem 0 .1rem;}
+.st-key-recovery_progress_workspace .rp-time-strip {margin:6px 0;padding:14px 21px;}
+.st-key-recovery_progress_workspace .rp-next-action {margin-top:7px;padding:25px 28px;}
+.st-key-recovery_progress_workspace .rp-next-action h2 {margin:7px 0;}
+.st-key-recovery_progress_workspace .rp-section-title {margin:16px 0 6px;}
+/* The optional dashboard keeps its own top offset below the shared toolbar. */
+.stApp:has(.st-key-recovery_progress_workspace) .block-container {padding-top:calc(var(--rr-header-height) + 4px) !important;}
+.st-key-recovery_progress_workspace h1 {font-size:clamp(1.8rem,2.7vw,2.4rem) !important;line-height:1.12 !important;}
+.st-key-recovery_progress_workspace .rp-lede {font-size:.9rem;margin:0;}
+.st-key-recovery_progress_workspace .rp-next-action h2 {font-size:1.45rem !important;}
+.st-key-recovery_progress_workspace .rp-time-strip {padding:12px 20px;}
